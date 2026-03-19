@@ -86,7 +86,7 @@ const SignUpPage: React.FC = () => {
           window.location.href = '/';
         } else {
           toast.custom(
-            (t:any) => (
+            (t: any) => (
               <div
                 style={{
                   display: 'flex',
@@ -328,7 +328,7 @@ const SignUpPage: React.FC = () => {
               options={addressOptions}
               dropdownStyle={{ minWidth: '300px' }}
               getPopupContainer={(triggerNode) => triggerNode.parentElement}
-    
+
             />
           </Form.Item>
 

@@ -31,9 +31,7 @@ const Teams = async () => {
             >
               <Tooltip placement="bottom" title={<div className="flex flex-col items-center">
                 <Image
-                  src={
-                    team?.team_logo ? imageUrl(team?.team_logo) : bg
-                  }
+                  src={imageUrl(team?.team_logo)}
                   alt={team.name}
                   className=" w-[40px] h-[40px] object-contain unselectable"
                   height={40}
