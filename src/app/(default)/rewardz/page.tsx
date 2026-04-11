@@ -1,15 +1,14 @@
+import { get } from '@/ApisRequests/server';
+import rewardbg from '@/Assets/rewardbgs.png';
 import Rewards from '@/components/rewardz/Rewards';
 import RewardzCards from '@/components/rewardz/RewardzCards';
 import SearchAndSortComponent from '@/components/rewardz/SearchAndSortComponent';
-import Heading from '@/components/Shared/Heading';
-import rewardbg from '@/Assets/rewardbgs.png';
-import { FaLongArrowAltRight } from 'react-icons/fa';
-import { get } from '@/ApisRequests/server';
 import PaginationComponents from '@/components/Shared/Client/Pagination';
+import Heading from '@/components/Shared/Heading';
 import GoToTop from '@/components/ui/GoToTop';
 import { Empty } from 'antd';
 import Link from 'next/link';
-import AdContainer from '@/components/ad/AdContainer';
+import { FaLongArrowAltRight } from 'react-icons/fa';
 
 export interface RewardInterface {
   _id: string;

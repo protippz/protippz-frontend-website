@@ -1,4 +1,8 @@
+import { get, imageUrl } from "@/ApisRequests/server";
 import category from "@/Assets/category.png";
+import { Tooltip } from "antd";
+import Image from "next/image";
+import SetTemParams from "../Playerz/Client/SetTemParams";
 import {
   Carousel,
   CarouselContent,
@@ -6,10 +10,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../ui/carousel";
-import Image from "next/image";
-import { get, imageUrl } from "@/ApisRequests/server";
-import SetTemParams from "../Playerz/Client/SetTemParams";
-import { Tooltip } from "antd";
 
 interface RewardInterface {
   _id: string;
@@ -22,6 +22,7 @@ interface RewardInterface {
 
 const Rewards = async () => {
   const [data] = await getCategory();
+  console.log(imageUrl(data?.[0]?.image))
   const teamLogos = data as RewardInterface[];
   return (
     <Carousel className="w-full">
@@ -44,9 +45,10 @@ const Rewards = async () => {
                     width={100}
                     unoptimized
                   />
-                  <p className="text-center text-sm">
+                  <p className="text-center line-clamp-1 text-sm">
                     {team?.name?.slice(0, 10)}..
                   </p>
+
                   <SetTemParams
                     key={team?._id}
                     ParamKey="category"
