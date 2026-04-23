@@ -22,15 +22,16 @@ interface RewardInterface {
 
 const Rewards = async () => {
   const [data] = await getCategory();
-  console.log(imageUrl(data?.[0]?.image))
+  // console.log(data?.data?.result)
+  // console.log(imageUrl("test", data));
   const teamLogos = data as RewardInterface[];
   return (
     <Carousel className="w-full">
       <CarouselPrevious className={`md:-left-4 left-0 z-50`} />
-      <CarouselContent className="flex items-center justify-center">
+      <CarouselContent className="flex items-center justify-start">
         {teamLogos &&
           Array.isArray(teamLogos) &&
-          teamLogos.map((team) => (
+          teamLogos?.map((team) => (
             <CarouselItem
               key={team?._id}
               className="basis-1/4 md:basis-1/7 lg:basis-1/12"
