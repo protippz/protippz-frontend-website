@@ -1,13 +1,13 @@
 'use client';
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
-import download from '@/Assets/Iphone update 14.png';
-import qrCode from '@/Assets/qrcode.png';
 import appsore from '@/Assets/appsore.png';
+import download from '@/Assets/Iphone update 14.png';
 import playstore from '@/Assets/playstore.png';
-import Link from 'next/link';
+import qrCode from '@/Assets/qrcode.png';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
 
 const DownloadSection = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -92,7 +92,7 @@ const DownloadSection = () => {
       </div>
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12 relative">
         <motion.div
-          className="bg-[#2FC191] relative p-1 lg:h-[500px] h-[400px] text-white w-full max-w-lg md:max-w-lg lg:max-w-xl md:px-12 text-center z-10 flex flex-col justify-center items-center"
+          className="bg-[#2FC191] relative p-1 lg:h-[500px] h-[400px] text-white w-full max-w-lg md:max-w-lg lg:max-w-xl md:px-12 text-center z-1 flex flex-col justify-center items-center"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => {
             setIsHovered(false);
@@ -149,7 +149,7 @@ const DownloadSection = () => {
             </div>
           </div>
         </motion.div>
-        <div className="relative md:relative  md:right-20 md:ml-10 md:top-0  lg:ml-20 md:z-20 ">
+        <div className="relative md:relative  md:right-20 md:ml-10 md:top-0  lg:ml-20 md:z-1 ">
           <Image className='lg:w-72 md:w-60 w-48' src={download} alt="Mobile Mockup" width={300} height={600} />
         </div>
       </div>

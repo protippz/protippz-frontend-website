@@ -1,11 +1,12 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { AuthProvider } from '@/provider/ContextProvider';
-import NextTopLoader from 'nextjs-toploader';
 import GoogleAnalytics from '@/components/GoogleAnalytics/GoogleAnalytics';
+import SportsTicker from '@/components/Shared/SportsTicker';
 import ClickjackingFixed from '@/components/ethical_process/ClickjackingFixed';
+import { AuthProvider } from '@/provider/ContextProvider';
+import type { Metadata } from 'next';
 import Script from 'next/script';
+import NextTopLoader from 'nextjs-toploader';
 import { myFont } from '../../public/fonts/myFont';
+import './globals.css';
 export const metadata: Metadata = {
   title: 'PROTIPPZ',
   description: 'protippz',
@@ -61,6 +62,7 @@ export default function RootLayout({
             }}
           />
           <ClickjackingFixed>{children}</ClickjackingFixed>
+          <SportsTicker />
         </AuthProvider>
         <GoogleAnalytics />
       </body>
