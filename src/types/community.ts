@@ -1,3 +1,12 @@
+export type ContentCategory =
+  | 'All'
+  | 'Blog Article'
+  | 'Press Release'
+  | 'Company News'
+  | 'Promotional Content'
+  | 'Community Update'
+  | 'Product Announcement';
+
 export interface User {
   id: string
   name: string
@@ -25,6 +34,11 @@ export interface Comment {
 export interface Post {
   id: string
   user: User
+  title?: string
+  category?: ContentCategory
+  summary?: string
+  readTime?: string
+  authorRole?: string
   content: string
   image?: string
   timestamp: string
@@ -35,10 +49,14 @@ export interface Post {
   isLiked: boolean
   isTrending?: boolean
   taggedPlayer?: string
+  tags?: string[]
 }
 
 export interface CreatePostData {
   content: string
+  title?: string
+  category?: ContentCategory
   image?: string
   taggedPlayer?: string
 }
+

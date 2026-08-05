@@ -8,11 +8,13 @@ import CommunitySearchBar from "@/components/community/CommunitySearchBar";
 import FeedCard from "@/components/community/FeedCard";
 import PostModal from "@/components/community/PostModal";
 import TipModal from "@/components/community/TipModal";
-import { Post, Comment } from "@/types/community";
+import { Post, Comment, ContentCategory } from "@/types/community";
 
 export default function CommunityPage() {
   const [posts, setPosts] = useState<Post[]>(mockPosts);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] =
+    useState<ContentCategory>("All");
   const [selectedPostForModal, setSelectedPostForModal] = useState<Post | null>(
     null,
   );
@@ -22,16 +24,25 @@ export default function CommunityPage() {
   );
   const [isTipModalOpen, setIsTipModalOpen] = useState(false);
 
-  // Filter posts based on search query
+  // Filter posts based on search query and category
   const filteredPosts = useMemo(() => {
-    return posts.filter(
-      (post) =>
-        post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (post.taggedPlayer &&
-          post.taggedPlayer.toLowerCase().includes(searchQuery.toLowerCase())),
-    );
-  }, [posts, searchQuery]);
+    return posts.filter((post) => {
+      const q = searchQuery.toLowerCase();
+      const matchesSearch =
+        !q ||
+        post.content.toLowerCase().includes(q) ||
+        post.user.name.toLowerCase().includes(q) ||
+        (post.title && post.title.toLowerCase().includes(q)) ||
+        (post.summary && post.summary.toLowerCase().includes(q)) ||
+        (post.taggedPlayer && post.taggedPlayer.toLowerCase().includes(q)) ||
+        (post.tags && post.tags.some((t) => t.toLowerCase().includes(q)));
+
+      const matchesCategory =
+        selectedCategory === "All" || post.category === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [posts, searchQuery, selectedCategory]);
 
   // Handle Likes
   const handleLike = (postId: string) => {
@@ -199,15 +210,17 @@ export default function CommunityPage() {
       {/* Header Section */}
       <CommunityHeader />
 
-      {/* Search Bar Component (Inline at top, Collapses to floating icon on scroll) */}
+      {/* Search & Category Filter Navigation Bar */}
       <CommunitySearchBar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
       />
 
       {/* Main Content Area */}
-      <div className="container mx-auto px-4 py-6 bg-[#FAFBFB]">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="container mx-auto px-2.5 sm:px-4 py-3 sm:py-6 bg-[#FAFBFB]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6">
           {/* Main Feed Column */}
           <div className="lg:col-span-3 space-y-6">
             {/* Feed Cards List */}
@@ -223,10 +236,24 @@ export default function CommunityPage() {
                   />
                 ))
               ) : (
-                <div className="p-8 text-center rounded-2xl bg-white border border-[#233A6C1A]">
-                  <p className="text-sm font-semibold text-[#233A6C80]">
-                    No posts found matching &quot;{searchQuery}&quot;
+                <div className="p-10 text-center rounded-2xl bg-white border border-[#233A6C1A] shadow-sm">
+                  <p className="text-base font-bold text-[#233A6C]">
+                    No content found
                   </p>
+                  <p className="text-xs text-[#233A6C70] mt-1">
+                    No articles, releases, or posts match your current search &
+                    category filter.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSelectedCategory("All");
+                    }}
+                    className="mt-4 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all active:scale-95 shadow-sm"
+                    style={{ backgroundColor: "#308D6F" }}
+                  >
+                    Reset Filters
+                  </button>
                 </div>
               )}
             </div>

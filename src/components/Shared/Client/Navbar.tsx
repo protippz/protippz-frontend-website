@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
     { href: "/tippz", text: "TIPPZ" },
     { href: "/playerz", text: "PLAYERZ" },
     { href: "/teamz", text: "TEAMZ" },
-    { href: "/community", text: "🔥 COMMUNITY" },
+    { href: "/community", text: "MEDIA & COMMUNITY" },
     { href: "/rewardz", text: "REWARDZ" },
     { href: "https://protippz.store", text: "STORE" },
   ];
