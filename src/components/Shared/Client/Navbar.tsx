@@ -1,18 +1,18 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { Button, Drawer, Dropdown, Menu } from 'antd';
-import { IoIosNotificationsOutline, IoMdMenu } from 'react-icons/io';
-import logo from '@/Assets/logo.png';
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaDollarSign, FaRegUserCircle, FaStar } from 'react-icons/fa';
-import { useContextData } from '@/provider/ContextProvider';
-import Cookies from 'js-cookie';
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+"use client";
+import React, { useEffect, useState } from "react";
+import { Button, Drawer, Dropdown, Menu } from "antd";
+import { IoIosNotificationsOutline, IoMdMenu } from "react-icons/io";
+import logo from "@/Assets/logo.png";
+import Image from "next/image";
+import Link from "next/link";
+import { FaDollarSign, FaRegUserCircle, FaStar } from "react-icons/fa";
+import { useContextData } from "@/provider/ContextProvider";
+import Cookies from "js-cookie";
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 const Navbar: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [activeMenu, setActiveMenu] = useState('');
+  const [activeMenu, setActiveMenu] = useState("");
   const data = useContextData();
   const router = useRouter();
   const showDrawer = () => {
@@ -20,17 +20,18 @@ const Navbar: React.FC = () => {
   };
 
   const handleChnagePassword = () => {
-    router.push('/change-password');
+    router.push("/change-password");
   };
   const closeDrawer = () => {
     setDrawerVisible(false);
   };
   const navItems = [
-    { href: '/tippz', text: 'TIPPZ' },
-    { href: '/playerz', text: 'PLAYERZ' },
-    { href: '/teamz', text: 'TEAMZ' },
-    { href: '/rewardz', text: 'REWARDZ' },
-    { href: 'https://protippz.store', text: 'STORE' },
+    { href: "/tippz", text: "TIPPZ" },
+    { href: "/playerz", text: "PLAYERZ" },
+    { href: "/teamz", text: "TEAMZ" },
+    { href: "/community", text: "🔥 COMMUNITY" },
+    { href: "/rewardz", text: "REWARDZ" },
+    { href: "https://protippz.store", text: "STORE" },
   ];
   const handleMenuClick = (href: string) => {
     setActiveMenu(href);
@@ -42,10 +43,10 @@ const Navbar: React.FC = () => {
       <Menu.Item key="1">
         <Link
           href={
-            data?.userData?.user?.role == 'player' ||
-            data?.userData?.user?.role == 'team'
+            data?.userData?.user?.role == "player" ||
+            data?.userData?.user?.role == "team"
               ? `home`
-              : '/profile'
+              : "/profile"
           }
         >
           My Profile
@@ -54,31 +55,31 @@ const Navbar: React.FC = () => {
       <Menu.Item key="11">
         <button
           onClick={() => {
-            Cookies.remove('token');
-            localStorage.removeItem('token');
-            window.location.href = '/sign-in';
+            Cookies.remove("token");
+            localStorage.removeItem("token");
+            window.location.href = "/sign-in";
           }}
         >
           Sign out
         </button>
       </Menu.Item>
-    </Menu>
+    </Menu>,
   );
 
   useEffect(() => {
     if (
-      data?.userData?.user?.role != 'player' &&
-      data?.userData?.user?.role != 'team'
+      data?.userData?.user?.role != "player" &&
+      data?.userData?.user?.role != "team"
     ) {
       setUserMenu(
         <Menu>
           <Menu.Item key="1">
             <Link
               href={
-                data?.userData?.user?.role == 'player' ||
-                data?.userData?.user?.role == 'team'
+                data?.userData?.user?.role == "player" ||
+                data?.userData?.user?.role == "team"
                   ? `home`
-                  : '/profile'
+                  : "/profile"
               }
             >
               My Profile
@@ -118,15 +119,15 @@ const Navbar: React.FC = () => {
           <Menu.Item key="12">
             <button
               onClick={() => {
-                Cookies.remove('token');
-                localStorage.removeItem('token');
-                window.location.href = 'sign-in';
+                Cookies.remove("token");
+                localStorage.removeItem("token");
+                window.location.href = "sign-in";
               }}
             >
               Sign Out
             </button>
           </Menu.Item>
-        </Menu>
+        </Menu>,
       );
     } else {
       setUserMenu(
@@ -134,10 +135,10 @@ const Navbar: React.FC = () => {
           <Menu.Item key="1">
             <Link
               href={
-                data?.userData?.user?.role == 'player' ||
-                data?.userData?.user?.role == 'team'
+                data?.userData?.user?.role == "player" ||
+                data?.userData?.user?.role == "team"
                   ? `home`
-                  : '/profile'
+                  : "/profile"
               }
             >
               My Profile
@@ -149,20 +150,20 @@ const Navbar: React.FC = () => {
           <Menu.Item key="12">
             <button
               onClick={() => {
-                Cookies.remove('token');
-                localStorage.removeItem('token');
-                window.location.href = 'sign-in';
+                Cookies.remove("token");
+                localStorage.removeItem("token");
+                window.location.href = "sign-in";
               }}
             >
               Sign Out
             </button>
           </Menu.Item>
-        </Menu>
+        </Menu>,
       );
     }
   }, [data?.userData]);
   return (
-    <div className="p-4 bg-white shadow-md">
+    <div className="p-4 bg-white">
       <nav className="flex items-center justify-between container mx-auto">
         <Link href={`/`}>
           <Image
@@ -181,8 +182,8 @@ const Navbar: React.FC = () => {
               key={item.href}
               className={`cursor-pointer hover:text-[#053697] transition-all ${
                 activeMenu === item.href
-                  ? 'text-[#053697] font-semibold px-2'
-                  : ''
+                  ? "text-[#053697] font-semibold px-2"
+                  : ""
               } relative`}
               onClick={() => handleMenuClick(item.href)}
               // whileHover={{ scale: 1.1 }}
@@ -193,7 +194,7 @@ const Navbar: React.FC = () => {
               )}
               <Link
                 target={
-                  item?.href === 'https://protippz.store' ? '_blank' : '_self'
+                  item?.href === "https://protippz.store" ? "_blank" : "_self"
                 }
                 href={item.href}
               >
@@ -208,8 +209,8 @@ const Navbar: React.FC = () => {
           {data?.userData?._id ? (
             <>
               <div className="flex flex-col space-y-2">
-                {data?.userData?.user?.role != 'player' &&
-                  data?.userData?.user?.role != 'team' && (
+                {data?.userData?.user?.role != "player" &&
+                  data?.userData?.user?.role != "team" && (
                     <>
                       <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-green-100">
                         <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white border border-green-500">
@@ -237,14 +238,14 @@ const Navbar: React.FC = () => {
                 >
                   <IoIosNotificationsOutline
                     className="text-green-500"
-                    style={{ fontSize: '18px' }}
+                    style={{ fontSize: "18px" }}
                   />
                 </Link>
-                <Dropdown overlay={userMenu} trigger={['click']}>
+                <Dropdown overlay={userMenu} trigger={["click"]}>
                   <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 cursor-pointer">
                     <FaRegUserCircle
                       className="text-green-500"
-                      style={{ fontSize: '18px' }}
+                      style={{ fontSize: "18px" }}
                     />
                   </div>
                 </Dropdown>
@@ -350,14 +351,14 @@ const Navbar: React.FC = () => {
                 >
                   <IoIosNotificationsOutline
                     className="text-green-500"
-                    style={{ fontSize: '18px' }}
+                    style={{ fontSize: "18px" }}
                   />
                 </Link>
-                <Dropdown overlay={userMenu} trigger={['click']}>
+                <Dropdown overlay={userMenu} trigger={["click"]}>
                   <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 cursor-pointer">
                     <FaRegUserCircle
                       className="text-green-500"
-                      style={{ fontSize: '18px' }}
+                      style={{ fontSize: "18px" }}
                     />
                   </div>
                 </Dropdown>

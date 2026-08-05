@@ -1,38 +1,37 @@
-import GoogleAnalytics from '@/components/GoogleAnalytics/GoogleAnalytics';
-import SportsTicker from '@/components/Shared/SportsTicker';
-import ClickjackingFixed from '@/components/ethical_process/ClickjackingFixed';
-import { AuthProvider } from '@/provider/ContextProvider';
-import type { Metadata } from 'next';
-import Script from 'next/script';
-import NextTopLoader from 'nextjs-toploader';
-import { myFont } from '../../public/fonts/myFont';
-import './globals.css';
+import GoogleAnalytics from "@/components/GoogleAnalytics/GoogleAnalytics";
+import SportsTicker from "@/components/Shared/SportsTicker";
+import ClickjackingFixed from "@/components/ethical_process/ClickjackingFixed";
+import { AuthProvider } from "@/provider/ContextProvider";
+import type { Metadata } from "next";
+import Script from "next/script";
+import NextTopLoader from "nextjs-toploader";
+import "./globals.css";
 export const metadata: Metadata = {
-  title: 'PROTIPPZ',
-  description: 'protippz',
-  keywords: 'protippz',
+  title: "PROTIPPZ",
+  description: "protippz",
+  keywords: "protippz",
   icons: {
-    icon: '/favicon.png',
+    icon: "/favicon.png",
   },
   openGraph: {
-    type: 'website',
-    url: 'https://protippz.com',
-    title: 'PROTIPPZ',
-    description: 'protippz',
+    type: "website",
+    url: "https://protippz.com",
+    title: "PROTIPPZ",
+    description: "protippz",
     images: [
       {
-        url: 'https://i.ibb.co.com/cXf1gL5/image-1.png',
+        url: "https://i.ibb.co.com/cXf1gL5/image-1.png",
         width: 1200,
         height: 630,
-        alt: 'Protippz',
+        alt: "Protippz",
       },
     ],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'PROTIPPZ',
-    description: 'protippz',
-    images: ['https://i.ibb.co.com/cXf1gL5/image-1.png'],
+    card: "summary_large_image",
+    title: "PROTIPPZ",
+    description: "protippz",
+    images: ["https://i.ibb.co.com/cXf1gL5/image-1.png"],
   },
 };
 
@@ -45,7 +44,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.png" sizes="any" type="image/png" />
         <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className={myFont.variable}>
+      <body>
         <NextTopLoader />
         <AuthProvider>
           <Script

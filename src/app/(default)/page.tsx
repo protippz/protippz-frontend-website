@@ -1,18 +1,19 @@
-'use client';
-import PoweredByStripe from '@/components/ad/PoweredByStripe';
-import Banner from '@/components/HomePage/Banner';
-import DownloadSection from '@/components/HomePage/DownloadSection';
-import AnnouncementPopups from '@/components/popups/AnnouncementPopups';
-import { getSEOMetadata } from '@/components/seo/seo';
-import SeoPage from '@/components/seo/SeoPage';
-import dynamic from 'next/dynamic';
+"use client";
+import PoweredByStripe from "@/components/ad/PoweredByStripe";
+import Banner from "@/components/HomePage/Banner";
+import DownloadSection from "@/components/HomePage/DownloadSection";
+import HeroSection from "@/components/HomePage/HeroSection";
+import AnnouncementPopups from "@/components/popups/AnnouncementPopups";
+import { getSEOMetadata } from "@/components/seo/seo";
+import SeoPage from "@/components/seo/SeoPage";
+import dynamic from "next/dynamic";
 
 // const AdContainer = dynamic(() => import('@/components/ad/AdContainer'), {
 //   ssr: false,
 // });
 
 export default function Home() {
-  const seoMetadata = getSEOMetadata('home');
+  const seoMetadata = getSEOMetadata("home");
   return (
     <>
       <div>
@@ -59,7 +60,8 @@ export default function Home() {
         </h1>
       </div>
       <SeoPage metadata={seoMetadata} />
-      <Banner />
+      {/* <Banner /> */}
+      <HeroSection />
       {/* <AdContainer /> */}
       <PoweredByStripe />
       <DownloadSection />

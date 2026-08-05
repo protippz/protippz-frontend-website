@@ -1,15 +1,15 @@
-import type { Metadata } from 'next';
-import Navbar from '@/components/Shared/Client/Navbar';
-import Footer from '@/components/Shared/Client/Footer';
-import { AuthProvider } from '@/provider/ContextProvider';
-import NextTopLoader from 'nextjs-toploader';
-import ShocaseMarquee from '@/components/HomePage/ShocaseMarquee';
-import Head from 'next/head';
+import type { Metadata } from "next";
+import Navbar from "@/components/Shared/Client/Navbar";
+import Footer from "@/components/Shared/Client/Footer";
+import { AuthProvider } from "@/provider/ContextProvider";
+import NextTopLoader from "nextjs-toploader";
+import ShocaseMarquee from "@/components/HomePage/ShocaseMarquee";
+import Head from "next/head";
 
 export const metadata: Metadata = {
-  title: 'PROTIPPZ',
-  keywords: 'protippz',
-  description: 'protippz',
+  title: "PROTIPPZ",
+  keywords: "protippz",
+  description: "protippz",
 };
 
 export default function RootLayout({
@@ -46,21 +46,21 @@ export default function RootLayout({
 
         <script type="application/ld+json">
           {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Website',
-            name: 'PROTIPPZ - Best Sports Tipping Platform',
-            url: 'https://protippz.com',
-            description: 'protippz',
-            image: 'https://protippz.com/assets/seo-banner.jpg',
+            "@context": "https://schema.org",
+            "@type": "Website",
+            name: "PROTIPPZ - Best Sports Tipping Platform",
+            url: "https://protippz.com",
+            description: "protippz",
+            image: "https://protippz.com/assets/seo-banner.jpg",
             publisher: {
-              '@type': 'Organization',
-              name: 'ProTippz',
-              logo: 'https://protippz.com/assets/logo.png',
+              "@type": "Organization",
+              name: "ProTippz",
+              logo: "https://protippz.com/assets/logo.png",
             },
             potentialAction: {
-              '@type': 'SearchAction',
-              target: 'https://protippz.com/search?q={search_term_string}',
-              'query-input': 'required name=search_term_string',
+              "@type": "SearchAction",
+              target: "https://protippz.com/search?q={search_term_string}",
+              "query-input": "required name=search_term_string",
             },
           })}
         </script>

@@ -1,9 +1,9 @@
-'use client';
-import { useContextData } from '@/provider/ContextProvider';
-import Link from 'next/link';
-import React from 'react';
-import MotionDiv from '../Playerz/Motion';
-import Head from 'next/head';
+"use client";
+import { useContextData } from "@/provider/ContextProvider";
+import Link from "next/link";
+import React from "react";
+import MotionDiv from "../Playerz/Motion";
+import Head from "next/head";
 
 const Banner = () => {
   const data = useContextData();
@@ -38,15 +38,15 @@ const Banner = () => {
 
         <script type="application/ld+json">
           {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Website',
-            name: 'Best Sports Tipping Platform',
-            url: 'https://protippz.com',
-            description: 'protippz',
+            "@context": "https://schema.org",
+            "@type": "Website",
+            name: "Best Sports Tipping Platform",
+            url: "https://protippz.com",
+            description: "protippz",
             publisher: {
-              '@type': 'Organization',
-              name: 'ProTipz',
-              logo: 'https://protippz.com',
+              "@type": "Organization",
+              name: "ProTipz",
+              logo: "https://protippz.com",
             },
           })}
         </script>
@@ -54,7 +54,7 @@ const Banner = () => {
       <div
         className="relative w-full h-[500px] bg-cover bg-center flex items-center"
         style={{
-          backgroundImage: 'url(https://i.ibb.co.com/cXf1gL5/image-1.png)',
+          backgroundImage: "url(https://i.ibb.co.com/cXf1gL5/image-1.png)",
         }}
       >
         <div className="absolute w-full h-full bg-black opacity-50 z-10"></div>
