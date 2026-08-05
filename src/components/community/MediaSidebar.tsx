@@ -73,8 +73,8 @@ export default function MediaSidebar({
   return (
     <aside className="sticky top-[70px] space-y-4">
       {/* 1. Media & Publishing Categories Card */}
-      <div className="p-5 rounded-2xl bg-white border border-[#233A6C15] shadow-xs">
-        <div className="flex items-center gap-2 mb-3.5 pb-2.5 border-b border-[#233A6C10]">
+      <div className="p-5 rounded-2xl bg-white border border-border shadow-2xs">
+        <div className="flex items-center gap-2 mb-3.5 pb-2.5 border-b border-border">
           <FileText className="w-4 h-4 text-[#308D6F]" />
           <h3 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
             Media Categories
@@ -88,9 +88,9 @@ export default function MediaSidebar({
               <button
                 key={item.name}
                 onClick={() => setSelectedCategory(item.name)}
-                className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs text-left transition-all ${
+                className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs text-left transition-all cursor-pointer ${
                   isActive
-                    ? "bg-[#308D6F] text-white font-bold shadow-xs"
+                    ? "bg-[#308D6F] text-white font-bold shadow-2xs"
                     : "hover:bg-[#233A6C08] text-[#233A6C]"
                 }`}
               >
@@ -125,8 +125,8 @@ export default function MediaSidebar({
       </div>
 
       {/* 2. Trending Topics / Tags Card */}
-      <div className="p-5 rounded-2xl bg-white border border-[#233A6C15] shadow-xs">
-        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#233A6C10]">
+      <div className="p-5 rounded-2xl bg-white border border-border shadow-2xs">
+        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border">
           <TrendingUp className="w-4 h-4 text-[#308D6F]" />
           <h3 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
             Popular Topics
@@ -146,7 +146,7 @@ export default function MediaSidebar({
       </div>
 
       {/* 3. Press & Media Submissions Card */}
-      <div className="p-5 rounded-2xl bg-[#308D6F0D] border border-[#308D6F25]">
+      <div className="p-5 rounded-2xl bg-[#308D6F0D] border border-[#308D6F20]">
         <div className="flex items-center gap-2 mb-2">
           <Mail className="w-4 h-4 text-[#308D6F]" />
           <h4 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
@@ -154,9 +154,10 @@ export default function MediaSidebar({
           </h4>
         </div>
         <p className="text-xs text-[#233A6C80] leading-relaxed mb-3">
-          Are you a journalist, league official, or PR manager? Submit press releases or media inquiries directly to our team.
+          Are you a journalist, league official, or PR manager? Submit press
+          releases or media inquiries directly to our team.
         </p>
-        <button className="w-full py-2 px-3 rounded-xl bg-[#308D6F] hover:bg-[#28775e] text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5">
+        <button className="w-full py-2 px-3 rounded-xl bg-[#308D6F] hover:bg-[#28775e] text-white text-xs font-bold transition-all shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer">
           Submit Press Release
           <ChevronRight className="w-3.5 h-3.5" />
         </button>

@@ -113,7 +113,7 @@ export const mockPosts: Post[] = [
       "We're thrilled to announce the official rollout of real-time micro-tipping with zero transaction delay.",
     content:
       "We are excited to launch ProTippz v2.0! Our engineering team has rebuilt the core micro-payment engine from the ground up. Fans can now tip their favorite athletes during live games with instantaneous verification and reduced fee structures. Check out the full release notes below and update your app today!",
-    image: "/new/payment-flow.webp",
+    image: "/new/post1.png",
     timestamp: "1 hour ago",
     readTime: "3 min read",
     authorRole: "Product Lead @ ProTippz",
@@ -134,8 +134,7 @@ export const mockPosts: Post[] = [
       "Watch how collegiate & professional athletes are leveraging direct fan contributions to fuel their athletic careers.",
     content:
       "Go behind the scenes with ProTippz! In this feature documentary snippet, hear directly from players and superfans sharing their experiences on how direct micro-funding creates game-changing support for emerging sports stars.",
-    videoUrl:
-      "https://www.youtube.com/embed/xrqgcuNtE64?si=Ur5YUmMMz6OOIwCz",
+    videoUrl: "https://www.youtube.com/embed/xrqgcuNtE64?si=Ur5YUmMMz6OOIwCz",
     timestamp: "3 hours ago",
     readTime: "5 min video",
     authorRole: "ProTippz Media",
@@ -151,7 +150,8 @@ export const mockPosts: Post[] = [
     id: "2",
     user: mockUsers[4],
     category: "Press Release",
-    title: "ProTippz Secures Strategic Partnership with Major League Franchises",
+    title:
+      "ProTippz Secures Strategic Partnership with Major League Franchises",
     summary:
       "ProTippz expands its digital fan engagement network across national sports leagues.",
     content:

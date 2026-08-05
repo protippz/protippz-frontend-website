@@ -11,14 +11,13 @@ import {
   Users,
   Smile,
   TrendingUp,
-  Plus,
   CornerDownRight,
 } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getLevelIcon, getEmbedVideoUrl } from "./helpers";
 import { levelColors, mockUsers } from "./data/mockData";
-import { Post, Comment } from "@/types/community";
+import { Post } from "@/types/community";
 import EmojiPicker from "./EmojiPicker";
 
 interface PostModalProps {
@@ -128,12 +127,16 @@ export const PostModal: React.FC<PostModalProps> = ({
       onTouchMove={(e) => e.stopPropagation()}
     >
       {/* Click outside backdrop to close */}
-      <div className="absolute inset-0" onClick={onClose} aria-hidden="true" />
+      <div
+        className="absolute inset-0 cursor-pointer"
+        onClick={onClose}
+        aria-hidden="true"
+      />
 
       {/* Facebook Style Modal Container */}
       <div
         data-lenis-prevent
-        className="relative bg-[#FAFBFB] w-full max-w-2xl max-h-[92dvh] sm:max-h-[88dvh] h-[92dvh] sm:h-auto rounded-t-3xl sm:rounded-2xl flex flex-col shadow-2xl overflow-hidden border-t sm:border border-[#233A6C1A] z-10 animate-in slide-in-from-bottom-5 sm:slide-in-from-bottom-0 duration-200"
+        className="relative bg-[#FAFBFB] w-full max-w-2xl max-h-[92dvh] sm:max-h-[88dvh] h-[92dvh] sm:h-auto rounded-t-3xl sm:rounded-2xl flex flex-col shadow-2xl overflow-hidden border-t sm:border border-border z-10 animate-in slide-in-from-bottom-5 sm:slide-in-from-bottom-0 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Mobile Handle */}
@@ -142,10 +145,10 @@ export const PostModal: React.FC<PostModalProps> = ({
         {/* Facebook Style Header */}
         <div
           className="flex items-center justify-between px-4 sm:px-6 py-3 border-b shrink-0 bg-white"
-          style={{ borderColor: "#233A6C12" }}
+          style={{ borderColor: "#233A6C0B" }}
         >
           <div className="flex items-center gap-3 min-w-0">
-            <Avatar className="w-9 h-9 sm:w-10 sm:h-10 border border-[#233A6C15] shrink-0">
+            <Avatar className="w-9 h-9 sm:w-10 sm:h-10 border border-[#233A6C15] shrink-0 cursor-pointer">
               <AvatarImage src={post.user.avatar} alt={post.user.name} />
               <AvatarFallback>
                 <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#233A6C60]" />
@@ -153,11 +156,11 @@ export const PostModal: React.FC<PostModalProps> = ({
             </Avatar>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 flex-wrap">
-                <h3 className="font-bold text-xs sm:text-base text-[#233A6C] truncate">
+                <h3 className="font-bold text-xs sm:text-base text-[#233A6C] truncate cursor-pointer hover:underline">
                   {post.user.name}
                 </h3>
                 <div
-                  className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold shrink-0"
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold shrink-0 cursor-default"
                   style={{
                     backgroundColor: levelColor.bg,
                     color: levelColor.text,
@@ -185,7 +188,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-800 shrink-0"
+            className="p-2 rounded-full hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-800 shrink-0 cursor-pointer"
             aria-label="Close Modal"
           >
             <X className="w-5 h-5" />
@@ -220,7 +223,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs font-semibold text-[#308D6F] hover:underline"
+                    className="text-xs font-semibold text-[#308D6F] hover:underline cursor-pointer"
                   >
                     #{tag}
                   </span>
@@ -231,7 +234,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
           {/* Post Video or Image Media */}
           {videoEmbedSrc ? (
-            <div className="rounded-xl overflow-hidden bg-black aspect-video relative border border-gray-100 shadow-xs">
+            <div className="rounded-xl overflow-hidden bg-black aspect-video relative border border-border shadow-2xs">
               <iframe
                 src={videoEmbedSrc}
                 title={post.title || "Embedded Video"}
@@ -242,7 +245,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               />
             </div>
           ) : post.image ? (
-            <div className="rounded-xl overflow-hidden bg-black/5 border border-gray-100">
+            <div className="rounded-xl overflow-hidden bg-black/5 border border-border">
               <Image
                 src={post.image}
                 alt="Post Attachment"
@@ -256,7 +259,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           {/* Facebook Style Stats Summary Bar */}
           <div
             className="flex items-center justify-between pt-2 pb-2.5 border-b text-xs text-[#233A6C70]"
-            style={{ borderColor: "#233A6C0F" }}
+            style={{ borderColor: "#233A6C0B" }}
           >
             <div className="flex items-center gap-1.5 font-medium">
               <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#308D6F] text-white text-[10px]">
@@ -270,10 +273,10 @@ export const PostModal: React.FC<PostModalProps> = ({
           </div>
 
           {/* Facebook Style Action Toolbar (Like / Comment / Share) */}
-          <div className="grid grid-cols-2 gap-2 py-0.5 border-b border-[#233A6C0F]">
+          <div className="grid grid-cols-2 gap-2 py-0.5 border-b border-border">
             <button
               onClick={() => onLike(post.id)}
-              className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold transition-colors ${
+              className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
                 post.isLiked
                   ? "bg-[#308D6F] text-white"
                   : "bg-gray-100 hover:bg-gray-200 text-[#233A6C]"
@@ -296,7 +299,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                   });
                 }
               }}
-              className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-[#233A6C] transition-colors"
+              className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-[#233A6C] transition-colors cursor-pointer"
             >
               <Share2 className="w-4 h-4 shrink-0" />
               <span>Share</span>
@@ -321,7 +324,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                     <div key={cmt.id} className="space-y-2">
                       {/* Top-Level Parent Comment */}
                       <div className="flex items-start gap-2.5">
-                        <Avatar className="w-8 h-8 mt-0.5 border border-[#233A6C15] shrink-0">
+                        <Avatar className="w-8 h-8 mt-0.5 border border-[#233A6C15] shrink-0 cursor-pointer">
                           <AvatarImage
                             src={cmt.user.avatar}
                             alt={cmt.user.name}
@@ -353,13 +356,11 @@ export const PostModal: React.FC<PostModalProps> = ({
                               {cmt.content}
                             </p>
 
-                            {/* Floating Reaction Pill Badge on Bottom Right of Bubble */}
+                            {/* Floating Reaction Pill Badge */}
                             {cmt.reactions && cmt.reactions.length > 0 && (
-                              <div className="absolute -bottom-2 right-2 bg-white shadow-2xs border border-gray-200 px-1.5 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-0.5">
+                              <div className="absolute -bottom-2 right-2 bg-white shadow-2xs border border-gray-200 px-1.5 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-0.5 cursor-pointer">
                                 {cmt.reactions.map((r, idx) => (
-                                  <span key={idx}>
-                                    {r.emoji}
-                                  </span>
+                                  <span key={idx}>{r.emoji}</span>
                                 ))}
                                 <span className="text-[9px] text-gray-500 font-bold ml-0.5">
                                   {cmt.reactions.reduce(
@@ -378,7 +379,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                               onClick={() =>
                                 handleToggleCommentReaction(cmt.id, "👍")
                               }
-                              className="hover:underline hover:text-[#308D6F]"
+                              className="hover:underline hover:text-[#308D6F] cursor-pointer"
                             >
                               Like
                             </button>
@@ -388,7 +389,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                               onClick={() =>
                                 handleReplyClick(cmt.id, cmt.user.name)
                               }
-                              className="hover:underline hover:text-[#308D6F] flex items-center gap-0.5"
+                              className="hover:underline hover:text-[#308D6F] flex items-center gap-0.5 cursor-pointer"
                             >
                               <CornerDownRight className="w-3 h-3 inline" />
                               Reply
@@ -405,7 +406,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                                     isQuickReactionOpen ? null : cmt.id,
                                   )
                                 }
-                                className="p-1 text-gray-400 hover:text-[#308D6F] transition-colors"
+                                className="p-1 text-gray-400 hover:text-[#308D6F] transition-colors cursor-pointer"
                                 title="React"
                               >
                                 <Smile className="w-3.5 h-3.5" />
@@ -423,7 +424,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                                           emoji,
                                         )
                                       }
-                                      className="p-1 hover:bg-gray-100 rounded-lg text-base"
+                                      className="p-1 hover:bg-gray-100 rounded-lg text-base cursor-pointer"
                                     >
                                       {emoji}
                                     </button>
@@ -447,7 +448,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                                 key={reply.id}
                                 className="flex items-start gap-2.5"
                               >
-                                <Avatar className="w-7 h-7 mt-0.5 border border-[#233A6C15] shrink-0">
+                                <Avatar className="w-7 h-7 mt-0.5 border border-[#233A6C15] shrink-0 cursor-pointer">
                                   <AvatarImage
                                     src={reply.user.avatar}
                                     alt={reply.user.name}
@@ -488,7 +489,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                                           "👍",
                                         )
                                       }
-                                      className="hover:underline hover:text-[#308D6F]"
+                                      className="hover:underline hover:text-[#308D6F] cursor-pointer"
                                     >
                                       Like
                                     </button>
@@ -496,9 +497,12 @@ export const PostModal: React.FC<PostModalProps> = ({
                                     <button
                                       type="button"
                                       onClick={() =>
-                                        handleReplyClick(cmt.id, reply.user.name)
+                                        handleReplyClick(
+                                          cmt.id,
+                                          reply.user.name,
+                                        )
                                       }
-                                      className="hover:underline hover:text-[#308D6F]"
+                                      className="hover:underline hover:text-[#308D6F] cursor-pointer"
                                     >
                                       Reply
                                     </button>
@@ -533,12 +537,13 @@ export const PostModal: React.FC<PostModalProps> = ({
             <div className="flex items-center justify-between px-4 py-1.5 bg-[#308D6F12] border-b border-[#308D6F25] text-xs">
               <span className="text-[#308D6F] font-semibold flex items-center gap-1.5">
                 <CornerDownRight className="w-3.5 h-3.5" />
-                Replying to <span className="font-bold">@{replyingTo.userName}</span>
+                Replying to{" "}
+                <span className="font-bold">@{replyingTo.userName}</span>
               </span>
               <button
                 type="button"
                 onClick={() => setReplyingTo(null)}
-                className="p-0.5 text-gray-400 hover:text-gray-700 rounded-full"
+                className="p-0.5 text-gray-400 hover:text-gray-700 rounded-full cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -585,7 +590,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               <button
                 type="button"
                 onClick={() => setIsEmojiPickerOpen((prev) => !prev)}
-                className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-lg transition-colors ${
+                className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-lg transition-colors cursor-pointer ${
                   isEmojiPickerOpen
                     ? "text-[#308D6F]"
                     : "text-gray-400 hover:text-gray-600"
@@ -599,7 +604,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             <button
               type="submit"
               disabled={!commentText.trim()}
-              className="p-2 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed shrink-0 flex items-center gap-1.5"
+              className="p-2 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed shrink-0 flex items-center gap-1.5 cursor-pointer"
               style={{ backgroundColor: "#308D6F" }}
             >
               <Send className="w-3.5 h-3.5" />

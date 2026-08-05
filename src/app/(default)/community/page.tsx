@@ -197,7 +197,7 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFBFB]">
+    <div className="min-h-screen ">
       {/* Header Section */}
       <CommunityHeader />
 
@@ -205,8 +205,6 @@ export default function CommunityPage() {
       <CommunitySearchBar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
       />
 
       {/* Main Content Layout */}
