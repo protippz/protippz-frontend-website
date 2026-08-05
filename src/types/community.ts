@@ -41,6 +41,8 @@ export interface Post {
   authorRole?: string
   content: string
   image?: string
+  videoUrl?: string
+  videoEmbedCode?: string
   timestamp: string
   likes: number
   comments: number // Count of comments

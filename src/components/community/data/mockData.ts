@@ -60,6 +60,28 @@ const mockCommentsForPost1: Comment[] = [
 
 export const mockPosts: Post[] = [
   {
+    id: "v1",
+    user: mockUsers[2],
+    category: "Product Announcement",
+    title: "ProTippz Platform Showcase & Feature Breakdown",
+    summary:
+      "Watch our official product walkthrough video explaining how sports fans and athletes connect through micro-tipping.",
+    content:
+      "Check out our latest video overview! We demonstrate the complete fan-to-athlete tipping flow, instant withdrawal setup for players, and custom team reward leaderboards. Watch the full breakdown above and let us know your thoughts in the comments!",
+    videoEmbedCode:
+      '<iframe width="560" height="315" src="https://www.youtube.com/embed/y8p4wNuPr0U?si=k3quqU1RX2QaTwQU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
+    timestamp: "30 minutes ago",
+    readTime: "4 min video",
+    authorRole: "Product Media Team",
+    likes: 489,
+    comments: 12,
+    commentsList: mockCommentsForPost1,
+    tips: 1890,
+    isLiked: true,
+    isTrending: true,
+    tags: ["ProductVideo", "PlatformShowcase", "Tutorial"],
+  },
+  {
     id: "1",
     user: mockUsers[2],
     category: "Product Announcement",
@@ -79,6 +101,28 @@ export const mockPosts: Post[] = [
     isLiked: true,
     isTrending: true,
     tags: ["ProductUpdate", "Fintech", "LiveTipping"],
+  },
+  {
+    id: "v2",
+    user: mockUsers[4],
+    category: "Company News",
+    title: "Official ProTippz Highlight Reel & Athlete Stories",
+    summary:
+      "Watch how collegiate & professional athletes are leveraging direct fan contributions to fuel their athletic careers.",
+    content:
+      "Go behind the scenes with ProTippz! In this feature documentary snippet, hear directly from players and superfans sharing their experiences on how direct micro-funding creates game-changing support for emerging sports stars.",
+    videoUrl:
+      "https://www.youtube.com/embed/xrqgcuNtE64?si=Ur5YUmMMz6OOIwCz",
+    timestamp: "3 hours ago",
+    readTime: "5 min video",
+    authorRole: "ProTippz Media",
+    likes: 620,
+    comments: 8,
+    commentsList: [],
+    tips: 2750,
+    isLiked: false,
+    isTrending: true,
+    tags: ["AthleteStories", "HighlightReel", "FanSupport"],
   },
   {
     id: "2",

@@ -1,0 +1,166 @@
+"use client";
+
+import React from "react";
+import {
+  BookOpen,
+  Newspaper,
+  Building,
+  Sparkles,
+  Radio,
+  Megaphone,
+  Mail,
+  FileText,
+  ChevronRight,
+  TrendingUp,
+} from "lucide-react";
+import { ContentCategory } from "@/types/community";
+
+interface MediaSidebarProps {
+  selectedCategory: ContentCategory;
+  setSelectedCategory: (category: ContentCategory) => void;
+}
+
+const CATEGORY_ITEMS: {
+  name: ContentCategory;
+  icon: React.ReactNode;
+  desc: string;
+}[] = [
+  {
+    name: "Blog Article",
+    icon: <BookOpen className="w-4 h-4 text-emerald-600" />,
+    desc: "In-depth insights & sports economics",
+  },
+  {
+    name: "Press Release",
+    icon: <Newspaper className="w-4 h-4 text-blue-600" />,
+    desc: "Official corporate announcements",
+  },
+  {
+    name: "Company News",
+    icon: <Building className="w-4 h-4 text-amber-600" />,
+    desc: "Milestones & platform updates",
+  },
+  {
+    name: "Promotional Content",
+    icon: <Sparkles className="w-4 h-4 text-rose-600" />,
+    desc: "Special offers & double XP events",
+  },
+  {
+    name: "Community Update",
+    icon: <Radio className="w-4 h-4 text-purple-600" />,
+    desc: "Spotlights & fan highlights",
+  },
+  {
+    name: "Product Announcement",
+    icon: <Megaphone className="w-4 h-4 text-sky-600" />,
+    desc: "New features & releases",
+  },
+];
+
+const POPULAR_TAGS = [
+  "SportsBiz",
+  "Fintech",
+  "LiveTipping",
+  "Partnership",
+  "Milestone",
+  "FanEconomy",
+];
+
+export default function MediaSidebar({
+  selectedCategory,
+  setSelectedCategory,
+}: MediaSidebarProps) {
+  return (
+    <aside className="sticky top-[70px] space-y-4">
+      {/* 1. Media & Publishing Categories Card */}
+      <div className="p-5 rounded-2xl bg-white border border-[#233A6C15] shadow-xs">
+        <div className="flex items-center gap-2 mb-3.5 pb-2.5 border-b border-[#233A6C10]">
+          <FileText className="w-4 h-4 text-[#308D6F]" />
+          <h3 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
+            Media Categories
+          </h3>
+        </div>
+
+        <div className="space-y-1.5">
+          {CATEGORY_ITEMS.map((item) => {
+            const isActive = selectedCategory === item.name;
+            return (
+              <button
+                key={item.name}
+                onClick={() => setSelectedCategory(item.name)}
+                className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs text-left transition-all ${
+                  isActive
+                    ? "bg-[#308D6F] text-white font-bold shadow-xs"
+                    : "hover:bg-[#233A6C08] text-[#233A6C]"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div
+                    className={`p-1.5 rounded-lg shrink-0 ${
+                      isActive ? "bg-white/20" : "bg-gray-100"
+                    }`}
+                  >
+                    {item.icon}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-semibold truncate">{item.name}</p>
+                    <p
+                      className={`text-[10px] truncate ${
+                        isActive ? "text-white/80" : "text-[#233A6C60]"
+                      }`}
+                    >
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight
+                  className={`w-3.5 h-3.5 shrink-0 ${
+                    isActive ? "text-white" : "text-[#233A6C40]"
+                  }`}
+                />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 2. Trending Topics / Tags Card */}
+      <div className="p-5 rounded-2xl bg-white border border-[#233A6C15] shadow-xs">
+        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#233A6C10]">
+          <TrendingUp className="w-4 h-4 text-[#308D6F]" />
+          <h3 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
+            Popular Topics
+          </h3>
+        </div>
+
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {POPULAR_TAGS.map((tag) => (
+            <span
+              key={tag}
+              className="text-xs font-semibold text-[#308D6F] bg-[#308D6F12] hover:bg-[#308D6F22] px-2.5 py-1 rounded-lg cursor-pointer transition-colors"
+            >
+              #{tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* 3. Press & Media Submissions Card */}
+      <div className="p-5 rounded-2xl bg-[#308D6F0D] border border-[#308D6F25]">
+        <div className="flex items-center gap-2 mb-2">
+          <Mail className="w-4 h-4 text-[#308D6F]" />
+          <h4 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
+            Press &amp; Submissions
+          </h4>
+        </div>
+        <p className="text-xs text-[#233A6C80] leading-relaxed mb-3">
+          Are you a journalist, league official, or PR manager? Submit press releases or media inquiries directly to our team.
+        </p>
+        <button className="w-full py-2 px-3 rounded-xl bg-[#308D6F] hover:bg-[#28775e] text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5">
+          Submit Press Release
+          <ChevronRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </aside>
+  );
+}

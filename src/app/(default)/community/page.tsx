@@ -6,8 +6,8 @@ import { mockPosts, mockUsers } from "@/components/community/data/mockData";
 import CommunityHeader from "@/components/community/CommunityHeader";
 import CommunitySearchBar from "@/components/community/CommunitySearchBar";
 import FeedCard from "@/components/community/FeedCard";
+import MediaSidebar from "@/components/community/MediaSidebar";
 import PostModal from "@/components/community/PostModal";
-import TipModal from "@/components/community/TipModal";
 import { Post, Comment, ContentCategory } from "@/types/community";
 
 export default function CommunityPage() {
@@ -19,10 +19,6 @@ export default function CommunityPage() {
     null,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPostForTip, setSelectedPostForTip] = useState<Post | null>(
-    null,
-  );
-  const [isTipModalOpen, setIsTipModalOpen] = useState(false);
 
   // Filter posts based on search query and category
   const filteredPosts = useMemo(() => {
@@ -64,39 +60,11 @@ export default function CommunityPage() {
     );
   };
 
-  // Open Tip Modal
-  const handleOpenTipModal = (postId: string) => {
-    const targetPost = posts.find((p) => p.id === postId);
-    if (targetPost) {
-      setSelectedPostForTip(targetPost);
-      setIsTipModalOpen(true);
-    }
-  };
-
-  // Handle Confirm Tip Amount
-  const handleConfirmTip = (postId: string, amount: number) => {
-    setPosts((prev) =>
-      prev.map((post) => {
-        if (post.id === postId) {
-          const updatedPost = {
-            ...post,
-            tips: post.tips + amount,
-          };
-          if (selectedPostForModal?.id === postId) {
-            setSelectedPostForModal(updatedPost);
-          }
-          return updatedPost;
-        }
-        return post;
-      }),
-    );
-  };
-
   // Handle Add Comment inside Modal
   const handleAddComment = (postId: string, content: string) => {
     const newComment: Comment = {
       id: Date.now().toString(),
-      user: mockUsers[0], // Current logged in user
+      user: mockUsers[0],
       content,
       timestamp: "Just now",
       likes: 0,
@@ -206,7 +174,7 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#F0F2F5" }}>
+    <div className="min-h-screen bg-[#FAFBFB]">
       {/* Header Section */}
       <CommunityHeader />
 
@@ -218,12 +186,11 @@ export default function CommunityPage() {
         setSelectedCategory={setSelectedCategory}
       />
 
-      {/* Main Content Area */}
-      <div className="container mx-auto px-2.5 sm:px-4 py-3 sm:py-6 bg-[#FAFBFB]">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6">
+      {/* Main Content Layout */}
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Feed Column */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Feed Cards List */}
+          <div className="lg:col-span-2 space-y-4">
             <div className="space-y-4">
               {filteredPosts.length > 0 ? (
                 filteredPosts.map((post) => (
@@ -231,7 +198,6 @@ export default function CommunityPage() {
                     key={post.id}
                     post={post}
                     onLike={handleLike}
-                    onTip={handleOpenTipModal}
                     onCommentClick={handleOpenModal}
                   />
                 ))
@@ -241,8 +207,8 @@ export default function CommunityPage() {
                     No content found
                   </p>
                   <p className="text-xs text-[#233A6C70] mt-1">
-                    No articles, releases, or posts match your current search &
-                    category filter.
+                    No articles, releases, or posts match your current search
+                    &amp; category filter.
                   </p>
                   <button
                     onClick={() => {
@@ -258,41 +224,37 @@ export default function CommunityPage() {
               )}
             </div>
           </div>
+
+          {/* Dedicated Media & Publishing Sidebar (Desktop Only) */}
+          <div className="hidden lg:block lg:col-span-1">
+            <MediaSidebar
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Facebook-style Post & Comment Modal */}
+      {/* Post Details & Discussion Modal */}
       <PostModal
         post={selectedPostForModal}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onLike={handleLike}
-        onTip={handleOpenTipModal}
         onAddComment={handleAddComment}
         onCommentReaction={handleCommentReaction}
       />
 
-      {/* Interactive Send Tip & Success Modal */}
-      <TipModal
-        post={selectedPostForTip}
-        isOpen={isTipModalOpen}
-        onClose={() => {
-          setIsTipModalOpen(false);
-          setSelectedPostForTip(null);
-        }}
-        onConfirmTip={handleConfirmTip}
-      />
-
-      {/* Mobile Quick Floating Post Button */}
+      {/* Mobile Floating Scroll to Top Button */}
       <button
         onClick={() => {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
-        className="lg:hidden fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-white shadow-xl z-40 transition-transform active:scale-95"
+        className="lg:hidden fixed bottom-6 right-6 w-12 h-12 rounded-full flex items-center justify-center text-white shadow-xl z-40 transition-transform active:scale-95"
         style={{ backgroundColor: "#308D6F" }}
-        title="Scroll to Create Post"
+        title="Scroll to Top"
       >
-        <Plus className="w-6 h-6" />
+        <Plus className="w-5 h-5" />
       </button>
     </div>
   );
