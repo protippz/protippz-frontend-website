@@ -51,9 +51,32 @@ const mockCommentsForPost1: Comment[] = [
       "This new instant payout feature is a total game changer for fans and players! 🔥🏀",
     timestamp: "10 minutes ago",
     likes: 18,
+    isLiked: true,
     reactions: [
       { emoji: "🔥", count: 8, isReacted: true },
       { emoji: "🏀", count: 4, isReacted: false },
+    ],
+    replies: [
+      {
+        id: "r1",
+        user: mockUsers[2],
+        content:
+          "Appreciate the support Mike! We've worked hard to bring sub-second payouts live.",
+        timestamp: "5 minutes ago",
+        likes: 7,
+        isLiked: false,
+        reactions: [{ emoji: "❤️", count: 3, isReacted: false }],
+      },
+      {
+        id: "r2",
+        user: mockUsers[0],
+        content:
+          "Tested it yesterday during the game, payout hit my account instantly! ⚡",
+        timestamp: "2 minutes ago",
+        likes: 4,
+        isLiked: true,
+        reactions: [{ emoji: "🙌", count: 2, isReacted: true }],
+      },
     ],
   },
 ];

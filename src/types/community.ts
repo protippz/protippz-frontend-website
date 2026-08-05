@@ -28,6 +28,9 @@ export interface Comment {
   content: string
   timestamp: string
   likes: number
+  isLiked?: boolean
+  parentId?: string
+  replies?: Comment[]
   reactions?: CommentReaction[]
 }
 

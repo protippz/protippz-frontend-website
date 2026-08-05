@@ -60,24 +60,47 @@ export default function CommunityPage() {
     );
   };
 
-  // Handle Add Comment inside Modal
-  const handleAddComment = (postId: string, content: string) => {
-    const newComment: Comment = {
+  // Handle Add Comment or Reply inside Modal
+  const handleAddComment = (
+    postId: string,
+    content: string,
+    parentId?: string,
+  ) => {
+    const newCommentOrReply: Comment = {
       id: Date.now().toString(),
       user: mockUsers[0],
       content,
       timestamp: "Just now",
       likes: 0,
+      parentId,
     };
 
     setPosts((prev) =>
       prev.map((post) => {
         if (post.id === postId) {
           const currentComments = post.commentsList || [];
+          let updatedComments: Comment[];
+
+          if (parentId) {
+            // Append as nested reply under target parent comment
+            updatedComments = currentComments.map((cmt) => {
+              if (cmt.id === parentId) {
+                return {
+                  ...cmt,
+                  replies: [...(cmt.replies || []), newCommentOrReply],
+                };
+              }
+              return cmt;
+            });
+          } else {
+            // Append as top-level comment
+            updatedComments = [newCommentOrReply, ...currentComments];
+          }
+
           const updatedPost = {
             ...post,
             comments: post.comments + 1,
-            commentsList: [newComment, ...currentComments],
+            commentsList: updatedComments,
           };
 
           if (selectedPostForModal?.id === postId) {
