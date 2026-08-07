@@ -22,6 +22,7 @@ const SearchAndSortComponent: React.FC = () => {
     } else {
       CurrentParams.set("sort", `-${value}`);
     }
+    CurrentParams.set("page", "1");
     router.replace(`?${CurrentParams.toString()}`, { scroll: false });
   };
 
@@ -33,6 +34,7 @@ const SearchAndSortComponent: React.FC = () => {
     } else {
       CurrentParams.set("sort", `-${sortBy}`);
     }
+    CurrentParams.set("page", "1");
     router.replace(`?${CurrentParams.toString()}`, { scroll: false });
   };
 
@@ -42,7 +44,12 @@ const SearchAndSortComponent: React.FC = () => {
 
   const handleSearch = () => {
     const CurrentParams = new URLSearchParams(window.location.search);
-    CurrentParams.set("searchTerm", `${search}`);
+    if (search) {
+      CurrentParams.set("searchTerm", `${search}`);
+    } else {
+      CurrentParams.delete("searchTerm");
+    }
+    CurrentParams.set("page", "1");
     setSearch(search);
     router.replace(`?${CurrentParams.toString()}`, { scroll: false });
   };

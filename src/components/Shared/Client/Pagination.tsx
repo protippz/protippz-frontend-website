@@ -18,13 +18,18 @@ const PaginationComponents = ({
 
   return (
     <Pagination
-      className="my-3 mb-10"
-      showSizeChanger={false}
+      className="my-3 mb-10 text-center"
+      showSizeChanger
+      pageSizeOptions={["12", "24", "36", "48"]}
+      current={Number(paginationData?.page) || 1}
       total={paginationData?.total || 0}
-      pageSize={paginationData?.limit || 10}
-      onChange={(page) => {
+      pageSize={Number(paginationData?.limit) || 12}
+      onChange={(page, pageSize) => {
         const currentParams = new URLSearchParams(window.location.search);
         currentParams.set("page", page?.toString());
+        if (pageSize) {
+          currentParams.set("limit", pageSize?.toString());
+        }
         router.replace(`?${currentParams?.toString()}`, { scroll: false });
       }}
     />

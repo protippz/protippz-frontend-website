@@ -29,6 +29,7 @@ const SetTemParams = ({
     }
 
     currentParams.set(ParamKey, value);
+    currentParams.set("page", "1");
     router.replace(`?${currentParams?.toString()}`, { scroll: false });
   };
 

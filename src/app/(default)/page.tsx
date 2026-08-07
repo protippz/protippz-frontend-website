@@ -62,7 +62,6 @@ export default function Home() {
       <SeoPage metadata={seoMetadata} />
       {/* <Banner /> */}
       <HeroSection />
-      {/* <AdContainer /> */}
       <PoweredByStripe />
       <DownloadSection />
       <AnnouncementPopups />
