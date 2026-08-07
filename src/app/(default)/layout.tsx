@@ -5,6 +5,7 @@ import { AuthProvider } from "@/provider/ContextProvider";
 import NextTopLoader from "nextjs-toploader";
 import ShocaseMarquee from "@/components/HomePage/ShocaseMarquee";
 import Head from "next/head";
+import Header from "@/components/Shared/Client/Header";
 
 export const metadata: Metadata = {
   title: "PROTIPPZ",
@@ -67,7 +68,8 @@ export default function RootLayout({
       </Head>
       <ShocaseMarquee />
       <AuthProvider>
-        <Navbar />
+        {/* <Navbar /> */}
+        <Header />
         <div className="min-h-[72vh] flex flex-col justify-center items-center bg-white">
           {children}
         </div>
