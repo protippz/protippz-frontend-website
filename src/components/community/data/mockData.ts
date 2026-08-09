@@ -92,7 +92,7 @@ export const mockPosts: Post[] = [
     content:
       "Check out our latest video overview! We demonstrate the complete fan-to-athlete tipping flow, instant withdrawal setup for players, and custom team reward leaderboards. Watch the full breakdown above and let us know your thoughts in the comments!",
     videoEmbedCode:
-      '<iframe width="560" height="315" src="https://www.youtube.com/embed/y8p4wNuPr0U?si=k3quqU1RX2QaTwQU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
+      '<iframe width="560" height="315" src="https://www.youtube.com/embed/y8p4wNuPr0U?rel=0&modestbranding=1&controls=1&fs=1&iv_load_policy=3&playsinline=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen> </iframe>',
     timestamp: "30 minutes ago",
     readTime: "4 min video",
     authorRole: "Product Media Team",

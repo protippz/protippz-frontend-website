@@ -181,6 +181,10 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+.quick-actions-wrapper {
+  display: none !important;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
