@@ -1,8 +1,16 @@
 "use client";
 import PoweredByStripe from "@/components/ad/PoweredByStripe";
 import Banner from "@/components/HomePage/Banner";
+import BrandShowcase from "@/components/HomePage/BrandShowcase";
+import ConnectionBoth from "@/components/HomePage/ConnectionBoth";
 import DownloadSection from "@/components/HomePage/DownloadSection";
+import FAQ from "@/components/HomePage/FAQ";
+import ForAthletes from "@/components/HomePage/ForAthlets";
 import HeroSection from "@/components/HomePage/HeroSection";
+import HowItWork from "@/components/HomePage/HowItWork";
+import Testimonials from "@/components/HomePage/Testimonials";
+import TopHero from "@/components/HomePage/TopHero";
+import WhyProtippzExist from "@/components/HomePage/WhyProtippzExist";
 import AnnouncementPopups from "@/components/popups/AnnouncementPopups";
 import { getSEOMetadata } from "@/components/seo/seo";
 import SeoPage from "@/components/seo/SeoPage";
@@ -16,7 +24,7 @@ export default function Home() {
   const seoMetadata = getSEOMetadata("home");
   return (
     <>
-      <div>
+      {/* <div>
         <h1 className="hidden">
           PROTIPPZ | Sports Fan Engagement Platform & NIL Deals
         </h1>
@@ -58,13 +66,21 @@ export default function Home() {
         <h1 className="hidden">
           PROTIPPZ | Sports Fan Engagement Platform & NIL Deals
         </h1>
-      </div>
+      </div> */}
       <SeoPage metadata={seoMetadata} />
       {/* <Banner /> */}
       <HeroSection />
-      <PoweredByStripe />
-      <DownloadSection />
-      <AnnouncementPopups />
+      <BrandShowcase />
+      <WhyProtippzExist />
+      <HowItWork />
+      <TopHero />
+      <ForAthletes />
+      <ConnectionBoth />
+      <Testimonials />
+      <FAQ />
+      {/* <PoweredByStripe /> */}
+      {/* <DownloadSection />
+      <AnnouncementPopups /> */}
     </>
   );
 }

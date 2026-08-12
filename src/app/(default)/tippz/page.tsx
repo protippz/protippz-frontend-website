@@ -13,9 +13,8 @@ import appstore from "@/Assets/appsore.png";
 import phoneImage2 from "@/Assets/phone_image2.png";
 import Image from "next/image";
 import Link from "next/link";
-import { getSEOMetadata } from "@/components/seo/seo";
 import SeoPage from "@/components/seo/SeoPage";
-import AdContainer from "@/components/ad/AdContainer";
+import { getSEOMetadata } from "@/components/seo/seo";
 
 const cardData = [
   {

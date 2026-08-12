@@ -71,7 +71,7 @@ export default function MediaSidebar({
   setSelectedCategory,
 }: MediaSidebarProps) {
   return (
-    <aside className="sticky top-[70px] space-y-4">
+    <aside className="sticky top-17.5 space-y-4">
       {/* 1. Media & Publishing Categories Card */}
       <div className="p-5 rounded-2xl bg-white border border-border shadow-2xs">
         <div className="flex items-center gap-2 mb-3.5 pb-2.5 border-b border-border">
@@ -146,7 +146,7 @@ export default function MediaSidebar({
       </div>
 
       {/* 3. Press & Media Submissions Card */}
-      <div className="p-5 rounded-2xl bg-[#308D6F0D] border border-[#308D6F20]">
+      {/* <div className="p-5 rounded-2xl bg-[#308D6F0D] border border-[#308D6F20]">
         <div className="flex items-center gap-2 mb-2">
           <Mail className="w-4 h-4 text-[#308D6F]" />
           <h4 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
@@ -161,7 +161,7 @@ export default function MediaSidebar({
           Submit Press Release
           <ChevronRight className="w-3.5 h-3.5" />
         </button>
-      </div>
+      </div> */}
     </aside>
   );
 }

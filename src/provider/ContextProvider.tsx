@@ -31,6 +31,7 @@ interface User {
 }
 interface AuthContextProps {
   userData: User | null;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -45,23 +46,36 @@ const AuthProvider = ({ children }: Props) => {
   const GOOGLE_CLIENT_ID = `${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`;
   
   const [userData, setUserData] = useState<User | null>(null);
-  null;
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await get('/user/get-my-profile', {
-        headers: {
-          Authorization: `${localStorage.getItem('token')}`,
-        },
-      });
-      if (res?.success) {
-        setUserData(res?.data);
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      if (token) {
+        try {
+          const res = await get('/user/get-my-profile', {
+            headers: {
+              Authorization: `${token}`,
+            },
+          });
+          if (res?.success) {
+            setUserData(res?.data);
+          }
+        } catch (error) {
+          console.error('Failed to fetch user profile:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
       }
     };
     fetchUser();
-  }, [typeof localStorage]);
+  }, []);
+
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <AuthContext.Provider value={{ userData: userData }}>
+      <AuthContext.Provider value={{ userData, loading }}>
         {children}
         <Toaster position="top-center" reverseOrder={false} />
       </AuthContext.Provider>

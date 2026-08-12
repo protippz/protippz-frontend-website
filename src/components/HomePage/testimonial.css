@@ -1,0 +1,262 @@
+
+
+.testimonials-root {
+    --bg: #fff;
+    --surface: #0f1117;
+    --border: rgba(255, 255, 255, 0.07);
+    --accent-1: #4f8ef7;
+    --accent-2: #a78bfa;
+    --text-primary: #111;
+    --text-muted: #fff;
+    --star-on: #fbbf24;
+    --star-off: #2d3147;
+    --card-gap: 14px;
+}
+
+
+.testimonials-root {
+    min-height: 100vh;
+    padding: 40px 0;
+    overflow: hidden;
+}
+
+
+.testimonials-header {
+    text-align: center;
+    padding: 0 24px 56px;
+}
+
+.testimonials-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #2B8E70;
+    background: rgba(43, 142, 112, .1);
+    border: 1px solid rgba(43, 142, 112, .2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    margin-bottom: 20px;
+}
+
+.testimonials-eyebrow span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2B8E70;
+    display: inline-block;
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: .4;
+        transform: scale(.6);
+    }
+}
+
+.testimonials-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    text-wrap: balance;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin: 0 0 16px;
+    letter-spacing: -.02em;
+}
+
+.testimonials-title em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.testimonials-sub {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    font-weight: 300;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+
+.marquee-scene {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 600px;
+
+}
+
+
+.marquee-scene::before,
+.marquee-scene::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.marquee-scene::before {
+    top: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, #fff 0%, transparent 100%);
+}
+
+.marquee-scene::after {
+    bottom: 0;
+    height: 120px;
+    background: linear-gradient(to top, #fff 0%, transparent 100%);
+}
+
+.marquee-grid {
+    display: grid;
+    gap: 16px;
+    height: 100%;
+
+}
+
+.marquee-grid.cols-1 {
+    grid-template-columns: 1fr;
+}
+
+.marquee-grid.cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.marquee-grid.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+
+.marquee-column {
+    overflow: hidden;
+    height: 100%;
+}
+
+.marquee-track {
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+    will-change: transform;
+}
+
+
+.testimonial-card {
+    position: relative;
+    background: var(--bg);
+    border: 0.5px solid rgba(15, 15, 15, 0.1);
+    border-radius: 18px;
+    padding: 20px;
+    overflow: hidden;
+    transition: border-color .3s, transform .3s;
+    cursor: default;
+    flex-shrink: 0;
+}
+
+.card-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at top left, rgba(79, 142, 247, .06), transparent 70%);
+    pointer-events: none;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.quote-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: rgba(43, 142, 112, 0.12);
+    border: 1px solid rgb(43, 142, 112);
+    display: grid;
+    place-items: center;
+    color: var(--accent-1);
+}
+
+.stars {
+    display: flex;
+    gap: 3px;
+}
+
+.star-filled {
+    color: var(--star-on);
+    fill: var(--star-on);
+}
+
+.star-empty {
+    color: var(--star-off);
+    fill: var(--star-off);
+}
+
+.card-description {
+    color: var(--star-off);
+    font-size: .875rem;
+    line-height: 1.65;
+    font-weight: 300;
+    margin: 0 0 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.avatar-img {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, .08);
+}
+
+.profile-name {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: .875rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.profile-type {
+    font-size: .75rem;
+    color: var(--accent-1);
+    margin: 0;
+    font-weight: 500;
+    opacity: .8;
+}

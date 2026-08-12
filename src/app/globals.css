@@ -167,10 +167,9 @@ body {
 
 @import "tailwindcss";
 @import "tw-animate-css";
-
 @font-face {
   font-family: "Edosz";
-  src: url("/font/edosz.ttf") format("truetype");
+  src: url("/fonts/edosz.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -309,9 +308,9 @@ body {
     @apply bg-background text-foreground;
   }
 
-  html {
+  /* html {
     @apply font-sans;
-  }
+  } */
 }
 
 .border-zero {

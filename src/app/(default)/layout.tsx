@@ -66,11 +66,10 @@ export default function RootLayout({
           })}
         </script>
       </Head>
-      <ShocaseMarquee />
+      {/* <ShocaseMarquee /> */}
       <AuthProvider>
-        {/* <Navbar /> */}
-        <Header />
-        <div className="min-h-[72vh] flex flex-col justify-center items-center bg-white">
+        <Navbar />
+        <div className="min-h-[72vh] flex flex-col justify-center items-center">
           {children}
         </div>
         <Footer />
