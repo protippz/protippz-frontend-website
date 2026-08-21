@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import {
   Heart,
   MessageCircle,
@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { getLevelIcon, getEmbedVideoUrl } from "./helpers";
+import { getEmbedVideoUrl } from "./helpers";
 import { levelColors, categoryStyles } from "./data/mockData";
 import { Post, ContentCategory } from "@/types/community";
 
@@ -46,29 +46,33 @@ const getCategoryIcon = (category?: ContentCategory) => {
   }
 };
 
-export const FeedCard: React.FC<FeedCardProps> = ({
+export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
   post,
   onLike,
   onCommentClick,
-}) => {
+}) {
   const [isExpandedText, setIsExpandedText] = useState(false);
-  const levelColor = levelColors[post.user.level] || levelColors.Bronze;
-  const catStyle = post.category ? categoryStyles[post.category] : null;
-  const isLongText = post.content.length > 110;
-  const videoEmbedSrc = getEmbedVideoUrl(post.videoUrl, post.videoEmbedCode);
+  const userLevel = post?.user?.level || "Bronze";
+  const levelColor = levelColors[userLevel] || levelColors.Bronze;
+  const catStyle = post?.category ? categoryStyles[post.category] : null;
+  const postContent = post?.content || "";
+  const isLongText = postContent.length > 110;
+  const videoEmbedSrc = getEmbedVideoUrl(post?.videoUrl, post?.videoEmbedCode);
 
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (typeof window !== "undefined" && navigator.share) {
       navigator
         .share({
-          title: post.title || post.content,
-          text: post.summary || post.content,
+          title: post?.title || postContent,
+          text: post?.summary || postContent,
           url: window.location.href,
         })
         .catch((err) => console.log("Error sharing:", err));
     }
   };
+
+  const userName = post?.user?.name || "User";
 
   return (
     <article
@@ -79,17 +83,17 @@ export const FeedCard: React.FC<FeedCardProps> = ({
       <div className="flex items-center justify-between gap-2 flex-wrap mb-2">
         <div className="flex items-center gap-1.5 flex-wrap text-[11px]">
           <Avatar className="w-6.5 h-6.5 sm:w-7 sm:h-7 border border-[#233A6C15] shrink-0 cursor-pointer">
-            <AvatarImage src={post.user.avatar} alt={post.user.name} />
+            <AvatarImage src={post?.user?.avatar} alt={userName} />
             <AvatarFallback>
               <Users className="w-3 h-3 text-[#233A6C60]" />
             </AvatarFallback>
           </Avatar>
 
           <span className="font-semibold text-xs text-[#233A6C] group-hover:text-[#308D6F] transition-colors cursor-pointer">
-            u/{post.user.name.replace(/\s+/g, "")}
+            u/{userName.replace(/\s+/g, "")}
           </span>
 
-          {post.authorRole && (
+          {post?.authorRole && (
             <span className="text-[9px] sm:text-[10px] font-bold text-[#308D6F] bg-[#308D6F12] px-1.5 py-0.5 rounded cursor-default">
               {post.authorRole}
             </span>
@@ -97,10 +101,10 @@ export const FeedCard: React.FC<FeedCardProps> = ({
 
           <span className="text-[#233A6C40]">•</span>
           <span className="text-[10px] sm:text-[11px] text-[#233A6C60]">
-            {post.timestamp}
+            {post?.timestamp}
           </span>
 
-          {post.category && catStyle && (
+          {post?.category && catStyle && (
             <>
               <span className="text-[#233A6C40]">•</span>
               <span
@@ -119,13 +123,13 @@ export const FeedCard: React.FC<FeedCardProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          {post.readTime && (
+          {post?.readTime && (
             <span className="flex items-center gap-1 text-[10px] sm:text-[11px] text-[#233A6C60] font-medium">
               <Clock className="w-3 h-3" />
               {post.readTime}
             </span>
           )}
-          {post.isTrending && (
+          {post?.isTrending && (
             <span
               className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold"
               style={{ backgroundColor: "#F6E05E20", color: "#D69E2E" }}
@@ -139,13 +143,13 @@ export const FeedCard: React.FC<FeedCardProps> = ({
 
       {/* Main Content Area */}
       <div className="mb-2.5">
-        {post.title && (
+        {post?.title && (
           <h2 className="text-sm sm:text-base md:text-lg font-bold text-[#233A6C] mb-1 group-hover:text-[#308D6F] transition-colors leading-snug cursor-pointer">
             {post.title}
           </h2>
         )}
 
-        {post.summary && (
+        {post?.summary && (
           <p className="text-[11px] sm:text-xs font-medium text-[#233A6C75] mb-1.5 leading-relaxed cursor-pointer">
             {post.summary}
           </p>
@@ -154,9 +158,9 @@ export const FeedCard: React.FC<FeedCardProps> = ({
         {/* Text with See More / See Less Toggle */}
         <div className="text-[11px] sm:text-xs leading-relaxed text-[#233A6C90] whitespace-pre-wrap cursor-pointer">
           {isExpandedText || !isLongText ? (
-            post.content
+            postContent
           ) : (
-            <>{post.content.slice(0, 110).trim()}... </>
+            <>{postContent.slice(0, 110).trim()}... </>
           )}
           {isLongText && (
             <button
@@ -173,7 +177,7 @@ export const FeedCard: React.FC<FeedCardProps> = ({
         </div>
 
         {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
+        {post?.tags && post.tags.length > 0 && (
           <div className="flex items-center gap-1.5 flex-wrap mt-2">
             {post.tags.map((tag) => (
               <span
@@ -195,14 +199,14 @@ export const FeedCard: React.FC<FeedCardProps> = ({
         >
           <iframe
             src={videoEmbedSrc}
-            title={post.title || "Embedded Video"}
+            title={post?.title || "Embedded Video"}
             className="absolute inset-0 w-full h-full border-0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
           />
         </div>
-      ) : post.image ? (
+      ) : post?.image ? (
         <div className="mb-2.5 rounded-xl overflow-hidden bg-black/5 border border-border cursor-pointer">
           <Image
             src={post.image}
@@ -219,19 +223,19 @@ export const FeedCard: React.FC<FeedCardProps> = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onLike(post.id);
+            if (post?.id) onLike(post.id);
           }}
           className={`flex items-center gap-1.5 py-1 px-2.5 rounded-full transition-colors cursor-pointer ${
-            post.isLiked
+            post?.isLiked
               ? "bg-[#308D6F] text-white"
               : "bg-gray-100/80 text-[#233A6C] hover:bg-gray-200"
           }`}
         >
           <Heart
             className="w-3.5 h-3.5"
-            fill={post.isLiked ? "white" : "none"}
+            fill={post?.isLiked ? "white" : "none"}
           />
-          <span>{post.likes}</span>
+          <span>{post?.likes ?? 0}</span>
         </button>
 
         <button
@@ -242,7 +246,7 @@ export const FeedCard: React.FC<FeedCardProps> = ({
           className="flex items-center gap-1.5 py-1 px-2.5 rounded-full bg-gray-100/80 text-[#233A6C] hover:bg-gray-200 transition-colors cursor-pointer"
         >
           <MessageCircle className="w-3.5 h-3.5" />
-          <span>{post.comments} Comments</span>
+          <span>{post?.comments ?? 0} Comments</span>
         </button>
 
         <button
@@ -255,6 +259,6 @@ export const FeedCard: React.FC<FeedCardProps> = ({
       </div>
     </article>
   );
-};
+});
 
 export default FeedCard;

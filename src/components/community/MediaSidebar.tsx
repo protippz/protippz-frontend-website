@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import {
   BookOpen,
   Newspaper,
@@ -8,10 +8,10 @@ import {
   Sparkles,
   Radio,
   Megaphone,
-  Mail,
   FileText,
   ChevronRight,
   TrendingUp,
+  Globe,
 } from "lucide-react";
 import { ContentCategory } from "@/types/community";
 
@@ -25,6 +25,11 @@ const CATEGORY_ITEMS: {
   icon: React.ReactNode;
   desc: string;
 }[] = [
+  {
+    name: "All",
+    icon: <Globe className="w-4 h-4 text-teal-600" />,
+    desc: "View all articles & announcements",
+  },
   {
     name: "Blog Article",
     icon: <BookOpen className="w-4 h-4 text-emerald-600" />,
@@ -66,7 +71,7 @@ const POPULAR_TAGS = [
   "FanEconomy",
 ];
 
-export default function MediaSidebar({
+const MediaSidebar = memo(function MediaSidebar({
   selectedCategory,
   setSelectedCategory,
 }: MediaSidebarProps) {
@@ -144,24 +149,8 @@ export default function MediaSidebar({
           ))}
         </div>
       </div>
-
-      {/* 3. Press & Media Submissions Card */}
-      {/* <div className="p-5 rounded-2xl bg-[#308D6F0D] border border-[#308D6F20]">
-        <div className="flex items-center gap-2 mb-2">
-          <Mail className="w-4 h-4 text-[#308D6F]" />
-          <h4 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
-            Press &amp; Submissions
-          </h4>
-        </div>
-        <p className="text-xs text-[#233A6C80] leading-relaxed mb-3">
-          Are you a journalist, league official, or PR manager? Submit press
-          releases or media inquiries directly to our team.
-        </p>
-        <button className="w-full py-2 px-3 rounded-xl bg-[#308D6F] hover:bg-[#28775e] text-white text-xs font-bold transition-all shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer">
-          Submit Press Release
-          <ChevronRight className="w-3.5 h-3.5" />
-        </button>
-      </div> */}
     </aside>
   );
-}
+});
+
+export default MediaSidebar;

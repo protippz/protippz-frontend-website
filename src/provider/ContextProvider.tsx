@@ -9,6 +9,7 @@ import React, {
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from 'react-hot-toast';
 import { get } from '@/ApisRequests/server';
+import ReduxProvider from './ReduxProvider';
 
 interface User {
   address: any;
@@ -76,8 +77,10 @@ const AuthProvider = ({ children }: Props) => {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <AuthContext.Provider value={{ userData, loading }}>
-        {children}
-        <Toaster position="top-center" reverseOrder={false} />
+        <ReduxProvider>
+          {children}
+          <Toaster position="top-center" reverseOrder={false} />
+        </ReduxProvider>
       </AuthContext.Provider>
     </GoogleOAuthProvider>
   );

@@ -1,19 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { Search, X } from "lucide-react";
+import { ContentCategory } from "@/types/community";
 
 interface CommunitySearchBarProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  selectedCategory?: ContentCategory;
+  onSelectCategory?: (category: ContentCategory) => void;
 }
 
-export default function CommunitySearchBar({
+const CATEGORY_OPTIONS: ContentCategory[] = [
+  "All",
+  "Blog Article",
+  "Press Release",
+  "Company News",
+  "Promotional Content",
+  "Community Update",
+  "Product Announcement",
+];
+
+const CommunitySearchBar = memo(function CommunitySearchBar({
   searchQuery,
   setSearchQuery,
+  selectedCategory = "All",
+  onSelectCategory,
 }: CommunitySearchBarProps) {
   return (
-    <div className="sticky top-0 z-30 py-2 sm:py-3 bg-white transition-all w-full overflow-hidden">
+    <div className="sticky top-0 z-30 py-2 sm:py-3 bg-white/95 backdrop-blur-md transition-all w-full border-b border-border/50">
       <div className="container mx-auto px-3 sm:px-4 flex flex-col md:flex-row md:items-center justify-between gap-2 sm:gap-3 w-full min-w-0">
         {/* Search Bar Input */}
         <div className="relative w-full md:max-w-xs shrink-0 min-w-0">
@@ -35,7 +50,32 @@ export default function CommunitySearchBar({
             </button>
           )}
         </div>
+
+        {/* Mobile Horizontal Category Selector (lg:hidden) */}
+        {onSelectCategory && (
+          <div className="lg:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 w-full">
+            {CATEGORY_OPTIONS.map((cat) => {
+              const isActive = selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => onSelectCategory(cat)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-[#308D6F] text-white shadow-2xs"
+                      : "bg-gray-100 text-[#233A6C] hover:bg-gray-200"
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
-}
+});
+
+export default CommunitySearchBar;
