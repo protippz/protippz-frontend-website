@@ -67,10 +67,11 @@ export default function CommunityPage() {
 
   // RTK Query API Mutations
   const [likePostApi] = useLikeCommunityPostMutation();
-  const [createCommentApi] = useCreateCommentMutation();
+  const [createCommentApi, { isLoading: isPostingComment }] =
+    useCreateCommentMutation();
   const [deleteCommentApi, { isLoading: isDeleting }] =
     useDeleteCommentMutation();
-  const [likeCommentApi,{isLoading:isLiking}] = useLikeCommentMutation();
+  const [likeCommentApi, { isLoading: isLiking }] = useLikeCommentMutation();
 
   // Search Debounce Effect
   useEffect(() => {
@@ -658,8 +659,7 @@ export default function CommunityPage() {
         onAddComment={handleAddComment}
         onDeleteComment={handleDeleteComment}
         onLikeComment={handleLikeComment}
-        isDeleting={isDeleting}
-        isLiking={isLiking}
+        isPostingComment={isPostingComment}
       />
 
       {/* Mobile Floating Scroll to Top Button */}

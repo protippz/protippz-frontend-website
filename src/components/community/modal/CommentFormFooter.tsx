@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { X, Send, Users, Smile, CornerDownRight, ImageIcon } from "lucide-react";
+import { X, Send, Users, Smile, CornerDownRight, ImageIcon, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import EmojiPicker from "../EmojiPicker";
@@ -24,6 +24,7 @@ interface CommentFormFooterProps {
   inputRef: React.RefObject<HTMLInputElement | null>;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   currentUser: User;
+  isPostingComment?: boolean;
 }
 
 export const CommentFormFooter: React.FC<CommentFormFooterProps> = ({
@@ -41,6 +42,7 @@ export const CommentFormFooter: React.FC<CommentFormFooterProps> = ({
   inputRef,
   fileInputRef,
   currentUser,
+  isPostingComment,
 }) => {
   const handleInsertEmoji = (emoji: string) => {
     setCommentText((prev) => prev + emoji);
@@ -169,12 +171,18 @@ export const CommentFormFooter: React.FC<CommentFormFooterProps> = ({
 
         <button
           type="submit"
-          disabled={!commentText.trim() && !selectedImage}
+          disabled={(!commentText.trim() && !selectedImage) || isPostingComment}
           className="p-2 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed shrink-0 flex items-center gap-1.5 cursor-pointer"
           style={{ backgroundColor: "#308D6F" }}
         >
-          <Send className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Post</span>
+          {isPostingComment ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
+          ) : (
+            <Send className="w-3.5 h-3.5" />
+          )}
+          <span className="hidden sm:inline">
+            {isPostingComment ? "Posting..." : "Post"}
+          </span>
         </button>
       </form>
     </div>

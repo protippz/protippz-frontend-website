@@ -11,14 +11,13 @@ interface CommentListProps {
   isLoading: boolean;
   postId: string;
   likingCommentIds: Record<string, boolean>;
+  deletingCommentIds: Record<string, boolean>;
   activeReactionCommentId: string | null;
   onLikeCommentClick: (commentId: string) => void;
   onReplyClick: (commentId: string, userName: string) => void;
   onDeleteComment?: (postId: string, commentId: string) => void;
   onToggleReaction: (commentId: string, emoji: string) => void;
   setActiveReactionCommentId: React.Dispatch<React.SetStateAction<string | null>>;
-  isDeleting?: boolean;
-  isLiking?: boolean;
 }
 
 export const CommentList: React.FC<CommentListProps> = ({
@@ -27,14 +26,13 @@ export const CommentList: React.FC<CommentListProps> = ({
   isLoading,
   postId,
   likingCommentIds,
+  deletingCommentIds,
   activeReactionCommentId,
   onLikeCommentClick,
   onReplyClick,
   onDeleteComment,
   onToggleReaction,
   setActiveReactionCommentId,
-  isDeleting,
-  isLiking,
 }) => {
   return (
     <div className="space-y-4 pt-2">
@@ -55,14 +53,13 @@ export const CommentList: React.FC<CommentListProps> = ({
               postId={postId}
               comment={cmt}
               likingCommentIds={likingCommentIds}
+              deletingCommentIds={deletingCommentIds}
               activeReactionCommentId={activeReactionCommentId}
               onLikeCommentClick={onLikeCommentClick}
               onReplyClick={onReplyClick}
               onDeleteComment={onDeleteComment}
               onToggleReaction={onToggleReaction}
               setActiveReactionCommentId={setActiveReactionCommentId}
-              isDeleting={isDeleting}
-              isLiking={isLiking}
             />
           ))}
         </div>

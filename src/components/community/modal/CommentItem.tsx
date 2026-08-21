@@ -18,6 +18,7 @@ interface CommentItemProps {
   comment: Comment;
   isReply?: boolean;
   likingCommentIds: Record<string, boolean>;
+  deletingCommentIds: Record<string, boolean>;
   activeReactionCommentId: string | null;
   onLikeCommentClick: (commentId: string) => void;
   onReplyClick: (commentId: string, userName: string) => void;
@@ -26,8 +27,6 @@ interface CommentItemProps {
   setActiveReactionCommentId: React.Dispatch<
     React.SetStateAction<string | null>
   >;
-  isDeleting?: boolean;
-  isLiking?: boolean;
 }
 
 const QUICK_REACTION_EMOJIS = ["👍", "❤️", "🔥", "😂", "👏", "🏆", "🚀"];
@@ -37,19 +36,21 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   comment,
   isReply = false,
   likingCommentIds,
+  deletingCommentIds,
   activeReactionCommentId,
   onLikeCommentClick,
   onReplyClick,
   onDeleteComment,
   onToggleReaction,
   setActiveReactionCommentId,
-  isDeleting,
-  isLiking: isLikingProp,
 }) => {
   const cmtLevelColor =
     levelColors[comment.user?.level || "Bronze"] || levelColors.Bronze;
   const isQuickReactionOpen = activeReactionCommentId === comment.id;
-  const isLiking = Boolean(isLikingProp || likingCommentIds[comment.id]);
+
+  // Specific per-comment loading status
+  const isLiking = Boolean(likingCommentIds[comment.id]);
+  const isDeleting = Boolean(deletingCommentIds[comment.id]);
 
   if (isReply) {
     return (
@@ -127,12 +128,17 @@ export const CommentItem: React.FC<CommentItemProps> = ({
             {onDeleteComment && (
               <button
                 type="button"
+                disabled={isDeleting}
                 onClick={() => onDeleteComment(postId, comment.id)}
-                className="hover:text-red-600 transition-colors flex items-center gap-0.5 cursor-pointer text-[#233A6C60]"
+                className="hover:text-red-600 transition-colors flex items-center gap-0.5 cursor-pointer text-[#233A6C60] disabled:opacity-60 disabled:cursor-not-allowed"
                 title="Delete reply"
               >
-                <Trash2 className="w-3 h-3" />
-                Delete
+                {isDeleting ? (
+                  <Loader2 className="w-3 h-3 animate-spin text-red-600 shrink-0" />
+                ) : (
+                  <Trash2 className="w-3 h-3" />
+                )}
+                <span>{isDeleting ? "Deleting..." : "Delete"}</span>
               </button>
             )}
 
@@ -161,7 +167,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
               <span className="text-xs font-bold text-[#233A6C] hover:underline cursor-pointer">
                 {comment.user?.name || "User"}
               </span>
-              <span
+              {/* <span
                 className="px-1.5 py-0.2 rounded-full text-[9px] font-semibold"
                 style={{
                   backgroundColor: cmtLevelColor.bg,
@@ -169,7 +175,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                 }}
               >
                 {comment.user?.level || "Bronze"}
-              </span>
+              </span> */}
             </div>
 
             <p className="text-xs text-[#233A6C] leading-relaxed whitespace-pre-line">
@@ -232,8 +238,9 @@ export const CommentItem: React.FC<CommentItemProps> = ({
             {onDeleteComment && (
               <button
                 type="button"
+                disabled={isDeleting}
                 onClick={() => onDeleteComment(postId, comment.id)}
-                className="hover:text-red-600 transition-colors flex items-center gap-0.5 cursor-pointer text-gray-400"
+                className="hover:text-red-600 transition-colors flex items-center gap-0.5 cursor-pointer text-gray-400 disabled:opacity-60 disabled:cursor-not-allowed"
                 title="Delete comment"
               >
                 {isDeleting ? (
@@ -241,19 +248,19 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                 ) : (
                   <Trash2 className="w-3 h-3" />
                 )}
-                Delete
+                <span>{isDeleting ? "Deleting..." : "Delete"}</span>
               </button>
             )}
 
             <span>{comment.timestamp}</span>
 
             {/* Quick Emoji Trigger */}
-            <div className="relative inline-block ml-auto">
+            {/* <div className="relative inline-block ml-auto">
               <button
                 type="button"
                 onClick={() =>
                   setActiveReactionCommentId(
-                    isQuickReactionOpen ? null : comment.id,
+                    isQuickReactionOpen ? null : comment.id
                   )
                 }
                 className="p-1 text-gray-400 hover:text-[#308D6F] transition-colors cursor-pointer"
@@ -276,7 +283,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -291,14 +298,13 @@ export const CommentItem: React.FC<CommentItemProps> = ({
               comment={reply}
               isReply={true}
               likingCommentIds={likingCommentIds}
+              deletingCommentIds={deletingCommentIds}
               activeReactionCommentId={activeReactionCommentId}
               onLikeCommentClick={onLikeCommentClick}
               onReplyClick={onReplyClick}
               onDeleteComment={onDeleteComment}
               onToggleReaction={onToggleReaction}
               setActiveReactionCommentId={setActiveReactionCommentId}
-              isDeleting={isDeleting}
-              isLiking={isLikingProp}
             />
           ))}
         </div>

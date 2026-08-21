@@ -63,12 +63,13 @@ const CATEGORY_ITEMS: {
 ];
 
 const POPULAR_TAGS = [
-  "SportsBiz",
-  "Fintech",
-  "LiveTipping",
-  "Partnership",
-  "Milestone",
-  "FanEconomy",
+  "All",
+  "Blog Article",
+  "Press Release",
+  "Company News",
+  "Promotional Content",
+  "Community Update",
+  "Product Announcement",
 ];
 
 const MediaSidebar = memo(function MediaSidebar({
@@ -139,14 +140,23 @@ const MediaSidebar = memo(function MediaSidebar({
         </div>
 
         <div className="flex items-center gap-1.5 flex-wrap">
-          {POPULAR_TAGS.map((tag) => (
-            <span
-              key={tag}
-              className="text-xs font-semibold text-[#308D6F] bg-[#308D6F12] hover:bg-[#308D6F22] px-2.5 py-1 rounded-lg cursor-pointer transition-colors"
-            >
-              #{tag}
-            </span>
-          ))}
+          {POPULAR_TAGS.map((tag) => {
+            const isActive = selectedCategory === tag;
+            return (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => setSelectedCategory(tag as ContentCategory)}
+                className={`text-xs font-semibold px-2.5 py-1 rounded-lg cursor-pointer transition-colors ${
+                  isActive
+                    ? "bg-[#308D6F] text-white shadow-2xs"
+                    : "text-[#308D6F] bg-[#308D6F12] hover:bg-[#308D6F22]"
+                }`}
+              >
+                #{tag}
+              </button>
+            );
+          })}
         </div>
       </div>
     </aside>

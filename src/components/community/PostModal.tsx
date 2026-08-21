@@ -22,15 +22,14 @@ interface PostModalProps {
     parentId?: string,
     imageFile?: File
   ) => void;
-  onDeleteComment?: (postId: string, commentId: string) => void;
+  onDeleteComment?: (postId: string, commentId: string) => Promise<any> | void;
   onLikeComment?: (postId: string, commentId: string) => Promise<any> | void;
   onCommentReaction?: (
     postId: string,
     commentId: string,
     emoji: string
   ) => void;
-  isDeleting?: boolean;
-  isLiking?: boolean;
+  isPostingComment?: boolean;
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -42,8 +41,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   onDeleteComment,
   onLikeComment,
   onCommentReaction,
-  isDeleting,
-  isLiking,
+  isPostingComment,
 }) => {
   const [commentText, setCommentText] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -57,8 +55,11 @@ export const PostModal: React.FC<PostModalProps> = ({
     userName: string;
   } | null>(null);
 
-  // Track per-comment liking status
+  // Track per-comment liking & deleting status independently
   const [likingCommentIds, setLikingCommentIds] = useState<
+    Record<string, boolean>
+  >({});
+  const [deletingCommentIds, setDeletingCommentIds] = useState<
     Record<string, boolean>
   >({});
 
@@ -108,7 +109,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     return topLevel;
   }, [commentsApiResponse]);
 
-  // Handle Comment Like with loading state per comment
+  // Handle Comment Like with targeted loading state per comment
   const handleCommentLikeClick = async (commentId: string) => {
     if (!post?.id || likingCommentIds[commentId]) return;
 
@@ -124,6 +125,28 @@ export const PostModal: React.FC<PostModalProps> = ({
       }
     } else {
       setLikingCommentIds((prev) => ({ ...prev, [commentId]: false }));
+    }
+  };
+
+  // Handle Comment Delete with targeted loading state per comment
+  const handleDeleteCommentClick = async (
+    postId: string,
+    commentId: string
+  ) => {
+    if (!commentId || deletingCommentIds[commentId]) return;
+
+    setDeletingCommentIds((prev) => ({ ...prev, [commentId]: true }));
+
+    if (onDeleteComment) {
+      try {
+        await onDeleteComment(postId, commentId);
+      } catch (err) {
+        console.error("Failed to delete comment:", err);
+      } finally {
+        setDeletingCommentIds((prev) => ({ ...prev, [commentId]: false }));
+      }
+    } else {
+      setDeletingCommentIds((prev) => ({ ...prev, [commentId]: false }));
     }
   };
 
@@ -145,6 +168,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       setSelectedImage(null);
       setImagePreview(null);
       setLikingCommentIds({});
+      setDeletingCommentIds({});
     }
     return () => {
       document.body.style.overflow = "";
@@ -286,14 +310,13 @@ export const PostModal: React.FC<PostModalProps> = ({
             isLoading={isCommentsLoading}
             postId={post.id}
             likingCommentIds={likingCommentIds}
+            deletingCommentIds={deletingCommentIds}
             activeReactionCommentId={activeReactionCommentId}
             onLikeCommentClick={handleCommentLikeClick}
             onReplyClick={handleReplyClick}
-            onDeleteComment={onDeleteComment}
+            onDeleteComment={handleDeleteCommentClick}
             onToggleReaction={handleToggleCommentReaction}
             setActiveReactionCommentId={setActiveReactionCommentId}
-            isDeleting={isDeleting}
-            isLiking={isLiking}
           />
         </div>
 
@@ -313,6 +336,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           inputRef={inputRef}
           fileInputRef={fileInputRef}
           currentUser={currentUser}
+          isPostingComment={isPostingComment}
         />
       </div>
     </div>
