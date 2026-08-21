@@ -97,6 +97,23 @@ export interface CommunityPostBackendItem {
   user?: Partial<User>;
 }
 
+export interface BackendCommentItem {
+  _id: string;
+  communityPost?: string;
+  user?: Partial<User> | string;
+  text?: string;
+  content?: string;
+  parent?: string | null;
+  rootId?: string | null;
+  likes?: number;
+  likers?: string[];
+  isLiked?: boolean;
+  replies?: BackendCommentItem[];
+  reactions?: CommentReaction[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface CommunityPostApiResponse {
   success?: boolean;
   message?: string;
@@ -156,5 +173,41 @@ export const mapBackendItemToPost = (item?: CommunityPostBackendItem): Post => {
     tips: 0,
     isLiked: Boolean(item?.isLiked),
     slug: item?.slug,
+  };
+};
+
+export const mapBackendCommentToComment = (item?: BackendCommentItem): Comment => {
+  const userObj: User =
+    typeof item?.user === 'object' && item?.user !== null
+      ? {
+          id: item.user.id || (item.user as any)?._id || 'user_id',
+          name: item.user.name || 'Community Member',
+          avatar:
+            item.user.avatar ||
+            'http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png',
+          level: item.user.level || 'Bronze',
+          xp: item.user.xp || 100,
+          badges: item.user.badges || [],
+        }
+      : {
+          id: typeof item?.user === 'string' ? item.user : 'user_id',
+          name: 'Community Member',
+          avatar:
+            'http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png',
+          level: 'Bronze',
+          xp: 100,
+          badges: [],
+        };
+
+  return {
+    id: item?._id || String(Math.random()),
+    user: userObj,
+    content: item?.text || item?.content || '',
+    timestamp: formatRelativeTime(item?.createdAt),
+    likes: item?.likes ?? item?.likers?.length ?? 0,
+    isLiked: Boolean(item?.isLiked),
+    parentId: item?.parent || undefined,
+    replies: item?.replies?.map(mapBackendCommentToComment),
+    reactions: item?.reactions,
   };
 };

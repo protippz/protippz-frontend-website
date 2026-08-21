@@ -1,35 +1,45 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   X,
   Heart,
   Share2,
   Send,
   MessageCircle,
-  Tag,
   Users,
   Smile,
   TrendingUp,
   CornerDownRight,
+  Trash2,
+  ImageIcon,
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getLevelIcon, getEmbedVideoUrl } from "./helpers";
 import { levelColors, mockUsers } from "./data/mockData";
-import { Post } from "@/types/community";
+import { Post, Comment, mapBackendCommentToComment } from "@/types/community";
 import EmojiPicker from "./EmojiPicker";
+import { useGetCommentsByPostQuery } from "@/Redux/Apis/commentApis";
 
 interface PostModalProps {
   post: Post | null;
   isOpen: boolean;
   onClose: () => void;
   onLike: (postId: string) => void;
-  onAddComment: (postId: string, content: string, parentId?: string) => void;
+  onAddComment: (
+    postId: string,
+    content: string,
+    parentId?: string,
+    imageFile?: File
+  ) => void;
+  onDeleteComment?: (postId: string, commentId: string) => void;
+  onLikeComment?: (postId: string, commentId: string) => Promise<any> | void;
   onCommentReaction?: (
     postId: string,
     commentId: string,
-    emoji: string,
+    emoji: string
   ) => void;
 }
 
@@ -41,9 +51,13 @@ export const PostModal: React.FC<PostModalProps> = ({
   onClose,
   onLike,
   onAddComment,
+  onDeleteComment,
+  onLikeComment,
   onCommentReaction,
 }) => {
   const [commentText, setCommentText] = useState("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [activeReactionCommentId, setActiveReactionCommentId] = useState<
     string | null
@@ -53,8 +67,143 @@ export const PostModal: React.FC<PostModalProps> = ({
     userName: string;
   } | null>(null);
 
+  const [localCommentsList, setLocalCommentsList] = useState<Comment[]>([]);
+
   const inputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const currentUser = mockUsers[0];
+
+  // Fetch comments for current post from API
+  const { data: commentsApiResponse, isLoading: isCommentsLoading } =
+    useGetCommentsByPostQuery(post?.id, {
+      skip: !isOpen || !post?.id,
+    }) as { data?: any; isLoading: boolean };
+
+  // Transform raw API comment list into frontend Comment hierarchy
+  const processedComments = useMemo(() => {
+    const rawList =
+      commentsApiResponse?.data?.result ||
+      commentsApiResponse?.data ||
+      commentsApiResponse?.result ||
+      (Array.isArray(commentsApiResponse) ? commentsApiResponse : []);
+
+    if (!Array.isArray(rawList)) return [];
+
+    const mapped = rawList.map(mapBackendCommentToComment);
+
+    const hasNested = mapped.some((c) => c.replies && c.replies.length > 0);
+    if (hasNested) return mapped;
+
+    const topLevel: Comment[] = [];
+    const commentMap = new Map<string, Comment>();
+
+    mapped.forEach((c) => {
+      commentMap.set(c.id, { ...c, replies: [] });
+    });
+
+    mapped.forEach((c) => {
+      const current = commentMap.get(c.id)!;
+      if (c.parentId && commentMap.has(c.parentId)) {
+        const parent = commentMap.get(c.parentId)!;
+        parent.replies = parent.replies || [];
+        parent.replies.push(current);
+      } else {
+        topLevel.push(current);
+      }
+    });
+
+    return topLevel;
+  }, [commentsApiResponse]);
+
+  // Combine fetched API comments with local/optimistic commentsList
+  const displayComments = useMemo(() => {
+    const localList = post?.commentsList || [];
+    if (processedComments.length === 0) return localList;
+
+    const localTempItems = localList.filter((c) => c.id.startsWith("temp_"));
+
+    const mergedApi = processedComments.map((apiComment) => {
+      const localMatch = localList.find((l) => l.id === apiComment.id);
+      if (localMatch) {
+        return {
+          ...apiComment,
+          isLiked: localMatch.isLiked ?? apiComment.isLiked,
+          likes: localMatch.likes ?? apiComment.likes,
+          replies: apiComment.replies || localMatch.replies,
+        };
+      }
+      return apiComment;
+    });
+
+    return [...localTempItems, ...mergedApi];
+  }, [post?.commentsList, processedComments]);
+
+  // Sync displayComments into localCommentsList state
+  useEffect(() => {
+    if (displayComments && displayComments.length > 0) {
+      setLocalCommentsList((prev) => {
+        if (prev.length === 0) return displayComments;
+
+        const prevMap = new Map<string, Comment>();
+        const mapRecursive = (list: Comment[]) => {
+          list.forEach((c) => {
+            prevMap.set(c.id, c);
+            if (c.replies) mapRecursive(c.replies);
+          });
+        };
+        mapRecursive(prev);
+
+        const updateRecursive = (list: Comment[]): Comment[] =>
+          list.map((c) => {
+            const match = prevMap.get(c.id);
+            return {
+              ...c,
+              isLiked: match ? match.isLiked : c.isLiked,
+              likes: match ? match.likes : c.likes,
+              replies: c.replies ? updateRecursive(c.replies) : undefined,
+            };
+          });
+
+        return updateRecursive(displayComments);
+      });
+    } else {
+      setLocalCommentsList([]);
+    }
+  }, [displayComments]);
+
+  // Handle Comment Like Click with Instant Local Update + Rollback
+  const handleCommentLikeClick = async (commentId: string) => {
+    if (!post?.id) return;
+
+    const toggleInList = (list: Comment[]): Comment[] =>
+      list.map((c) => {
+        if (c.id === commentId) {
+          const nextIsLiked = !c.isLiked;
+          return {
+            ...c,
+            isLiked: nextIsLiked,
+            likes: nextIsLiked ? c.likes + 1 : Math.max(0, c.likes - 1),
+          };
+        }
+        if (c.replies) {
+          return { ...c, replies: toggleInList(c.replies) };
+        }
+        return c;
+      });
+
+    // 1. Instantly update UI locally
+    setLocalCommentsList((prev) => toggleInList(prev));
+
+    // 2. Call API in background
+    if (onLikeComment) {
+      try {
+        await onLikeComment(post.id, commentId);
+      } catch (err) {
+        // 3. Rollback on API failure
+        setLocalCommentsList((prev) => toggleInList(prev));
+      }
+    }
+  };
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -71,6 +220,8 @@ export const PostModal: React.FC<PostModalProps> = ({
       setIsEmojiPickerOpen(false);
       setActiveReactionCommentId(null);
       setReplyingTo(null);
+      setSelectedImage(null);
+      setImagePreview(null);
     }
     return () => {
       document.body.style.overflow = "";
@@ -82,20 +233,47 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   if (!isOpen || !post) return null;
 
-  const levelColor = levelColors[post.user.level] || levelColors.Bronze;
+  const levelColor = levelColors[post.user?.level || "Bronze"] || levelColors.Bronze;
   const videoEmbedSrc = getEmbedVideoUrl(post.videoUrl, post.videoEmbedCode);
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handleSubmitComment = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (!commentText.trim()) return;
+    if (!commentText.trim() && !selectedImage) return;
 
     let finalContent = commentText.trim();
     if (replyingTo) {
       finalContent = `@${replyingTo.userName} ${finalContent}`;
     }
 
-    onAddComment(post.id, finalContent, replyingTo?.id);
+    onAddComment(
+      post.id,
+      finalContent,
+      replyingTo?.id,
+      selectedImage || undefined
+    );
     setCommentText("");
+    setSelectedImage(null);
+    setImagePreview(null);
     setReplyingTo(null);
     setIsEmojiPickerOpen(false);
   };
@@ -108,7 +286,9 @@ export const PostModal: React.FC<PostModalProps> = ({
   };
 
   const handleToggleCommentReaction = (commentId: string, emoji: string) => {
-    if (onCommentReaction) {
+    if (onLikeComment) {
+      handleCommentLikeClick(commentId);
+    } else if (onCommentReaction) {
       onCommentReaction(post.id, commentId, emoji);
     }
     setActiveReactionCommentId(null);
@@ -120,6 +300,9 @@ export const PostModal: React.FC<PostModalProps> = ({
       inputRef.current.focus();
     }
   };
+
+  const activeComments = localCommentsList.length > 0 ? localCommentsList : displayComments;
+  const totalCommentCount = Math.max(post.comments || 0, activeComments.length);
 
   return (
     <div
@@ -133,7 +316,7 @@ export const PostModal: React.FC<PostModalProps> = ({
         aria-hidden="true"
       />
 
-      {/* Facebook Style Modal Container */}
+      {/* Modal Container */}
       <div
         data-lenis-prevent
         className="relative bg-[#FAFBFB] w-full max-w-2xl max-h-[92dvh] sm:max-h-[88dvh] h-[92dvh] sm:h-auto rounded-t-3xl sm:rounded-2xl flex flex-col shadow-2xl overflow-hidden border-t sm:border border-border z-10 animate-in slide-in-from-bottom-5 sm:slide-in-from-bottom-0 duration-200"
@@ -142,14 +325,14 @@ export const PostModal: React.FC<PostModalProps> = ({
         {/* Mobile Handle */}
         <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mt-2.5 mb-1 sm:hidden shrink-0" />
 
-        {/* Facebook Style Header */}
+        {/* Modal Header */}
         <div
           className="flex items-center justify-between px-4 sm:px-6 py-3 border-b shrink-0 bg-white"
           style={{ borderColor: "#233A6C0B" }}
         >
           <div className="flex items-center gap-3 min-w-0">
             <Avatar className="w-9 h-9 sm:w-10 sm:h-10 border border-[#233A6C15] shrink-0 cursor-pointer">
-              <AvatarImage src={post.user.avatar} alt={post.user.name} />
+              <AvatarImage src={post.user?.avatar} alt={post.user?.name} />
               <AvatarFallback>
                 <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#233A6C60]" />
               </AvatarFallback>
@@ -157,7 +340,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 flex-wrap">
                 <h3 className="font-bold text-xs sm:text-base text-[#233A6C] truncate cursor-pointer hover:underline">
-                  {post.user.name}
+                  {post.user?.name || "User"}
                 </h3>
                 <div
                   className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold shrink-0 cursor-default"
@@ -167,8 +350,8 @@ export const PostModal: React.FC<PostModalProps> = ({
                     border: `1px solid ${levelColor.border}`,
                   }}
                 >
-                  {getLevelIcon(post.user.level)}
-                  {post.user.level}
+                  {getLevelIcon(post.user?.level || "Bronze")}
+                  {post.user?.level || "Bronze"}
                 </div>
                 {post.isTrending && (
                   <div
@@ -195,7 +378,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           </button>
         </div>
 
-        {/* Scrollable Modal Content Body */}
+        {/* Scrollable Modal Body */}
         <div
           data-lenis-prevent
           className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 custom-scrollbar"
@@ -232,7 +415,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             )}
           </div>
 
-          {/* Post Video or Image Media */}
+          {/* Post Media */}
           {videoEmbedSrc ? (
             <div className="rounded-xl overflow-hidden bg-black aspect-video relative border border-border shadow-2xs">
               <iframe
@@ -256,7 +439,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             </div>
           ) : null}
 
-          {/* Facebook Style Stats Summary Bar */}
+          {/* Stats Bar */}
           <div
             className="flex items-center justify-between pt-2 pb-2.5 border-b text-xs text-[#233A6C70]"
             style={{ borderColor: "#233A6C0B" }}
@@ -268,11 +451,11 @@ export const PostModal: React.FC<PostModalProps> = ({
               <span className="font-semibold text-[#233A6C]">{post.likes}</span>
             </div>
             <div className="flex items-center gap-3 font-medium">
-              <span>{post.comments} comments</span>
+              <span>{totalCommentCount} comments</span>
             </div>
           </div>
 
-          {/* Facebook Style Action Toolbar (Like / Comment / Share) */}
+          {/* Action Toolbar */}
           <div className="grid grid-cols-2 gap-2 py-0.5 border-b border-border">
             <button
               onClick={() => onLike(post.id)}
@@ -306,28 +489,33 @@ export const PostModal: React.FC<PostModalProps> = ({
             </button>
           </div>
 
-          {/* Facebook Style Comments & Threaded Replies Section */}
+          {/* Comments Section */}
           <div className="space-y-4 pt-2">
             <h4 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
-              Comments ({post.comments})
+              Comments ({totalCommentCount})
             </h4>
 
-            {post.commentsList && post.commentsList.length > 0 ? (
+            {isCommentsLoading && activeComments.length === 0 ? (
+              <div className="py-8 flex items-center justify-center gap-2 text-xs font-semibold text-[#308D6F]">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Loading comments...</span>
+              </div>
+            ) : activeComments.length > 0 ? (
               <div className="space-y-4">
-                {post.commentsList.map((cmt) => {
+                {activeComments.map((cmt) => {
                   const cmtLevelColor =
-                    levelColors[cmt.user.level] || levelColors.Bronze;
+                    levelColors[cmt.user?.level || "Bronze"] || levelColors.Bronze;
                   const isQuickReactionOpen =
                     activeReactionCommentId === cmt.id;
 
                   return (
                     <div key={cmt.id} className="space-y-2">
                       {/* Top-Level Parent Comment */}
-                      <div className="flex items-start gap-2.5">
+                      <div className="flex items-start gap-2.5 group/cmt">
                         <Avatar className="w-8 h-8 mt-0.5 border border-[#233A6C15] shrink-0 cursor-pointer">
                           <AvatarImage
-                            src={cmt.user.avatar}
-                            alt={cmt.user.name}
+                            src={cmt.user?.avatar}
+                            alt={cmt.user?.name}
                           />
                           <AvatarFallback>
                             <Users className="w-4 h-4 text-[#233A6C60]" />
@@ -335,11 +523,11 @@ export const PostModal: React.FC<PostModalProps> = ({
                         </Avatar>
 
                         <div className="flex-1 min-w-0">
-                          {/* Facebook Style Rounded Comment Bubble */}
+                          {/* Comment Bubble */}
                           <div className="relative inline-block bg-[#F0F2F5] px-3.5 py-2.5 rounded-2xl max-w-full">
                             <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
                               <span className="text-xs font-bold text-[#233A6C] hover:underline cursor-pointer">
-                                {cmt.user.name}
+                                {cmt.user?.name || "User"}
                               </span>
                               <span
                                 className="px-1.5 py-0.2 rounded-full text-[9px] font-semibold"
@@ -348,7 +536,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                                   color: cmtLevelColor.text,
                                 }}
                               >
-                                {cmt.user.level}
+                                {cmt.user?.level || "Bronze"}
                               </span>
                             </div>
 
@@ -356,7 +544,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                               {cmt.content}
                             </p>
 
-                            {/* Floating Reaction Pill Badge */}
+                            {/* Floating Reaction Pill */}
                             {cmt.reactions && cmt.reactions.length > 0 && (
                               <div className="absolute -bottom-2 right-2 bg-white shadow-2xs border border-gray-200 px-1.5 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-0.5 cursor-pointer">
                                 {cmt.reactions.map((r, idx) => (
@@ -365,29 +553,39 @@ export const PostModal: React.FC<PostModalProps> = ({
                                 <span className="text-[9px] text-gray-500 font-bold ml-0.5">
                                   {cmt.reactions.reduce(
                                     (acc, curr) => acc + curr.count,
-                                    0,
+                                    0
                                   )}
                                 </span>
                               </div>
                             )}
                           </div>
 
-                          {/* Facebook Style Comment Action Links */}
+                          {/* Comment Actions */}
                           <div className="flex items-center gap-3 text-[11px] text-[#233A6C70] font-semibold px-2 mt-1">
                             <button
                               type="button"
-                              onClick={() =>
-                                handleToggleCommentReaction(cmt.id, "👍")
-                              }
-                              className="hover:underline hover:text-[#308D6F] cursor-pointer"
+                              onClick={() => handleCommentLikeClick(cmt.id)}
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold transition-all cursor-pointer ${
+                                cmt.isLiked
+                                  ? "bg-[#308D6F18] text-[#308D6F] font-bold"
+                                  : "text-[#233A6C70] hover:text-[#308D6F] hover:bg-gray-100"
+                              }`}
                             >
-                              Like
+                              <Heart
+                                className="w-3 h-3 shrink-0"
+                                fill={cmt.isLiked ? "#308D6F" : "none"}
+                                stroke={cmt.isLiked ? "#308D6F" : "currentColor"}
+                              />
+                              <span>{cmt.isLiked ? "Liked" : "Like"}</span>
+                              {cmt.likes > 0 && (
+                                <span className="text-[10px]">({cmt.likes})</span>
+                              )}
                             </button>
 
                             <button
                               type="button"
                               onClick={() =>
-                                handleReplyClick(cmt.id, cmt.user.name)
+                                handleReplyClick(cmt.id, cmt.user?.name || "User")
                               }
                               className="hover:underline hover:text-[#308D6F] flex items-center gap-0.5 cursor-pointer"
                             >
@@ -395,15 +593,27 @@ export const PostModal: React.FC<PostModalProps> = ({
                               Reply
                             </button>
 
+                            {onDeleteComment && (
+                              <button
+                                type="button"
+                                onClick={() => onDeleteComment(post.id, cmt.id)}
+                                className="hover:text-red-600 transition-colors flex items-center gap-0.5 cursor-pointer text-gray-400"
+                                title="Delete comment"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                                Delete
+                              </button>
+                            )}
+
                             <span>{cmt.timestamp}</span>
 
-                            {/* Quick Emoji Reaction Trigger */}
+                            {/* Quick Emoji Trigger */}
                             <div className="relative inline-block ml-auto">
                               <button
                                 type="button"
                                 onClick={() =>
                                   setActiveReactionCommentId(
-                                    isQuickReactionOpen ? null : cmt.id,
+                                    isQuickReactionOpen ? null : cmt.id
                                   )
                                 }
                                 className="p-1 text-gray-400 hover:text-[#308D6F] transition-colors cursor-pointer"
@@ -421,7 +631,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                                       onClick={() =>
                                         handleToggleCommentReaction(
                                           cmt.id,
-                                          emoji,
+                                          emoji
                                         )
                                       }
                                       className="p-1 hover:bg-gray-100 rounded-lg text-base cursor-pointer"
@@ -436,12 +646,12 @@ export const PostModal: React.FC<PostModalProps> = ({
                         </div>
                       </div>
 
-                      {/* Facebook Style Threaded Nested Replies */}
+                      {/* Nested Replies */}
                       {cmt.replies && cmt.replies.length > 0 && (
                         <div className="border-l-2 border-[#233A6C15] pl-3.5 sm:pl-4 ml-4 space-y-3 pt-1">
                           {cmt.replies.map((reply) => {
                             const replyLevelColor =
-                              levelColors[reply.user.level] ||
+                              levelColors[reply.user?.level || "Bronze"] ||
                               levelColors.Bronze;
                             return (
                               <div
@@ -450,8 +660,8 @@ export const PostModal: React.FC<PostModalProps> = ({
                               >
                                 <Avatar className="w-7 h-7 mt-0.5 border border-[#233A6C15] shrink-0 cursor-pointer">
                                   <AvatarImage
-                                    src={reply.user.avatar}
-                                    alt={reply.user.name}
+                                    src={reply.user?.avatar}
+                                    alt={reply.user?.name}
                                   />
                                   <AvatarFallback>
                                     <Users className="w-3 h-3 text-[#233A6C60]" />
@@ -462,7 +672,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                                   <div className="relative inline-block bg-[#F0F2F5] px-3.5 py-2 rounded-2xl max-w-full">
                                     <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
                                       <span className="text-xs font-bold text-[#233A6C] hover:underline cursor-pointer">
-                                        {reply.user.name}
+                                        {reply.user?.name || "User"}
                                       </span>
                                       <span
                                         className="px-1.5 py-0.2 rounded-full text-[9px] font-semibold"
@@ -471,7 +681,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                                           color: replyLevelColor.text,
                                         }}
                                       >
-                                        {reply.user.level}
+                                        {reply.user?.level || "Bronze"}
                                       </span>
                                     </div>
 
@@ -483,15 +693,22 @@ export const PostModal: React.FC<PostModalProps> = ({
                                   <div className="flex items-center gap-3 text-[10px] text-[#233A6C70] font-semibold px-2 mt-0.5">
                                     <button
                                       type="button"
-                                      onClick={() =>
-                                        handleToggleCommentReaction(
-                                          reply.id,
-                                          "👍",
-                                        )
-                                      }
-                                      className="hover:underline hover:text-[#308D6F] cursor-pointer"
+                                      onClick={() => handleCommentLikeClick(reply.id)}
+                                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold transition-all cursor-pointer ${
+                                        reply.isLiked
+                                          ? "bg-[#308D6F18] text-[#308D6F] font-bold"
+                                          : "text-[#233A6C70] hover:text-[#308D6F] hover:bg-gray-100"
+                                      }`}
                                     >
-                                      Like
+                                      <Heart
+                                        className="w-3 h-3 shrink-0"
+                                        fill={reply.isLiked ? "#308D6F" : "none"}
+                                        stroke={reply.isLiked ? "#308D6F" : "currentColor"}
+                                      />
+                                      <span>{reply.isLiked ? "Liked" : "Like"}</span>
+                                      {reply.likes > 0 && (
+                                        <span className="text-[9px]">({reply.likes})</span>
+                                      )}
                                     </button>
 
                                     <button
@@ -499,13 +716,27 @@ export const PostModal: React.FC<PostModalProps> = ({
                                       onClick={() =>
                                         handleReplyClick(
                                           cmt.id,
-                                          reply.user.name,
+                                          reply.user?.name || "User"
                                         )
                                       }
                                       className="hover:underline hover:text-[#308D6F] cursor-pointer"
                                     >
                                       Reply
                                     </button>
+
+                                    {onDeleteComment && (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          onDeleteComment(post.id, reply.id)
+                                        }
+                                        className="hover:text-red-600 transition-colors flex items-center gap-0.5 cursor-pointer text-[#233A6C60]"
+                                        title="Delete reply"
+                                      >
+                                        <Trash2 className="w-3 h-3" />
+                                        Delete
+                                      </button>
+                                    )}
 
                                     <span>{reply.timestamp}</span>
                                   </div>
@@ -530,9 +761,9 @@ export const PostModal: React.FC<PostModalProps> = ({
           </div>
         </div>
 
-        {/* Facebook Style Sticky Comment Footer */}
+        {/* Sticky Comment Footer */}
         <div className="relative border-t bg-white shrink-0">
-          {/* Replying Banner Indicator */}
+          {/* Replying Banner */}
           {replyingTo && (
             <div className="flex items-center justify-between px-4 py-1.5 bg-[#308D6F12] border-b border-[#308D6F25] text-xs">
               <span className="text-[#308D6F] font-semibold flex items-center gap-1.5">
@@ -550,7 +781,33 @@ export const PostModal: React.FC<PostModalProps> = ({
             </div>
           )}
 
-          {/* Emoji Picker Popover */}
+          {/* Image Thumbnail Preview */}
+          {imagePreview && (
+            <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-200">
+              <div className="flex items-center gap-2">
+                <Image
+                  src={imagePreview}
+                  alt="Attachment Preview"
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 object-cover rounded-lg border border-gray-200"
+                />
+                <span className="text-xs text-gray-600 font-medium truncate max-w-[200px]">
+                  {selectedImage?.name}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={handleRemoveImage}
+                className="p-1 text-gray-400 hover:text-red-600 rounded-full cursor-pointer"
+                title="Remove image"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {/* Emoji Picker */}
           <EmojiPicker
             isOpen={isEmojiPickerOpen}
             onClose={() => setIsEmojiPickerOpen(false)}
@@ -569,7 +826,7 @@ export const PostModal: React.FC<PostModalProps> = ({
               </AvatarFallback>
             </Avatar>
 
-            <div className="relative flex-1">
+            <div className="relative flex-1 flex items-center">
               <input
                 ref={inputRef}
                 type="text"
@@ -580,30 +837,52 @@ export const PostModal: React.FC<PostModalProps> = ({
                 }
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                className="w-full pl-3 pr-9 py-2 text-xs sm:text-sm rounded-xl outline-none border transition-colors focus:border-[#308D6F]"
+                className="w-full pl-3 pr-16 py-2 text-xs sm:text-sm rounded-xl outline-none border transition-colors focus:border-[#308D6F]"
                 style={{
                   backgroundColor: "#F0F2F5",
                   borderColor: "#233A6C15",
                   color: "#233A6C",
                 }}
               />
-              <button
-                type="button"
-                onClick={() => setIsEmojiPickerOpen((prev) => !prev)}
-                className={`absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-lg transition-colors cursor-pointer ${
-                  isEmojiPickerOpen
-                    ? "text-[#308D6F]"
-                    : "text-gray-400 hover:text-gray-600"
-                }`}
-                title="Choose an emoji"
-              >
-                <Smile className="w-4 h-4" />
-              </button>
+
+              {/* Hidden File Input */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageSelect}
+                accept="image/*"
+                className="hidden"
+              />
+
+              {/* Image & Emoji Buttons */}
+              <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-1 text-gray-400 hover:text-[#308D6F] transition-colors cursor-pointer"
+                  title="Attach an image"
+                >
+                  <ImageIcon className="w-4 h-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsEmojiPickerOpen((prev) => !prev)}
+                  className={`p-1 rounded-lg transition-colors cursor-pointer ${
+                    isEmojiPickerOpen
+                      ? "text-[#308D6F]"
+                      : "text-gray-400 hover:text-gray-600"
+                  }`}
+                  title="Choose an emoji"
+                >
+                  <Smile className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
             <button
               type="submit"
-              disabled={!commentText.trim()}
+              disabled={!commentText.trim() && !selectedImage}
               className="p-2 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed shrink-0 flex items-center gap-1.5 cursor-pointer"
               style={{ backgroundColor: "#308D6F" }}
             >

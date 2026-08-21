@@ -8,6 +8,7 @@ import React, {
   useRef,
 } from "react";
 import { Plus, RefreshCw, Loader2, AlertCircle } from "lucide-react";
+import toast from "react-hot-toast";
 import CommunityHeader from "@/components/community/CommunityHeader";
 import CommunitySearchBar from "@/components/community/CommunitySearchBar";
 import FeedCard from "@/components/community/FeedCard";
@@ -24,8 +25,13 @@ import {
   useGetAllCommunityPostsQuery,
   useLikeCommunityPostMutation,
 } from "@/Redux/Apis/communityApis";
+import {
+  useCreateCommentMutation,
+  useDeleteCommentMutation,
+  useLikeCommentMutation,
+} from "@/Redux/Apis/commentApis";
 
-// Feed Skeleton Loader component for smooth loading experience
+// Feed Skeleton Loader component
 function FeedCardSkeleton() {
   return (
     <div className="p-4 rounded-2xl bg-white border border-border animate-pulse space-y-3">
@@ -56,12 +62,14 @@ export default function CommunityPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const observerTargetRef = useRef<HTMLDivElement | null>(null);
-  const isMountedRef = useRef(true);
 
-  // RTK Query Mutation for Like
+  // RTK Query API Mutations
   const [likePostApi] = useLikeCommunityPostMutation();
+  const [createCommentApi] = useCreateCommentMutation();
+  const [deleteCommentApi] = useDeleteCommentMutation();
+  const [likeCommentApi] = useLikeCommentMutation();
 
-  // Search Debounce Effect (with timer cleanup)
+  // Search Debounce Effect
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(rawSearchQuery);
@@ -112,7 +120,6 @@ export default function CommunityPage() {
 
   // Sync API result into accumulated posts
   useEffect(() => {
-    isMountedRef.current = true;
     if (rawResults && Array.isArray(rawResults)) {
       const transformedNewPosts = rawResults.map(mapBackendItemToPost);
 
@@ -120,7 +127,6 @@ export default function CommunityPage() {
         if (page === 1) {
           return transformedNewPosts;
         }
-        // Deduplicate posts by ID
         const existingIds = new Set(prev.map((p) => p.id));
         const uniqueNew = transformedNewPosts.filter(
           (p) => !existingIds.has(p.id)
@@ -128,10 +134,6 @@ export default function CommunityPage() {
         return [...prev, ...uniqueNew];
       });
     }
-
-    return () => {
-      isMountedRef.current = false;
-    };
   }, [rawResults, page]);
 
   // Infinite Scroll Intersection Observer
@@ -160,20 +162,19 @@ export default function CommunityPage() {
     };
   }, [hasMorePages, isFetching, isLoading]);
 
-  // Category Handler with Memoization
+  // Handlers
   const handleSelectCategory = useCallback((category: ContentCategory) => {
     setSelectedCategory(category);
   }, []);
 
-  // Search Handler with Memoization
   const handleSearchChange = useCallback((query: string) => {
     setRawSearchQuery(query);
   }, []);
 
-  // Handle Like Optimistically and via API Mutation
-  const handleLike = useCallback(
+  // Post Like Handler (Optimistic + Background API + Rollback)
+  const handleLikePost = useCallback(
     async (postId: string) => {
-      // Optimistic UI Update
+      // 1. Instantly update UI
       setPosts((prev) =>
         prev.map((post) => {
           if (post.id === postId) {
@@ -193,21 +194,49 @@ export default function CommunityPage() {
         })
       );
 
-      // Trigger API
+      // 2. Perform API Mutation in background
       try {
         await likePostApi(postId).unwrap();
       } catch (err) {
-        console.error("Failed to like post:", err);
+        console.error("Failed to like post API:", err);
+        toast.error("Failed to update post like");
+
+        // 3. Rollback on API Failure
+        setPosts((prev) =>
+          prev.map((post) => {
+            if (post.id === postId) {
+              const revertedPost = {
+                ...post,
+                isLiked: !post.isLiked,
+                likes: post.isLiked
+                  ? Math.max(0, post.likes - 1)
+                  : post.likes + 1,
+              };
+              if (selectedPostForModal?.id === postId) {
+                setSelectedPostForModal(revertedPost);
+              }
+              return revertedPost;
+            }
+            return post;
+          })
+        );
       }
     },
     [likePostApi, selectedPostForModal]
   );
 
-  // Comment Handlers inside Modal
+  // Optimistic Add Comment with Background Sync & Rollback
   const handleAddComment = useCallback(
-    (postId: string, content: string, parentId?: string) => {
+    async (
+      postId: string,
+      content: string,
+      parentId?: string,
+      imageFile?: File
+    ) => {
+      const tempCommentId = "temp_" + Date.now();
+
       const newComment: Comment = {
-        id: Date.now().toString(),
+        id: tempCommentId,
         user: {
           id: "curr_user",
           name: "You",
@@ -220,106 +249,290 @@ export default function CommunityPage() {
         content,
         timestamp: "Just now",
         likes: 0,
+        isLiked: false,
         parentId,
       };
 
+      // 1. Immediately update UI (Optimistic response)
       setPosts((prev) =>
-        prev.map((post) => {
-          if (post.id === postId) {
-            const currentList = post.commentsList || [];
+        prev.map((p) => {
+          if (p.id === postId) {
+            const currentList = p.commentsList || [];
             let updatedList: Comment[];
 
             if (parentId) {
-              updatedList = currentList.map((cmt) => {
-                if (cmt.id === parentId) {
-                  return {
-                    ...cmt,
-                    replies: [...(cmt.replies || []), newComment],
-                  };
-                }
-                return cmt;
-              });
+              updatedList = currentList.map((c) =>
+                c.id === parentId
+                  ? { ...c, replies: [...(c.replies || []), newComment] }
+                  : c
+              );
             } else {
               updatedList = [newComment, ...currentList];
             }
 
             const updatedPost = {
-              ...post,
-              comments: post.comments + 1,
+              ...p,
+              comments: (p.comments || 0) + 1,
               commentsList: updatedList,
             };
 
             if (selectedPostForModal?.id === postId) {
               setSelectedPostForModal(updatedPost);
             }
+
             return updatedPost;
           }
-          return post;
+          return p;
         })
       );
-    },
-    [selectedPostForModal]
-  );
 
-  // Comment Reaction Handler
-  const handleCommentReaction = useCallback(
-    (postId: string, commentId: string, emoji: string) => {
-      setPosts((prev) =>
-        prev.map((post) => {
-          if (post.id === postId) {
-            const updatedComments = (post.commentsList || []).map((cmt) => {
-              if (cmt.id === commentId) {
-                const currentReactions = cmt.reactions || [];
-                const existingIdx = currentReactions.findIndex(
-                  (r) => r.emoji === emoji
-                );
-                let newReactions = [...currentReactions];
+      // 2. Perform API Mutation in background
+      try {
+        const formData = new FormData();
+        formData.append(
+          "data",
+          JSON.stringify({
+            communityPost: postId,
+            text: content,
+            parent: parentId || null,
+            rootId: null,
+          })
+        );
+        if (imageFile) {
+          formData.append("image", imageFile);
+        }
 
-                if (existingIdx >= 0) {
-                  const item = newReactions[existingIdx];
-                  if (item.isReacted) {
-                    if (item.count <= 1) {
-                      newReactions = newReactions.filter(
-                        (_, idx) => idx !== existingIdx
-                      );
-                    } else {
-                      newReactions[existingIdx] = {
-                        ...item,
-                        count: item.count - 1,
-                        isReacted: false,
-                      };
-                    }
-                  } else {
-                    newReactions[existingIdx] = {
-                      ...item,
-                      count: item.count + 1,
-                      isReacted: true,
-                    };
-                  }
-                } else {
-                  newReactions.push({ emoji, count: 1, isReacted: true });
+        const res = await createCommentApi(formData).unwrap();
+        const realId =
+          res?.data?._id || res?.data?.result?._id || res?.result?._id || res?._id;
+
+        // Replace tempCommentId with realId in state on success
+        if (realId) {
+          setPosts((prev) =>
+            prev.map((p) => {
+              if (p.id === postId) {
+                const replaceIdInList = (list: Comment[]): Comment[] =>
+                  list.map((c) => {
+                    if (c.id === tempCommentId) return { ...c, id: realId };
+                    if (c.replies)
+                      return { ...c, replies: replaceIdInList(c.replies) };
+                    return c;
+                  });
+
+                const updatedPost = {
+                  ...p,
+                  commentsList: replaceIdInList(p.commentsList || []),
+                };
+
+                if (selectedPostForModal?.id === postId) {
+                  setSelectedPostForModal(updatedPost);
                 }
 
-                return { ...cmt, reactions: newReactions };
+                return updatedPost;
               }
-              return cmt;
-            });
+              return p;
+            })
+          );
+        }
+      } catch (err) {
+        console.error("Failed to post comment API:", err);
+        toast.error("Failed to post comment. Reverting...");
+
+        // 3. Rollback on API failure (remove tempCommentId)
+        setPosts((prev) =>
+          prev.map((p) => {
+            if (p.id === postId) {
+              const removeIdFromList = (list: Comment[]): Comment[] =>
+                list
+                  .filter((c) => c.id !== tempCommentId)
+                  .map((c) => ({
+                    ...c,
+                    replies: c.replies
+                      ? removeIdFromList(c.replies)
+                      : undefined,
+                  }));
+
+              const updatedPost = {
+                ...p,
+                comments: Math.max(0, (p.comments || 1) - 1),
+                commentsList: removeIdFromList(p.commentsList || []),
+              };
+
+              if (selectedPostForModal?.id === postId) {
+                setSelectedPostForModal(updatedPost);
+              }
+
+              return updatedPost;
+            }
+            return p;
+          })
+        );
+      }
+    },
+    [createCommentApi, selectedPostForModal]
+  );
+
+  // Optimistic Delete Comment with Background Sync & Rollback
+  const handleDeleteComment = useCallback(
+    async (postId: string, commentId: string) => {
+      let deletedBackup: Comment | null = null;
+      let parentCommentId: string | undefined = undefined;
+
+      // 1. Immediately update UI & backup item
+      setPosts((prev) =>
+        prev.map((p) => {
+          if (p.id === postId) {
+            const currentList = p.commentsList || [];
+
+            // Find item to backup
+            const topMatch = currentList.find((c) => c.id === commentId);
+            if (topMatch) {
+              deletedBackup = topMatch;
+            } else {
+              currentList.forEach((c) => {
+                const replyMatch = c.replies?.find((r) => r.id === commentId);
+                if (replyMatch) {
+                  deletedBackup = replyMatch;
+                  parentCommentId = c.id;
+                }
+              });
+            }
+
+            const removeFromList = (list: Comment[]): Comment[] =>
+              list
+                .filter((c) => c.id !== commentId)
+                .map((c) => ({
+                  ...c,
+                  replies: c.replies ? removeFromList(c.replies) : undefined,
+                }));
 
             const updatedPost = {
-              ...post,
-              commentsList: updatedComments,
+              ...p,
+              comments: Math.max(0, (p.comments || 1) - 1),
+              commentsList: removeFromList(currentList),
             };
 
             if (selectedPostForModal?.id === postId) {
               setSelectedPostForModal(updatedPost);
             }
+
             return updatedPost;
           }
-          return post;
+          return p;
         })
       );
+
+      // 2. Perform API Mutation in background
+      try {
+        await deleteCommentApi(commentId).unwrap();
+        toast.success("Comment deleted");
+      } catch (err) {
+        console.error("Failed to delete comment API:", err);
+        toast.error("Failed to delete comment. Restoring...");
+
+        // 3. Rollback on API failure (restore deleted item)
+        if (deletedBackup) {
+          const restoredItem = deletedBackup;
+          setPosts((prev) =>
+            prev.map((p) => {
+              if (p.id === postId) {
+                const currentList = p.commentsList || [];
+                let restoredList: Comment[];
+
+                if (parentCommentId) {
+                  restoredList = currentList.map((c) =>
+                    c.id === parentCommentId
+                      ? { ...c, replies: [...(c.replies || []), restoredItem] }
+                      : c
+                  );
+                } else {
+                  restoredList = [restoredItem, ...currentList];
+                }
+
+                const updatedPost = {
+                  ...p,
+                  comments: (p.comments || 0) + 1,
+                  commentsList: restoredList,
+                };
+
+                if (selectedPostForModal?.id === postId) {
+                  setSelectedPostForModal(updatedPost);
+                }
+
+                return updatedPost;
+              }
+              return p;
+            })
+          );
+        }
+      }
     },
-    [selectedPostForModal]
+    [deleteCommentApi, selectedPostForModal]
+  );
+
+  // Optimistic Like Comment with Background Sync & Rollback
+  const handleLikeComment = useCallback(
+    async (postId: string, commentId: string) => {
+      // Helper function to toggle comment like
+      const toggleLike = (list: Comment[]): Comment[] =>
+        list.map((c) => {
+          if (c.id === commentId) {
+            const nextIsLiked = !c.isLiked;
+            return {
+              ...c,
+              isLiked: nextIsLiked,
+              likes: nextIsLiked ? c.likes + 1 : Math.max(0, c.likes - 1),
+            };
+          }
+          if (c.replies) {
+            return { ...c, replies: toggleLike(c.replies) };
+          }
+          return c;
+        });
+
+      // 1. Immediately update UI
+      setPosts((prev) =>
+        prev.map((p) => {
+          if (p.id === postId) {
+            const updatedPost = {
+              ...p,
+              commentsList: toggleLike(p.commentsList || []),
+            };
+            if (selectedPostForModal?.id === postId) {
+              setSelectedPostForModal(updatedPost);
+            }
+            return updatedPost;
+          }
+          return p;
+        })
+      );
+
+      // 2. Perform API Mutation in background
+      try {
+        await likeCommentApi(commentId).unwrap();
+      } catch (err) {
+        console.error("Failed to like comment API:", err);
+        toast.error("Failed to like comment");
+
+        // 3. Rollback toggle on API failure
+        setPosts((prev) =>
+          prev.map((p) => {
+            if (p.id === postId) {
+              const updatedPost = {
+                ...p,
+                commentsList: toggleLike(p.commentsList || []),
+              };
+              if (selectedPostForModal?.id === postId) {
+                setSelectedPostForModal(updatedPost);
+              }
+              return updatedPost;
+            }
+            return p;
+          })
+        );
+      }
+    },
+    [likeCommentApi, selectedPostForModal]
   );
 
   // Modal Handlers
@@ -387,7 +600,7 @@ export default function CommunityPage() {
                   <FeedCard
                     key={post.id}
                     post={post}
-                    onLike={handleLike}
+                    onLike={handleLikePost}
                     onCommentClick={handleOpenModal}
                   />
                 ))
@@ -440,9 +653,10 @@ export default function CommunityPage() {
         post={selectedPostForModal}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        onLike={handleLike}
+        onLike={handleLikePost}
         onAddComment={handleAddComment}
-        onCommentReaction={handleCommentReaction}
+        onDeleteComment={handleDeleteComment}
+        onLikeComment={handleLikeComment}
       />
 
       {/* Mobile Floating Scroll to Top Button */}
