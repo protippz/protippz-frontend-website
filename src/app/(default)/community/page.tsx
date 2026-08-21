@@ -58,8 +58,9 @@ export default function CommunityPage() {
     useState<ContentCategory>("All");
   const [posts, setPosts] = useState<Post[]>([]);
 
-  const [selectedPostForModal, setSelectedPostForModal] =
-    useState<Post | null>(null);
+  const [selectedPostForModal, setSelectedPostForModal] = useState<Post | null>(
+    null,
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const observerTargetRef = useRef<HTMLDivElement | null>(null);
@@ -67,8 +68,9 @@ export default function CommunityPage() {
   // RTK Query API Mutations
   const [likePostApi] = useLikeCommunityPostMutation();
   const [createCommentApi] = useCreateCommentMutation();
-  const [deleteCommentApi] = useDeleteCommentMutation();
-  const [likeCommentApi] = useLikeCommentMutation();
+  const [deleteCommentApi, { isLoading: isDeleting }] =
+    useDeleteCommentMutation();
+  const [likeCommentApi,{isLoading:isLiking}] = useLikeCommentMutation();
 
   // Search Debounce Effect
   useEffect(() => {
@@ -130,7 +132,7 @@ export default function CommunityPage() {
         }
         const existingIds = new Set(prev.map((p) => p.id));
         const uniqueNew = transformedNewPosts.filter(
-          (p) => !existingIds.has(p.id)
+          (p) => !existingIds.has(p.id),
         );
         return [...prev, ...uniqueNew];
       });
@@ -153,7 +155,7 @@ export default function CommunityPage() {
           setPage((prev) => prev + 1);
         }
       },
-      { threshold: 0.2, rootMargin: "200px" }
+      { threshold: 0.2, rootMargin: "200px" },
     );
 
     observer.observe(target);
@@ -192,7 +194,7 @@ export default function CommunityPage() {
             return updatedPost;
           }
           return post;
-        })
+        }),
       );
 
       // 2. Perform API Mutation in background
@@ -219,11 +221,11 @@ export default function CommunityPage() {
               return revertedPost;
             }
             return post;
-          })
+          }),
         );
       }
     },
-    [likePostApi, selectedPostForModal]
+    [likePostApi, selectedPostForModal],
   );
 
   // Optimistic Add Comment with Background Sync & Rollback
@@ -232,7 +234,7 @@ export default function CommunityPage() {
       postId: string,
       content: string,
       parentId?: string,
-      imageFile?: File
+      imageFile?: File,
     ) => {
       const tempCommentId = "temp_" + Date.now();
 
@@ -265,7 +267,7 @@ export default function CommunityPage() {
               updatedList = currentList.map((c) =>
                 c.id === parentId
                   ? { ...c, replies: [...(c.replies || []), newComment] }
-                  : c
+                  : c,
               );
             } else {
               updatedList = [newComment, ...currentList];
@@ -284,7 +286,7 @@ export default function CommunityPage() {
             return updatedPost;
           }
           return p;
-        })
+        }),
       );
 
       // 2. Perform API Mutation in background
@@ -297,7 +299,7 @@ export default function CommunityPage() {
             text: content,
             parent: parentId || null,
             rootId: null,
-          })
+          }),
         );
         if (imageFile) {
           formData.append("image", imageFile);
@@ -305,7 +307,10 @@ export default function CommunityPage() {
 
         const res = await createCommentApi(formData).unwrap();
         const realId =
-          res?.data?._id || res?.data?.result?._id || res?.result?._id || res?._id;
+          res?.data?._id ||
+          res?.data?.result?._id ||
+          res?.result?._id ||
+          res?._id;
 
         // Replace tempCommentId with realId in state on success
         if (realId) {
@@ -332,7 +337,7 @@ export default function CommunityPage() {
                 return updatedPost;
               }
               return p;
-            })
+            }),
           );
         }
       } catch (err) {
@@ -366,11 +371,11 @@ export default function CommunityPage() {
               return updatedPost;
             }
             return p;
-          })
+          }),
         );
       }
     },
-    [createCommentApi, selectedPostForModal]
+    [createCommentApi, selectedPostForModal],
   );
 
   // Optimistic Delete Comment with Background Sync & Rollback
@@ -420,17 +425,13 @@ export default function CommunityPage() {
             return updatedPost;
           }
           return p;
-        })
+        }),
       );
 
       // 2. Perform API Mutation in background
       try {
         await deleteCommentApi(commentId).unwrap();
-        toast.success("Comment deleted");
       } catch (err) {
-        console.error("Failed to delete comment API:", err);
-        toast.error("Failed to delete comment. Restoring...");
-
         // 3. Rollback on API failure (restore deleted item)
         if (deletedBackup) {
           const restoredItem = deletedBackup;
@@ -444,7 +445,7 @@ export default function CommunityPage() {
                   restoredList = currentList.map((c) =>
                     c.id === parentCommentId
                       ? { ...c, replies: [...(c.replies || []), restoredItem] }
-                      : c
+                      : c,
                   );
                 } else {
                   restoredList = [restoredItem, ...currentList];
@@ -463,12 +464,12 @@ export default function CommunityPage() {
                 return updatedPost;
               }
               return p;
-            })
+            }),
           );
         }
       }
     },
-    [deleteCommentApi, selectedPostForModal]
+    [deleteCommentApi, selectedPostForModal],
   );
 
   // Like Comment Handler (Mutation + Re-throw for modal rollback)
@@ -482,7 +483,7 @@ export default function CommunityPage() {
         throw err;
       }
     },
-    [likeCommentApi]
+    [likeCommentApi],
   );
 
   const [triggerGetSinglePost] = useLazyGetSingleCommunityPostQuery();
@@ -498,7 +499,7 @@ export default function CommunityPage() {
     if (postParam) {
       setHasDeepLinkChecked(true);
       const existing = posts.find(
-        (p) => p.slug === postParam || p.id === postParam
+        (p) => p.slug === postParam || p.id === postParam,
       );
 
       if (existing) {
@@ -657,6 +658,8 @@ export default function CommunityPage() {
         onAddComment={handleAddComment}
         onDeleteComment={handleDeleteComment}
         onLikeComment={handleLikeComment}
+        isDeleting={isDeleting}
+        isLiking={isLiking}
       />
 
       {/* Mobile Floating Scroll to Top Button */}

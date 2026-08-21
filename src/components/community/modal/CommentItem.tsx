@@ -23,7 +23,11 @@ interface CommentItemProps {
   onReplyClick: (commentId: string, userName: string) => void;
   onDeleteComment?: (postId: string, commentId: string) => void;
   onToggleReaction: (commentId: string, emoji: string) => void;
-  setActiveReactionCommentId: React.Dispatch<React.SetStateAction<string | null>>;
+  setActiveReactionCommentId: React.Dispatch<
+    React.SetStateAction<string | null>
+  >;
+  isDeleting?: boolean;
+  isLiking?: boolean;
 }
 
 const QUICK_REACTION_EMOJIS = ["👍", "❤️", "🔥", "😂", "👏", "🏆", "🚀"];
@@ -39,20 +43,19 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   onDeleteComment,
   onToggleReaction,
   setActiveReactionCommentId,
+  isDeleting,
+  isLiking: isLikingProp,
 }) => {
   const cmtLevelColor =
     levelColors[comment.user?.level || "Bronze"] || levelColors.Bronze;
   const isQuickReactionOpen = activeReactionCommentId === comment.id;
-  const isLiking = Boolean(likingCommentIds[comment.id]);
+  const isLiking = Boolean(isLikingProp || likingCommentIds[comment.id]);
 
   if (isReply) {
     return (
       <div className="flex items-start gap-2.5">
         <Avatar className="w-7 h-7 mt-0.5 border border-[#233A6C15] shrink-0 cursor-pointer">
-          <AvatarImage
-            src={comment.user?.avatar}
-            alt={comment.user?.name}
-          />
+          <AvatarImage src={comment.user?.avatar} alt={comment.user?.name} />
           <AvatarFallback>
             <Users className="w-3 h-3 text-[#233A6C60]" />
           </AvatarFallback>
@@ -111,7 +114,10 @@ export const CommentItem: React.FC<CommentItemProps> = ({
             <button
               type="button"
               onClick={() =>
-                onReplyClick(comment.parentId || comment.id, comment.user?.name || "User")
+                onReplyClick(
+                  comment.parentId || comment.id,
+                  comment.user?.name || "User",
+                )
               }
               className="hover:underline hover:text-[#308D6F] cursor-pointer"
             >
@@ -142,10 +148,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
       {/* Top-Level Parent Comment */}
       <div className="flex items-start gap-2.5 group/cmt">
         <Avatar className="w-8 h-8 mt-0.5 border border-[#233A6C15] shrink-0 cursor-pointer">
-          <AvatarImage
-            src={comment.user?.avatar}
-            alt={comment.user?.name}
-          />
+          <AvatarImage src={comment.user?.avatar} alt={comment.user?.name} />
           <AvatarFallback>
             <Users className="w-4 h-4 text-[#233A6C60]" />
           </AvatarFallback>
@@ -180,10 +183,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                   <span key={idx}>{r.emoji}</span>
                 ))}
                 <span className="text-[9px] text-gray-500 font-bold ml-0.5">
-                  {comment.reactions.reduce(
-                    (acc, curr) => acc + curr.count,
-                    0
-                  )}
+                  {comment.reactions.reduce((acc, curr) => acc + curr.count, 0)}
                 </span>
               </div>
             )}
@@ -236,7 +236,11 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                 className="hover:text-red-600 transition-colors flex items-center gap-0.5 cursor-pointer text-gray-400"
                 title="Delete comment"
               >
-                <Trash2 className="w-3 h-3" />
+                {isDeleting ? (
+                  <Loader2 className="w-3 h-3 animate-spin text-red-600 shrink-0" />
+                ) : (
+                  <Trash2 className="w-3 h-3" />
+                )}
                 Delete
               </button>
             )}
@@ -249,7 +253,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                 type="button"
                 onClick={() =>
                   setActiveReactionCommentId(
-                    isQuickReactionOpen ? null : comment.id
+                    isQuickReactionOpen ? null : comment.id,
                   )
                 }
                 className="p-1 text-gray-400 hover:text-[#308D6F] transition-colors cursor-pointer"
@@ -278,9 +282,9 @@ export const CommentItem: React.FC<CommentItemProps> = ({
       </div>
 
       {/* Nested Replies */}
-      {comment.replies && comment.replies.length > 0 && (
+      {comment?.replies && comment?.replies?.length > 0 && (
         <div className="border-l-2 border-[#233A6C15] pl-3.5 sm:pl-4 ml-4 space-y-3 pt-1">
-          {comment.replies.map((reply) => (
+          {comment?.replies?.map((reply) => (
             <CommentItem
               key={reply.id}
               postId={postId}
@@ -293,6 +297,8 @@ export const CommentItem: React.FC<CommentItemProps> = ({
               onDeleteComment={onDeleteComment}
               onToggleReaction={onToggleReaction}
               setActiveReactionCommentId={setActiveReactionCommentId}
+              isDeleting={isDeleting}
+              isLiking={isLikingProp}
             />
           ))}
         </div>

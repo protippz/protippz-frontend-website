@@ -29,6 +29,8 @@ interface PostModalProps {
     commentId: string,
     emoji: string
   ) => void;
+  isDeleting?: boolean;
+  isLiking?: boolean;
 }
 
 export const PostModal: React.FC<PostModalProps> = ({
@@ -40,6 +42,8 @@ export const PostModal: React.FC<PostModalProps> = ({
   onDeleteComment,
   onLikeComment,
   onCommentReaction,
+  isDeleting,
+  isLiking,
 }) => {
   const [commentText, setCommentText] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -288,6 +292,8 @@ export const PostModal: React.FC<PostModalProps> = ({
             onDeleteComment={onDeleteComment}
             onToggleReaction={handleToggleCommentReaction}
             setActiveReactionCommentId={setActiveReactionCommentId}
+            isDeleting={isDeleting}
+            isLiking={isLiking}
           />
         </div>
 

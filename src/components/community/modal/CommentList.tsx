@@ -17,6 +17,8 @@ interface CommentListProps {
   onDeleteComment?: (postId: string, commentId: string) => void;
   onToggleReaction: (commentId: string, emoji: string) => void;
   setActiveReactionCommentId: React.Dispatch<React.SetStateAction<string | null>>;
+  isDeleting?: boolean;
+  isLiking?: boolean;
 }
 
 export const CommentList: React.FC<CommentListProps> = ({
@@ -31,6 +33,8 @@ export const CommentList: React.FC<CommentListProps> = ({
   onDeleteComment,
   onToggleReaction,
   setActiveReactionCommentId,
+  isDeleting,
+  isLiking,
 }) => {
   return (
     <div className="space-y-4 pt-2">
@@ -57,6 +61,8 @@ export const CommentList: React.FC<CommentListProps> = ({
               onDeleteComment={onDeleteComment}
               onToggleReaction={onToggleReaction}
               setActiveReactionCommentId={setActiveReactionCommentId}
+              isDeleting={isDeleting}
+              isLiking={isLiking}
             />
           ))}
         </div>

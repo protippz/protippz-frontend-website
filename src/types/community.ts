@@ -1,17 +1,17 @@
 export type ContentCategory =
-  | 'All'
-  | 'Blog Article'
-  | 'Press Release'
-  | 'Company News'
-  | 'Promotional Content'
-  | 'Community Update'
-  | 'Product Announcement';
+  | "All"
+  | "Blog Article"
+  | "Press Release"
+  | "Company News"
+  | "Promotional Content"
+  | "Community Update"
+  | "Product Announcement";
 
 export interface User {
   id: string;
   name: string;
   avatar: string;
-  level: 'Bronze' | 'Silver' | 'Gold' | 'Platinum' | 'Diamond';
+  level: "Bronze" | "Silver" | "Gold" | "Platinum" | "Diamond";
   xp: number;
   badges: string[];
 }
@@ -143,12 +143,12 @@ export interface CommunityPostApiResponse {
 }
 
 export const formatRelativeTime = (dateString?: string): string => {
-  if (!dateString) return 'Just now';
+  if (!dateString) return "Just now";
   const date = new Date(dateString);
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  if (isNaN(diffInSeconds) || diffInSeconds < 0) return 'Just now';
+  if (isNaN(diffInSeconds) || diffInSeconds < 0) return "Just now";
   if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
@@ -157,19 +157,19 @@ export const formatRelativeTime = (dateString?: string): string => {
   const diffInDays = Math.floor(diffInHours / 24);
   if (diffInDays < 30) return `${diffInDays}d ago`;
 
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 };
 
 export const mapBackendItemToPost = (item?: CommunityPostBackendItem): Post => {
   const defaultUser: User = {
-    id: item?.user?.id || item?._id || 'unknown_id',
-    name: item?.user?.name || 'ProTippz Team',
+    id: item?.user?.id || item?._id || "unknown_id",
+    name: item?.user?.name || "ProTippz Team",
     avatar:
       item?.user?.avatar ||
-      'http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png',
-    level: item?.user?.level || 'Gold',
+      "http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png",
+    level: item?.user?.level || "Gold",
     xp: item?.user?.xp || 500,
-    badges: item?.user?.badges || ['Official'],
+    badges: item?.user?.badges || ["Official"],
   };
 
   const image =
@@ -183,7 +183,7 @@ export const mapBackendItemToPost = (item?: CommunityPostBackendItem): Post => {
     title: item?.title,
     category: (item?.category as ContentCategory) || undefined,
     summary: item?.metaDescription,
-    content: item?.description || '',
+    content: item?.description || "",
     image,
     videoUrl: item?.video_url,
     timestamp: formatRelativeTime(item?.createdAt),
@@ -195,31 +195,37 @@ export const mapBackendItemToPost = (item?: CommunityPostBackendItem): Post => {
   };
 };
 
-export const mapBackendCommentToComment = (item?: BackendCommentItem): Comment => {
+export const mapBackendCommentToComment = (
+  item?: BackendCommentItem,
+): Comment => {
   const commentorObj =
     item?.commentorFormatted ||
     item?.commentor ||
-    (typeof item?.user === 'object' ? item?.user : null);
+    (typeof item?.user === "object" ? item?.user : null);
 
   const userObj: User =
-    commentorObj && typeof commentorObj === 'object'
+    commentorObj && typeof commentorObj === "object"
       ? {
-          id: (commentorObj as any).id || (commentorObj as any)._id || 'user_id',
-          name: (commentorObj as any).name || (commentorObj as any).username || 'Community Member',
+          id:
+            (commentorObj as any).id || (commentorObj as any)._id || "user_id",
+          name:
+            (commentorObj as any).name ||
+            (commentorObj as any).username ||
+            "Community Member",
           avatar:
             (commentorObj as any).profile_image ||
             (commentorObj as any).avatar ||
-            'http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png',
-          level: (commentorObj as any).level || 'Bronze',
+            "http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png",
+          level: (commentorObj as any).level || "Bronze",
           xp: (commentorObj as any).xp || 100,
           badges: (commentorObj as any).badges || [],
         }
       : {
-          id: typeof item?.user === 'string' ? item.user : 'user_id',
-          name: 'Community Member',
+          id: typeof item?.user === "string" ? item.user : "user_id",
+          name: "Community Member",
           avatar:
-            'http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png',
-          level: 'Bronze',
+            "http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png",
+          level: "Bronze",
           xp: 100,
           badges: [],
         };
@@ -229,7 +235,7 @@ export const mapBackendCommentToComment = (item?: BackendCommentItem): Comment =
   return {
     id: item?._id || String(Math.random()),
     user: userObj,
-    content: item?.text || item?.content || '',
+    content: item?.text || item?.content || "",
     timestamp: formatRelativeTime(item?.createdAt),
     likes: item?.totalLikers ?? item?.likes ?? item?.likers?.length ?? 0,
     isLiked: Boolean(item?.isLiked),
