@@ -20,6 +20,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getEmbedVideoUrl } from "./helpers";
 import { levelColors, categoryStyles } from "./data/mockData";
 import { Post, ContentCategory } from "@/types/community";
+import { toast } from "react-hot-toast";
 
 interface FeedCardProps {
   post: Post;
@@ -59,16 +60,38 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
   const isLongText = postContent.length > 110;
   const videoEmbedSrc = getEmbedVideoUrl(post?.videoUrl, post?.videoEmbedCode);
 
-  const handleShare = (e: React.MouseEvent) => {
+  const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    const postSlug = post?.slug || post?.id;
+    const shareUrl =
+      typeof window !== "undefined"
+        ? `${window.location.origin}${window.location.pathname}?post=${postSlug}`
+        : "";
+
     if (typeof window !== "undefined" && navigator.share) {
-      navigator
-        .share({
+      try {
+        await navigator.share({
           title: post?.title || postContent,
           text: post?.summary || postContent,
-          url: window.location.href,
-        })
-        .catch((err) => console.log("Error sharing:", err));
+          url: shareUrl,
+        });
+      } catch (err) {
+        if ((err as Error)?.name !== "AbortError") {
+          try {
+            await navigator.clipboard.writeText(shareUrl);
+            toast.success("Link copied to clipboard!");
+          } catch (e) {
+            console.error("Failed to copy link:", e);
+          }
+        }
+      }
+    } else if (typeof window !== "undefined") {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Link copied to clipboard!");
+      } catch (e) {
+        console.error("Failed to copy link:", e);
+      }
     }
   };
 

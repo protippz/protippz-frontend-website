@@ -24,6 +24,7 @@ import {
 import {
   useGetAllCommunityPostsQuery,
   useLikeCommunityPostMutation,
+  useLazyGetSingleCommunityPostQuery,
 } from "@/Redux/Apis/communityApis";
 import {
   useCreateCommentMutation,
@@ -470,80 +471,79 @@ export default function CommunityPage() {
     [deleteCommentApi, selectedPostForModal]
   );
 
-  // Optimistic Like Comment with Background Sync & Rollback
+  // Like Comment Handler (Mutation + Re-throw for modal rollback)
   const handleLikeComment = useCallback(
     async (postId: string, commentId: string) => {
-      // Helper function to toggle comment like
-      const toggleLike = (list: Comment[]): Comment[] =>
-        list.map((c) => {
-          if (c.id === commentId) {
-            const nextIsLiked = !c.isLiked;
-            return {
-              ...c,
-              isLiked: nextIsLiked,
-              likes: nextIsLiked ? c.likes + 1 : Math.max(0, c.likes - 1),
-            };
-          }
-          if (c.replies) {
-            return { ...c, replies: toggleLike(c.replies) };
-          }
-          return c;
-        });
-
-      // 1. Immediately update UI
-      setPosts((prev) =>
-        prev.map((p) => {
-          if (p.id === postId) {
-            const updatedPost = {
-              ...p,
-              commentsList: toggleLike(p.commentsList || []),
-            };
-            if (selectedPostForModal?.id === postId) {
-              setSelectedPostForModal(updatedPost);
-            }
-            return updatedPost;
-          }
-          return p;
-        })
-      );
-
-      // 2. Perform API Mutation in background
       try {
         await likeCommentApi(commentId).unwrap();
       } catch (err) {
         console.error("Failed to like comment API:", err);
-        toast.error("Failed to like comment");
-
-        // 3. Rollback toggle on API failure
-        setPosts((prev) =>
-          prev.map((p) => {
-            if (p.id === postId) {
-              const updatedPost = {
-                ...p,
-                commentsList: toggleLike(p.commentsList || []),
-              };
-              if (selectedPostForModal?.id === postId) {
-                setSelectedPostForModal(updatedPost);
-              }
-              return updatedPost;
-            }
-            return p;
-          })
-        );
+        toast.error("Failed to update comment like");
+        throw err;
       }
     },
-    [likeCommentApi, selectedPostForModal]
+    [likeCommentApi]
   );
 
-  // Modal Handlers
+  const [triggerGetSinglePost] = useLazyGetSingleCommunityPostQuery();
+  const [hasDeepLinkChecked, setHasDeepLinkChecked] = useState(false);
+
+  // Check for direct deep-link ?post=slug query param on load
+  useEffect(() => {
+    if (typeof window === "undefined" || hasDeepLinkChecked) return;
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const postParam = searchParams.get("post");
+
+    if (postParam) {
+      setHasDeepLinkChecked(true);
+      const existing = posts.find(
+        (p) => p.slug === postParam || p.id === postParam
+      );
+
+      if (existing) {
+        setSelectedPostForModal(existing);
+        setIsModalOpen(true);
+      } else {
+        triggerGetSinglePost(postParam)
+          .unwrap()
+          .then((res) => {
+            const raw = res?.data?.result || res?.data || res?.result;
+            if (raw) {
+              const mapped = mapBackendItemToPost(raw);
+              setSelectedPostForModal(mapped);
+              setIsModalOpen(true);
+            }
+          })
+          .catch((err) => {
+            console.error("Failed to load post by slug:", err);
+          });
+      }
+    }
+  }, [posts, triggerGetSinglePost, hasDeepLinkChecked]);
+
+  // Modal Handlers with URL Sync
   const handleOpenModal = useCallback((post: Post) => {
     setSelectedPostForModal(post);
     setIsModalOpen(true);
+
+    if (typeof window !== "undefined") {
+      const postSlug = post.slug || post.id;
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set("post", postSlug);
+      window.history.pushState({ postSlug }, "", currentUrl.toString());
+    }
   }, []);
 
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     setSelectedPostForModal(null);
+
+    if (typeof window !== "undefined") {
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.delete("post");
+      window.history.pushState({}, "", currentUrl.toString());
+    }
   }, []);
 
   const handleResetFilters = useCallback(() => {

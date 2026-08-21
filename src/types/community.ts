@@ -101,14 +101,33 @@ export interface BackendCommentItem {
   _id: string;
   communityPost?: string;
   user?: Partial<User> | string;
+  commentor?: {
+    _id?: string;
+    id?: string;
+    name?: string;
+    username?: string;
+    profile_image?: string;
+    avatar?: string;
+  };
+  commentorFormatted?: {
+    _id?: string;
+    id?: string;
+    name?: string;
+    username?: string;
+    profile_image?: string;
+    avatar?: string;
+    role?: string;
+  };
   text?: string;
   content?: string;
   parent?: string | null;
   rootId?: string | null;
   likes?: number;
+  totalLikers?: number;
   likers?: string[];
   isLiked?: boolean;
   replies?: BackendCommentItem[];
+  firstReplies?: BackendCommentItem[];
   reactions?: CommentReaction[];
   createdAt?: string;
   updatedAt?: string;
@@ -177,17 +196,23 @@ export const mapBackendItemToPost = (item?: CommunityPostBackendItem): Post => {
 };
 
 export const mapBackendCommentToComment = (item?: BackendCommentItem): Comment => {
+  const commentorObj =
+    item?.commentorFormatted ||
+    item?.commentor ||
+    (typeof item?.user === 'object' ? item?.user : null);
+
   const userObj: User =
-    typeof item?.user === 'object' && item?.user !== null
+    commentorObj && typeof commentorObj === 'object'
       ? {
-          id: item.user.id || (item.user as any)?._id || 'user_id',
-          name: item.user.name || 'Community Member',
+          id: (commentorObj as any).id || (commentorObj as any)._id || 'user_id',
+          name: (commentorObj as any).name || (commentorObj as any).username || 'Community Member',
           avatar:
-            item.user.avatar ||
+            (commentorObj as any).profile_image ||
+            (commentorObj as any).avatar ||
             'http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png',
-          level: item.user.level || 'Bronze',
-          xp: item.user.xp || 100,
-          badges: item.user.badges || [],
+          level: (commentorObj as any).level || 'Bronze',
+          xp: (commentorObj as any).xp || 100,
+          badges: (commentorObj as any).badges || [],
         }
       : {
           id: typeof item?.user === 'string' ? item.user : 'user_id',
@@ -199,15 +224,17 @@ export const mapBackendCommentToComment = (item?: BackendCommentItem): Comment =
           badges: [],
         };
 
+  const rawReplies = item?.firstReplies || item?.replies || [];
+
   return {
     id: item?._id || String(Math.random()),
     user: userObj,
     content: item?.text || item?.content || '',
     timestamp: formatRelativeTime(item?.createdAt),
-    likes: item?.likes ?? item?.likers?.length ?? 0,
+    likes: item?.totalLikers ?? item?.likes ?? item?.likers?.length ?? 0,
     isLiked: Boolean(item?.isLiked),
     parentId: item?.parent || undefined,
-    replies: item?.replies?.map(mapBackendCommentToComment),
+    replies: rawReplies.map(mapBackendCommentToComment),
     reactions: item?.reactions,
   };
 };
