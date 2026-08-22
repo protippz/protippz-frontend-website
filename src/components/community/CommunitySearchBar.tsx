@@ -28,7 +28,7 @@ const CommunitySearchBar = memo(function CommunitySearchBar({
   onSelectCategory,
 }: CommunitySearchBarProps) {
   return (
-    <div className="sticky top-0 z-30 py-2 sm:py-3 bg-white/95 backdrop-blur-md transition-all w-full border-b border-border/50">
+    <div className="sticky top-0 z-30 py-2 sm:py-3 backdrop-blur-md transition-all w-full border-b border-border/50">
       <div className="container mx-auto px-3 sm:px-4 flex flex-col md:flex-row md:items-center justify-between gap-2 sm:gap-3 w-full min-w-0">
         {/* Search Bar Input */}
         <div className="relative w-full md:max-w-xs shrink-0 min-w-0">

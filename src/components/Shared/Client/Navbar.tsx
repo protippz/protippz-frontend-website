@@ -163,7 +163,7 @@ const Navbar: React.FC = () => {
     }
   }, [data?.userData]);
   return (
-    <div className="p-4 bg-white shadow-md z-999 mb-2">
+    <div className="p-4 bg-white shadow-md z-999">
       <nav className="flex items-center justify-between container mx-auto">
         <Link href={`/`}>
           <Image

@@ -4,7 +4,7 @@ import React from "react";
 
 export const CommunityHeader: React.FC = () => {
   return (
-    <div className="w-full px-3 sm:px-6 md:px-8 pt-4 sm:pt-6 md:pt-8 pb-3 sm:pb-6 bg-[#fff]">
+    <div className="w-full px-3 sm:px-6 md:px-8 pt-4 sm:pt-6 md:pt-8 pb-3 sm:pb-6 bg-transparent">
       <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-6">
           <div>

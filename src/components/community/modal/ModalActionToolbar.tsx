@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Heart, Share2 } from "lucide-react";
-import { toast } from "react-hot-toast";
+import { sharePostLink } from "../helpers";
 
 interface ModalActionToolbarProps {
   postId: string;
@@ -23,43 +23,22 @@ export const ModalActionToolbar: React.FC<ModalActionToolbarProps> = ({
   isLiked,
   onLike,
 }) => {
-  const handleShare = async () => {
-    const postSlug = slug || postId;
-    const shareUrl =
-      typeof window !== "undefined"
-        ? `${window.location.origin}${window.location.pathname}?post=${postSlug}`
-        : "";
-
-    if (typeof window !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({
-          title: title || content,
-          text: summary || content,
-          url: shareUrl,
-        });
-      } catch (err) {
-        if ((err as Error)?.name !== "AbortError") {
-          try {
-            await navigator.clipboard.writeText(shareUrl);
-            toast.success("Link copied to clipboard!");
-          } catch (e) {
-            console.error("Failed to copy link:", e);
-          }
-        }
-      }
-    } else if (typeof window !== "undefined") {
-      try {
-        await navigator.clipboard.writeText(shareUrl);
-        toast.success("Link copied to clipboard!");
-      } catch (e) {
-        console.error("Failed to copy link:", e);
-      }
-    }
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    await sharePostLink({
+      postId,
+      title,
+      summary,
+      content,
+      slug,
+    });
   };
 
   return (
-    <div className="grid grid-cols-2 gap-2 py-0.5 border-b border-border">
+    <div className="grid grid-cols-2 gap-2 py-0.5 ">
       <button
+        type="button"
         onClick={() => onLike(postId)}
         className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
           isLiked
@@ -72,8 +51,9 @@ export const ModalActionToolbar: React.FC<ModalActionToolbarProps> = ({
       </button>
 
       <button
+        type="button"
         onClick={handleShare}
-        className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-[#233A6C] transition-colors cursor-pointer"
+        className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-[#233A6C] transition-colors cursor-pointer active:scale-95"
       >
         <Share2 className="w-4 h-4 shrink-0" />
         <span>Share</span>

@@ -109,15 +109,17 @@ export default function CommunityPage() {
     isLoading,
     isFetching,
     isError,
+    error,
     refetch,
   } = useGetAllCommunityPostsQuery(queryParams) as {
     data?: CommunityPostApiResponse;
     isLoading: boolean;
     isFetching: boolean;
     isError: boolean;
+    error: any;
     refetch: () => void;
   };
-
+  console.log(error);
   const meta = apiResponse?.data?.meta;
   const rawResults = apiResponse?.data?.result;
   const hasMorePages = Boolean(meta && page < meta.totalPage);

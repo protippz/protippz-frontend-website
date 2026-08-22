@@ -17,10 +17,9 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { getEmbedVideoUrl } from "./helpers";
+import { getEmbedVideoUrl, sharePostLink } from "./helpers";
 import { levelColors, categoryStyles } from "./data/mockData";
 import { Post, ContentCategory } from "@/types/community";
-import { toast } from "react-hot-toast";
 
 interface FeedCardProps {
   post: Post;
@@ -62,37 +61,14 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
 
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const postSlug = post?.slug || post?.id;
-    const shareUrl =
-      typeof window !== "undefined"
-        ? `${window.location.origin}${window.location.pathname}?post=${postSlug}`
-        : "";
-
-    if (typeof window !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({
-          title: post?.title || postContent,
-          text: post?.summary || postContent,
-          url: shareUrl,
-        });
-      } catch (err) {
-        if ((err as Error)?.name !== "AbortError") {
-          try {
-            await navigator.clipboard.writeText(shareUrl);
-            toast.success("Link copied to clipboard!");
-          } catch (e) {
-            console.error("Failed to copy link:", e);
-          }
-        }
-      }
-    } else if (typeof window !== "undefined") {
-      try {
-        await navigator.clipboard.writeText(shareUrl);
-        toast.success("Link copied to clipboard!");
-      } catch (e) {
-        console.error("Failed to copy link:", e);
-      }
-    }
+    e.preventDefault();
+    await sharePostLink({
+      postId: post?.id,
+      title: post?.title,
+      summary: post?.summary,
+      content: postContent,
+      slug: post?.slug,
+    });
   };
 
   const userName = post?.user?.name || "User";
@@ -262,6 +238,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
         </button>
 
         <button
+          type="button"
           onClick={(e) => {
             e.stopPropagation();
             onCommentClick(post);
@@ -273,8 +250,9 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
         </button>
 
         <button
+          type="button"
           onClick={handleShare}
-          className="flex items-center gap-1.5 py-1 px-2.5 rounded-full bg-gray-100/80 text-[#233A6C] hover:bg-gray-200 transition-colors ml-auto cursor-pointer"
+          className="flex items-center gap-1.5 py-1 px-2.5 rounded-full bg-gray-100/80 text-[#233A6C] hover:bg-gray-200 transition-colors ml-auto cursor-pointer active:scale-95"
         >
           <Share2 className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Share</span>

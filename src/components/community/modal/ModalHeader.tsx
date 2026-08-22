@@ -40,7 +40,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
             <h3 className="font-bold text-xs sm:text-base text-[#233A6C] truncate cursor-pointer hover:underline">
               {user?.name || "User"}
             </h3>
-            <div
+            {/* <div
               className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold shrink-0 cursor-default"
               style={{
                 backgroundColor: levelColor.bg,
@@ -50,7 +50,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
             >
               {getLevelIcon(user?.level || "Bronze")}
               {user?.level || "Bronze"}
-            </div>
+            </div> */}
             {isTrending && (
               <div
                 className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-semibold shrink-0"

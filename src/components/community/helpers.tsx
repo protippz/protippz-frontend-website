@@ -53,3 +53,104 @@ export const getEmbedVideoUrl = (videoInput?: string, videoEmbedCode?: string): 
   return target;
 };
 
+export const copyToClipboard = async (text: string): Promise<boolean> => {
+  if (typeof window === "undefined") return false;
+
+  // 1. Try Clipboard API (HTTPS / modern browsers)
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (err) {
+      console.warn("navigator.clipboard.writeText failed, using fallback:", err);
+    }
+  }
+
+  // 2. Fallback to hidden textarea + execCommand for HTTP / older browsers / mobile edge cases
+  try {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
+    textArea.style.padding = "0";
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
+    textArea.style.opacity = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    const successful = document.execCommand("copy");
+    document.body.removeChild(textArea);
+    return successful;
+  } catch (err) {
+    console.error("Fallback copy failed:", err);
+    return false;
+  }
+};
+
+export interface ShareOptions {
+  slug?: string;
+  postId?: string;
+  title?: string;
+  summary?: string;
+  content?: string;
+}
+
+export const sharePostLink = async (options: ShareOptions): Promise<void> => {
+  const postSlug = options.slug || options.postId || "";
+  if (!postSlug) return;
+
+  const shareUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(postSlug)}`
+      : "";
+
+  if (!shareUrl) return;
+
+  // Attempt Web Share API first if supported
+  if (typeof navigator !== "undefined" && navigator.share) {
+    const shareData = {
+      title: options.title || "ProTippz Post",
+      text:
+        options.summary ||
+        (options.content ? options.content.slice(0, 100) : "Check out this post on ProTippz!"),
+      url: shareUrl,
+    };
+
+    try {
+      if (!navigator.canShare || navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+        return;
+      }
+    } catch (err) {
+      const errorName = (err as Error)?.name;
+      const errorMessage = (err as Error)?.message || "";
+      if (
+        errorName === "AbortError" ||
+        errorMessage.toLowerCase().includes("cancel") ||
+        errorMessage.toLowerCase().includes("abort")
+      ) {
+        return; // User cancelled share sheet
+      }
+      console.warn("navigator.share failed, falling back to clipboard:", err);
+    }
+  }
+
+  // Fallback to Clipboard copy
+  const copied = await copyToClipboard(shareUrl);
+  if (copied) {
+    const { toast } = await import("react-hot-toast");
+    toast.success("Link copied to clipboard!");
+  } else {
+    const { toast } = await import("react-hot-toast");
+    toast.error("Failed to copy link. Please copy manually.");
+  }
+};
+
+
