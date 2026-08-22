@@ -17,6 +17,17 @@ import { post } from '@/ApisRequests/server';
 const { Title, Text } = Typography;
 const SignInPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const getRedirectTarget = (role?: string) => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      const redirectUrl = searchParams.get('redirect');
+      if (redirectUrl) {
+        return redirectUrl;
+      }
+    }
+    return role === 'user' ? '/' : '/home';
+  };
+
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const response = await fetch(
@@ -54,7 +65,7 @@ const SignInPage: React.FC = () => {
         Cookies.set('token', res?.data?.accessToken);
         if (Cookies.get('token')) {
           toast.success(res?.message || 'logged in successfully');
-          window.location.href = '/';
+          window.location.href = getRedirectTarget(res?.data?.role);
         } else {
           toast.custom(
             (t:any) => (
@@ -96,7 +107,7 @@ const SignInPage: React.FC = () => {
               position: 'top-center',
             }
           );
-          window.location.href = res?.data?.role === 'user' ? '/' : '/home';
+          window.location.href = getRedirectTarget(res?.data?.role);
         }
       } else {
         toast.error(res?.message || 'something went wrong');
@@ -114,7 +125,7 @@ const SignInPage: React.FC = () => {
       Cookies.set('token', res?.data?.accessToken);
       if (Cookies.get('token')) {
         toast.success(res?.message || 'logged in successfully');
-        window.location.href = res?.data?.role === 'user' ? '/' : '/home';
+        window.location.href = getRedirectTarget(res?.data?.role);
       } else {
         toast.custom(
           (t:any) => (
@@ -156,7 +167,7 @@ const SignInPage: React.FC = () => {
             position: 'top-center',
           }
         );
-        window.location.href = res?.data?.role === 'user' ? '/' : '/home';
+        window.location.href = getRedirectTarget(res?.data?.role);
       }
     } else {
       toast.error(res?.message || 'something went wrong');

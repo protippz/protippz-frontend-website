@@ -7,6 +7,8 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/provider/ContextProvider";
 import { Plus, RefreshCw, Loader2, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import CommunityHeader from "@/components/community/CommunityHeader";
@@ -50,6 +52,8 @@ function FeedCardSkeleton() {
 }
 
 export default function CommunityPage() {
+  const router = useRouter();
+  const { userData } = useAuth();
   const [page, setPage] = useState(1);
   const limit = 10;
   const [rawSearchQuery, setRawSearchQuery] = useState("");
@@ -180,6 +184,14 @@ export default function CommunityPage() {
   // Post Like Handler (Optimistic + Background API + Rollback)
   const handleLikePost = useCallback(
     async (postId: string) => {
+      if (!userData?._id) {
+        if (typeof window !== "undefined") {
+          const currentUrl = window.location.pathname + window.location.search;
+          router.push(`/sign-in?redirect=${encodeURIComponent(currentUrl)}`);
+        }
+        return;
+      }
+
       // 1. Instantly update UI
       setPosts((prev) =>
         prev.map((post) => {
@@ -228,7 +240,7 @@ export default function CommunityPage() {
         );
       }
     },
-    [likePostApi, selectedPostForModal],
+    [likePostApi, selectedPostForModal, userData?._id, router],
   );
 
   // Optimistic Add Comment with Background Sync & Rollback

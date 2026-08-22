@@ -12,6 +12,8 @@ interface ModalActionToolbarProps {
   slug?: string;
   isLiked: boolean;
   onLike: (postId: string) => void;
+  isLoggedIn?: boolean;
+  onRequireLogin?: () => void;
 }
 
 export const ModalActionToolbar: React.FC<ModalActionToolbarProps> = ({
@@ -22,6 +24,8 @@ export const ModalActionToolbar: React.FC<ModalActionToolbarProps> = ({
   slug,
   isLiked,
   onLike,
+  isLoggedIn = true,
+  onRequireLogin,
 }) => {
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -35,11 +39,19 @@ export const ModalActionToolbar: React.FC<ModalActionToolbarProps> = ({
     });
   };
 
+  const handleLikeClick = () => {
+    if (!isLoggedIn && onRequireLogin) {
+      onRequireLogin();
+      return;
+    }
+    onLike(postId);
+  };
+
   return (
     <div className="grid grid-cols-2 gap-2 py-0.5 ">
       <button
         type="button"
-        onClick={() => onLike(postId)}
+        onClick={handleLikeClick}
         className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
           isLiked
             ? "bg-[#308D6F] text-white"

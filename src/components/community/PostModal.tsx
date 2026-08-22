@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Post, mapBackendCommentToComment } from "@/types/community";
+import { useRouter } from "next/navigation";
+import { Lock, LogIn } from "lucide-react";
+import { useAuth } from "@/provider/ContextProvider";
+import { Post, User, mapBackendCommentToComment } from "@/types/community";
 import { mockUsers } from "./data/mockData";
 import { useGetCommentsByPostQuery } from "@/Redux/Apis/commentApis";
 import { ModalHeader } from "./modal/ModalHeader";
@@ -43,6 +46,10 @@ export const PostModal: React.FC<PostModalProps> = ({
   onCommentReaction,
   isPostingComment,
 }) => {
+  const router = useRouter();
+  const { userData } = useAuth();
+  const isLoggedIn = Boolean(userData?._id);
+
   const [commentText, setCommentText] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -65,7 +72,27 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const currentUser = mockUsers[0];
+
+  const currentUser: User = useMemo(() => {
+    if (userData) {
+      return {
+        id: userData._id || "curr_user",
+        name: userData.name || "User",
+        avatar: userData.profile_image || mockUsers[0].avatar,
+        level: "Gold" as const,
+        xp: 100,
+        badges: [],
+      };
+    }
+    return mockUsers[0];
+  }, [userData]);
+
+  const handleGoToLogin = () => {
+    if (typeof window !== "undefined") {
+      const currentUrl = window.location.pathname + window.location.search;
+      router.push(`/sign-in?redirect=${encodeURIComponent(currentUrl)}`);
+    }
+  };
 
   // Fetch comments for current post from API
   const { data: commentsApiResponse, isLoading: isCommentsLoading } =
@@ -111,6 +138,10 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   // Handle Comment Like with targeted loading state per comment
   const handleCommentLikeClick = async (commentId: string) => {
+    if (!isLoggedIn) {
+      handleGoToLogin();
+      return;
+    }
     if (!post?.id || likingCommentIds[commentId]) return;
 
     setLikingCommentIds((prev) => ({ ...prev, [commentId]: true }));
@@ -133,6 +164,10 @@ export const PostModal: React.FC<PostModalProps> = ({
     postId: string,
     commentId: string
   ) => {
+    if (!isLoggedIn) {
+      handleGoToLogin();
+      return;
+    }
     if (!commentId || deletingCommentIds[commentId]) return;
 
     setDeletingCommentIds((prev) => ({ ...prev, [commentId]: true }));
@@ -202,6 +237,10 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const handleSubmitComment = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    if (!isLoggedIn) {
+      handleGoToLogin();
+      return;
+    }
     if (!commentText.trim() && !selectedImage) return;
 
     let finalContent = commentText.trim();
@@ -223,6 +262,10 @@ export const PostModal: React.FC<PostModalProps> = ({
   };
 
   const handleToggleCommentReaction = (commentId: string, emoji: string) => {
+    if (!isLoggedIn) {
+      handleGoToLogin();
+      return;
+    }
     if (onLikeComment) {
       handleCommentLikeClick(commentId);
     } else if (onCommentReaction) {
@@ -232,6 +275,10 @@ export const PostModal: React.FC<PostModalProps> = ({
   };
 
   const handleReplyClick = (commentId: string, userName: string) => {
+    if (!isLoggedIn) {
+      handleGoToLogin();
+      return;
+    }
     setReplyingTo({ id: commentId, userName });
     if (inputRef.current) {
       inputRef.current.focus();
@@ -301,43 +348,86 @@ export const PostModal: React.FC<PostModalProps> = ({
             slug={post.slug}
             isLiked={post.isLiked}
             onLike={onLike}
+            isLoggedIn={isLoggedIn}
+            onRequireLogin={handleGoToLogin}
           />
 
-          {/* Comments Section */}
-          <CommentList
-            comments={activeComments}
-            totalCommentCount={totalCommentCount}
-            isLoading={isCommentsLoading}
-            postId={post.id}
-            likingCommentIds={likingCommentIds}
-            deletingCommentIds={deletingCommentIds}
-            activeReactionCommentId={activeReactionCommentId}
-            onLikeCommentClick={handleCommentLikeClick}
-            onReplyClick={handleReplyClick}
-            onDeleteComment={handleDeleteCommentClick}
-            onToggleReaction={handleToggleCommentReaction}
-            setActiveReactionCommentId={setActiveReactionCommentId}
-          />
+          {/* Comments Section Container */}
+          <div className="relative min-h-[220px]">
+            <CommentList
+              comments={activeComments}
+              totalCommentCount={totalCommentCount}
+              isLoading={isCommentsLoading}
+              postId={post.id}
+              likingCommentIds={likingCommentIds}
+              deletingCommentIds={deletingCommentIds}
+              activeReactionCommentId={activeReactionCommentId}
+              onLikeCommentClick={handleCommentLikeClick}
+              onReplyClick={handleReplyClick}
+              onDeleteComment={handleDeleteCommentClick}
+              onToggleReaction={handleToggleCommentReaction}
+              setActiveReactionCommentId={setActiveReactionCommentId}
+            />
+
+            {!isLoggedIn && (
+              <div className="absolute inset-0 bg-white/80 backdrop-blur-md z-20 flex flex-col items-center justify-center p-6 text-center rounded-2xl border border-gray-200/80 shadow-md animate-in fade-in duration-200">
+                <div className="w-12 h-12 rounded-full bg-[#308D6F]/10 flex items-center justify-center mb-3 text-[#308D6F] shadow-xs">
+                  <Lock className="w-6 h-6" />
+                </div>
+                <h3 className="text-sm sm:text-base font-bold text-[#233A6C] mb-1">
+                  Log in to join the discussion
+                </h3>
+                <p className="text-xs text-gray-500 max-w-sm mb-4 leading-relaxed">
+                  You need to be signed in to post comments, reply to existing comments, or like posts.
+                </p>
+                <button
+                  type="button"
+                  onClick={handleGoToLogin}
+                  className="px-5 py-2.5 rounded-xl bg-[#308D6F] hover:bg-[#257259] text-white font-bold text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span>Go to Login</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Sticky Comment Footer */}
-        <CommentFormFooter
-          commentText={commentText}
-          setCommentText={setCommentText}
-          selectedImage={selectedImage}
-          imagePreview={imagePreview}
-          replyingTo={replyingTo}
-          setReplyingTo={setReplyingTo}
-          isEmojiPickerOpen={isEmojiPickerOpen}
-          setIsEmojiPickerOpen={setIsEmojiPickerOpen}
-          onImageSelect={handleImageSelect}
-          onRemoveImage={handleRemoveImage}
-          onSubmit={handleSubmitComment}
-          inputRef={inputRef}
-          fileInputRef={fileInputRef}
-          currentUser={currentUser}
-          isPostingComment={isPostingComment}
-        />
+        {isLoggedIn ? (
+          <CommentFormFooter
+            commentText={commentText}
+            setCommentText={setCommentText}
+            selectedImage={selectedImage}
+            imagePreview={imagePreview}
+            replyingTo={replyingTo}
+            setReplyingTo={setReplyingTo}
+            isEmojiPickerOpen={isEmojiPickerOpen}
+            setIsEmojiPickerOpen={setIsEmojiPickerOpen}
+            onImageSelect={handleImageSelect}
+            onRemoveImage={handleRemoveImage}
+            onSubmit={handleSubmitComment}
+            inputRef={inputRef}
+            fileInputRef={fileInputRef}
+            currentUser={currentUser}
+            isPostingComment={isPostingComment}
+          />
+        ) : (
+          <div className="p-3 sm:p-4 bg-gray-50/90 border-t text-center text-xs text-gray-600 font-medium flex items-center justify-center gap-2 shrink-0">
+            <Lock className="w-4 h-4 text-[#308D6F]" />
+            <span>
+              Please{" "}
+              <button
+                type="button"
+                onClick={handleGoToLogin}
+                className="text-[#308D6F] font-bold hover:underline cursor-pointer"
+              >
+                sign in
+              </button>{" "}
+              to write a comment or reply.
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
