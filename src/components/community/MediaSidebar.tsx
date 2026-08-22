@@ -77,41 +77,45 @@ const MediaSidebar = memo(function MediaSidebar({
   setSelectedCategory,
 }: MediaSidebarProps) {
   return (
-    <aside className="sticky top-17.5 space-y-4">
+    <aside className="w-full min-w-0 max-w-full lg:sticky lg:top-20 lg:max-h-[calc(100vh-100px)] lg:overflow-y-auto custom-sidebar-scrollbar space-y-4 sm:space-y-5">
       {/* 1. Media & Publishing Categories Card */}
-      <div className="p-5 rounded-2xl bg-white border border-border shadow-2xs">
-        <div className="flex items-center gap-2 mb-3.5 pb-2.5 border-b border-border">
-          <FileText className="w-4 h-4 text-[#308D6F]" />
-          <h3 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
+      <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-border shadow-2xs w-full max-w-full min-w-0 overflow-hidden box-border">
+        <div className="flex items-center gap-2 mb-3 sm:mb-3.5 pb-2.5 border-b border-border min-w-0">
+          <FileText className="w-4 h-4 text-[#308D6F] shrink-0" />
+          <h3 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider truncate min-w-0 flex-1">
             Media Categories
           </h3>
         </div>
 
-        <div className="space-y-1.5">
+        {/* On mobile: overflow-x-auto horizontal scroll track. On desktop: vertical stack */}
+        <div className="flex lg:flex-col items-center lg:items-stretch gap-2 lg:gap-1.5 overflow-x-auto lg:overflow-x-visible no-scrollbar py-0.5 w-full min-w-0 max-w-full scroll-smooth">
           {CATEGORY_ITEMS.map((item) => {
             const isActive = selectedCategory === item.name;
             return (
               <button
                 key={item.name}
+                type="button"
                 onClick={() => setSelectedCategory(item.name)}
-                className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs text-left transition-all cursor-pointer ${
+                className={`flex-1 lg:flex-none min-w-[200px] lg:min-w-0 lg:w-full shrink-0 flex items-center justify-between p-2 sm:p-2.5 rounded-xl text-xs text-left transition-all cursor-pointer box-border overflow-hidden ${
                   isActive
                     ? "bg-[#308D6F] text-white font-bold shadow-2xs"
-                    : "hover:bg-[#233A6C08] text-[#233A6C]"
+                    : "hover:bg-[#233A6C08] text-[#233A6C] bg-gray-50/50 lg:bg-transparent"
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1 mr-1.5 overflow-hidden">
                   <div
-                    className={`p-1.5 rounded-lg shrink-0 ${
+                    className={`p-1.5 sm:p-2 rounded-lg shrink-0 ${
                       isActive ? "bg-white/20" : "bg-gray-100"
                     }`}
                   >
                     {item.icon}
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-semibold truncate">{item.name}</p>
+                  <div className="min-w-0 flex-1 overflow-hidden">
+                    <p className="font-semibold truncate text-xs leading-tight block w-full">
+                      {item.name}
+                    </p>
                     <p
-                      className={`text-[10px] truncate ${
+                      className={`text-[10px] sm:text-[11px] truncate leading-tight mt-0.5 block w-full ${
                         isActive ? "text-white/80" : "text-[#233A6C60]"
                       }`}
                     >
@@ -131,15 +135,16 @@ const MediaSidebar = memo(function MediaSidebar({
       </div>
 
       {/* 2. Trending Topics / Tags Card */}
-      <div className="p-5 rounded-2xl bg-white border border-border shadow-2xs">
-        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border">
-          <TrendingUp className="w-4 h-4 text-[#308D6F]" />
-          <h3 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
+      <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-border shadow-2xs w-full max-w-full min-w-0 overflow-hidden box-border">
+        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border min-w-0">
+          <TrendingUp className="w-4 h-4 text-[#308D6F] shrink-0" />
+          <h3 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider truncate min-w-0 flex-1">
             Popular Topics
           </h3>
         </div>
 
-        <div className="flex items-center gap-1.5 flex-wrap">
+        {/* On mobile: overflow-x-auto horizontal tag scrolling track */}
+        <div className="flex items-center gap-1.5 overflow-x-auto lg:overflow-x-visible lg:flex-wrap no-scrollbar py-0.5 w-full max-w-full min-w-0 scroll-smooth">
           {POPULAR_TAGS.map((tag) => {
             const isActive = selectedCategory === tag;
             return (
@@ -147,7 +152,7 @@ const MediaSidebar = memo(function MediaSidebar({
                 key={tag}
                 type="button"
                 onClick={() => setSelectedCategory(tag as ContentCategory)}
-                className={`text-xs font-semibold px-2.5 py-1 rounded-lg cursor-pointer transition-colors ${
+                className={`text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer transition-colors whitespace-nowrap shrink-0 ${
                   isActive
                     ? "bg-[#308D6F] text-white shadow-2xs"
                     : "text-[#308D6F] bg-[#308D6F12] hover:bg-[#308D6F22]"

@@ -654,8 +654,8 @@ export default function CommunityPage() {
             </div>
           </div>
 
-          {/* Dedicated Media & Publishing Sidebar (Desktop Only) */}
-          <div className="hidden lg:block lg:col-span-1">
+          {/* Dedicated Media & Publishing Sidebar */}
+          <div className="w-full lg:col-span-1">
             <MediaSidebar
               selectedCategory={selectedCategory}
               setSelectedCategory={handleSelectCategory}

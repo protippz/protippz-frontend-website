@@ -281,47 +281,20 @@ const Navbar: React.FC = () => {
           className="text-[#053697]"
         >
           <ul className="space-y-4">
-            <li>
-              <Link
-                href="/tippz"
-                className="hover:text-[#053697] cursor-pointer"
-              >
-                Tippz
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/playerz"
-                className="hover:text-[#053697] cursor-pointer"
-              >
-                Playerz
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/teamz"
-                className="hover:text-[#053697] cursor-pointer"
-              >
-                Teamz
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/rewardz"
-                className="hover:text-[#053697] cursor-pointer"
-              >
-                Rewardz
-              </Link>
-            </li>
-            <li>
-              <Link
-                target="_blank"
-                href="https://protippz.store"
-                className="hover:text-[#053697] cursor-pointer"
-              >
-                Store
-              </Link>
-            </li>
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  target={
+                    item?.href === "https://protippz.store" ? "_blank" : "_self"
+                  }
+                  href={item.href}
+                  onClick={closeDrawer}
+                  className="hover:text-[#053697] cursor-pointer font-semibold"
+                >
+                  {item.text}
+                </Link>
+              </li>
+            ))}
           </ul>
 
           {data?.userData?._id ? (
