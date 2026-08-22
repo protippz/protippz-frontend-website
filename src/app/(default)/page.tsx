@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 // const AdContainer = dynamic(() => import('@/components/ad/AdContainer'), {
 //   ssr: false,
 // });
+// new
 
 export default function Home() {
   const seoMetadata = getSEOMetadata("home");
