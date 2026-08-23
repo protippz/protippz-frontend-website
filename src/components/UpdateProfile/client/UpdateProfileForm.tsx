@@ -1,18 +1,18 @@
-'use client';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Form, Input, Button, Upload, AutoComplete } from 'antd';
+"use client";
+import React, { useCallback, useEffect, useState } from "react";
+import { Form, Input, Button, Upload, AutoComplete } from "antd";
 import {
   UserOutlined,
   MailOutlined,
   PhoneOutlined,
   HomeOutlined,
   CameraOutlined,
-} from '@ant-design/icons';
-import Image from 'next/image';
-import { useContextData } from '@/provider/ContextProvider';
-import { imageUrl, patch } from '@/ApisRequests/server';
-import toast from 'react-hot-toast';
-import debounce from 'lodash.debounce';
+} from "@ant-design/icons";
+import Image from "next/image";
+import { useContextData } from "@/provider/ContextProvider";
+import { imageUrl, patch } from "@/ApisRequests/server";
+import toast from "react-hot-toast";
+import debounce from "lodash.debounce";
 
 interface ProfileFormValues {
   fullName: string;
@@ -28,7 +28,7 @@ const UpdateProfileForm: React.FC = () => {
   const [form] = Form.useForm();
   const data = useContextData();
   const [options, setOptions] = useState<{ value: string; label: string }[]>(
-    []
+    [],
   );
   const onFinish = async (values: ProfileFormValues) => {
     const { email, username, ...otherValues } = values;
@@ -43,15 +43,15 @@ const UpdateProfileForm: React.FC = () => {
       formData.append(key, value);
     });
 
-    const res = await patch('/normal-user/update-profile', formData, {
+    const res = await patch("/normal-user/update-profile", formData, {
       headers: {
-        Authorization: `${localStorage.getItem('token')}`,
+        Authorization: `${localStorage.getItem("token")}`,
       },
     });
     if (res?.success) {
-      toast.success('Profile updated successfully');
+      toast.success("Profile updated successfully");
     } else {
-      toast.error('Fail updated Profile');
+      toast.error("Fail updated Profile");
     }
   };
 
@@ -62,7 +62,7 @@ const UpdateProfileForm: React.FC = () => {
 
     try {
       const response = await fetch(
-        `/api/places?query=${encodeURIComponent(query)}`
+        `/api/places?query=${encodeURIComponent(query)}`,
       );
       const data = await response.json();
 
@@ -71,11 +71,11 @@ const UpdateProfileForm: React.FC = () => {
           data.predictions.map((item: { description: string }) => ({
             value: item.description,
             label: item.description,
-          }))
+          })),
         );
       }
     } catch (error) {
-      console.error('Error fetching locations:', error);
+      console.error("Error fetching locations:", error);
     } finally {
       setLoadings(false);
     }
@@ -83,7 +83,7 @@ const UpdateProfileForm: React.FC = () => {
 
   const debouncedFetch = useCallback(
     debounce(fetchLocations, 500) as (query: string) => Promise<void>,
-    []
+    [],
   );
 
   useEffect(() => {
@@ -97,15 +97,15 @@ const UpdateProfileForm: React.FC = () => {
   }, [data]);
 
   const handleUploadChange = (info: any) => {
-    if (info.file.status === 'done') {
-      toast.success('Image uploaded successfully');
-    } else if (info.file.status === 'error') {
-      toast.error('Image upload failed');
+    if (info.file.status === "done") {
+      toast.success("Image uploaded successfully");
+    } else if (info.file.status === "error") {
+      toast.error("Image upload failed");
     }
     setFileList(info.fileList);
   };
   return (
-    <div className="container mx-auto p-8 text-center w-full">
+    <div className="max-w-355 mx-auto p-8 text-center w-full">
       <h1 className="text-4xl font-bold text-[#053697] mb-8">Edit Profile</h1>
 
       <div className="flex flex-col items-center mb-6 relative">
@@ -121,8 +121,8 @@ const UpdateProfileForm: React.FC = () => {
             src={
               fileList
                 ? URL.createObjectURL(fileList[0]?.originFileObj)
-                : imageUrl(data?.userData?.profile_image || '') ||
-                  'https://i.ibb.co.com/f4tzYw2/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg'
+                : imageUrl(data?.userData?.profile_image || "") ||
+                  "https://i.ibb.co.com/f4tzYw2/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg"
             }
             alt="Profile"
             className="w-32 h-32 rounded-full object-cover mb-4"
@@ -144,7 +144,7 @@ const UpdateProfileForm: React.FC = () => {
           label="Full Name"
           name="name"
           initialValue="Robert Smith"
-          rules={[{ required: true, message: 'Please enter your full name' }]}
+          rules={[{ required: true, message: "Please enter your full name" }]}
         >
           <Input className="custom-input" placeholder="Full Name" />
         </Form.Item>
@@ -154,8 +154,8 @@ const UpdateProfileForm: React.FC = () => {
           name="email"
           initialValue="robertsmithctg23@gmail.com"
           rules={[
-            { required: true, message: 'Please enter your email' },
-            { type: 'email', message: 'Please enter a valid email' },
+            { required: true, message: "Please enter your email" },
+            { type: "email", message: "Please enter a valid email" },
           ]}
         >
           <Input
@@ -170,7 +170,7 @@ const UpdateProfileForm: React.FC = () => {
           label="User Name"
           name="username"
           initialValue="siyam"
-          rules={[{ required: true, message: 'Please enter your username' }]}
+          rules={[{ required: true, message: "Please enter your username" }]}
         >
           <Input
             disabled
@@ -185,7 +185,7 @@ const UpdateProfileForm: React.FC = () => {
           name="phone"
           initialValue="+54645674567"
           rules={[
-            { required: true, message: 'Please enter your phone number' },
+            { required: true, message: "Please enter your phone number" },
           ]}
         >
           <Input
@@ -206,13 +206,13 @@ const UpdateProfileForm: React.FC = () => {
           className="col-span-2"
         >
           <AutoComplete
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
             className="!justify-start !items-start"
             options={options}
             onSearch={debouncedFetch}
             placeholder="Enter address"
             allowClear
-            notFoundContent={loadings ? 'Loading...' : 'No results found'}
+            notFoundContent={loadings ? "Loading..." : "No results found"}
             placement="bottomLeft"
             getPopupContainer={(triggerNode) => triggerNode.parentElement}
           >

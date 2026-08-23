@@ -46,7 +46,7 @@ const WithdrawFundForm = () => {
           headers: {
             Authorization: `${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       if (res?.success) {
         toast.success(res?.message);
@@ -61,7 +61,7 @@ const WithdrawFundForm = () => {
   };
 
   return (
-    <div style={{ width: "100vw" }} className="w-full container mx-auto">
+    <div style={{ width: "100vw" }} className="w-full max-w-355 mx-auto">
       <div className="w-full p-8 bg-white rounded-lg max-w-4xl mx-auto">
         <h2 className="text-3xl font-semibold text-center mb-3 text-[#053697]">
           {" "}

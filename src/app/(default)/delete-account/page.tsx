@@ -1,7 +1,6 @@
-
 function page() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-355 mx-auto px-4 py-8">
       <div className="bg-white rounded-lg shadow-lg p-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
           Delete Your PROTIPPZ Account
@@ -14,7 +13,10 @@ function page() {
             </h2>
             <ol className="list-decimal list-inside space-y-3 text-gray-700">
               <li>Open the PROTIPPZ app on your device</li>
-              <li>Go to <strong>Settings</strong> &rarr; <strong>Account</strong> &rarr; <strong>Delete Account</strong></li>
+              <li>
+                Go to <strong>Settings</strong> &rarr; <strong>Account</strong>{" "}
+                &rarr; <strong>Delete Account</strong>
+              </li>
               <li>Confirm your request</li>
             </ol>
 
@@ -22,7 +24,9 @@ function page() {
               <p className="text-gray-700 mb-2">OR Email us at:</p>
               <div className="bg-white p-3 rounded border border-blue-300">
                 <p className="font-mono text-blue-600">cory@protippz.com</p>
-                <p className="text-sm text-gray-600 mt-1">Subject line: "ACCOUNT DELETION REQUEST"</p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Subject line: "ACCOUNT DELETION REQUEST"
+                </p>
               </div>
               <p className="text-sm text-gray-600 mt-3">Please include your:</p>
               <ul className="list-disc list-inside text-sm text-gray-600 ml-4">
@@ -60,9 +64,7 @@ function page() {
             <h2 className="text-xl font-semibold text-gray-900 mb-3">
               Data retention:
             </h2>
-            <p className="text-gray-700 mb-3">
-              Some data may be retained for:
-            </p>
+            <p className="text-gray-700 mb-3">Some data may be retained for:</p>
             <ul className="space-y-2 text-gray-700">
               <li className="flex items-start">
                 <span className="text-yellow-600 mr-2">&bull;</span>
@@ -91,12 +93,13 @@ function page() {
 
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-500 italic">
-            If you have any questions about the deletion process, please contact our support team.
+            If you have any questions about the deletion process, please contact
+            our support team.
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default page
+export default page;

@@ -1,32 +1,24 @@
-'use client';
+"use client";
 
-import React, { useCallback, useState } from 'react';
-import {
-  Button,
-  Input,
-  Checkbox,
-  Typography,
-  Form,
-  Spin,
-  Select,
-} from 'antd';
-import { FaGoogle } from 'react-icons/fa6';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { CheckboxChangeEvent } from 'antd/es/checkbox';
-import Image from 'next/image';
-import Link from 'next/link';
-import logo_green from '@/Assets/logo_green.png';
-import phoneImage from '@/Assets/phone_image.png';
-import { signUpHandler } from '@/ApisRequests/Auth';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
-import { useGoogleLogin } from '@react-oauth/google';
+import React, { useCallback, useState } from "react";
+import { Button, Input, Checkbox, Typography, Form, Spin, Select } from "antd";
+import { FaGoogle } from "react-icons/fa6";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
+import Image from "next/image";
+import Link from "next/link";
+import logo_green from "@/Assets/logo_green.png";
+import phoneImage from "@/Assets/phone_image.png";
+import { signUpHandler } from "@/ApisRequests/Auth";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { useGoogleLogin } from "@react-oauth/google";
 const { Title, Text } = Typography;
-import Cookies from 'js-cookie';
-import { post } from '@/ApisRequests/server';
-import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
-import debounce from 'lodash.debounce';
+import Cookies from "js-cookie";
+import { post } from "@/ApisRequests/server";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import debounce from "lodash.debounce";
 export interface FinishFailedInfo {
   values: Record<string, unknown>;
   errorFields: {
@@ -40,8 +32,8 @@ const SignUpPage: React.FC = () => {
   const [form] = Form.useForm();
   const [invite, setInvite] = useState(
     new URLSearchParams(
-      typeof window == 'undefined' ? '' : window?.location?.search
-    )?.get('invite')
+      typeof window == "undefined" ? "" : window?.location?.search,
+    )?.get("invite"),
   );
   const [formLoading, setFormLoading] = useState(false);
   const router = useRouter();
@@ -49,17 +41,17 @@ const SignUpPage: React.FC = () => {
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const response = await fetch(
-        'https://www.googleapis.com/oauth2/v3/userinfo',
+        "https://www.googleapis.com/oauth2/v3/userinfo",
         {
-          method: 'GET',
+          method: "GET",
           headers: {
             Authorization: `Bearer ${tokenResponse?.access_token}`,
           },
-        }
+        },
       );
 
       if (!response.ok) {
-        toast.error('Failed to fetch user info');
+        toast.error("Failed to fetch user info");
       }
 
       const userDetails = await response.json();
@@ -67,52 +59,52 @@ const SignUpPage: React.FC = () => {
         userDetails?.phone ||
         userDetails?.phoneNumber ||
         userDetails?.phone_number ||
-        '';
+        "";
       const data = {
-        name: userDetails.name || '',
-        picture: userDetails.picture || '',
-        email: userDetails.email || '',
-        username: userDetails.name || '',
-        address: userDetails?.address || '',
+        name: userDetails.name || "",
+        picture: userDetails.picture || "",
+        email: userDetails.email || "",
+        username: userDetails.name || "",
+        address: userDetails?.address || "",
         phone,
       };
-      const res = await post('/auth/google-login', data);
+      const res = await post("/auth/google-login", data);
       if (res?.success) {
-        Cookies.remove('token');
-        localStorage.setItem('token', res?.data?.accessToken);
-        Cookies.set('token', res?.data?.accessToken);
-        if (Cookies.get('token')) {
-          toast.success(res?.message || 'logged in successfully');
-          window.location.href = '/';
+        Cookies.remove("token");
+        localStorage.setItem("token", res?.data?.accessToken);
+        Cookies.set("token", res?.data?.accessToken);
+        if (Cookies.get("token")) {
+          toast.success(res?.message || "logged in successfully");
+          window.location.href = "/";
         } else {
           toast.custom(
             (t: any) => (
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  background: '#fff',
-                  color: '#000',
-                  padding: '12px 16px',
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                  width: '350px',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  background: "#fff",
+                  color: "#000",
+                  padding: "12px 16px",
+                  border: "1px solid #ddd",
+                  borderRadius: "8px",
+                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                  width: "350px",
                 }}
               >
-                <span style={{ flex: 1, marginRight: '8px' }}>
+                <span style={{ flex: 1, marginRight: "8px" }}>
                   ⚠️ Logged in successfully, but cookies are disabled in your
                   browser. Some features may not work as expected.
                 </span>
                 <button
                   style={{
-                    background: '#f27405',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    padding: '4px 8px',
-                    cursor: 'pointer',
+                    background: "#f27405",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "4px",
+                    padding: "4px 8px",
+                    cursor: "pointer",
                   }}
                   onClick={() => toast.dismiss(t.id)}
                 >
@@ -122,16 +114,16 @@ const SignUpPage: React.FC = () => {
             ),
             {
               duration: 5000,
-              position: 'top-center',
-            }
+              position: "top-center",
+            },
           );
-          window.location.href = '/';
+          window.location.href = "/";
         }
       } else {
-        toast.error(res?.message || 'something went wrong');
+        toast.error(res?.message || "something went wrong");
       }
     },
-    onError: (err) => { },
+    onError: (err) => {},
   });
 
   const onFinish = async (values: any) => {
@@ -145,7 +137,7 @@ const SignUpPage: React.FC = () => {
         phone: values?.phoneNumber,
         email: values?.email,
         address: values?.address,
-        inviteToken: invite || '',
+        inviteToken: invite || "",
       },
     };
 
@@ -153,14 +145,16 @@ const SignUpPage: React.FC = () => {
     setFormLoading(false);
 
     if (res?.success) {
-      localStorage.setItem('email', values?.email);
-      toast.success(res?.message || 'Please check your email');
-      router.push('/otp');
+      localStorage.setItem("email", values?.email);
+      toast.success(res?.message || "Please check your email");
+      router.push("/otp");
     } else {
-      if (res?.message?.includes('Email already exists')) {
-        toast.error('This email is already registered. Please use a different one.');
+      if (res?.message?.includes("Email already exists")) {
+        toast.error(
+          "This email is already registered. Please use a different one.",
+        );
       } else {
-        toast.error(res?.message || 'Something went wrong. Please try again.');
+        toast.error(res?.message || "Something went wrong. Please try again.");
       }
     }
   };
@@ -172,8 +166,10 @@ const SignUpPage: React.FC = () => {
   };
 
   //
-  const [addressOptions, setAddressOptions] = useState<Array<{ value: string; label: string; disabled?: boolean }>>([]);
-  const [searchText, setSearchText] = useState('');
+  const [addressOptions, setAddressOptions] = useState<
+    Array<{ value: string; label: string; disabled?: boolean }>
+  >([]);
+  const [searchText, setSearchText] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
   const fetchLocations = async (query: string) => {
@@ -184,7 +180,9 @@ const SignUpPage: React.FC = () => {
 
     setIsSearching(true);
     try {
-      const response = await fetch(`/api/places?query=${encodeURIComponent(query)}`);
+      const response = await fetch(
+        `/api/places?query=${encodeURIComponent(query)}`,
+      );
       const data = await response.json();
 
       if (data.predictions?.length) {
@@ -192,14 +190,18 @@ const SignUpPage: React.FC = () => {
           data.predictions.map((item: { description: string }) => ({
             value: item.description,
             label: item.description,
-          }))
+          })),
         );
       } else {
-        setAddressOptions([{ value: 'no-results', label: 'No results found', disabled: true }]);
+        setAddressOptions([
+          { value: "no-results", label: "No results found", disabled: true },
+        ]);
       }
     } catch (error) {
-      console.error('Error fetching locations:', error);
-      setAddressOptions([{ value: 'error', label: 'Error loading addresses', disabled: true }]);
+      console.error("Error fetching locations:", error);
+      setAddressOptions([
+        { value: "error", label: "Error loading addresses", disabled: true },
+      ]);
     } finally {
       setIsSearching(false);
     }
@@ -210,7 +212,7 @@ const SignUpPage: React.FC = () => {
     debounce((query: string) => {
       fetchLocations(query);
     }, 500),
-    []
+    [],
   );
 
   const handleSearch = (value: string) => {
@@ -222,7 +224,6 @@ const SignUpPage: React.FC = () => {
     }
   };
 
-
   return (
     <>
       <div className="flex flex-col items-center bg-[#2FC191] p-8 rounded-lg max-w-2xl mt-10 w-full">
@@ -233,12 +234,12 @@ const SignUpPage: React.FC = () => {
         <Button
           className="w-full bg-[#053697] text-white h-[42px]"
           onMouseEnter={(event: any) => (
-            (event.target.style.backgroundColor = '#053697c9'),
-            (event.target.style.color = '#fff')
+            (event.target.style.backgroundColor = "#053697c9"),
+            (event.target.style.color = "#fff")
           )}
           onMouseLeave={(event: any) => (
-            (event.target.style.backgroundColor = '#053697'),
-            (event.target.style.color = '#fff')
+            (event.target.style.backgroundColor = "#053697"),
+            (event.target.style.color = "#fff")
           )}
           onClick={() => login()}
           icon={<FaGoogle />}
@@ -259,7 +260,7 @@ const SignUpPage: React.FC = () => {
           <Form.Item
             label="Full Name"
             name="fullName"
-            rules={[{ required: true, message: 'Please enter your full name' }]}
+            rules={[{ required: true, message: "Please enter your full name" }]}
           >
             <Input placeholder="Full Name" className="h-[42px]" />
           </Form.Item>
@@ -268,8 +269,8 @@ const SignUpPage: React.FC = () => {
             label="Email"
             name="email"
             rules={[
-              { required: true, message: 'Please enter your email' },
-              { type: 'email', message: 'Please enter a valid email' },
+              { required: true, message: "Please enter your email" },
+              { type: "email", message: "Please enter a valid email" },
             ]}
           >
             <Input placeholder="Email" className="h-[42px]" />
@@ -279,17 +280,17 @@ const SignUpPage: React.FC = () => {
             label="Phone Number"
             name="phoneNumber"
             rules={[
-              { required: true, message: 'Please enter your phone number' },
+              { required: true, message: "Please enter your phone number" },
             ]}
           >
             <PhoneInput
-              country={'us'}
+              country={"us"}
               inputClass="!h-[42px] !w-full !border !border-gray-300 !rounded-md"
               dropdownClass="custom-dropdown"
               containerClass="!w-full"
               enableSearch={true}
               inputProps={{
-                name: 'phone',
+                name: "phone",
                 required: true,
               }}
             />
@@ -297,7 +298,7 @@ const SignUpPage: React.FC = () => {
           <Form.Item
             label="User Name"
             name="username"
-            rules={[{ required: true, message: 'Please enter a username' }]}
+            rules={[{ required: true, message: "Please enter a username" }]}
           >
             <Input placeholder="User Name" className="h-[42px]" />
           </Form.Item>
@@ -308,7 +309,7 @@ const SignUpPage: React.FC = () => {
             rules={[
               {
                 required: true,
-                message: 'Please select your address from the dropdown',
+                message: "Please select your address from the dropdown",
               },
             ]}
             className="relative"
@@ -320,22 +321,27 @@ const SignUpPage: React.FC = () => {
               filterOption={false}
               onSearch={handleSearch}
               onChange={(value) => form.setFieldsValue({ address: value })}
-              notFoundContent={isSearching ? 'Searching...' : searchText ? 'No results found' : 'Type to search for your address'}
-              style={{ width: '100%' }}
+              notFoundContent={
+                isSearching
+                  ? "Searching..."
+                  : searchText
+                    ? "No results found"
+                    : "Type to search for your address"
+              }
+              style={{ width: "100%" }}
               loading={isSearching}
               allowClear
               className="h-[42px]"
               options={addressOptions}
-              dropdownStyle={{ minWidth: '300px' }}
+              dropdownStyle={{ minWidth: "300px" }}
               getPopupContainer={(triggerNode) => triggerNode.parentElement}
-
             />
           </Form.Item>
 
           <Form.Item
             label="Password"
             name="password"
-            rules={[{ required: true, message: 'Please enter your password' }]}
+            rules={[{ required: true, message: "Please enter your password" }]}
           >
             <Input.Password
               placeholder="Password"
@@ -347,16 +353,16 @@ const SignUpPage: React.FC = () => {
           <Form.Item
             label="Confirm Password"
             name="confirmPassword"
-            dependencies={['password']}
+            dependencies={["password"]}
             rules={[
-              { required: true, message: 'Please confirm your password' },
+              { required: true, message: "Please confirm your password" },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue('password') === value) {
+                  if (!value || getFieldValue("password") === value) {
                     return Promise.resolve();
                   }
                   return Promise.reject(
-                    new Error('The two passwords do not match')
+                    new Error("The two passwords do not match"),
                   );
                 },
               }),
@@ -378,16 +384,16 @@ const SignUpPage: React.FC = () => {
                   value
                     ? Promise.resolve()
                     : Promise.reject(
-                      new Error(
-                        'You must accept the terms and privacy policy'
-                      )
-                    ),
+                        new Error(
+                          "You must accept the terms and privacy policy",
+                        ),
+                      ),
               },
             ]}
           >
             <div>
               <Checkbox className="text-white">I agree to the</Checkbox>
-              <Link href={'/terms'}>
+              <Link href={"/terms"}>
                 <Text className="cursor-pointer" underline>
                   Terms of Service
                 </Text>
@@ -401,15 +407,15 @@ const SignUpPage: React.FC = () => {
               htmlType="submit"
               className="w-full bg-[#053697] text-white h-[42px]"
               onMouseEnter={(event: any) => (
-                (event.target.style.backgroundColor = '#053697c9'),
-                (event.target.style.color = '#fff')
+                (event.target.style.backgroundColor = "#053697c9"),
+                (event.target.style.color = "#fff")
               )}
               onMouseLeave={(event: any) => (
-                (event.target.style.backgroundColor = '#053697'),
-                (event.target.style.color = '#fff')
+                (event.target.style.backgroundColor = "#053697"),
+                (event.target.style.color = "#fff")
               )}
             >
-              {formLoading ? <Spin size="small" /> : ' Sign up'}
+              {formLoading ? <Spin size="small" /> : " Sign up"}
             </Button>
           </Form.Item>
         </Form>
@@ -420,7 +426,7 @@ const SignUpPage: React.FC = () => {
       </div>
       <hr className="h-[4px] w-full mt-6 bg-[#2FC191]" />
       <hr className="h-[4px] w-full mb-6 -mt-[1px] bg-[#053697]" />
-      <section className="container mx-auto px-4 py-10">
+      <section className="max-w-355 mx-auto px-4 py-10">
         <h2 className="text-2xl md:text-3xl font-bold text-[#053697] mb-2">
           How TIPPZ works
         </h2>

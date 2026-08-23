@@ -67,8 +67,8 @@ const CommunitySearchBar = memo(function CommunitySearchBar({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   return (
-    <div className="sticky top-0 z-30 py-2 sm:py-3 backdrop-blur-md transition-all w-full border-b border-border/50 bg-white/90">
-      <div className="container mx-auto px-3 sm:px-4 flex items-center justify-between gap-2 sm:gap-3 w-full min-w-0">
+    <div className="sticky top-14 z-30 py-2 sm:py-3 backdrop-blur-md transition-all w-full border-b border-border/50">
+      <div className="max-w-355 mx-auto px-3 sm:px-4 flex items-center justify-between gap-2 sm:gap-3 w-full min-w-0">
         {/* Search Bar Input */}
         <div className="relative flex-1 md:max-w-xs min-w-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#233A6C60] pointer-events-none" />

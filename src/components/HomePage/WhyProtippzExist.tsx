@@ -89,7 +89,7 @@ function WhyProtippzExist() {
       className="relative w-full"
       aria-labelledby="why-protippz-heading"
     >
-      <div className="relative w-full container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="relative w-full max-w-355 mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center max-w-6xl mx-auto mb-16">
           <div

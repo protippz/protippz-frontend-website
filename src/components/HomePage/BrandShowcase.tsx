@@ -34,7 +34,7 @@ const BRAND_ITEMS = [
 
 function BrandShowcase() {
   return (
-    <section className="relative max-w-7xl mx-auto w-full flex flex-col gap-4 overflow-hidden">
+    <section className="relative max-w-355 mx-auto w-full flex flex-col gap-4 overflow-hidden">
       {/* Marquee strip */}
       <small className="text-center text-sm text-gray-600">
         Changing the game for women&apos;s sports — one tip at a time

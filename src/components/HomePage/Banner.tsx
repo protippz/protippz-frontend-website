@@ -59,7 +59,7 @@ const Banner = () => {
       >
         <div className="absolute w-full h-full bg-black opacity-50 z-10"></div>
         <MotionDiv
-          className="container mx-auto text-left text-white z-30 md:p-0 p-2"
+          className="max-w-355 mx-auto text-left text-white z-30 md:p-0 p-2"
           variants={containerVariants}
           initial="hidden"
           animate="visible"

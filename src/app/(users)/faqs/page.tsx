@@ -1,8 +1,8 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { Collapse, Typography } from 'antd';
-import Heading from '@/components/Shared/Heading';
-import { get } from '@/ApisRequests/server';
+"use client";
+import React, { useEffect, useState } from "react";
+import { Collapse, Typography } from "antd";
+import Heading from "@/components/Shared/Heading";
+import { get } from "@/ApisRequests/server";
 
 const { Panel } = Collapse;
 const { Title, Text } = Typography;
@@ -18,13 +18,13 @@ const FAQPage: React.FC = () => {
   const [data, setData] = useState<FaqInterface[]>();
   useEffect(() => {
     const getFaqData = async () => {
-      const res = await get('/manage/get-faq');
+      const res = await get("/manage/get-faq");
       setData(res?.data || []);
     };
     getFaqData();
   }, []);
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-355 mx-auto px-4 py-8">
       <Heading headingText="Frequently Asked Questions" />
       <Collapse
         accordion
@@ -34,11 +34,11 @@ const FAQPage: React.FC = () => {
         expandIcon={({ isActive }) => (
           <span
             style={{
-              fontSize: '20px',
-              color: isActive ? '#1a73e8' : '#1a73e8',
+              fontSize: "20px",
+              color: isActive ? "#1a73e8" : "#1a73e8",
             }}
           >
-            {isActive ? '−' : '+'}
+            {isActive ? "−" : "+"}
           </span>
         )}
       >

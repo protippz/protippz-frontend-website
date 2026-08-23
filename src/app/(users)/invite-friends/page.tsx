@@ -20,7 +20,7 @@ const InviteFriendsPage: React.FC = () => {
         headers: {
           Authorization: `${localStorage.getItem("token")}`,
         },
-      }
+      },
     );
     if (res?.success) {
       setInviteLink(res?.data?.link);
@@ -45,13 +45,13 @@ const InviteFriendsPage: React.FC = () => {
     const subject = "Join me on PROTIPPZ!";
     const body = `Hey, join PROTIPPZ using this link: ${inviteLink}`;
     const mailtoLink = `mailto:?subject=${encodeURIComponent(
-      subject
+      subject,
     )}&body=${encodeURIComponent(body)}`;
     window.open(mailtoLink, "_blank");
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-355 mx-auto px-4 py-8">
       <h2 className="text-center text-[#053697] text-4xl font-bold mb-2">
         Invite Friends
       </h2>
@@ -60,7 +60,9 @@ const InviteFriendsPage: React.FC = () => {
       </p>
 
       <div className="mb-12 max-w-screen-lg mx-auto">
-        <h3 className="text-[#053697] text-2xl font-semibold mb-3">How It Works</h3>
+        <h3 className="text-[#053697] text-2xl font-semibold mb-3">
+          How It Works
+        </h3>
         <div className="mb-8 ">
           <p className="text-[#053697] font-bold mb-3">1. Invite</p>
           <p className=" ml-4 text-green-500">
@@ -79,7 +81,8 @@ const InviteFriendsPage: React.FC = () => {
         <div className="mb-8 ">
           <p className="text-[#053697] font-bold mb-3">3. Earn Rewards</p>
           <p className=" ml-4 text-green-500">
-            For each friend who joins, you'll earn 10 points that you can redeem under our Rewardz tab.
+            For each friend who joins, you'll earn 10 points that you can redeem
+            under our Rewardz tab.
           </p>
         </div>
       </div>
@@ -122,7 +125,7 @@ const InviteFriendsPage: React.FC = () => {
           <div className="flex space-x-4">
             <a
               href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                inviteLink
+                inviteLink,
               )}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -133,9 +136,9 @@ const InviteFriendsPage: React.FC = () => {
 
             <Link
               href={`https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(
-                "Join me on PROTIPPZ!"
+                "Join me on PROTIPPZ!",
               )}&body=${encodeURIComponent(
-                `Hi,\n\nJoin me on PROTIPPZ using this link: ${inviteLink}\n\nCheers!`
+                `Hi,\n\nJoin me on PROTIPPZ using this link: ${inviteLink}\n\nCheers!`,
               )}`}
               target="_blank"
             >

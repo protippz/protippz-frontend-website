@@ -582,7 +582,7 @@ export default function CommunityPage() {
       />
 
       {/* Main Content Layout */}
-      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-7xl">
+      <div className="max-w-355 mx-auto px-3 sm:px-4 py-4 sm:py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Feed Column */}
           <div className="lg:col-span-2 space-y-4">
@@ -675,18 +675,6 @@ export default function CommunityPage() {
         onLikeComment={handleLikeComment}
         isPostingComment={isPostingComment}
       />
-
-      {/* Mobile Floating Scroll to Top Button */}
-      <button
-        onClick={() => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}
-        className="lg:hidden fixed bottom-6 right-6 w-12 h-12 rounded-full flex items-center justify-center text-white shadow-xl z-40 transition-transform active:scale-95 cursor-pointer"
-        style={{ backgroundColor: "#308D6F" }}
-        title="Scroll to Top"
-      >
-        <Plus className="w-5 h-5" />
-      </button>
     </div>
   );
 }

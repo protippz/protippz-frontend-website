@@ -1,30 +1,30 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Form, Radio, Input, Button } from 'antd';
-import Image from 'next/image';
-import ach from '@/Assets/ach.png';
-import check2 from '@/Assets/check2.png';
-import { useContextData } from '@/provider/ContextProvider';
-import toast from 'react-hot-toast';
-import { post } from '@/ApisRequests/server';
-import Swal from 'sweetalert2';
-import { useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import { Form, Radio, Input, Button } from "antd";
+import Image from "next/image";
+import ach from "@/Assets/ach.png";
+import check2 from "@/Assets/check2.png";
+import { useContextData } from "@/provider/ContextProvider";
+import toast from "react-hot-toast";
+import { post } from "@/ApisRequests/server";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 const WithDrawPage = () => {
   const [loading, setLoading] = useState(false);
   const data = useContextData();
-  const [paymentMethod, setPaymentMethod] = useState('ach');
+  const [paymentMethod, setPaymentMethod] = useState("ach");
   const [amount, setAmount] = useState(data?.userData?.dueAmount || 0);
   const router = useRouter();
   // Submit handler
   const handleSubmit = async (values: any) => {
     try {
       if (!data?.userData?.dueAmount) {
-        return toast.error('Insufficient balance');
+        return toast.error("Insufficient balance");
       }
       if (amount > data?.userData?.dueAmount) {
-        toast.error('Insufficient balance.');
+        toast.error("Insufficient balance.");
         return;
       }
       const ach = {
@@ -32,33 +32,33 @@ const WithDrawPage = () => {
         bankAccountNumber: Number(values?.bankAccountNumber),
         routingNumber: Number(values?.routingNumber),
         amount: Number(amount),
-        withdrawOption: 'ACH',
-        status: 'Pending',
+        withdrawOption: "ACH",
+        status: "Pending",
       };
       const check = {
         ...values,
         zipCode: Number(values?.zipCode),
         amount: Number(amount),
-        withdrawOption: 'Check',
-        status: 'Pending',
+        withdrawOption: "Check",
+        status: "Pending",
       };
       const res = await post(
-        '/withdraw/create',
-        paymentMethod == 'ach' ? ach : check,
+        "/withdraw/create",
+        paymentMethod == "ach" ? ach : check,
         {
           headers: {
-            Authorization: `${localStorage.getItem('token')}`,
+            Authorization: `${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       if (res?.success) {
         toast.success(res?.message);
-        window.location.href = '/home';
+        window.location.href = "/home";
       } else {
         toast.error(res?.message);
       }
     } catch (error) {
-      toast.error('Failed to withdraw funds');
+      toast.error("Failed to withdraw funds");
     }
   };
   // handle bank account
@@ -66,23 +66,23 @@ const WithDrawPage = () => {
     setLoading(true);
     const res = await post(
       `/stripe/connect-stripe`,
-      { test: '' },
+      { test: "" },
       {
         headers: {
-          Authorization: `${localStorage.getItem('token')}`,
+          Authorization: `${localStorage.getItem("token")}`,
         },
-      }
+      },
     );
     setLoading(false);
     if (res?.success) {
-      window.open(res?.data, '_blank');
+      window.open(res?.data, "_blank");
     } else {
       Swal.fire({
-        title: 'Oops!',
+        title: "Oops!",
         text: res?.message,
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK',
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
       });
     }
   };
@@ -94,29 +94,29 @@ const WithDrawPage = () => {
       { amount: Number(amount) },
       {
         headers: {
-          Authorization: `${localStorage.getItem('token')}`,
+          Authorization: `${localStorage.getItem("token")}`,
         },
-      }
+      },
     );
     setLoading(false);
     if (res?.success) {
       Swal.fire({
-        title: 'Success!',
+        title: "Success!",
         text: res?.message,
-        icon: 'success',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK',
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
       });
-      window.location.href = '/home';
-    } else if (res.message === 'Transfer failed update your bank info') {
+      window.location.href = "/home";
+    } else if (res.message === "Transfer failed update your bank info") {
       Swal.fire({
-        title: 'Connect bank account',
-        text: 'Securely connect your bank account through Stripe.',
-        icon: 'warning',
+        title: "Connect bank account",
+        text: "Securely connect your bank account through Stripe.",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Update Bank Account',
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Update Bank Account",
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
@@ -126,19 +126,19 @@ const WithDrawPage = () => {
               {},
               {
                 headers: {
-                  Authorization: `${localStorage.getItem('token')}`,
+                  Authorization: `${localStorage.getItem("token")}`,
                 },
-              }
+              },
             );
             if (res?.success) {
-              window.open(res?.data?.link, '_blank');
+              window.open(res?.data?.link, "_blank");
             } else {
               Swal.fire({
-                title: 'Oops!',
+                title: "Oops!",
                 text: res?.message,
-                icon: 'error',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'OK',
+                icon: "error",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "OK",
               });
             }
           } catch (error) {
@@ -149,19 +149,19 @@ const WithDrawPage = () => {
       });
     } else {
       Swal.fire({
-        title: 'Oops!',
+        title: "Oops!",
         text: res?.message,
-        icon: 'error',
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'OK',
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
       });
     }
   };
   return (
-    <div style={{ width: '100vw' }} className="w-full container mx-auto">
+    <div style={{ width: "100vw" }} className="w-full max-w-355 mx-auto">
       <div className="w-full p-8 bg-white rounded-lg max-w-4xl mx-auto">
         <h2 className="text-3xl font-semibold text-center mb-3 text-[#053697]">
-          {' '}
+          {" "}
           Withdraw Funds
         </h2>
         <h2 className="text-3xl font-semibold text-center mb-6 text-[#053697]">
@@ -178,10 +178,10 @@ const WithDrawPage = () => {
               onChange={(e) => {
                 toast.dismiss();
                 if (!data?.userData?.dueAmount) {
-                  return toast.error('Insufficient balance');
+                  return toast.error("Insufficient balance");
                 }
                 if (Number(e.target.value) > data?.userData?.dueAmount) {
-                  return toast.error('Insufficient balance');
+                  return toast.error("Insufficient balance");
                 }
                 setAmount(Number(e.target.value));
               }}
@@ -236,7 +236,7 @@ const WithDrawPage = () => {
           </div>
 
           <div className="w-full md:w-3/5 p-4 bg-gray-50 rounded-lg">
-            {paymentMethod === 'ach' ? (
+            {paymentMethod === "ach" ? (
               <div className="flex justify-center items-center gap-2 flex-col mt-8">
                 <Button
                   loading={loading}
@@ -249,13 +249,13 @@ const WithDrawPage = () => {
                         }
                       : () => {
                           Swal.fire({
-                            title: 'Connect bank account',
-                            text: 'Securely connect your bank account through Stripe.',
-                            icon: 'warning',
+                            title: "Connect bank account",
+                            text: "Securely connect your bank account through Stripe.",
+                            icon: "warning",
                             showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Add Bank Account',
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Add Bank Account",
                           }).then((result) => {
                             if (result.isConfirmed) {
                               accountConnect();
@@ -283,7 +283,7 @@ const WithDrawPage = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input your Player/Team Name!',
+                      message: "Please input your Player/Team Name!",
                     },
                   ]}
                 >
@@ -302,7 +302,7 @@ const WithDrawPage = () => {
                   name="email"
                   className="mt-4"
                   rules={[
-                    { required: true, message: 'Please input your Email!' },
+                    { required: true, message: "Please input your Email!" },
                   ]}
                 >
                   <Input
@@ -323,7 +323,7 @@ const WithDrawPage = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input your street address!',
+                      message: "Please input your street address!",
                     },
                   ]}
                 >
@@ -342,7 +342,7 @@ const WithDrawPage = () => {
                   name="city"
                   className="mt-4"
                   rules={[
-                    { required: true, message: 'Please input your city!' },
+                    { required: true, message: "Please input your city!" },
                   ]}
                 >
                   <Input
@@ -360,7 +360,7 @@ const WithDrawPage = () => {
                   name="state"
                   className="mt-4"
                   rules={[
-                    { required: true, message: 'Please input your state!' },
+                    { required: true, message: "Please input your state!" },
                   ]}
                 >
                   <Input
@@ -378,7 +378,7 @@ const WithDrawPage = () => {
                   name="zipCode"
                   className="mt-4"
                   rules={[
-                    { required: true, message: 'Please input your zip code!' },
+                    { required: true, message: "Please input your zip code!" },
                   ]}
                 >
                   <Input

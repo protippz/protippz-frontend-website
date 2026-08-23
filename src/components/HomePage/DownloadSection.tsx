@@ -1,13 +1,13 @@
-'use client';
-import appsore from '@/Assets/appsore.png';
-import download from '@/Assets/Iphone update 14.png';
-import playstore from '@/Assets/playstore.png';
-import qrCode from '@/Assets/qrcode.png';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
+"use client";
+import appsore from "@/Assets/appsore.png";
+import download from "@/Assets/Iphone update 14.png";
+import playstore from "@/Assets/playstore.png";
+import qrCode from "@/Assets/qrcode.png";
+import { motion, useMotionValue, useTransform } from "framer-motion";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 const DownloadSection = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -66,21 +66,21 @@ const DownloadSection = () => {
         {/* ✅ Structured Data for Google (JSON-LD Schema) */}
         <script type="application/ld+json">
           {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'SoftwareApplication',
-            name: 'ProTipz App',
-            operatingSystem: 'Android, iOS',
-            applicationCategory: 'Sports',
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "ProTipz App",
+            operatingSystem: "Android, iOS",
+            applicationCategory: "Sports",
             offers: {
-              '@type': 'Offer',
-              price: '0',
-              priceCurrency: 'USD',
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "USD",
             },
             downloadUrl:
-              'https://play.google.com/store/apps/details?id=com.protipz.cory',
+              "https://play.google.com/store/apps/details?id=com.protipz.cory",
             description:
-              'Download ProTipz, the best sports tipping app to tip players, earn rewards, and win prizes.',
-            image: 'https://yourwebsite.com/seo-image.jpg',
+              "Download ProTipz, the best sports tipping app to tip players, earn rewards, and win prizes.",
+            image: "https://yourwebsite.com/seo-image.jpg",
           })}
         </script>
       </Head>
@@ -90,7 +90,7 @@ const DownloadSection = () => {
           Available at Google Play & Apple Store
         </p>
       </div>
-      <div className="container mx-auto flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12 relative">
+      <div className="max-w-355 mx-auto flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12 relative">
         <motion.div
           className="bg-[#2FC191] relative p-1 lg:h-[500px] h-[400px] text-white w-full max-w-lg md:max-w-lg lg:max-w-xl md:px-12 text-center z-1 flex flex-col justify-center items-center"
           onMouseEnter={() => setIsHovered(true)}
@@ -102,9 +102,11 @@ const DownloadSection = () => {
           onMouseMove={handleMouseMove}
           animate={{ scale: isHovered ? 1.05 : 1 }}
           transition={{ duration: 0.3 }}
-          style={{ translateX, translateY, borderRadius: '500px' }}
+          style={{ translateX, translateY, borderRadius: "500px" }}
         >
-          <h2 className="text-xl md:text-2xl font-bold mb-4">Download Our App</h2>
+          <h2 className="text-xl md:text-2xl font-bold mb-4">
+            Download Our App
+          </h2>
           <p className="md:text-base text-sm mb-6">
             Tip your favorite players and teams, earn rewards, win prizes, and
             join a community of passionate sports lovers.
@@ -150,7 +152,13 @@ const DownloadSection = () => {
           </div>
         </motion.div>
         <div className="relative md:relative  md:right-20 md:ml-10 md:top-0  lg:ml-20 md:z-1 ">
-          <Image className='lg:w-72 md:w-60 w-48' src={download} alt="Mobile Mockup" width={300} height={600} />
+          <Image
+            className="lg:w-72 md:w-60 w-48"
+            src={download}
+            alt="Mobile Mockup"
+            width={300}
+            height={600}
+          />
         </div>
       </div>
     </section>

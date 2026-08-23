@@ -49,7 +49,7 @@ const TeamPage = async ({ searchParams }: ParamsProps) => {
   const token = (await cookie).get("token")?.value;
 
   return (
-    <div className="container mx-auto mt-10">
+    <div className="max-w-355 mx-auto mt-10">
       <GoToTop />
 
       <Suspense
@@ -90,7 +90,6 @@ const getTeam = async (param: SearchParams | {}) => {
   });
   return [res.data?.result, res.data?.meta];
 };
-
 
 // import { get } from '@/ApisRequests/server';
 // import PaginationComponents from '@/components/Shared/Client/Pagination';
@@ -138,7 +137,7 @@ const getTeam = async (param: SearchParams | {}) => {
 //   const token = (await cookie).get('token')?.value;
 
 //   return (
-//     <div className="container mx-auto mt-10">
+//     <div className="max-w-355 mx-auto mt-10">
 //       <GoToTop />
 
 //       <Teams />

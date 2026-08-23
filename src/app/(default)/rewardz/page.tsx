@@ -1,14 +1,14 @@
-import { get } from '@/ApisRequests/server';
-import rewardbg from '@/Assets/rewardbgs.png';
-import Rewards from '@/components/rewardz/Rewards';
-import RewardzCards from '@/components/rewardz/RewardzCards';
-import SearchAndSortComponent from '@/components/rewardz/SearchAndSortComponent';
-import PaginationComponents from '@/components/Shared/Client/Pagination';
-import Heading from '@/components/Shared/Heading';
-import GoToTop from '@/components/ui/GoToTop';
-import { Empty } from 'antd';
-import Link from 'next/link';
-import { FaLongArrowAltRight } from 'react-icons/fa';
+import { get } from "@/ApisRequests/server";
+import rewardbg from "@/Assets/rewardbgs.png";
+import Rewards from "@/components/rewardz/Rewards";
+import RewardzCards from "@/components/rewardz/RewardzCards";
+import SearchAndSortComponent from "@/components/rewardz/SearchAndSortComponent";
+import PaginationComponents from "@/components/Shared/Client/Pagination";
+import Heading from "@/components/Shared/Heading";
+import GoToTop from "@/components/ui/GoToTop";
+import { Empty } from "antd";
+import Link from "next/link";
+import { FaLongArrowAltRight } from "react-icons/fa";
 
 export interface RewardInterface {
   _id: string;
@@ -35,7 +35,7 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
   const rewardData = data as RewardInterface[];
   return (
     <>
-      <div className="container mx-auto mt-10">
+      <div className="max-w-355 mx-auto mt-10">
         <GoToTop />
         <Rewards />
         <Heading headingText="REWARDZ" subHeadingText="Select a Reward" />
@@ -57,18 +57,18 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
             <PaginationComponents paginationData={meta} />
           </div>
         ) : (
-          ''
+          ""
         )}
       </div>
       <div
         style={{
           backgroundImage: `url(${rewardbg.src})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
         className="flex flex-col items-center justify-between mb-10 box-border w-full"
       >
-        <div className="w-full md:flex md:items-center md:justify-between container mx-auto  min-h-[600px]">
+        <div className="w-full md:flex md:items-center md:justify-between max-w-355 mx-auto  min-h-[600px]">
           <div className="w-full md:w-1/2 text-center md:text-left">
             <h2 className="text-3xl font-bold text-[#053697] mb-4">
               Send Tippz. Earn Rewardz! Win Prizes!!
@@ -79,7 +79,7 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
               drawings.
             </p>
             <ul className="mt-4 space-y-2">
-              {['Sports Merchandise', 'Cash Prizes', 'Tickets & More'].map(
+              {["Sports Merchandise", "Cash Prizes", "Tickets & More"].map(
                 (item, index) => (
                   <li
                     key={index}
@@ -88,7 +88,7 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
                     <FaLongArrowAltRight className="text-[#053697] mr-2" />
                     <span>{item}</span>
                   </li>
-                )
+                ),
               )}
             </ul>
             <div className="mt-4 flex justify-center md:justify-start">
@@ -113,7 +113,7 @@ const getReward = async (params: searchParamsInterface) => {
   const paramsUrl = Object.entries(params)
     .filter(([key, value]) => value !== undefined)
     .map(([key, value]) => `${key}=${value}`)
-    .join('&');
+    .join("&");
   const res = await get(`/reward/get-all?${paramsUrl}&limit=200`);
   return [res.data?.result, res.data?.meta];
 };

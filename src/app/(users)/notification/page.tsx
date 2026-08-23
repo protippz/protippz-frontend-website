@@ -25,7 +25,7 @@ const NotificationPage = async () => {
   const data = res.data?.result as NotificationsType[];
   const meta = res.data?.meta;
   return (
-    <div className="container mx-auto p-4">
+    <div className="max-w-355 mx-auto p-4">
       {data?.length >= 1 ? (
         <div>
           <h1 className="text-4xl font-bold text-[#053697] mb-12 text-center">
@@ -43,7 +43,9 @@ const NotificationPage = async () => {
                 <div className="flex items-center text-green-500 space-x-2">
                   <AiOutlineClockCircle className="text-xl" />
                   <span className="text-sm">
-                    {new Date(notification.createdAt).toLocaleDateString("en-US")}
+                    {new Date(notification.createdAt).toLocaleDateString(
+                      "en-US",
+                    )}
                   </span>
                 </div>
               </div>

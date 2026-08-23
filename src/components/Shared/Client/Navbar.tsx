@@ -164,7 +164,7 @@
 //   }, [data?.userData]);
 //   return (
 //     <div className="p-4 bg-white shadow-md z-999">
-//       <nav className="flex items-center justify-between container mx-auto">
+//       <nav className="flex items-center justify-between max-w-355 mx-auto">
 //         <Link href={`/`}>
 //           <Image
 //             src={logo}
@@ -385,7 +385,7 @@ import { IMAGE } from "@/constant/image.index";
 const isRouteActive = (
   pathname: string | null,
   href: string,
-  external?: boolean
+  external?: boolean,
 ) => {
   if (external || !pathname || !href) return false;
 
@@ -420,10 +420,7 @@ const Navbar: React.FC = () => {
     { href: "https://protippz.store", text: "STORE", external: true },
   ];
 
-  const mobileNavItems = [
-    { href: "/", text: "HOME" },
-    ...navItems,
-  ];
+  const mobileNavItems = [{ href: "/", text: "HOME" }, ...navItems];
 
   const handleSignOut = () => {
     Cookies.remove("token");
@@ -597,7 +594,7 @@ const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs transition-all duration-200">
-      <nav className="flex items-center justify-between container mx-auto px-4 py-3">
+      <nav className="flex items-center justify-between max-w-355 mx-auto px-4 py-3">
         {/* Brand Logo */}
         <Link
           href="/"
@@ -800,7 +797,11 @@ const Navbar: React.FC = () => {
             {/* Mobile Nav Links */}
             <ul className="space-y-2 font-semibold text-base">
               {mobileNavItems.map((item) => {
-                const isActive = isRouteActive(pathname, item.href, item.external);
+                const isActive = isRouteActive(
+                  pathname,
+                  item.href,
+                  item.external,
+                );
 
                 return (
                   <li key={item.href}>

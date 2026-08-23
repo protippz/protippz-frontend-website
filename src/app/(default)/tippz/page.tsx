@@ -41,10 +41,10 @@ const cardData = [
 ];
 
 const TipsPage = () => {
-  const seoMetadata= getSEOMetadata('sportsTipping')
+  const seoMetadata = getSEOMetadata("sportsTipping");
   return (
     <>
-     <h1 className="hidden">
+      <h1 className="hidden">
         PROTIPPZ | Sports Fan Engagement Platform & NIL Deals
       </h1>
       <p className="hidden">
@@ -63,28 +63,30 @@ const TipsPage = () => {
       <span className="hidden">fan appreciation</span>
       <span className="hidden">nil deals for college athletes</span>
       <span className="hidden">nil tipping</span>
-      <h2 className='hidden'>Welcome to the PROTIPPZ Sports Community</h2>
+      <h2 className="hidden">Welcome to the PROTIPPZ Sports Community</h2>
       <p className="hidden">
         Join our platform for sports tipping, fan engagement, and the best NIL
         deals for college athletes.
       </p>
-      <h3 className='hidden'>Sports Fan Engagement</h3>
+      <h3 className="hidden">Sports Fan Engagement</h3>
       <p className="hidden">
         Connect with your favorite athletes and teams in our vibrant sports
         community.
       </p>
-      <h3 className='hidden'>NIL Deals for College Athletes</h3>
+      <h3 className="hidden">NIL Deals for College Athletes</h3>
       <p className="hidden">
         Discover and support the best NIL deals that help college sports stars
         thrive.
       </p>
-      <h3 className='hidden'>Support Athletes</h3>
+      <h3 className="hidden">Support Athletes</h3>
       <p className="hidden">
         Show your fan appreciation through our innovative tipping platform.
       </p>
-      <h1 className='hidden'>PROTIPPZ | Sports Fan Engagement Platform & NIL Deals</h1>
+      <h1 className="hidden">
+        PROTIPPZ | Sports Fan Engagement Platform & NIL Deals
+      </h1>
       <SeoPage metadata={seoMetadata} />
-      <div className="container mx-auto sm:p-0 px-2">
+      <div className="max-w-355 mx-auto sm:p-0 px-2">
         <Heading
           headingText="TIPPZ"
           subHeadingText="Tip your favorite player/team, earn rewards, and win prizes."
@@ -98,7 +100,7 @@ const TipsPage = () => {
       </div>
       <hr className="h-[4px] w-full mt-6 bg-[#2FC191]" />
       <hr className="h-[4px] w-full mb-6 -mt-[1px] bg-[#053697]" />
-      <div className="container mx-auto px-4 py-8 flex flex-col items-center">
+      <div className="max-w-355 mx-auto px-4 py-8 flex flex-col items-center">
         <h2 className="text-2xl font-bold text-[#053697] mb-4">
           Download Today
         </h2>

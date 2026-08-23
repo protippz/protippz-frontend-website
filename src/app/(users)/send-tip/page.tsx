@@ -17,13 +17,13 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 const stripePromise: Promise<Stripe | null> = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || ""
+  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "",
 );
 
 const DepositFundForm = () => {
   const router = useRouter();
   const currentParams = new URLSearchParams(
-    typeof window == "undefined" ? "" : window.location.search
+    typeof window == "undefined" ? "" : window.location.search,
   );
   const stripe = useStripe();
   const elements = useElements();
@@ -50,7 +50,7 @@ const DepositFundForm = () => {
           headers: {
             Authorization: `${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       if (paymentMethod === "credit" && stripe && elements) {
         const cardElement = elements.getElement(CardElement);
@@ -63,7 +63,7 @@ const DepositFundForm = () => {
                 name: "Customer Name",
               },
             },
-          }
+          },
         );
         if (error) {
           console.error(error);
@@ -77,7 +77,7 @@ const DepositFundForm = () => {
               headers: {
                 Authorization: `${localStorage.getItem("token")}`,
               },
-            }
+            },
           );
           if (executePayment?.success) {
             toast.success(executePayment?.message);
@@ -105,7 +105,7 @@ const DepositFundForm = () => {
       style={{
         width: "100vw",
       }}
-      className="w-full container mx-auto"
+      className="w-full max-w-355 mx-auto"
     >
       <Form
         onSubmitCapture={handleSubmit}

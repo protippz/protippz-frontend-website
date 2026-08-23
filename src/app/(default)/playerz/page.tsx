@@ -67,7 +67,7 @@ const PlayerZPage = async ({ searchParams }: ParamsProps) => {
   const meta = res.data?.meta;
 
   return (
-    <div className="container mx-auto mt-10">
+    <div className="max-w-355 mx-auto mt-10">
       <GoToTop />
       <Suspense
         fallback={
@@ -164,7 +164,7 @@ export default PlayerZPage;
 //   const meta = res.data?.meta;
 
 //   return (
-//     <div className="container mx-auto mt-10">
+//     <div className="max-w-355 mx-auto mt-10">
 //       <GoToTop />
 //       <Teams />
 

@@ -21,8 +21,8 @@ function HeroSection() {
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
   return (
     <>
-      <section className="relative w-full overflow-hidden h-fit py-10">
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col lg:flex-row items-center justify-between">
+      <section className="relativ w-full overflow-hidden h-fit py-10">
+        <div className="relative z-10 max-w-355 mx-auto px-4 sm:px-0 h-full flex flex-col lg:flex-row items-center justify-between">
           {/* ── Left content ── */}
           <div className="flex-1 w-full relative text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#228c6b]/15 border border-[#228c6b]/30 text-[#1a8a66] text-sm font-semibold mb-6 tracking-wide">
@@ -129,11 +129,11 @@ function HeroSection() {
           </div>
 
           {/* ── Right: Mockup ── */}
-          <div className="flex-1 overflow-hidden w-full h-full flex items-center justify-center">
+          <div className="flex-1 overflow-hidden w-full h-full flex items-center justify-center sm:justify-end">
             <Image
               src={IMAGE.mockup3}
               alt="PROTOPPZ App Mockup"
-              className="w-full object-contain h-full max-h-[calc(100vh-25rem)]"
+              className="w-fit object-contain h-full max-h-[calc(100vh-25rem)]"
               priority
               fetchPriority="high"
               placeholder="empty"

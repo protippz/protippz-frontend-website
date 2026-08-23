@@ -12,7 +12,7 @@ const ProfilePage = () => {
   const data = useContextData();
 
   return (
-    <div className="container mx-auto p-8 text-center max-w-3xl">
+    <div className="max-w-355 mx-auto p-8 text-center max-w-3xl">
       <h1 className="text-4xl font-extrabold text-[#053697] mb-6">
         Your Profile
       </h1>

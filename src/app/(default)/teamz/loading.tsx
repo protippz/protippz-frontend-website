@@ -2,7 +2,7 @@ import React from "react";
 
 export default function TeamzLoading() {
   return (
-    <div className="container mx-auto mt-10 px-2 animate-pulse">
+    <div className="max-w-355 mx-auto mt-10 px-2 animate-pulse">
       {/* Teams Skeleton */}
       <div className="w-full flex gap-4 overflow-hidden py-4">
         {[...Array(8)].map((_, i) => (

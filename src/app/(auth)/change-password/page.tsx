@@ -26,7 +26,7 @@ const ChangePasswordPage: React.FC = () => {
     }
   };
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-355 mx-auto px-4 py-8">
       <Title
         level={2}
         className="text-center text-[#053697] text-4xl font-bold mb-8"

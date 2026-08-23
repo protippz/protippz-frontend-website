@@ -17,7 +17,7 @@ const Footer = () => {
       {/* <hr className="h-[4px] w-full bg-[#2FC191]" /> */}
       {/* <hr className="h-[4px] w-full -mt-[1px] bg-[#053697]" /> */}
       <footer className="bg-white shadow-md px-2 pb-24 mt-10">
-        <div className="container mx-auto text-center flex justify-between items-end md:items-center">
+        <div className="max-w-355 mx-auto text-center flex justify-between items-end md:items-center">
           <div className="flex justify-center mb-4">
             <Image src={logo} alt="PROTIPPZ" width={150} height={50} />
           </div>
@@ -40,7 +40,7 @@ const Footer = () => {
           </div>
         </div>
         <hr className="border-t border-[#053697] mb-6" />
-        <div className="container mx-auto flex justify-between items-center pb-6">
+        <div className="max-w-355 mx-auto flex justify-between items-center pb-6">
           <p className="text-[#053697] text-sm">
             © {new Date().getFullYear()} PROTIPPZ. All rights reserved.
           </p>

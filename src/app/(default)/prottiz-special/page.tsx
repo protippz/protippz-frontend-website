@@ -13,7 +13,7 @@ function page() {
       }}
       className="flex flex-col items-center justify-between mb-10 box-border w-full"
     >
-      <div className="w-full md:flex md:items-center md:justify-between container mx-auto  min-h-[600px]">
+      <div className="w-full md:flex md:items-center md:justify-between max-w-355 mx-auto  min-h-[600px]">
         <div className="w-full md:w-1/2 text-center md:text-left">
           <h2 className="text-3xl font-bold text-[#053697] mb-4">
             Send Tippz. Earn Rewardz! Win Prizes!!
@@ -32,7 +32,7 @@ function page() {
                   <FaLongArrowAltRight className="text-[#053697] mr-2" />
                   <span>{item}</span>
                 </li>
-              )
+              ),
             )}
           </ul>
           <div className="mt-4 flex justify-center md:justify-start">

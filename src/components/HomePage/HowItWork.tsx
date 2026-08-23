@@ -181,7 +181,7 @@ function Card4() {
 export default function HowItWork() {
   return (
     <section className="relative w-full py-12">
-      <div className="container mx-auto px-4">
+      <div className="max-w-355 mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
           <div
