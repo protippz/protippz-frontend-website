@@ -150,7 +150,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
           />
         </div>
       </div>
-      <div className="flex justify-end m-2 z-50">
+      <div className="flex justify-end m-2 z-1">
         <SendTipsButton token={token} item={item} />
       </div>
     </MotionDiv>

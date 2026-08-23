@@ -264,7 +264,7 @@ export default function SportsTicker() {
   return (
     <>
       <div
-        className="fixed bottom-0 left-0 right-0 z-9999 h-12 flex items-center overflow-hidden border-t border-border bg-white"
+        className="fixed bottom-0 left-0 right-0 z-99 h-12 flex items-center overflow-hidden border-t border-border bg-white"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         role="marquee"

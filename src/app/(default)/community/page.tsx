@@ -569,7 +569,7 @@ export default function CommunityPage() {
   }, []);
 
   return (
-    <div className="min-h-screen pb-12">
+    <div className="min-h-screen pb-12 px-2">
       {/* Header Section */}
       <CommunityHeader />
 
