@@ -39,7 +39,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
       variants={cardReveal}
       initial="hidden"
       animate="visible"
-      className="relative border  overflow-hidden border-green-300 rounded-lg shadow-md max-w-lg m-4 h-72 flex flex-col justify-between w-full mx-auto"
+      className="relative border overflow-hidden border-green-300 rounded-lg shadow-md max-w-lg mx-auto h-72 flex flex-col justify-between w-full"
     >
       {/* Player Details Section */}
       <div className="absolute h-full w-full ">

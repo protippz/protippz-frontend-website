@@ -18,9 +18,9 @@ const SearchAndSortComponent: React.FC = () => {
     setSortBy(value);
     const CurrentParams = new URLSearchParams(window.location.search);
     if (order == "A to Z") {
-      CurrentParams.set('sort', value);
+      CurrentParams.set("sort", value);
     } else {
-      CurrentParams.set('sort', `-${value}`);
+      CurrentParams.set("sort", `-${value}`);
     }
     router.replace(`?${CurrentParams.toString()}`, { scroll: false });
   };
@@ -29,9 +29,9 @@ const SearchAndSortComponent: React.FC = () => {
     setOrder(value);
     const CurrentParams = new URLSearchParams(window.location.search);
     if (value == "A to Z") {
-      CurrentParams.set('sort', sortBy);
+      CurrentParams.set("sort", sortBy);
     } else {
-      CurrentParams.set('sort', `-${sortBy}`);
+      CurrentParams.set("sort", `-${sortBy}`);
     }
     router.replace(`?${CurrentParams.toString()}`, { scroll: false });
   };
