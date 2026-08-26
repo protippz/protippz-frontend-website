@@ -32,7 +32,7 @@ function ConnectionBoth() {
           </h2>
 
           <p className="text-[#57606A] text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Tip and earn rewards — our fan rewards program recognizes your
+            Tip and earn rewards our fan rewards program recognizes your
             contributions. From exclusive gifts to personalized recognition,
             keep supporting our favorite female athletes.
           </p>
@@ -44,7 +44,7 @@ function ConnectionBoth() {
           style={{ borderColor: "#D0D7DE" }}
         >
           <div className="grid grid-cols-1 lg:grid-cols-2">
-            {/* Left — Content */}
+            {/* Left   Content */}
             <div className="flex flex-col justify-center px-8 py-12 sm:px-10 sm:py-14 lg:px-14 lg:py-16">
               {/* Eyebrow */}
               <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#308D6F] mb-4">
@@ -53,13 +53,12 @@ function ConnectionBoth() {
 
               <h3 className="text-2xl font-e sm:text-3xl lg:text-[2.15rem] font-black text-[#1A2A23] leading-[1.15] tracking-[-0.025em] mb-4">
                 Connecting fans with the{" "}
-                <span className="text-[#308D6F]">female athletes</span> they
-                love
+                <span className="text-[#308D6F]">athletes</span> they love
               </h3>
 
               <p className="text-[#57606A] text-sm sm:text-base leading-relaxed mb-8 max-w-md">
-                Where fan passion meets athlete support — helping you make a
-                real difference, one tip at a time, while earning exclusive
+                Where fan passion meets athlete support. PROTIPPZ makes it easy
+                to show your support, make a real difference, and earn exclusive
                 rewards along the way.
               </p>
 
@@ -99,7 +98,7 @@ function ConnectionBoth() {
               </div>
             </div>
 
-            {/* Right — Image */}
+            {/* Right   Image */}
             <div className="relative min-h-[300px] sm:min-h-[400px] lg:min-h-[540px] bg-[#F6F8FA]">
               <Image
                 src={IMAGE.tippz}
@@ -110,7 +109,7 @@ function ConnectionBoth() {
               />
               <div className="absolute top-0 left-0 w-full h-full bg-linear-to-l to-[#F0F5F4] via-transparent from-transparent"></div>
 
-              {/* Floating stat pill — top right */}
+              {/* Floating stat pill   top right */}
               <div
                 className="absolute top-5 right-5 flex items-center gap-2.5 rounded-xl border px-4 py-2.5 bg-white/90 backdrop-blur-sm"
                 style={{ borderColor: "#D0D7DE" }}

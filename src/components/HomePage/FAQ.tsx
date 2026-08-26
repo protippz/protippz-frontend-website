@@ -9,12 +9,12 @@ const faqs = [
       {
         question: "What is PROTIPPZ?",
         answer:
-          "PROTIPPZ is a platform that lets fans directly tip and support female athletes they love. We bridge the gap between fan passion and athlete income — no middlemen, no delays, just real support that makes a real difference.",
+          "PROTIPPZ is a platform that lets fans directly tip and support female athletes they love. We bridge the gap between fan passion and athlete income   no middlemen, no delays, just real support that makes a real difference.",
       },
       {
         question: "Who can use PROTIPPZ?",
         answer:
-          "Anyone can use PROTIPPZ — whether you are a fan wanting to support your favourite athlete, or a female athlete looking to earn direct income from your community. We welcome fans and athletes from all sports and countries.",
+          "Anyone can use PROTIPPZ   whether you are a fan wanting to support your favourite athlete, or a female athlete looking to earn direct income from your community. We welcome fans and athletes from all sports and countries.",
       },
       {
         question: "Is PROTIPPZ available worldwide?",
@@ -29,7 +29,7 @@ const faqs = [
       {
         question: "How do I send a tip to an athlete?",
         answer:
-          'Simply search for an athlete by name, sport, or country — then tap "Send Tip", choose your amount, and confirm. The tip reaches the athlete instantly with no hidden fees eating into their earnings.',
+          'Simply search for an athlete by name, sport, or country   then tap "Send Tip", choose your amount, and confirm. The tip reaches the athlete instantly with no hidden fees eating into their earnings.',
       },
       {
         question: "What payment methods are supported?",
@@ -39,7 +39,7 @@ const faqs = [
       {
         question: "Are there any fees for tipping?",
         answer:
-          "PROTIPPZ charges a small platform fee to keep the service running and secure. Athletes receive the majority of every tip — we are transparent about our fee structure and display it clearly before you confirm any transaction.",
+          "PROTIPPZ charges a small platform fee to keep the service running and secure. Athletes receive the majority of every tip   we are transparent about our fee structure and display it clearly before you confirm any transaction.",
       },
     ],
   },
@@ -49,7 +49,7 @@ const faqs = [
       {
         question: "How does the rewards system work?",
         answer:
-          "Every tip you send earns you PROTIPPZ points. Accumulate enough points and you unlock exclusive rewards — from signed merch and behind-the-scenes content to meet-and-greets and VIP fan experiences with your favourite athletes.",
+          "Every tip you send earns you PROTIPPZ points. Accumulate enough points and you unlock exclusive rewards   from signed merch and behind-the-scenes content to meet-and-greets and VIP fan experiences with your favourite athletes.",
       },
       {
         question: "Do my points expire?",
@@ -186,14 +186,14 @@ function FAQ() {
           </h2>
 
           <p className="text-[#57606A] text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
-            Everything you need to know about PROTIPPZ — from sending your first
-            tip to unlocking exclusive fan rewards.
+            Everything you need to know about PROTIPPZ from sending your first
+            tip to unlocking exclusive fan rewards
           </p>
         </div>
 
         {/* FAQ Grid */}
         <div className="grid grid-cols-1">
-          {/* Right — FAQ items */}
+          {/* Right   FAQ items */}
           <div className="lg:col-span-9 flex flex-col gap-10">
             {faqs.map((section) => (
               <div

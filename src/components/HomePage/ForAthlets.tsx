@@ -32,14 +32,13 @@ function ForAthletes() {
           </div>
 
           <h2 className="text-3xl font-e sm:text-4xl md:text-5xl font-black text-[#1A2A23] mb-4 leading-[1.1] tracking-[-0.03em]">
-            Why female athletes love{" "}
-            <span className="text-[#308D6F]">PROTIPPZ</span>
+            Why Athletes Love <span className="text-[#308D6F]">PROTIPPZ</span>
           </h2>
 
           <p className="text-[#57606A] text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Direct fan income, stronger fan relationships, and recognition
-            beyond contracts and sponsorships — PROTIPPZ puts power back in the
-            hands of athletes.
+            Build a stronger connection with your fans, create new income
+            opportunities, and get recognized beyond traditional contracts and
+            sponsorships. PROTIPP.
           </p>
         </div>
 
@@ -61,7 +60,7 @@ function ForAthletes() {
                 className="object-cover object-top"
                 alt="Female athlete supported by PROTIPPZ fans"
               />
-              {/* Gradient overlay — fades into card bg on mobile (bottom), desktop (right) */}
+              {/* Gradient overlay   fades into card bg on mobile (bottom), desktop (right) */}
               <div className="absolute inset-0 bg-linear-to-t from-[#f0faf6]/90 via-transparent to-transparent lg:bg-linear-to-r lg:from-transparent lg:to-[#f0faf6]/80" />
 
               {/* Floating stat pill */}
@@ -104,24 +103,23 @@ function ForAthletes() {
               </div>
 
               <h3 className="text-2xl font-e sm:text-3xl lg:text-4xl font-black text-[#1A2A23] leading-[1.15] tracking-[-0.025em] mb-4">
-                Direct fan income —{" "}
-                <span className="text-[#308D6F]">no middlemen,</span> no
-                gatekeepers
+                Direct Fan Support{" "}
+                <span className="text-[#308D6F]">Built for Athletes</span>
               </h3>
 
               <p className="text-[#57606A] text-sm sm:text-base leading-relaxed mb-8 max-w-md">
-                Every tip from fans flows directly to the athlete — instantly,
-                transparently, and without platform cuts. Build stronger fan
-                relationships and earn income that truly reflects your talent
-                and effort, beyond contracts and traditional sponsorships.
+                Tip your favourite athletes and get rewarded for your support.
+                Every contribution brings you closer to exclusive gifts, special
+                experiences, and personalized recognition, making every moment
+                of support count.
               </p>
 
               {/* Feature list */}
               <ul className="space-y-2.5 mb-10">
                 {[
-                  "Instant payouts to your account",
-                  "Full fan analytics dashboard",
-                  "Exclusive rewards to offer your fans",
+                  "Earn from fan support",
+                  "Connect with fans directly",
+                  "Get recognized beyond the game",
                 ].map((item) => (
                   <li
                     key={item}

@@ -135,7 +135,7 @@
 //               ))}
 //             </div>
 //           ) : error && headlines.length === 0 ? (
-//             <span className="text-sm text-muted-foreground/60 px-6">Unable to load news — try again shortly.</span>
+//             <span className="text-sm text-muted-foreground/60 px-6">Unable to load news   try again shortly.</span>
 //           ) : (
 //             <Marquee
 //               pauseOnHover={paused}
@@ -300,7 +300,7 @@ export default function SportsTicker() {
             </div>
           ) : error && headlines.length === 0 ? (
             <span className="text-sm text-muted-foreground/60 px-6">
-              Unable to load news — try again shortly.
+              Unable to load news try again shortly.
             </span>
           ) : (
             <Marquee

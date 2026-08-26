@@ -37,7 +37,7 @@ function BrandShowcase() {
     <section className="relative max-w-355 mx-auto w-full flex flex-col gap-4 overflow-hidden">
       {/* Marquee strip */}
       <small className="text-center text-sm text-gray-600">
-        Changing the game for women&apos;s sports — one tip at a time
+        Changing the game for women&apos;s sports one tip at a time
       </small>
       <div className="relative pointer-events-none">
         <Marquee

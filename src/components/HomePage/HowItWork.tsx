@@ -69,8 +69,9 @@ function Card1() {
             Create Your <br /> Fan Profile
           </h2>
           <p className="text-base text-white/50">
-            Sign up and set up your fan profile in seconds. Tell us which sports
-            and athletes you follow to personalize your experience.
+            Sign up in seconds and set up your fan profile. Choose the sports
+            and athletes you follow so we can make your PROTIPPZ experience more
+            personal.
           </p>
         </div>
       </div>
@@ -97,12 +98,12 @@ function Card2() {
         <StepLabel n={2} green />
         <div>
           <h2 className="text-xl sm:text-4xl font-bold text-white mb-2">
-            Discover Female <br /> Athletes
+            Discover <br /> Athletes
           </h2>
           <p className="text-base text-white/60 mb-4">
-            Browse profiles of talented female athletes across leagues, sports,
-            and competitions. Find the players you love and follow their
-            journey.
+            Explore talented athletes across different sports, leagues, and
+            competitions. Find the players you love, follow their journey, and
+            show your support along the way.
           </p>
         </div>
       </div>
@@ -131,9 +132,9 @@ function Card3() {
             </h2>
 
             <p className="text-base text-white/40 mb-4">
-              Support athletes instantly during games, tournaments, or standout
-              moments. Tips go directly to the players — no middlemen, no
-              delays.
+              Show your support when it matters most during a game, tournament,
+              or standout moment. Send a tip through PROTIPPZ and let your
+              favourite athletes know you’re behind them.
             </p>
           </div>
         </div>
@@ -165,12 +166,12 @@ function Card4() {
         <StepLabel n={4} />
 
         <h2 className="text-xl sm:text-4xl font-bold text-white mb-2">
-          Unlock Your Fan Rewards
+          Unlock Fan Rewards
         </h2>
 
         <p className="text-base text-white/45">
-          Every tip you send earns you points and access to exclusive rewards —
-          from merchandise and meet-and-greets to VIP fan experiences.
+          Every tip you send earns points and brings you closer to exclusive fan
+          rewards from merchandise and meet-and-greets to VIP experiences.
         </p>
       </div>
     </div>

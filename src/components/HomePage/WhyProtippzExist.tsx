@@ -14,7 +14,7 @@ const steps = [
     number: "01",
     title: "Find a player",
     description:
-      "Discover and support your favourite female athletes from around the world. Search by sport, country, or team.",
+      "Discover and support your favourite athletes from around the world. Search by sport, country, or team.",
     icon: (
       <svg
         width="16"
@@ -37,7 +37,7 @@ const steps = [
     number: "02",
     title: "Send a tip",
     description:
-      "Female athletes struggle to secure sponsorships. Your direct tip reaches them instantly — no middlemen, no delays.",
+      "Show your support with a direct tip through PROTIPPZ. Your contribution helps athletes turn fan support into real income and meaningful impact.",
     icon: (
       <svg
         width="16"
@@ -60,7 +60,7 @@ const steps = [
     number: "03",
     title: "Earn rewards",
     description:
-      "Every tip earns you points and unlocks exclusive fan rewards — merch, meet-and-greets, and VIP fan experiences.",
+      "Every tip earns you points and unlocks exclusive fan rewards merch, meet-and-greets, and VIP fan experiences.",
     icon: (
       <svg
         width="16"
@@ -110,24 +110,23 @@ function WhyProtippzExist() {
 
           <h2
             id="why-protippz-heading"
-            className="text-2xl font-e sm:text-5xl font-black text-[#154098] mb-5 leading-[1.1] tracking-[-0.03em]"
+            className="text-2xl max-w-4xl mx-auto font-e sm:text-5xl font-black text-[#154098] mb-5 leading-[1.1] tracking-[-0.03em]"
           >
-            Female athletes are{" "}
-            <span className="text-[#308D6F]">underpaid,</span>{" "}
+            Athletes are underpaid{" "}
             <span className="text-[#308D6F]">undervalued,</span>{" "}
             <span className="text-[#308D6F]">and overlooked</span>
           </h2>
 
           <p className="text-[#57606A] text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
-            Despite the talent, passion, and fans behind them — female athletes
-            face a massive pay gap. PROTIPPZ turns fan support into real income
-            and real impact.
+            Despite the talent, passion, and fans behind them, many athletes
+            struggle to turn their dedication into real income. PROTIPPZ turns
+            fan support into real income and real impact.
           </p>
         </div>
 
         {/* Main content grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start lg:items-center">
-          {/* Image — full width on mobile/tablet, spans 2 rows on desktop */}
+          {/* Image   full width on mobile/tablet, spans 2 rows on desktop */}
           <div
             className="relative rounded-2xl overflow-hidden border bg-white col-span-1 lg:row-span-2"
             style={{ borderColor: "#D0D7DE" }}
@@ -144,7 +143,7 @@ function WhyProtippzExist() {
             />
           </div>
 
-          {/* Steps — 2-col on tablet, individual cols on desktop */}
+          {/* Steps   2-col on tablet, individual cols on desktop */}
           <div className="col-span-1 lg:contents grid sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-0">
             {steps.map((step, i) => (
               <div
@@ -155,7 +154,7 @@ function WhyProtippzExist() {
                   i === 2 ? "sm:col-span-2 lg:col-span-2" : "col-span-1",
                 )}
               >
-                {/* Connector line — desktop only */}
+                {/* Connector line   desktop only */}
                 {i < steps.length - 1 && (
                   <div
                     className="hidden lg:block absolute left-[2.35rem] top-17 w-px h-[calc(100%+0.75rem)] z-0"

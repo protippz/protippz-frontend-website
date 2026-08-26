@@ -169,7 +169,7 @@ function TopHero() {
     <section className="w-full max-w-full select-none overflow-hidden">
       {/* ─── MOBILE: stacked layout (visible below md) ─── */}
       <div className="flex flex-col md:hidden">
-        {/* Text block — always visible on mobile, sits above cards */}
+        {/* Text block   always visible on mobile, sits above cards */}
         <div className="px-6 pt-8 pb-4">
           <h1 className="text-white font-e text-3xl font-black tracking-tight leading-tight">
             The Faces of
@@ -178,7 +178,7 @@ function TopHero() {
           </h1>
           <p className="text-white/70 text-sm mt-3 leading-relaxed max-w-sm">
             Elite athletes redefining the game. Explore the stars shaping the
-            WNBA — from rising rookies to all-time legends.
+            WNBA from rising rookies to all-time legends.
           </p>
         </div>
 
@@ -216,7 +216,7 @@ function TopHero() {
           </button>
         </div>
 
-        {/* Cards row — scrollable only */}
+        {/* Cards row   scrollable only */}
         <div
           ref={mobileScrollRef}
           className={`flex gap-3 px-6 pb-8 overflow-x-auto [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
@@ -234,7 +234,7 @@ function TopHero() {
 
       {/* ─── DESKTOP: side-by-side layout (visible from md up) ─── */}
       <div className="hidden md:flex  bg-[#228c6b]/20 rounded-3xl items-stretch py-8 w-full overflow-hidden max-w-355 mx-auto">
-        {/* Left panel — fixed width, never scrolls */}
+        {/* Left panel   fixed width, never scrolls */}
         <div className="shrink-0 w-80 lg:w-96 flex flex-col justify-center px-8 pb-2 gap-4">
           <div>
             <h1 className="text-[#228c6b] font-e text-4xl font-black tracking-tight leading-tight">
@@ -244,11 +244,11 @@ function TopHero() {
             </h1>
             <p className="text-[#228c6b] text-sm mt-3 leading-relaxed">
               Elite athletes redefining the game. Explore the stars shaping the
-              WNBA — from rising rookies to all-time legends.
+              WNBA from rising rookies to all-time legends.
             </p>
           </div>
 
-          {/* Scroll buttons — stay put */}
+          {/* Scroll buttons   stay put */}
           <div className="flex gap-2">
             <button
               onClick={() => scroll("left")}
@@ -283,7 +283,7 @@ function TopHero() {
           </div>
         </div>
 
-        {/* Right panel — only this area scrolls */}
+        {/* Right panel   only this area scrolls */}
         <div
           ref={desktopScrollRef}
           className={`flex-1 min-w-0 flex gap-4 pr-8 overflow-x-auto items-end [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}

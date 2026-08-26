@@ -155,7 +155,7 @@ export const mockPosts: Post[] = [
     summary:
       "ProTippz expands its digital fan engagement network across national sports leagues.",
     content:
-      "FOR IMMEDIATE RELEASE — ProTippz is proud to announce formal partnership agreements with leading professional sports organizations. This initiative empowers fans to directly support emerging talent, claim exclusive digital rewards, and access VIP athlete interactions during post-game streams.",
+      "FOR IMMEDIATE RELEASE   ProTippz is proud to announce formal partnership agreements with leading professional sports organizations. This initiative empowers fans to directly support emerging talent, claim exclusive digital rewards, and access VIP athlete interactions during post-game streams.",
     image: "/new/hero-mocup.webp",
     timestamp: "4 hours ago",
     readTime: "5 min read",
