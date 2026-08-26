@@ -40,7 +40,7 @@ const TeamPage = async ({ searchParams }: ParamsProps) => {
     searchTerm: searchTerm || undefined,
     sort: sort || undefined,
     page: page || "1",
-    limit: limit || "12",
+    limit: limit || "20",
     league: league || undefined,
   };
   const [data, meta] = await getTeam(param);
@@ -69,7 +69,7 @@ const TeamPage = async ({ searchParams }: ParamsProps) => {
         searchTerm={searchTerm || undefined}
         sort={sort || undefined}
         league={league || undefined}
-        limit={12}
+        limit={20}
       />
     </div>
   );

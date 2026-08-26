@@ -1,12 +1,12 @@
-import React, { memo } from 'react';
-import Image from 'next/image';
-import { imageUrl } from '@/ApisRequests/server';
-import BookmarkButton from '../Shared/Client/BookmarkButton';
-import bg from '@/Assets/bg.png';
-import player from '@/Assets/playerDefult.jpg';
-import { Player } from '@/app/(default)/playerz/page';
-import SendTipsButton from './Client/SendTipsButton';
-import MotionDiv from './Motion';
+import React, { memo } from "react";
+import Image from "next/image";
+import { imageUrl } from "@/ApisRequests/server";
+import BookmarkButton from "../Shared/Client/BookmarkButton";
+import bg from "@/Assets/bg.png";
+import player from "@/Assets/playerDefult.jpg";
+import { Player } from "@/app/(default)/playerz/page";
+import SendTipsButton from "./Client/SendTipsButton";
+import MotionDiv from "./Motion";
 
 interface PlayerzCardsProps {
   item: Player;
@@ -14,24 +14,24 @@ interface PlayerzCardsProps {
 }
 
 const textReveal = {
-  hidden: { y: '100%', opacity: 0 },
+  hidden: { y: "100%", opacity: 0 },
   visible: {
-    y: '0%',
+    y: "0%",
     opacity: 1,
     transition: {
       duration: 0.5,
-      ease: 'easeOut',
+      ease: "easeOut",
     },
   },
 };
 
 const cardReveal = {
-  hidden: { y: '10%' },
+  hidden: { y: "10%" },
   visible: {
-    y: '0%',
+    y: "0%",
     transition: {
       duration: 0.5,
-      ease: 'easeOut',
+      ease: "easeOut",
     },
   },
 };
@@ -42,7 +42,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
       variants={cardReveal}
       initial="hidden"
       animate="visible"
-      className="relative border overflow-hidden border-green-300 rounded-lg shadow-md max-w-lg m-4 flex flex-col justify-between w-full mx-auto"
+      className="relative border overflow-hidden border-green-300 rounded-lg shadow-md max-w-lg mx-auto w-full flex flex-col justify-between"
     >
       <div className="absolute h-full w-full ">
         <Image
@@ -112,7 +112,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                 Jersey No.
               </MotionDiv>
               <MotionDiv className="text-sm mt-2 text-[#053697]">
-                {item?.jerceyNumber || 'N/A'}
+                {item?.jerceyNumber || "N/A"}
               </MotionDiv>
             </MotionDiv>
 
@@ -126,7 +126,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                 Experience.
               </MotionDiv>
               <MotionDiv className="text-sm mt-2 text-[#053697]">
-                {item?.experience || 'N/A'}
+                {item?.experience || "N/A"}
               </MotionDiv>
             </MotionDiv>
           </div>
