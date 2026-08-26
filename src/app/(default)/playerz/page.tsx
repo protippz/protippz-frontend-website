@@ -47,7 +47,7 @@ const PlayerZPage = async ({ searchParams }: ParamsProps) => {
     searchTerm: searchTerm || undefined,
     sort: sort || undefined,
     page: page || "1",
-    limit: limit || "12",
+    limit: limit || "20",
     team: team || undefined,
   };
   const cookie = cookies();
@@ -86,7 +86,7 @@ const PlayerZPage = async ({ searchParams }: ParamsProps) => {
         searchTerm={searchTerm}
         sort={sort}
         team={team}
-        limit={12}
+        limit={20}
       />
     </div>
   );

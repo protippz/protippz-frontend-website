@@ -28,7 +28,7 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
   searchTerm,
   sort,
   team,
-  limit = 12,
+  limit = 20,
 }) => {
   const [players, setPlayers] = useState<Player[]>(initialData);
   const [page, setPage] = useState<number>(1);
@@ -109,7 +109,7 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
           loadMore();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0, rootMargin: "600px 0px" }
     );
 
     if (sentinelRef.current) {
@@ -137,23 +137,8 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
         ))}
       </div>
 
-      {/* Bottom Sentinel & Loading Spinner */}
-      <div
-        ref={sentinelRef}
-        className="w-full flex justify-center items-center py-8 min-h-[60px]"
-      >
-        {loading && (
-          <div className="flex items-center gap-2 text-blue-950 font-medium">
-            <Spin size="default" />
-            <span>Loading more players...</span>
-          </div>
-        )}
-        {!hasMore && players.length > 0 && (
-          <p className="text-gray-400 text-sm italic">
-            No more players to display.
-          </p>
-        )}
-      </div>
+      {/* Invisible Bottom Sentinel for seamless background loading */}
+      <div ref={sentinelRef} className="w-full h-4" />
     </div>
   );
 };
