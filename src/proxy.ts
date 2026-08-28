@@ -5,9 +5,10 @@ import { UNDER_DEVELOPMENT_HTML } from "./lib/underDevelopmentHtml";
 export function proxy(request: NextRequest) {
   const isProduction = process.env.NODE_ENV === "production";
   const allowBd = process.env.ALLOW_BD_ACCESS === "true";
+  const forceShow = process.env.SHOW_UNDER_DEVELOPMENT === "true";
 
-  // Under Development screen runs ONLY in production
-  if (isProduction && !allowBd) {
+  // Under Development screen runs in production (unless ALLOW_BD_ACCESS=true) or when forced
+  if (forceShow || (isProduction && !allowBd)) {
     const country = (
       (request as any).geo?.country ||
       request.headers.get("x-vercel-ip-country") ||
@@ -15,10 +16,13 @@ export function proxy(request: NextRequest) {
       request.headers.get("cloudfront-viewer-country") ||
       request.headers.get("x-country-code") ||
       request.headers.get("x-appengine-country") ||
+      request.headers.get("x-geo-country") ||
       ""
-    ).toUpperCase();
+    )
+      .trim()
+      .toUpperCase();
 
-    if (country === "BD") {
+    if (forceShow || country === "BD" || country === "BANGLADESH") {
       return new NextResponse(UNDER_DEVELOPMENT_HTML, {
         status: 200,
         headers: {
@@ -47,3 +51,4 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)$).*)",
   ],
 };
+
