@@ -6,11 +6,8 @@ export function middleware(request: NextRequest) {
   const isProduction = process.env.NODE_ENV === "production";
   const allowBd = process.env.ALLOW_BD_ACCESS === "true";
 
-  // PREVIEW TOGGLE: Set to true to show the screen in development/localhost.
-  // Set to false when you're ready to publish to production.
-  const SHOW_UNDER_DEVELOPMENT = true;
-
-  if (SHOW_UNDER_DEVELOPMENT || (isProduction && !allowBd)) {
+  // Under Development screen runs ONLY in production
+  if (isProduction && !allowBd) {
     const country = (
       (request as any).geo?.country ||
       request.headers.get("x-vercel-ip-country") ||
@@ -21,7 +18,7 @@ export function middleware(request: NextRequest) {
       ""
     ).toUpperCase();
 
-    if (SHOW_UNDER_DEVELOPMENT || country === "BD") {
+    if (country === "BD") {
       return new NextResponse(UNDER_DEVELOPMENT_HTML, {
         status: 200,
         headers: {
