@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { UNDER_DEVELOPMENT_HTML } from "./src/lib/underDevelopmentHtml";
+import { UNDER_DEVELOPMENT_HTML } from "./lib/underDevelopmentHtml";
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const isProduction = process.env.NODE_ENV === "production";
   const allowBd = process.env.ALLOW_BD_ACCESS === "true";
 
@@ -43,7 +43,7 @@ export function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-export const middleware = proxy;
+export const proxy = middleware;
 
 export const config = {
   matcher: [

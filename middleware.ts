@@ -1,39 +1,35 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-
-// const BAD_GATEWAY_HTML = `<html>
-// <head><title>502 Bad gateway</title></head>
-// <body>
-// <center><h1>502 Bad Gateway</h1></center>
-// <hr><center>nginx</center>
-// </body>
-// </html>`;
+import { UNDER_DEVELOPMENT_HTML } from "./src/lib/underDevelopmentHtml";
 
 export function middleware(request: NextRequest) {
   const isProduction = process.env.NODE_ENV === "production";
   const allowBd = process.env.ALLOW_BD_ACCESS === "true";
 
-  // Geo-blocking check for live/production mode -> return 502 Bad Gateway
-  // if (isProduction && !allowBd) {
-  //   const country = (
-  //     (request as any).geo?.country ||
-  //     request.headers.get("x-vercel-ip-country") ||
-  //     request.headers.get("cf-ipcountry") ||
-  //     request.headers.get("cloudfront-viewer-country") ||
-  //     request.headers.get("x-country-code") ||
-  //     request.headers.get("x-appengine-country") ||
-  //     ""
-  //   ).toUpperCase();
+  // PREVIEW TOGGLE: Set to true to show the screen in development/localhost.
+  // Set to false when you're ready to publish to production.
+  const SHOW_UNDER_DEVELOPMENT = true;
 
-  //   if (country === "BD") {
-  //     return new NextResponse(BAD_GATEWAY_HTML, {
-  //       status: 502,
-  //       headers: {
-  //         "content-type": "text/html; charset=utf-8",
-  //       },
-  //     });
-  //   }
-  // }
+  if (SHOW_UNDER_DEVELOPMENT || (isProduction && !allowBd)) {
+    const country = (
+      (request as any).geo?.country ||
+      request.headers.get("x-vercel-ip-country") ||
+      request.headers.get("cf-ipcountry") ||
+      request.headers.get("cloudfront-viewer-country") ||
+      request.headers.get("x-country-code") ||
+      request.headers.get("x-appengine-country") ||
+      ""
+    ).toUpperCase();
+
+    if (SHOW_UNDER_DEVELOPMENT || country === "BD") {
+      return new NextResponse(UNDER_DEVELOPMENT_HTML, {
+        status: 200,
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+        },
+      });
+    }
+  }
 
   // Existing route protection
   const token = request.cookies.get("token")?.value || "";
@@ -46,6 +42,8 @@ export function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
+
+export const proxy = middleware;
 
 export const config = {
   matcher: [

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { UNDER_DEVELOPMENT_HTML } from "./src/lib/underDevelopmentHtml";
+import { UNDER_DEVELOPMENT_HTML } from "./lib/underDevelopmentHtml";
 
 export function proxy(request: NextRequest) {
   const isProduction = process.env.NODE_ENV === "production";
