@@ -47,7 +47,7 @@ function HeroSection() {
             <p className="text-[#111] italic text-base sm:text-lg leading-relaxed mb-8 max-w-md mx-auto lg:mx-0">
               <span className="font-bold inline w-fit text-white relative">
                 <span className="absolute top-0 left-0 -z-1 bg-(--brand) w-full p-2 h-full -rotate-5" />
-                PROTOPPZ
+                PROTIPPZ
               </span>{" "}
               lets fans send real-time tips to female athletes, earn exclusive
               rewards, and help close the pay gap in sports.
@@ -118,11 +118,11 @@ function HeroSection() {
                   ))}
                 </div>
                 <p className="text-sm text-[#3d6b5a]">
-                  Trusted by{" "}
+                  Built for{" "}
                   <span className="font-semibold text-[#154098]">
-                    fans & athletes
+                    fans and athletes
                   </span>{" "}
-                  worldwide
+                  everywhere.
                 </p>
               </div>
             </div>
@@ -132,7 +132,7 @@ function HeroSection() {
           <div className="flex-1 overflow-hidden w-full h-full flex items-center justify-center sm:justify-end">
             <Image
               src={IMAGE.mockup3}
-              alt="PROTOPPZ App Mockup"
+              alt="PROTIPPZ App Mockup"
               className="w-fit object-contain h-full max-h-[calc(100vh-25rem)]"
               priority
               fetchPriority="high"
@@ -177,7 +177,7 @@ function HeroSection() {
                   className="w-full h-full rounded-xl shadow-2xl"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                  title="How PROTOPPZ works"
+                  title="How PROTOIPPZ works"
                 />
               </motion.div>
             </motion.div>

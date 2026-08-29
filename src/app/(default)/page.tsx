@@ -141,10 +141,10 @@ export default function Home() {
       <SeoPage metadata={seoMetadata} />
       {/* <Banner /> */}
       <HeroSection />
-      <BrandShowcase />
+      {/* <BrandShowcase /> */}
       <WhyProtippzExist />
       <HowItWork />
-      <TopHero />
+      {/* <TopHero /> */}
       <ForAthletes />
       <ConnectionBoth />
       <Testimonials />

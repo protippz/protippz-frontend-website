@@ -112,7 +112,7 @@ function WhyProtippzExist() {
             id="why-protippz-heading"
             className="text-2xl max-w-4xl mx-auto font-e sm:text-5xl font-black text-[#154098] mb-5 leading-[1.1] tracking-[-0.03em]"
           >
-            Athletes are underpaid{" "}
+            Athletes are underpaid,{" "}
             <span className="text-[#308D6F]">undervalued,</span>{" "}
             <span className="text-[#308D6F]">and overlooked</span>
           </h2>
