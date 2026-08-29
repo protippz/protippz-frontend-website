@@ -181,7 +181,7 @@ function FAQ() {
             </span>
           </div>
 
-          <h2 className="text-4xl font-e sm:text-5xl font-black text-[#1A2A23] mb-4 leading-[1.1] tracking-[-0.03em]">
+          <h2 className="text-4xl font-e sm:text-5xl font-black text-[#053697] mb-4 leading-[1.1] tracking-[-0.03em]">
             Frequently asked <span className="text-[#2FC191]">questions</span>
           </h2>
 

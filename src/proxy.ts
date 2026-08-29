@@ -7,29 +7,36 @@ export function proxy(request: NextRequest) {
   const allowBd = process.env.ALLOW_BD_ACCESS === "true";
   const forceShow = process.env.SHOW_UNDER_DEVELOPMENT === "true";
 
-  // Under Development screen runs in production (unless ALLOW_BD_ACCESS=true) or when forced
-  if (forceShow || (isProduction && !allowBd)) {
-    const country = (
-      (request as any).geo?.country ||
-      request.headers.get("x-vercel-ip-country") ||
-      request.headers.get("cf-ipcountry") ||
-      request.headers.get("cloudfront-viewer-country") ||
-      request.headers.get("x-country-code") ||
-      request.headers.get("x-appengine-country") ||
-      request.headers.get("x-geo-country") ||
-      ""
-    )
-      .trim()
-      .toUpperCase();
+  const host = (
+    request.headers.get("host") ||
+    request.nextUrl.hostname ||
+    ""
+  ).toLowerCase();
 
-    if (forceShow || country === "BD" || country === "BANGLADESH") {
-      return new NextResponse(UNDER_DEVELOPMENT_HTML, {
-        status: 200,
-        headers: {
-          "content-type": "text/html; charset=utf-8",
-        },
-      });
-    }
+  const country = (
+    (request as any).geo?.country ||
+    request.headers.get("x-vercel-ip-country") ||
+    request.headers.get("cf-ipcountry") ||
+    request.headers.get("cloudfront-viewer-country") ||
+    request.headers.get("x-country-code") ||
+    request.headers.get("x-appengine-country") ||
+    request.headers.get("x-geo-country") ||
+    ""
+  )
+    .trim()
+    .toUpperCase();
+
+  const isVercelApp = host.includes("protippz.vercel.app");
+  const isBd = country === "BD" || country === "BANGLADESH" || allowBd;
+
+  // Show Under Development screen ONLY if in production (or forceShow) AND NOT visiting via protippz.vercel.app AND NOT visiting from BD
+  if ((forceShow || isProduction) && !isVercelApp && !isBd) {
+    return new NextResponse(UNDER_DEVELOPMENT_HTML, {
+      status: 200,
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+      },
+    });
   }
 
   // Existing route protection
@@ -51,4 +58,5 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)$).*)",
   ],
 };
+
 
