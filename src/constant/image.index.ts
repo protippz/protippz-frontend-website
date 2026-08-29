@@ -7,7 +7,7 @@ import trophy from "@/../public/new/trophy.webp";
 import protippzWorkflow from "@/../public/new/protippz-workflow.webp";
 import mockup3 from "@/../public/new/mockup3.webp";
 import femalePlayer from "@/../public/new/female-player.webp";
-import tippz from "@/../public/new/tippz-connect.svg";
+import tippz from "@/../public/new/tippz-connect.webp";
 export const IMAGE = {
   logo,
   mockup,

@@ -11,16 +11,16 @@ function StepLabel({ n, green = false }: { n: number; green?: boolean }) {
     <span
       className="inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.18em] uppercase mb-4"
       style={{
-        color: green ? "rgba(52,211,153,0.7)" : "rgba(255,255,255,0.35)",
+        color: green ? "rgba(47,193,145,0.9)" : "rgba(255,255,255,0.7)",
       }}
     >
       <span
         className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-black"
         style={{
-          background: green ? "rgba(34,140,107,0.2)" : "rgba(255,255,255,0.08)",
+          background: green ? "rgba(47,193,145,0.25)" : "rgba(5,54,151,0.4)",
           border: green
-            ? "1px solid rgba(34,140,107,0.4)"
-            : "1px solid rgba(255,255,255,0.12)",
+            ? "1px solid rgba(47,193,145,0.5)"
+            : "1px solid rgba(5,54,151,0.5)",
           color: "#fff",
         }}
       >
@@ -37,15 +37,15 @@ function Card1() {
     <div
       className="group relative rounded-[20px] overflow-hidden h-full "
       style={{
-        background: "#0d0d0d",
-        border: "1px solid rgba(255,255,255,0.07)",
+        background: "linear-gradient(145deg, #031c4f 0%, #053697 100%)",
+        border: "1px solid rgba(5,54,151,0.35)",
       }}
     >
       <Image
         src={signupGif}
         alt=""
         fill
-        className="absolute inset-0 object-cover opacity-35"
+        className="absolute inset-0 object-cover opacity-25"
         unoptimized
       />
 
@@ -53,7 +53,7 @@ function Card1() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(160deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.95) 100%)",
+            "linear-gradient(160deg, rgba(3,28,79,0.2) 0%, rgba(5,54,151,0.65) 55%, rgba(3,28,79,0.95) 100%)",
         }}
       />
 
@@ -68,7 +68,7 @@ function Card1() {
           <h2 className="text-xl sm:text-4xl font-bold text-white mb-2">
             Create Your <br /> Fan Profile
           </h2>
-          <p className="text-base text-white/50">
+          <p className="text-base text-white/70">
             Sign up in seconds and set up your fan profile. Choose the sports
             and athletes you follow so we can make your PROTIPPZ experience more
             personal.
@@ -85,8 +85,8 @@ function Card2() {
     <div
       className="group w-full relative rounded-[20px] overflow-hidden h-full"
       style={{
-        background: "linear-gradient(145deg, #0f201a 0%, #2F8F73 100%)",
-        border: "1px solid rgba(34,140,107,0.22)",
+        background: "linear-gradient(145deg, #093c2d 0%, #2FC191 100%)",
+        border: "1px solid rgba(47,193,145,0.35)",
       }}
     >
       <div
@@ -100,7 +100,7 @@ function Card2() {
           <h2 className="text-xl sm:text-4xl font-bold text-white mb-2">
             Discover <br /> Athletes
           </h2>
-          <p className="text-base text-white/60 mb-4">
+          <p className="text-base text-white/80 mb-4">
             Explore talented athletes across different sports, leagues, and
             competitions. Find the players you love, follow their journey, and
             show your support along the way.
@@ -117,8 +117,8 @@ function Card3() {
     <div
       className="group relative rounded-[20px] overflow-hidden h-full"
       style={{
-        background: "linear-gradient(145deg, #2F8F73 0%, #0f201a 100%)",
-        border: "1px solid rgba(34,140,107,0.3)",
+        background: "linear-gradient(145deg, #2FC191 0%, #093c2d 100%)",
+        border: "1px solid rgba(47,193,145,0.35)",
       }}
     >
       <div className="relative z-10 flex flex-col sm:flex-row h-full">
@@ -131,7 +131,7 @@ function Card3() {
               <span className="text-white">Real-Time Tip</span>
             </h2>
 
-            <p className="text-base text-white/40 mb-4">
+            <p className="text-base text-white/80 mb-4">
               Show your support when it matters most during a game, tournament,
               or standout moment. Send a tip through PROTIPPZ and let your
               favourite athletes know you’re behind them.
@@ -146,7 +146,7 @@ function Card3() {
 /* Card 4 */
 function Card4() {
   return (
-    <div className="group relative h-full  flex flex-col">
+    <div className="group relative h-full flex flex-col">
       <div className="relative z-20 flex justify-center -mb-6">
         <Image src={trophy} alt="trophy" width={70} height={70} />
       </div>
@@ -154,8 +154,8 @@ function Card4() {
       <div
         className="relative flex-1 rounded-[20px] overflow-hidden p-6"
         style={{
-          background: "#161616",
-          border: "1px solid rgba(255,255,255,0.08)",
+          background: "linear-gradient(145deg, #053697 0%, #031c4f 100%)",
+          border: "1px solid rgba(5,54,151,0.35)",
         }}
       >
         <div
@@ -169,7 +169,7 @@ function Card4() {
           Unlock Fan Rewards
         </h2>
 
-        <p className="text-base text-white/45">
+        <p className="text-base text-white/70">
           Every tip you send earns points and brings you closer to exclusive fan
           rewards from merchandise and meet-and-greets to VIP experiences.
         </p>
