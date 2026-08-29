@@ -98,7 +98,10 @@ export interface ShareOptions {
   slug?: string;
   postId?: string;
   title?: string;
+  seoTitle?: string;
   summary?: string;
+  metaDescription?: string;
+  ogImage?: string;
   content?: string;
 }
 
@@ -108,7 +111,7 @@ export const sharePostLink = async (options: ShareOptions): Promise<void> => {
 
   const shareUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}${window.location.pathname}?post=${encodeURIComponent(postSlug)}`
+      ? `${window.location.origin}/community/post/${encodeURIComponent(postSlug)}`
       : "";
 
   if (!shareUrl) return;
@@ -116,8 +119,9 @@ export const sharePostLink = async (options: ShareOptions): Promise<void> => {
   // Attempt Web Share API first if supported
   if (typeof navigator !== "undefined" && navigator.share) {
     const shareData = {
-      title: options.title || "ProTippz Post",
+      title: options.seoTitle || options.title || "ProTippz Post",
       text:
+        options.metaDescription ||
         options.summary ||
         (options.content ? options.content.slice(0, 100) : "Check out this post on ProTippz!"),
       url: shareUrl,

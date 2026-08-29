@@ -56,6 +56,9 @@ export interface Post {
   slug?: string;
   taggedPlayer?: string;
   tags?: string[];
+  seoTitle?: string;
+  metaDescription?: string;
+  ogImage?: string;
 }
 
 export interface CreatePostData {
@@ -192,6 +195,9 @@ export const mapBackendItemToPost = (item?: CommunityPostBackendItem): Post => {
     tips: 0,
     isLiked: Boolean(item?.isLiked),
     slug: item?.slug,
+    seoTitle: item?.seoTitle,
+    metaDescription: item?.metaDescription,
+    ogImage: item?.ogImage,
   };
 };
 

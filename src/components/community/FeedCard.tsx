@@ -65,7 +65,10 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
     await sharePostLink({
       postId: post?.id,
       title: post?.title,
+      seoTitle: post?.seoTitle,
       summary: post?.summary,
+      metaDescription: post?.metaDescription,
+      ogImage: post?.ogImage || post?.image,
       content: postContent,
       slug: post?.slug,
     });

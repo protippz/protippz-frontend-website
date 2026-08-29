@@ -51,7 +51,11 @@ function FeedCardSkeleton() {
   );
 }
 
-export default function CommunityPage() {
+export default function CommunityPage({
+  initialPostId,
+}: {
+  initialPostId?: string;
+} = {}) {
   const router = useRouter();
   const { userData } = useAuth();
   const [page, setPage] = useState(1);
@@ -504,15 +508,25 @@ export default function CommunityPage() {
   const [triggerGetSinglePost] = useLazyGetSingleCommunityPostQuery();
   const [hasDeepLinkChecked, setHasDeepLinkChecked] = useState(false);
 
-  // Check for direct deep-link ?post=slug query param on load
+  // Check for direct deep-link ?post=slug or /community/post/slug or initialPostId on load
   useEffect(() => {
     if (typeof window === "undefined" || hasDeepLinkChecked) return;
 
-    const searchParams = new URLSearchParams(window.location.search);
-    const postParam = searchParams.get("post");
+    let targetPostId = initialPostId;
+    if (!targetPostId) {
+      const pathname = window.location.pathname;
+      const match = pathname.match(/\/community\/post\/([^/]+)/);
+      if (match && match[1]) {
+        targetPostId = decodeURIComponent(match[1]);
+      } else {
+        const searchParams = new URLSearchParams(window.location.search);
+        targetPostId = searchParams.get("post") || undefined;
+      }
+    }
 
-    if (postParam) {
+    if (targetPostId) {
       setHasDeepLinkChecked(true);
+      const postParam = targetPostId;
       const existing = posts.find(
         (p) => p.slug === postParam || p.id === postParam,
       );
@@ -536,7 +550,7 @@ export default function CommunityPage() {
           });
       }
     }
-  }, [posts, triggerGetSinglePost, hasDeepLinkChecked]);
+  }, [posts, triggerGetSinglePost, hasDeepLinkChecked, initialPostId]);
 
   // Modal Handlers with URL Sync
   const handleOpenModal = useCallback((post: Post) => {
@@ -545,9 +559,8 @@ export default function CommunityPage() {
 
     if (typeof window !== "undefined") {
       const postSlug = post.slug || post.id;
-      const currentUrl = new URL(window.location.href);
-      currentUrl.searchParams.set("post", postSlug);
-      window.history.pushState({ postSlug }, "", currentUrl.toString());
+      const newPath = `/community/post/${encodeURIComponent(postSlug)}`;
+      window.history.pushState({ postSlug }, "", newPath);
     }
   }, []);
 
@@ -556,9 +569,7 @@ export default function CommunityPage() {
     setSelectedPostForModal(null);
 
     if (typeof window !== "undefined") {
-      const currentUrl = new URL(window.location.href);
-      currentUrl.searchParams.delete("post");
-      window.history.pushState({}, "", currentUrl.toString());
+      window.history.pushState({}, "", "/community");
     }
   }, []);
 
