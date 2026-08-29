@@ -14,6 +14,7 @@ export function proxy(request: NextRequest) {
   ).toLowerCase();
 
   const country = (
+    request.nextUrl.searchParams.get("geo") ||
     (request as any).geo?.country ||
     request.headers.get("x-vercel-ip-country") ||
     request.headers.get("cf-ipcountry") ||
@@ -26,11 +27,12 @@ export function proxy(request: NextRequest) {
     .trim()
     .toUpperCase();
 
-  const isVercelApp = host.includes("protippz.vercel.app");
-  const isBd = country === "BD" || country === "BANGLADESH" || allowBd;
+  const isVercelApp = host.includes("vercel.app");
+  const isBd = country === "BD" || country === "BANGLADESH";
+  const shouldBlockBd = isBd && !allowBd;
 
-  // Show Under Development screen ONLY if in production (or forceShow) AND NOT visiting via protippz.vercel.app AND NOT visiting from BD
-  if ((forceShow || isProduction) && !isVercelApp && !isBd) {
+  // Show Under Development screen on non-Vercel domains (e.g. www.protippz.com) for BD users (or when forceShow is enabled)
+  if (!isVercelApp && (forceShow || (isProduction && shouldBlockBd))) {
     return new NextResponse(UNDER_DEVELOPMENT_HTML, {
       status: 200,
       headers: {
