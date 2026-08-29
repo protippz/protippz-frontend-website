@@ -26,18 +26,18 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
   return (
     <div
       className="flex items-center justify-between px-4 sm:px-6 py-3 border-b shrink-0 bg-white"
-      style={{ borderColor: "#233A6C0B" }}
+      style={{ borderColor: "#0536970B" }}
     >
       <div className="flex items-center gap-3 min-w-0">
-        <Avatar className="w-9 h-9 sm:w-10 sm:h-10 border border-[#233A6C15] shrink-0 cursor-pointer">
+        <Avatar className="w-9 h-9 sm:w-10 sm:h-10 border border-[#05369715] shrink-0 cursor-pointer">
           <AvatarImage src={user?.avatar} alt={user?.name} />
           <AvatarFallback>
-            <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#233A6C60]" />
+            <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#05369760]" />
           </AvatarFallback>
         </Avatar>
         <div className="min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <h3 className="font-bold text-xs sm:text-base text-[#233A6C] truncate cursor-pointer hover:underline">
+            <h3 className="font-bold text-xs sm:text-base text-[#053697] truncate cursor-pointer hover:underline">
               {user?.name || "User"}
             </h3>
             {/* <div
@@ -61,7 +61,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
               </div>
             )}
           </div>
-          <p className="text-[10px] sm:text-xs text-[#233A6C60]">{timestamp}</p>
+          <p className="text-[10px] sm:text-xs text-[#05369760]">{timestamp}</p>
         </div>
       </div>
 

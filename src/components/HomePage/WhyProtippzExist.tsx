@@ -95,25 +95,25 @@ function WhyProtippzExist() {
           <div
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6 border"
             style={{
-              background: "rgba(42,146,109,0.06)",
-              borderColor: "rgba(42,146,109,0.22)",
+              background: "rgba(47,193,145,0.06)",
+              borderColor: "rgba(47,193,145,0.22)",
             }}
           >
             <span
-              className="w-1.5 h-1.5 rounded-full bg-[#308D6F] animate-pulse"
+              className="w-1.5 h-1.5 rounded-full bg-[#2FC191] animate-pulse"
               aria-hidden="true"
             />
-            <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#308D6F]">
+            <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#2FC191]">
               Why PROTIPPZ Exists
             </span>
           </div>
 
           <h2
             id="why-protippz-heading"
-            className="text-2xl max-w-4xl mx-auto font-e sm:text-5xl font-black text-[#154098] mb-5 leading-[1.1] tracking-[-0.03em]"
+            className="text-2xl max-w-4xl mx-auto font-e sm:text-5xl font-black text-[#053697] mb-5 leading-[1.1] tracking-[-0.03em]"
           >
             SUPPORT THE ATHLETES YOU LOVE.{" "}
-            <span className="text-[#308D6F]">GET MORE FROM THE GAME.</span>
+            <span className="text-[#2FC191]">GET MORE FROM THE GAME.</span>
           </h2>
 
           <p className="text-[#57606A] text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
@@ -149,7 +149,7 @@ function WhyProtippzExist() {
               <div
                 key={step.number}
                 className={cn(
-                  "group relative h-full bg-[#308D6F] rounded-xl border px-5 py-5 flex items-start gap-4 transition-all duration-200",
+                  "group relative h-full bg-[#2FC191] rounded-xl border px-5 py-5 flex items-start gap-4 transition-all duration-200",
                   // On desktop only: step 3 spans 2 columns
                   i === 2 ? "sm:col-span-2 lg:col-span-2" : "col-span-1",
                 )}
@@ -158,7 +158,7 @@ function WhyProtippzExist() {
                 {i < steps.length - 1 && (
                   <div
                     className="hidden lg:block absolute left-[2.35rem] top-17 w-px h-[calc(100%+0.75rem)] z-0"
-                    style={{ background: "rgba(42,146,109,0.15)" }}
+                    style={{ background: "rgba(47,193,145,0.15)" }}
                     aria-hidden="true"
                   />
                 )}
@@ -168,7 +168,7 @@ function WhyProtippzExist() {
                   style={{
                     background: "#fff",
                     borderColor: "#fff",
-                    color: "#308D6F",
+                    color: "#2FC191",
                   }}
                 >
                   {step.number}
@@ -193,7 +193,7 @@ function WhyProtippzExist() {
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path
                       d="M3 7h8M7 3.5L10.5 7 7 10.5"
-                      stroke="#308D6F"
+                      stroke="#2FC191"
                       strokeWidth="1.2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -231,13 +231,13 @@ function WhyProtippzExist() {
             {steps.map((step, i) => (
               <div
                 key={step.number}
-                className="group relative h-full bg-[#308D6F] rounded-xl border px-5 py-5 flex items-start gap-4 transition-all duration-200"
+                className="group relative h-full bg-[#2FC191] rounded-xl border px-5 py-5 flex items-start gap-4 transition-all duration-200"
               >
                 
                 {i < steps.length - 1 && (
                   <div
                     className="absolute left-[2.35rem] top-[4.25rem] w-px h-[calc(100%+0.75rem)] z-0"
-                    style={{ background: 'rgba(42,146,109,0.15)' }}
+                    style={{ background: 'rgba(47,193,145,0.15)' }}
                     aria-hidden="true"
                   />
                 )}
@@ -248,7 +248,7 @@ function WhyProtippzExist() {
                   style={{
                     background: '#fff',
                     borderColor: '#fff',
-                    color: '#308D6F',
+                    color: '#2FC191',
                   }}
                 >
                   {step.number}
@@ -275,7 +275,7 @@ function WhyProtippzExist() {
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path
                       d="M3 7h8M7 3.5L10.5 7 7 10.5"
-                      stroke="#308D6F"
+                      stroke="#2FC191"
                       strokeWidth="1.2"
                       strokeLinecap="round"
                       strokeLinejoin="round"

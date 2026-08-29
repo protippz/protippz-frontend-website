@@ -30,18 +30,18 @@ export const ModalPostContent: React.FC<ModalPostContentProps> = ({
       {/* Text & Meta */}
       <div className="space-y-2">
         {title && (
-          <h2 className="text-base sm:text-xl font-bold text-[#233A6C] leading-snug">
+          <h2 className="text-base sm:text-xl font-bold text-[#053697] leading-snug">
             {title}
           </h2>
         )}
 
         {summary && (
-          <p className="text-xs sm:text-sm font-medium text-[#233A6C75] leading-relaxed">
+          <p className="text-xs sm:text-sm font-medium text-[#05369775] leading-relaxed">
             {summary}
           </p>
         )}
 
-        <p className="text-xs sm:text-sm leading-relaxed text-[#233A6C90] whitespace-pre-line">
+        <p className="text-xs sm:text-sm leading-relaxed text-[#05369790] whitespace-pre-line">
           {content}
         </p>
 
@@ -50,7 +50,7 @@ export const ModalPostContent: React.FC<ModalPostContentProps> = ({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="text-xs font-semibold text-[#308D6F] hover:underline cursor-pointer"
+                className="text-xs font-semibold text-[#2FC191] hover:underline cursor-pointer"
               >
                 #{tag}
               </span>

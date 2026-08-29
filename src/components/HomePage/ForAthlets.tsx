@@ -18,21 +18,21 @@ function ForAthletes() {
           <div
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5 border"
             style={{
-              background: "rgba(42,146,109,0.06)",
-              borderColor: "rgba(42,146,109,0.22)",
+              background: "rgba(47,193,145,0.06)",
+              borderColor: "rgba(47,193,145,0.22)",
             }}
           >
             <span
-              className="w-1.5 h-1.5 rounded-full bg-[#308D6F] animate-pulse"
+              className="w-1.5 h-1.5 rounded-full bg-[#2FC191] animate-pulse"
               aria-hidden="true"
             />
-            <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#308D6F]">
+            <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#2FC191]">
               For Athletes
             </span>
           </div>
 
           <h2 className="text-3xl font-e sm:text-4xl md:text-5xl font-black text-[#1A2A23] mb-4 leading-[1.1] tracking-[-0.03em]">
-            Why Athletes Love <span className="text-[#308D6F]">PROTIPPZ</span>
+            Why Athletes Love <span className="text-[#2FC191]">PROTIPPZ</span>
           </h2>
 
           <p className="text-[#57606A] text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
@@ -46,8 +46,8 @@ function ForAthletes() {
         <div
           className="rounded-3xl border overflow-hidden"
           style={{
-            background: "rgba(42,146,109,0.04)",
-            borderColor: "rgba(42,146,109,0.15)",
+            background: "rgba(47,193,145,0.04)",
+            borderColor: "rgba(47,193,145,0.15)",
           }}
         >
           <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -65,11 +65,11 @@ function ForAthletes() {
 
               {/* Floating stat pill */}
               <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 flex items-center gap-2.5 bg-white/90 backdrop-blur-sm border border-white rounded-2xl px-4 py-3 shadow-sm">
-                <div className="w-8 h-8 rounded-full bg-[#308D6F]/10 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[#2FC191]/10 flex items-center justify-center">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                     <path
                       d="M8 2l1.5 3.5H13l-2.75 2 1 3.5L8 9.25 4.75 11l1-3.5L3 5.5h3.5L8 2z"
-                      stroke="#308D6F"
+                      stroke="#2FC191"
                       strokeWidth="1.25"
                       strokeLinejoin="round"
                     />
@@ -92,7 +92,7 @@ function ForAthletes() {
               <div className="flex flex-wrap gap-6 mb-8">
                 {stats.map((s) => (
                   <div key={s.label}>
-                    <p className="text-2xl sm:text-3xl font-black text-[#308D6F] leading-none mb-0.5">
+                    <p className="text-2xl sm:text-3xl font-black text-[#2FC191] leading-none mb-0.5">
                       {s.value}
                     </p>
                     <p className="text-xs text-[#57606A] font-medium">
@@ -104,7 +104,7 @@ function ForAthletes() {
 
               <h3 className="text-2xl font-e sm:text-3xl lg:text-4xl font-black text-[#1A2A23] leading-[1.15] tracking-[-0.025em] mb-4">
                 Direct Fan Support{" "}
-                <span className="text-[#308D6F]">Built for Athletes</span>
+                <span className="text-[#2FC191]">Built for Athletes</span>
               </h3>
 
               <p className="text-[#57606A] text-sm sm:text-base leading-relaxed mb-8 max-w-md">
@@ -125,11 +125,11 @@ function ForAthletes() {
                     key={item}
                     className="flex items-center gap-2.5 text-sm text-[#1A2A23] font-medium"
                   >
-                    <span className="w-4 h-4 rounded-full bg-[#308D6F]/10 flex items-center justify-center shrink-0">
+                    <span className="w-4 h-4 rounded-full bg-[#2FC191]/10 flex items-center justify-center shrink-0">
                       <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
                         <path
                           d="M2 5l2.5 2.5L8 2.5"
-                          stroke="#308D6F"
+                          stroke="#2FC191"
                           strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -143,12 +143,12 @@ function ForAthletes() {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button className="bg-[#154098] hover:bg-[#0f2f70] text-white rounded-full px-7 py-5 text-sm font-semibold uppercase tracking-wide cursor-pointer transition-colors">
+                <Button className="bg-[#053697] hover:bg-[#053697]/90 text-white rounded-full px-7 py-5 text-sm font-semibold uppercase tracking-wide cursor-pointer transition-colors">
                   Join as an Athlete
                 </Button>
                 <Button
                   variant="outline"
-                  className="border-[#154098] text-[#154098] hover:bg-[#154098]/5 rounded-full px-7 py-5 text-sm font-semibold uppercase tracking-wide cursor-pointer transition-colors bg-transparent"
+                  className="border-[#053697] text-[#053697] hover:bg-[#053697]/5 rounded-full px-7 py-5 text-sm font-semibold uppercase tracking-wide cursor-pointer transition-colors bg-transparent"
                 >
                   <svg
                     width="16"

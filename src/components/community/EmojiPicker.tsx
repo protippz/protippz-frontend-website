@@ -106,7 +106,7 @@ export const EmojiPicker: React.FC<EmojiPickerProps> = ({
       ref={pickerRef}
       className={`absolute bottom-full mb-2 ${
         align === 'right' ? 'right-0' : 'left-0'
-      } z-50 w-72 sm:w-80 bg-white rounded-2xl shadow-xl border border-[#233A6C18] overflow-hidden flex flex-col animate-in fade-in duration-150`}
+      } z-50 w-72 sm:w-80 bg-white rounded-2xl shadow-xl border border-[#05369718] overflow-hidden flex flex-col animate-in fade-in duration-150`}
       style={{ maxHeight: '320px' }}
       onClick={(e) => e.stopPropagation()}
     >
@@ -119,7 +119,7 @@ export const EmojiPicker: React.FC<EmojiPickerProps> = ({
             placeholder="Search emoji..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl bg-white border border-gray-200 outline-none text-[#233A6C] focus:border-[#308D6F]"
+            className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl bg-white border border-gray-200 outline-none text-[#053697] focus:border-[#2FC191]"
           />
         </div>
         <button
@@ -142,7 +142,7 @@ export const EmojiPicker: React.FC<EmojiPickerProps> = ({
               onClick={() => setActiveCategory(cat.id)}
               className={`p-1.5 rounded-lg transition-colors flex items-center justify-center ${
                 activeCategory === cat.id
-                  ? 'bg-[#308D6F15] text-[#308D6F]'
+                  ? 'bg-[#2FC19115] text-[#2FC191]'
                   : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
               }`}
               title={cat.name}
@@ -164,7 +164,7 @@ export const EmojiPicker: React.FC<EmojiPickerProps> = ({
                 onClick={() => {
                   onSelectEmoji(emoji)
                 }}
-                className="w-9 h-9 flex items-center justify-center text-xl rounded-xl hover:bg-[#308D6F12] transition-colors"
+                className="w-9 h-9 flex items-center justify-center text-xl rounded-xl hover:bg-[#2FC19112] transition-colors"
               >
                 {emoji}
               </button>

@@ -81,8 +81,8 @@ const MediaSidebar = memo(function MediaSidebar({
       {/* 1. Media & Publishing Categories Card */}
       <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-border shadow-2xs w-full max-w-full min-w-0 overflow-hidden box-border">
         <div className="flex items-center gap-2 mb-3 sm:mb-3.5 pb-2.5 border-b border-border min-w-0">
-          <FileText className="w-4 h-4 text-[#308D6F] shrink-0" />
-          <h3 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider truncate min-w-0 flex-1">
+          <FileText className="w-4 h-4 text-[#2FC191] shrink-0" />
+          <h3 className="text-xs font-bold text-[#053697] uppercase tracking-wider truncate min-w-0 flex-1">
             Media Categories
           </h3>
         </div>
@@ -98,8 +98,8 @@ const MediaSidebar = memo(function MediaSidebar({
                 onClick={() => setSelectedCategory(item.name)}
                 className={`flex-1 lg:flex-none min-w-[200px] lg:min-w-0 lg:w-full shrink-0 flex items-center justify-between p-2 sm:p-2.5 rounded-xl text-xs text-left transition-all cursor-pointer box-border overflow-hidden ${
                   isActive
-                    ? "bg-[#308D6F] text-white font-bold shadow-2xs"
-                    : "hover:bg-[#233A6C08] text-[#233A6C] bg-gray-50/50 lg:bg-transparent"
+                    ? "bg-[#2FC191] text-white font-bold shadow-2xs"
+                    : "hover:bg-[#05369708] text-[#053697] bg-gray-50/50 lg:bg-transparent"
                 }`}
               >
                 <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1 mr-1.5 overflow-hidden">
@@ -116,7 +116,7 @@ const MediaSidebar = memo(function MediaSidebar({
                     </p>
                     <p
                       className={`text-[10px] sm:text-[11px] truncate leading-tight mt-0.5 block w-full ${
-                        isActive ? "text-white/80" : "text-[#233A6C60]"
+                        isActive ? "text-white/80" : "text-[#05369760]"
                       }`}
                     >
                       {item.desc}
@@ -125,7 +125,7 @@ const MediaSidebar = memo(function MediaSidebar({
                 </div>
                 <ChevronRight
                   className={`w-3.5 h-3.5 shrink-0 ${
-                    isActive ? "text-white" : "text-[#233A6C40]"
+                    isActive ? "text-white" : "text-[#05369740]"
                   }`}
                 />
               </button>
@@ -137,8 +137,8 @@ const MediaSidebar = memo(function MediaSidebar({
       {/* 2. Trending Topics / Tags Card */}
       <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-border shadow-2xs w-full max-w-full min-w-0 overflow-hidden box-border">
         <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border min-w-0">
-          <TrendingUp className="w-4 h-4 text-[#308D6F] shrink-0" />
-          <h3 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider truncate min-w-0 flex-1">
+          <TrendingUp className="w-4 h-4 text-[#2FC191] shrink-0" />
+          <h3 className="text-xs font-bold text-[#053697] uppercase tracking-wider truncate min-w-0 flex-1">
             Popular Topics
           </h3>
         </div>
@@ -154,8 +154,8 @@ const MediaSidebar = memo(function MediaSidebar({
                 onClick={() => setSelectedCategory(tag as ContentCategory)}
                 className={`text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer transition-colors whitespace-nowrap shrink-0 ${
                   isActive
-                    ? "bg-[#308D6F] text-white shadow-2xs"
-                    : "text-[#308D6F] bg-[#308D6F12] hover:bg-[#308D6F22]"
+                    ? "bg-[#2FC191] text-white shadow-2xs"
+                    : "text-[#2FC191] bg-[#2FC19112] hover:bg-[#2FC19122]"
                 }`}
               >
                 #{tag}

@@ -50,7 +50,7 @@ const SearchAndSortComponent: React.FC = () => {
   return (
     <div className="w-full flex flex-col gap-4 p-4 md:flex-row md:justify-between md:items-center">
       <div className="flex flex-col items-start gap-2 w-full md:flex-row md:items-center md:w-auto">
-        {/* <Text strong className="text-[#2A3E98]">Sort By:</Text>
+        {/* <Text strong className="text-[#053697]">Sort By:</Text>
                 <Form className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                     <Select
                         className="border-2 border-[#2FC191] focus:border-[#2FC191] rounded-lg h-[42px] w-full md:w-32"

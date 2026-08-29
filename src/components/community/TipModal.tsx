@@ -84,7 +84,7 @@ export const TipModal: React.FC<TipModalProps> = ({
     >
       {/* Modal Container: Clean UI with smooth border */}
       <div
-        className="relative bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden border border-[#233A6C1A] z-10 animate-in fade-in duration-200"
+        className="relative bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden border border-[#0536971A] z-10 animate-in fade-in duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Close Button */}
@@ -102,23 +102,23 @@ export const TipModal: React.FC<TipModalProps> = ({
             {/* Modal Title / Recipient Card */}
             <div className="text-center mb-6">
               <div className="relative inline-block mb-3">
-                <Avatar className="w-16 h-16 border-2 border-[#308D6F]/30">
+                <Avatar className="w-16 h-16 border-2 border-[#2FC191]/30">
                   <AvatarImage src={post.user.avatar} alt={post.user.name} />
                   <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div
                   className="absolute -bottom-1 -right-1 p-1 rounded-full text-white shadow-sm"
-                  style={{ backgroundColor: '#308D6F' }}
+                  style={{ backgroundColor: '#2FC191' }}
                 >
                   <DollarSign className="w-3.5 h-3.5" />
                 </div>
               </div>
 
-              <h3 className="text-lg font-bold text-[#233A6C]">
+              <h3 className="text-lg font-bold text-[#053697]">
                 Send Tip to {post.user.name}
               </h3>
               <div className="flex items-center justify-center gap-1.5 mt-1">
-                <span className="text-xs text-[#233A6C70]">Supporting creator</span>
+                <span className="text-xs text-[#05369770]">Supporting creator</span>
                 <span
                   className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
                   style={{
@@ -135,7 +135,7 @@ export const TipModal: React.FC<TipModalProps> = ({
 
             {/* Preset Amount Options */}
             <div className="mb-5">
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#233A6C70] mb-2.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#05369770] mb-2.5">
                 Select Amount
               </label>
               <div className="grid grid-cols-5 gap-2">
@@ -148,8 +148,8 @@ export const TipModal: React.FC<TipModalProps> = ({
                       onClick={() => handleSelectPreset(amt)}
                       className={`py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-colors border ${
                         isSelected
-                          ? 'bg-[#308D6F] text-white border-[#308D6F]'
-                          : 'bg-[#F8FAFC] text-[#233A6C] border-[#233A6C12] hover:bg-gray-100 hover:border-[#233A6C20]'
+                          ? 'bg-[#2FC191] text-white border-[#2FC191]'
+                          : 'bg-[#F8FAFC] text-[#053697] border-[#05369712] hover:bg-gray-100 hover:border-[#05369720]'
                       }`}
                     >
                       ${amt}
@@ -161,11 +161,11 @@ export const TipModal: React.FC<TipModalProps> = ({
 
             {/* Custom Amount Input */}
             <div className="mb-5">
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#233A6C70] mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#05369770] mb-2">
                 Or Custom Amount
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-sm text-[#233A6C60]">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-sm text-[#05369760]">
                   $
                 </span>
                 <input
@@ -173,14 +173,14 @@ export const TipModal: React.FC<TipModalProps> = ({
                   placeholder="Custom amount (e.g. 15)"
                   value={customAmount}
                   onChange={handleCustomAmountChange}
-                  className="w-full pl-8 pr-4 py-2.5 rounded-xl text-sm font-semibold outline-none bg-[#F8FAFC] border border-[#233A6C18] text-[#233A6C] focus:bg-white focus:border-[#308D6F] transition-all"
+                  className="w-full pl-8 pr-4 py-2.5 rounded-xl text-sm font-semibold outline-none bg-[#F8FAFC] border border-[#05369718] text-[#053697] focus:bg-white focus:border-[#2FC191] transition-all"
                 />
               </div>
             </div>
 
             {/* Optional Note */}
             <div className="mb-6">
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#233A6C70] mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#05369770] mb-2">
                 Add Note (Optional)
               </label>
               <input
@@ -188,7 +188,7 @@ export const TipModal: React.FC<TipModalProps> = ({
                 placeholder="Write a message of support..."
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm outline-none bg-[#F8FAFC] border border-[#233A6C18] text-[#233A6C] focus:bg-white focus:border-[#308D6F] transition-all"
+                className="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm outline-none bg-[#F8FAFC] border border-[#05369718] text-[#053697] focus:bg-white focus:border-[#2FC191] transition-all"
               />
             </div>
 
@@ -197,7 +197,7 @@ export const TipModal: React.FC<TipModalProps> = ({
               type="submit"
               disabled={!isValidAmount}
               className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
-              style={{ backgroundColor: '#308D6F' }}
+              style={{ backgroundColor: '#2FC191' }}
             >
               <Send className="w-4 h-4" />
               <span>Send ${finalAmount > 0 ? finalAmount : '0'} Tip</span>
@@ -207,22 +207,22 @@ export const TipModal: React.FC<TipModalProps> = ({
           /* STEP 2: Celebratory Success Modal */
           <div className="p-8 text-center animate-in fade-in duration-200">
             {/* Celebration Icon */}
-            <div className="relative inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-[#308D6F15] text-[#308D6F]">
-              <CheckCircle2 className="w-9 h-9 text-[#308D6F]" />
+            <div className="relative inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-[#2FC19115] text-[#2FC191]">
+              <CheckCircle2 className="w-9 h-9 text-[#2FC191]" />
               <Sparkles className="absolute -top-1 -right-1 w-5 h-5 text-amber-400" />
               <Heart className="absolute -bottom-1 -left-1 w-4 h-4 text-rose-500 fill-rose-500" />
             </div>
 
-            <h3 className="text-xl font-bold text-[#233A6C] mb-1.5">
+            <h3 className="text-xl font-bold text-[#053697] mb-1.5">
               Tip Sent Successfully! 🎉
             </h3>
             <p className="text-xs text-gray-500 mb-6 leading-relaxed">
-              You sent <span className="font-bold text-[#308D6F]">${submittedAmount}</span> to{' '}
-              <span className="font-semibold text-[#233A6C]">{post.user.name}</span>. Thank you for supporting creator content!
+              You sent <span className="font-bold text-[#2FC191]">${submittedAmount}</span> to{' '}
+              <span className="font-semibold text-[#053697]">{post.user.name}</span>. Thank you for supporting creator content!
             </p>
 
             {note && (
-              <div className="mb-6 p-3.5 rounded-xl bg-[#F8FAFC] border border-[#233A6C10] text-xs text-slate-600 italic">
+              <div className="mb-6 p-3.5 rounded-xl bg-[#F8FAFC] border border-[#05369710] text-xs text-slate-600 italic">
                 &quot;{note}&quot;
               </div>
             )}
@@ -230,7 +230,7 @@ export const TipModal: React.FC<TipModalProps> = ({
             <button
               onClick={onClose}
               className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 shadow-sm"
-              style={{ backgroundColor: '#308D6F' }}
+              style={{ backgroundColor: '#2FC191' }}
             >
               Done
             </button>

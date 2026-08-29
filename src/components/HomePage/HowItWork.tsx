@@ -188,21 +188,21 @@ export default function HowItWork() {
           <div
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6 border"
             style={{
-              background: "rgba(42,146,109,0.06)",
-              borderColor: "rgba(42,146,109,0.22)",
+              background: "rgba(47,193,145,0.06)",
+              borderColor: "rgba(47,193,145,0.22)",
             }}
           >
             <span
-              className="w-1.5 h-1.5 rounded-full bg-[#308D6F] animate-pulse"
+              className="w-1.5 h-1.5 rounded-full bg-[#2FC191] animate-pulse"
               aria-hidden="true"
             />
-            <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#308D6F]">
+            <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#2FC191]">
               How it works
             </span>
           </div>
-          <h1 className="text-2xl font-e sm:text-4xl md:text-5xl font-bold text-[#154098] mb-4">
+          <h1 className="text-2xl font-e sm:text-4xl md:text-5xl font-bold text-[#053697] mb-4">
             Start supporting athletes in 4{" "}
-            <span className="text-[#308D6F]">simple steps</span>
+            <span className="text-[#2FC191]">simple steps</span>
           </h1>
 
           <p className="text-black/40 max-w-2xl mx-auto">

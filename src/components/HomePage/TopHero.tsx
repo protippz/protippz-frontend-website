@@ -186,7 +186,7 @@ function TopHero() {
         <div className="flex gap-2 px-6 pb-4">
           <button
             onClick={() => scroll("left")}
-            className="w-9 h-9 rounded-full bg-[#228c6b]/15 hover:bg-[#228c6b]/25 active:scale-95 transition-all flex items-center justify-center text-white cursor-pointer"
+            className="w-9 h-9 rounded-full bg-[#2FC191]/15 hover:bg-[#2FC191]/25 active:scale-95 transition-all flex items-center justify-center text-white cursor-pointer"
             aria-label="Scroll left"
           >
             <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
@@ -201,7 +201,7 @@ function TopHero() {
           </button>
           <button
             onClick={() => scroll("right")}
-            className="w-9 h-9 rounded-full bg-[#228c6b]/15 hover:bg-[#228c6b]/25 active:scale-95 transition-all flex items-center justify-center text-white cursor-pointer"
+            className="w-9 h-9 rounded-full bg-[#2FC191]/15 hover:bg-[#2FC191]/25 active:scale-95 transition-all flex items-center justify-center text-white cursor-pointer"
             aria-label="Scroll right"
           >
             <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
@@ -233,16 +233,16 @@ function TopHero() {
       </div>
 
       {/* ─── DESKTOP: side-by-side layout (visible from md up) ─── */}
-      <div className="hidden md:flex  bg-[#228c6b]/20 rounded-3xl items-stretch py-8 w-full overflow-hidden max-w-355 mx-auto">
+      <div className="hidden md:flex  bg-[#2FC191]/20 rounded-3xl items-stretch py-8 w-full overflow-hidden max-w-355 mx-auto">
         {/* Left panel   fixed width, never scrolls */}
         <div className="shrink-0 w-80 lg:w-96 flex flex-col justify-center px-8 pb-2 gap-4">
           <div>
-            <h1 className="text-[#228c6b] font-e text-4xl font-black tracking-tight leading-tight">
+            <h1 className="text-[#2FC191] font-e text-4xl font-black tracking-tight leading-tight">
               The Faces of
               <br />
               Women&apos;s Athletes
             </h1>
-            <p className="text-[#228c6b] text-sm mt-3 leading-relaxed">
+            <p className="text-[#2FC191] text-sm mt-3 leading-relaxed">
               Elite athletes redefining the game. Explore the stars shaping the
               WNBA from rising rookies to all-time legends.
             </p>
@@ -252,7 +252,7 @@ function TopHero() {
           <div className="flex gap-2">
             <button
               onClick={() => scroll("left")}
-              className="w-9 h-9 rounded-full bg-[#228c6b]/15 hover:bg-[#228c6b]/25 active:scale-95 transition-all flex items-center justify-center text-[#228c6b] cursor-pointer"
+              className="w-9 h-9 rounded-full bg-[#2FC191]/15 hover:bg-[#2FC191]/25 active:scale-95 transition-all flex items-center justify-center text-[#2FC191] cursor-pointer"
               aria-label="Scroll left"
             >
               <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
@@ -267,7 +267,7 @@ function TopHero() {
             </button>
             <button
               onClick={() => scroll("right")}
-              className="w-9 h-9 rounded-full bg-[#228c6b]/15 hover:bg-[#228c6b]/25 active:scale-95 transition-all flex items-center justify-center text-[#228c6b] cursor-pointer"
+              className="w-9 h-9 rounded-full bg-[#2FC191]/15 hover:bg-[#2FC191]/25 active:scale-95 transition-all flex items-center justify-center text-[#2FC191] cursor-pointer"
               aria-label="Scroll right"
             >
               <svg width="16" height="16" fill="none" viewBox="0 0 16 16">

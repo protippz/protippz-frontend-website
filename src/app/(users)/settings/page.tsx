@@ -23,7 +23,7 @@ const SettingPage: React.FC = () => {
           <p className="text-[#053697] -mb-4">Change Password</p>
           <IoIosArrowForward className="text-[#053697]" />
         </Link>
-        <Divider style={{ borderColor: "#00c96d" }} />
+        <Divider style={{ borderColor: "#2FC191" }} />
       </div>
 
       <div className="my-8">
@@ -32,11 +32,11 @@ const SettingPage: React.FC = () => {
         </h4>
         <div className="flex justify-between items-center my-4">
           <p className="text-[#053697]">Alerts for tipping activity</p>
-          <Switch defaultChecked style={{ backgroundColor: "#00c96d" }} />
+          <Switch defaultChecked style={{ backgroundColor: "#2FC191" }} />
         </div>
         <div className="flex justify-between items-center my-4">
           <p className="text-[#053697]">Alerts for earning rewards</p>
-          <Switch defaultChecked style={{ backgroundColor: "#00c96d" }} />
+          <Switch defaultChecked style={{ backgroundColor: "#2FC191" }} />
         </div>
         <div className="flex justify-between items-center my-4">
           <p className="text-[#053697]">Email or SMS notifications</p>

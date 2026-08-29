@@ -36,12 +36,12 @@ export const CommentList: React.FC<CommentListProps> = ({
 }) => {
   return (
     <div className="space-y-4 pt-2">
-      <h4 className="text-xs font-bold text-[#233A6C] uppercase tracking-wider">
+      <h4 className="text-xs font-bold text-[#053697] uppercase tracking-wider">
         Comments ({totalCommentCount})
       </h4>
 
       {isLoading && comments.length === 0 ? (
-        <div className="py-8 flex items-center justify-center gap-2 text-xs font-semibold text-[#308D6F]">
+        <div className="py-8 flex items-center justify-center gap-2 text-xs font-semibold text-[#2FC191]">
           <Loader2 className="w-4 h-4 animate-spin" />
           <span>Loading comments...</span>
         </div>

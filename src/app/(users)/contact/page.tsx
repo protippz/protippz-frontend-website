@@ -43,7 +43,7 @@ const ContactUsPage: React.FC = () => {
           >
             <Input
               placeholder="Your full name"
-              style={{ borderColor: "#00c96d" }}
+              style={{ borderColor: "#2FC191" }}
             />
           </Form.Item>
 
@@ -57,7 +57,7 @@ const ContactUsPage: React.FC = () => {
           >
             <Input
               placeholder="Your email"
-              style={{ borderColor: "#00c96d" }}
+              style={{ borderColor: "#2FC191" }}
             />
           </Form.Item>
 
@@ -70,7 +70,7 @@ const ContactUsPage: React.FC = () => {
           >
             <PhoneInput
               country={"us"}
-              inputStyle={{ width: "100%", borderColor: "#00c96d" }}
+              inputStyle={{ width: "100%", borderColor: "#2FC191" }}
               placeholder="Your phone number"
             />
           </Form.Item>
@@ -83,7 +83,7 @@ const ContactUsPage: React.FC = () => {
             <Input.TextArea
               rows={4}
               placeholder="Your message"
-              style={{ borderColor: "#00c96d", resize: "none" }}
+              style={{ borderColor: "#2FC191", resize: "none" }}
             />
           </Form.Item>
 

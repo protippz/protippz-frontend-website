@@ -51,7 +51,7 @@ const ChangePasswordPage: React.FC = () => {
           <Input.Password
             className="h-[42px]"
             placeholder="Enter your current password"
-            style={{ borderColor: "#00c96d" }}
+            style={{ borderColor: "#2FC191" }}
           />
         </Form.Item>
         <Form.Item
@@ -64,7 +64,7 @@ const ChangePasswordPage: React.FC = () => {
           <Input.Password
             className="h-[42px]"
             placeholder="Enter your new password"
-            style={{ borderColor: "#00c96d" }}
+            style={{ borderColor: "#2FC191" }}
           />
         </Form.Item>
 
@@ -87,7 +87,7 @@ const ChangePasswordPage: React.FC = () => {
           <Input.Password
             className="h-[42px]"
             placeholder="Retype your new password"
-            style={{ borderColor: "#00c96d" }}
+            style={{ borderColor: "#2FC191" }}
           />
         </Form.Item>
 

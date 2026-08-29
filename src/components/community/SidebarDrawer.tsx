@@ -48,16 +48,16 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
       {/* Drawer panel */}
       <div
         data-lenis-prevent
-        className="relative w-full max-w-lg bg-[#FAFBFB] rounded-t-[2rem] shadow-2xl z-10 flex flex-col max-h-[85vh] overflow-hidden animate-in slide-in-from-bottom duration-300 border-t border-[#233A6C1A]"
+        className="relative w-full max-w-lg bg-[#FAFBFB] rounded-t-[2rem] shadow-2xl z-10 flex flex-col max-h-[85vh] overflow-hidden animate-in slide-in-from-bottom duration-300 border-t border-[#0536971A]"
       >
         {/* Pull indicator */}
         <div className="w-12 h-1.5 bg-gray-300/80 rounded-full mx-auto mt-3 mb-2 shrink-0" />
 
         {/* Drawer Header */}
-        <div className="flex items-center justify-between px-6 pb-3 border-b border-[#233A6C0F] shrink-0">
+        <div className="flex items-center justify-between px-6 pb-3 border-b border-[#0536970F] shrink-0">
           <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-[#308D6F]" />
-            <h3 className="font-bold text-[#233A6C]">Community Stats & Rewards</h3>
+            <Trophy className="w-5 h-5 text-[#2FC191]" />
+            <h3 className="font-bold text-[#053697]">Community Stats & Rewards</h3>
           </div>
           <button
             onClick={onClose}

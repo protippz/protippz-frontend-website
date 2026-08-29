@@ -48,26 +48,26 @@ function Sidebar({
         {/* Top Community Posts */}
         <div
           className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md"
-          style={{ backgroundColor: "#FAFBFB", border: "1px solid #233A6C12" }}
+          style={{ backgroundColor: "#FAFBFB", border: "1px solid #05369712" }}
         >
-          <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#233A6C0F]">
+          <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#0536970F]">
             <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-[#308D6F15]">
+              <div className="p-1.5 rounded-lg bg-[#2FC19115]">
                 <Trophy
                   className="w-4 h-4 sm:w-5 sm:h-5"
-                  style={{ color: "#308D6F" }}
+                  style={{ color: "#2FC191" }}
                 />
               </div>
               <h3
                 className="text-sm sm:text-base lg:text-lg font-bold tracking-tight"
-                style={{ color: "#233A6C" }}
+                style={{ color: "#053697" }}
               >
                 Top Community Posts
               </h3>
             </div>
             <span
               className="flex items-center gap-1 text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full"
-              style={{ backgroundColor: "#308D6F15", color: "#308D6F" }}
+              style={{ backgroundColor: "#2FC19115", color: "#2FC191" }}
             >
               <Flame className="w-3 h-3" />
               Hot
@@ -79,7 +79,7 @@ function Sidebar({
               trendingPosts.map((post, index) => (
                 <div
                   key={post.id}
-                  className="group p-2 -mx-2 rounded-xl transition-all duration-150 hover:bg-[#233A6C08] cursor-pointer"
+                  className="group p-2 -mx-2 rounded-xl transition-all duration-150 hover:bg-[#05369708] cursor-pointer"
                 >
                   <div className="flex items-start gap-2.5">
                     <div
@@ -92,22 +92,22 @@ function Sidebar({
                               ? "#C0C0C0"
                               : index === 2
                                 ? "#CD7F32"
-                                : "#308D6F",
-                        color: index <= 2 ? "#233A6C" : "white",
+                                : "#2FC191",
+                        color: index <= 2 ? "#053697" : "white",
                       }}
                     >
                       {index + 1}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p
-                        className="text-xs sm:text-sm font-bold truncate group-hover:text-[#308D6F] transition-colors"
-                        style={{ color: "#233A6C" }}
+                        className="text-xs sm:text-sm font-bold truncate group-hover:text-[#2FC191] transition-colors"
+                        style={{ color: "#053697" }}
                       >
                         {post.user.name}
                       </p>
                       <p
                         className="text-xs line-clamp-2 leading-relaxed mt-0.5"
-                        style={{ color: "#233A6C80" }}
+                        style={{ color: "#05369780" }}
                       >
                         {post.content}
                       </p>
@@ -115,8 +115,8 @@ function Sidebar({
                         <span
                           className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md"
                           style={{
-                            backgroundColor: "#308D6F15",
-                            color: "#308D6F",
+                            backgroundColor: "#2FC19115",
+                            color: "#2FC191",
                           }}
                         >
                           <DollarSign className="w-2.5 h-2.5" />
@@ -125,8 +125,8 @@ function Sidebar({
                         <span
                           className="inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-md"
                           style={{
-                            backgroundColor: "#233A6C0B",
-                            color: "#233A6C70",
+                            backgroundColor: "#0536970B",
+                            color: "#05369770",
                           }}
                         >
                           <Heart className="w-2.5 h-2.5" />
@@ -140,7 +140,7 @@ function Sidebar({
             ) : (
               <p
                 className="text-xs text-center py-4"
-                style={{ color: "#233A6C60" }}
+                style={{ color: "#05369760" }}
               >
                 No trending posts available.
               </p>
@@ -151,26 +151,26 @@ function Sidebar({
         {/* Top Fans This Week */}
         <div
           className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md"
-          style={{ backgroundColor: "#FAFBFB", border: "1px solid #233A6C12" }}
+          style={{ backgroundColor: "#FAFBFB", border: "1px solid #05369712" }}
         >
-          <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#233A6C0F]">
+          <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#0536970F]">
             <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-[#308D6F15]">
+              <div className="p-1.5 rounded-lg bg-[#2FC19115]">
                 <Crown
                   className="w-4 h-4 sm:w-5 sm:h-5"
-                  style={{ color: "#308D6F" }}
+                  style={{ color: "#2FC191" }}
                 />
               </div>
               <h3
                 className="text-sm sm:text-base lg:text-lg font-bold tracking-tight"
-                style={{ color: "#233A6C" }}
+                style={{ color: "#053697" }}
               >
                 Top Fans This Week
               </h3>
             </div>
             <span
               className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full"
-              style={{ backgroundColor: "#233A6C0B", color: "#233A6C80" }}
+              style={{ backgroundColor: "#0536970B", color: "#05369780" }}
             >
               Top 5
             </span>
@@ -184,13 +184,13 @@ function Sidebar({
                 return (
                   <div
                     key={fan.id}
-                    className="flex items-center gap-2.5 sm:gap-3 p-2 -mx-2 rounded-xl transition-all duration-150 hover:bg-[#233A6C08] cursor-pointer group"
+                    className="flex items-center gap-2.5 sm:gap-3 p-2 -mx-2 rounded-xl transition-all duration-150 hover:bg-[#05369708] cursor-pointer group"
                   >
                     <div className="relative shrink-0">
-                      <Avatar className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 border border-[#233A6C15]">
+                      <Avatar className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 border border-[#05369715]">
                         <AvatarImage src={fan.avatar} alt={fan.name} />
                         <AvatarFallback>
-                          <Users className="w-4 h-4 text-[#233A6C60]" />
+                          <Users className="w-4 h-4 text-[#05369760]" />
                         </AvatarFallback>
                       </Avatar>
                       {index === 0 && (
@@ -205,8 +205,8 @@ function Sidebar({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <p
-                          className="text-xs sm:text-sm font-bold truncate group-hover:text-[#308D6F] transition-colors"
-                          style={{ color: "#233A6C" }}
+                          className="text-xs sm:text-sm font-bold truncate group-hover:text-[#2FC191] transition-colors"
+                          style={{ color: "#053697" }}
                         >
                           {fan.name}
                         </p>
@@ -222,7 +222,7 @@ function Sidebar({
                       </div>
                       <p
                         className="text-[10px] sm:text-xs font-medium flex items-center gap-1 mt-0.5"
-                        style={{ color: "#308D6F" }}
+                        style={{ color: "#2FC191" }}
                       >
                         <Sparkles className="w-3 h-3" />
                         {fan.xp.toLocaleString()} XP
@@ -234,7 +234,7 @@ function Sidebar({
             ) : (
               <p
                 className="text-xs text-center py-4"
-                style={{ color: "#233A6C60" }}
+                style={{ color: "#05369760" }}
               >
                 No top fans found.
               </p>
@@ -246,20 +246,20 @@ function Sidebar({
         <div
           className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md"
           style={{
-            backgroundColor: "#308D6F10",
-            border: "1px solid #308D6F30",
+            backgroundColor: "#2FC19110",
+            border: "1px solid #2FC19130",
           }}
         >
-          <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#308D6F20]">
-            <div className="p-1.5 rounded-lg bg-[#308D6F20]">
+          <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#2FC19120]">
+            <div className="p-1.5 rounded-lg bg-[#2FC19120]">
               <Gift
                 className="w-4 h-4 sm:w-5 sm:h-5"
-                style={{ color: "#308D6F" }}
+                style={{ color: "#2FC191" }}
               />
             </div>
             <h3
               className="text-sm sm:text-base lg:text-lg font-bold tracking-tight"
-              style={{ color: "#233A6C" }}
+              style={{ color: "#053697" }}
             >
               Rewards Preview
             </h3>
@@ -270,26 +270,26 @@ function Sidebar({
               className="p-3 rounded-xl transition-all hover:bg-white"
               style={{
                 backgroundColor: "#FAFBFB",
-                border: "1px solid #233A6C12",
+                border: "1px solid #05369712",
               }}
             >
               <div className="flex items-center justify-between mb-2">
                 <span
                   className="text-xs sm:text-sm font-bold"
-                  style={{ color: "#233A6C" }}
+                  style={{ color: "#053697" }}
                 >
                   Bronze Badge
                 </span>
                 <span
                   className="text-xs font-semibold"
-                  style={{ color: "#308D6F" }}
+                  style={{ color: "#2FC191" }}
                 >
                   100 XP
                 </span>
               </div>
               <div
                 className="w-full h-2 rounded-full overflow-hidden"
-                style={{ backgroundColor: "#233A6C0F" }}
+                style={{ backgroundColor: "#0536970F" }}
               >
                 <div
                   className="h-full rounded-full transition-all duration-500"
@@ -302,26 +302,26 @@ function Sidebar({
               className="p-3 rounded-xl transition-all hover:bg-white"
               style={{
                 backgroundColor: "#FAFBFB",
-                border: "1px solid #233A6C12",
+                border: "1px solid #05369712",
               }}
             >
               <div className="flex items-center justify-between mb-2">
                 <span
                   className="text-xs sm:text-sm font-bold"
-                  style={{ color: "#233A6C" }}
+                  style={{ color: "#053697" }}
                 >
                   Silver Badge
                 </span>
                 <span
                   className="text-xs font-semibold"
-                  style={{ color: "#308D6F" }}
+                  style={{ color: "#2FC191" }}
                 >
                   500 XP
                 </span>
               </div>
               <div
                 className="w-full h-2 rounded-full overflow-hidden"
-                style={{ backgroundColor: "#233A6C0F" }}
+                style={{ backgroundColor: "#0536970F" }}
               >
                 <div
                   className="h-full rounded-full transition-all duration-500"
@@ -332,8 +332,8 @@ function Sidebar({
           </div>
 
           <button
-            className="w-full mt-4 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-white transition-all hover:bg-[#28795e] active:scale-[0.98] shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
-            style={{ backgroundColor: "#308D6F" }}
+            className="w-full mt-4 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-white transition-all hover:bg-[#2FC191]/90 active:scale-[0.98] shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
+            style={{ backgroundColor: "#2FC191" }}
           >
             View All Rewards
             <ChevronRight className="w-4 h-4" />

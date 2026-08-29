@@ -621,18 +621,18 @@ export default function CommunityPage() {
                   />
                 ))
               ) : !isLoading && !isFetching ? (
-                <div className="p-10 text-center rounded-2xl bg-white border border-[#233A6C1A] shadow-sm">
-                  <p className="text-base font-bold text-[#233A6C]">
+                <div className="p-10 text-center rounded-2xl bg-white border border-[#0536971A] shadow-sm">
+                  <p className="text-base font-bold text-[#053697]">
                     No content found
                   </p>
-                  <p className="text-xs text-[#233A6C70] mt-1">
+                  <p className="text-xs text-[#05369770] mt-1">
                     No articles, releases, or posts match your current search
                     &amp; category filter.
                   </p>
                   <button
                     onClick={handleResetFilters}
                     className="mt-4 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all active:scale-95 shadow-sm cursor-pointer"
-                    style={{ backgroundColor: "#308D6F" }}
+                    style={{ backgroundColor: "#2FC191" }}
                   >
                     Reset Filters
                   </button>
@@ -646,8 +646,8 @@ export default function CommunityPage() {
               className="py-4 flex justify-center items-center min-h-[50px]"
             >
               {isFetching && page > 1 && (
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#308D6F]">
-                  <Loader2 className="w-4 h-4 animate-spin text-[#308D6F]" />
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#2FC191]">
+                  <Loader2 className="w-4 h-4 animate-spin text-[#2FC191]" />
                   <span>Loading more posts...</span>
                 </div>
               )}

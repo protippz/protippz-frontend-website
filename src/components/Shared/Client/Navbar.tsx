@@ -454,12 +454,12 @@ const Navbar: React.FC = () => {
               className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-xs"
             />
           ) : (
-            <div className="w-9 h-9 rounded-full bg-[#308D6F] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            <div className="w-9 h-9 rounded-full bg-[#2FC191] text-white flex items-center justify-center font-bold text-sm shadow-xs">
               {data?.userData?.name ? data.userData.name[0].toUpperCase() : "U"}
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <h4 className="text-sm font-bold text-[#154098] truncate leading-tight">
+            <h4 className="text-sm font-bold text-[#053697] truncate leading-tight">
               {data?.userData?.name || "My Account"}
             </h4>
             <p className="text-[11px] text-slate-500 truncate mt-0.5">
@@ -473,14 +473,14 @@ const Navbar: React.FC = () => {
         {/* Quick balance summary inside header */}
         {!isPlayerOrTeam && (
           <div className="mt-2.5 pt-2 border-t border-emerald-200/40 flex items-center justify-between text-xs font-bold">
-            <span className="flex items-center gap-1 text-[#308D6F]">
+            <span className="flex items-center gap-1 text-[#2FC191]">
               <DollarSign className="w-3.5 h-3.5" /> $
               {data?.userData?.totalAmount
                 ? data.userData.totalAmount.toFixed(2)
                 : "0.00"}
             </span>
-            <span className="flex items-center gap-1 text-[#308D6F]">
-              <Star className="w-3.5 h-3.5 fill-[#308D6F]" />{" "}
+            <span className="flex items-center gap-1 text-[#2FC191]">
+              <Star className="w-3.5 h-3.5 fill-[#2FC191]" />{" "}
               {data?.userData?.totalPoint
                 ? data.userData.totalPoint.toFixed(0)
                 : "0"}{" "}
@@ -490,14 +490,14 @@ const Navbar: React.FC = () => {
         )}
       </div>
 
-      {/* Menu Links with Single Unified Icon Color (#308D6F) */}
+      {/* Menu Links with Single Unified Icon Color (#2FC191) */}
       <div className="space-y-0.5 text-xs font-medium">
         <Link
           href={profileHref}
           onClick={() => setDropdownOpen(false)}
-          className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#308D6F] transition-colors group"
+          className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#2FC191] transition-colors group"
         >
-          <User className="w-4 h-4 text-[#308D6F]" />
+          <User className="w-4 h-4 text-[#2FC191]" />
           <span>My Profile</span>
         </Link>
 
@@ -506,63 +506,63 @@ const Navbar: React.FC = () => {
             <Link
               href="/deposit"
               onClick={() => setDropdownOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#308D6F] transition-colors"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#2FC191] transition-colors"
             >
-              <Wallet className="w-4 h-4 text-[#308D6F]" />
+              <Wallet className="w-4 h-4 text-[#2FC191]" />
               <span>Deposit Funds</span>
             </Link>
 
             <Link
               href="/tippz-history"
               onClick={() => setDropdownOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#308D6F] transition-colors"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#2FC191] transition-colors"
             >
-              <History className="w-4 h-4 text-[#308D6F]" />
+              <History className="w-4 h-4 text-[#2FC191]" />
               <span>Tippz History</span>
             </Link>
 
             <Link
               href="/transaction-log"
               onClick={() => setDropdownOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#308D6F] transition-colors"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#2FC191] transition-colors"
             >
-              <ReceiptText className="w-4 h-4 text-[#308D6F]" />
+              <ReceiptText className="w-4 h-4 text-[#2FC191]" />
               <span>Transaction Log</span>
             </Link>
 
             <Link
               href="/favorites"
               onClick={() => setDropdownOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#308D6F] transition-colors"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#2FC191] transition-colors"
             >
-              <Heart className="w-4 h-4 text-[#308D6F]" />
+              <Heart className="w-4 h-4 text-[#2FC191]" />
               <span>Favorites</span>
             </Link>
 
             <Link
               href="/faqs"
               onClick={() => setDropdownOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#308D6F] transition-colors"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#2FC191] transition-colors"
             >
-              <CircleHelp className="w-4 h-4 text-[#308D6F]" />
+              <CircleHelp className="w-4 h-4 text-[#2FC191]" />
               <span>FAQs</span>
             </Link>
 
             <Link
               href="/invite-friends"
               onClick={() => setDropdownOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#308D6F] transition-colors"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#2FC191] transition-colors"
             >
-              <UserPlus className="w-4 h-4 text-[#308D6F]" />
+              <UserPlus className="w-4 h-4 text-[#2FC191]" />
               <span>Invite Friends</span>
             </Link>
 
             <Link
               href="/contact"
               onClick={() => setDropdownOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#308D6F] transition-colors"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#2FC191] transition-colors"
             >
-              <Mail className="w-4 h-4 text-[#308D6F]" />
+              <Mail className="w-4 h-4 text-[#2FC191]" />
               <span>Contact Us</span>
             </Link>
           </>
@@ -570,9 +570,9 @@ const Navbar: React.FC = () => {
 
         <button
           onClick={handlePasswordChange}
-          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#308D6F] transition-colors text-left cursor-pointer"
+          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#2FC191] transition-colors text-left cursor-pointer"
         >
-          <Lock className="w-4 h-4 text-[#308D6F]" />
+          <Lock className="w-4 h-4 text-[#2FC191]" />
           <span>Change Password</span>
         </button>
 
@@ -622,14 +622,14 @@ const Navbar: React.FC = () => {
                   href={item.href}
                   className={`transition-colors duration-200 flex items-center ${
                     isActive
-                      ? "text-[#308D6F] font-bold"
-                      : "text-[#154098] hover:text-[#308D6F]"
+                      ? "text-[#2FC191] font-bold"
+                      : "text-[#053697] hover:text-[#2FC191]"
                   }`}
                 >
                   {item.text}
                 </Link>
                 {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#308D6F] rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#2FC191] rounded-full" />
                 )}
               </li>
             );
@@ -650,8 +650,8 @@ const Navbar: React.FC = () => {
               {/* User Balance Badges */}
               {!isPlayerOrTeam && (
                 <div className="flex items-center space-x-2">
-                  <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#308D6F]/10 border border-[#308D6F]/20 text-[#308D6F] text-xs font-bold shadow-xs">
-                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#308D6F] text-white">
+                  <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#2FC191]/10 border border-[#2FC191]/20 text-[#2FC191] text-xs font-bold shadow-xs">
+                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#2FC191] text-white">
                       <DollarSign className="w-3 h-3" />
                     </span>
                     <span>
@@ -662,8 +662,8 @@ const Navbar: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#308D6F]/10 border border-[#308D6F]/20 text-[#308D6F] text-xs font-bold shadow-xs">
-                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#308D6F] text-white">
+                  <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#2FC191]/10 border border-[#2FC191]/20 text-[#2FC191] text-xs font-bold shadow-xs">
+                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#2FC191] text-white">
                       <Star className="w-3 h-3 fill-white text-white" />
                     </span>
                     <span>
@@ -679,7 +679,7 @@ const Navbar: React.FC = () => {
               {/* Notification Icon */}
               <Link
                 href="/notification"
-                className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-[#308D6F]/15 hover:text-[#308D6F] text-slate-700 transition-all duration-200"
+                className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-[#2FC191]/15 hover:text-[#2FC191] text-slate-700 transition-all duration-200"
                 title="Notifications"
               >
                 <Bell className="w-4 h-4 text-slate-700" />
@@ -697,7 +697,7 @@ const Navbar: React.FC = () => {
                     triggerNode.parentElement || document.body
                   }
                 >
-                  <button className="flex items-center justify-center w-9 h-9 rounded-full bg-[#308D6F] text-white hover:opacity-90 transition-all duration-200 cursor-pointer shadow-xs">
+                  <button className="flex items-center justify-center w-9 h-9 rounded-full bg-[#2FC191] text-white hover:opacity-90 transition-all duration-200 cursor-pointer shadow-xs">
                     {data?.userData?.profile_image ? (
                       <Image
                         src={data.userData.profile_image}
@@ -720,7 +720,7 @@ const Navbar: React.FC = () => {
           ) : (
             <Link
               href="/sign-in"
-              className="bg-[#308D6F] hover:bg-[#257259] text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-xs hover:shadow-md transition-all duration-200 whitespace-nowrap active:scale-95"
+              className="bg-[#2FC191] hover:bg-[#2FC191]/90 text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-xs hover:shadow-md transition-all duration-200 whitespace-nowrap active:scale-95"
             >
               Sign In
             </Link>
@@ -731,10 +731,10 @@ const Navbar: React.FC = () => {
         <div className="lg:hidden flex items-center">
           <button
             onClick={showDrawer}
-            className="p-2 rounded-lg bg-slate-100 text-[#154098] hover:bg-[#308D6F]/10 hover:text-[#308D6F] transition-all cursor-pointer"
+            className="p-2 rounded-lg bg-slate-100 text-[#053697] hover:bg-[#2FC191]/10 hover:text-[#2FC191] transition-all cursor-pointer"
             aria-label="Toggle mobile menu"
           >
-            <MenuIcon className="w-5 h-5 text-[#154098]" />
+            <MenuIcon className="w-5 h-5 text-[#053697]" />
           </button>
         </div>
       </nav>
@@ -755,7 +755,7 @@ const Navbar: React.FC = () => {
         placement="right"
         onClose={closeDrawer}
         open={drawerVisible}
-        closeIcon={<CloseIcon className="w-5 h-5 text-[#154098]" />}
+        closeIcon={<CloseIcon className="w-5 h-5 text-[#053697]" />}
         className="mobile-nav-drawer"
         width={300}
       >
@@ -769,7 +769,7 @@ const Navbar: React.FC = () => {
               </div>
             ) : data?.userData?._id && !isPlayerOrTeam ? (
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
-                <div className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-emerald-50 text-[#308D6F] text-xs font-bold">
+                <div className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-emerald-50 text-[#2FC191] text-xs font-bold">
                   <span className="flex items-center gap-1.5">
                     <DollarSign className="w-3.5 h-3.5" /> Balance
                   </span>
@@ -780,9 +780,9 @@ const Navbar: React.FC = () => {
                       : "0.00"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-emerald-50 text-[#308D6F] text-xs font-bold">
+                <div className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-emerald-50 text-[#2FC191] text-xs font-bold">
                   <span className="flex items-center gap-1.5">
-                    <Star className="w-3.5 h-3.5 fill-[#308D6F]" /> Points
+                    <Star className="w-3.5 h-3.5 fill-[#2FC191]" /> Points
                   </span>
                   <span>
                     {data?.userData?.totalPoint
@@ -811,13 +811,13 @@ const Navbar: React.FC = () => {
                       onClick={closeDrawer}
                       style={
                         isActive
-                          ? { backgroundColor: "#308D6F", color: "#ffffff" }
+                          ? { backgroundColor: "#2FC191", color: "#ffffff" }
                           : undefined
                       }
                       className={`block px-4 py-3 rounded-xl transition-all duration-200 font-bold ${
                         isActive
                           ? "shadow-md text-white"
-                          : "text-[#154098] hover:bg-slate-100 hover:text-[#308D6F]"
+                          : "text-[#053697] hover:bg-slate-100 hover:text-[#2FC191]"
                       }`}
                     >
                       {item.text}
@@ -837,7 +837,7 @@ const Navbar: React.FC = () => {
                 <Link
                   href={profileHref}
                   onClick={closeDrawer}
-                  className="block text-center w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-[#154098] font-semibold rounded-xl text-sm transition-all"
+                  className="block text-center w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-[#053697] font-semibold rounded-xl text-sm transition-all"
                 >
                   My Profile
                 </Link>
@@ -855,7 +855,7 @@ const Navbar: React.FC = () => {
               <Link
                 href="/sign-in"
                 onClick={closeDrawer}
-                className="block text-center w-full py-3 px-4 bg-[#308D6F] hover:bg-[#257259] text-white font-semibold rounded-xl shadow-xs text-sm transition-all"
+                className="block text-center w-full py-3 px-4 bg-[#2FC191] hover:bg-[#2FC191]/90 text-white font-semibold rounded-xl shadow-xs text-sm transition-all"
               >
                 Sign In
               </Link>

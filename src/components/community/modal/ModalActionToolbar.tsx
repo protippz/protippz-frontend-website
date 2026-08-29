@@ -54,8 +54,8 @@ export const ModalActionToolbar: React.FC<ModalActionToolbarProps> = ({
         onClick={handleLikeClick}
         className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
           isLiked
-            ? "bg-[#308D6F] text-white"
-            : "bg-gray-100 hover:bg-gray-200 text-[#233A6C]"
+            ? "bg-[#2FC191] text-white"
+            : "bg-gray-100 hover:bg-gray-200 text-[#053697]"
         }`}
       >
         <Heart className="w-4 h-4 shrink-0" fill={isLiked ? "white" : "none"} />
@@ -65,7 +65,7 @@ export const ModalActionToolbar: React.FC<ModalActionToolbarProps> = ({
       <button
         type="button"
         onClick={handleShare}
-        className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-[#233A6C] transition-colors cursor-pointer active:scale-95"
+        className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-[#053697] transition-colors cursor-pointer active:scale-95"
       >
         <Share2 className="w-4 h-4 shrink-0" />
         <span>Share</span>

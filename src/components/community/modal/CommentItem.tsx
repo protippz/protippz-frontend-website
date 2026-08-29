@@ -55,17 +55,17 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   if (isReply) {
     return (
       <div className="flex items-start gap-2.5">
-        <Avatar className="w-7 h-7 mt-0.5 border border-[#233A6C15] shrink-0 cursor-pointer">
+        <Avatar className="w-7 h-7 mt-0.5 border border-[#05369715] shrink-0 cursor-pointer">
           <AvatarImage src={comment.user?.avatar} alt={comment.user?.name} />
           <AvatarFallback>
-            <Users className="w-3 h-3 text-[#233A6C60]" />
+            <Users className="w-3 h-3 text-[#05369760]" />
           </AvatarFallback>
         </Avatar>
 
         <div className="flex-1 min-w-0">
           <div className="relative inline-block bg-[#F0F2F5] px-3.5 py-2 rounded-2xl max-w-full">
             <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
-              <span className="text-xs font-bold text-[#233A6C] hover:underline cursor-pointer">
+              <span className="text-xs font-bold text-[#053697] hover:underline cursor-pointer">
                 {comment.user?.name || "User"}
               </span>
               <span
@@ -79,29 +79,29 @@ export const CommentItem: React.FC<CommentItemProps> = ({
               </span>
             </div>
 
-            <p className="text-xs text-[#233A6C] leading-relaxed whitespace-pre-line">
+            <p className="text-xs text-[#053697] leading-relaxed whitespace-pre-line">
               {comment.content}
             </p>
           </div>
 
-          <div className="flex items-center gap-3 text-[10px] text-[#233A6C70] font-semibold px-2 mt-0.5">
+          <div className="flex items-center gap-3 text-[10px] text-[#05369770] font-semibold px-2 mt-0.5">
             <button
               type="button"
               disabled={isLiking}
               onClick={() => onLikeCommentClick(comment.id)}
               className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
                 comment.isLiked
-                  ? "bg-[#308D6F18] text-[#308D6F] font-bold"
-                  : "text-[#233A6C70] hover:text-[#308D6F] hover:bg-gray-100"
+                  ? "bg-[#2FC19118] text-[#2FC191] font-bold"
+                  : "text-[#05369770] hover:text-[#2FC191] hover:bg-gray-100"
               }`}
             >
               {isLiking ? (
-                <Loader2 className="w-3 h-3 animate-spin text-[#308D6F] shrink-0" />
+                <Loader2 className="w-3 h-3 animate-spin text-[#2FC191] shrink-0" />
               ) : (
                 <Heart
                   className="w-3 h-3 shrink-0"
-                  fill={comment.isLiked ? "#308D6F" : "none"}
-                  stroke={comment.isLiked ? "#308D6F" : "currentColor"}
+                  fill={comment.isLiked ? "#2FC191" : "none"}
+                  stroke={comment.isLiked ? "#2FC191" : "currentColor"}
                 />
               )}
               <span>
@@ -120,7 +120,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                   comment.user?.name || "User",
                 )
               }
-              className="hover:underline hover:text-[#308D6F] cursor-pointer"
+              className="hover:underline hover:text-[#2FC191] cursor-pointer"
             >
               Reply
             </button>
@@ -130,7 +130,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                 type="button"
                 disabled={isDeleting}
                 onClick={() => onDeleteComment(postId, comment.id)}
-                className="hover:text-red-600 transition-colors flex items-center gap-0.5 cursor-pointer text-[#233A6C60] disabled:opacity-60 disabled:cursor-not-allowed"
+                className="hover:text-red-600 transition-colors flex items-center gap-0.5 cursor-pointer text-[#05369760] disabled:opacity-60 disabled:cursor-not-allowed"
                 title="Delete reply"
               >
                 {isDeleting ? (
@@ -153,10 +153,10 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     <div className="space-y-2">
       {/* Top-Level Parent Comment */}
       <div className="flex items-start gap-2.5 group/cmt">
-        <Avatar className="w-8 h-8 mt-0.5 border border-[#233A6C15] shrink-0 cursor-pointer">
+        <Avatar className="w-8 h-8 mt-0.5 border border-[#05369715] shrink-0 cursor-pointer">
           <AvatarImage src={comment.user?.avatar} alt={comment.user?.name} />
           <AvatarFallback>
-            <Users className="w-4 h-4 text-[#233A6C60]" />
+            <Users className="w-4 h-4 text-[#05369760]" />
           </AvatarFallback>
         </Avatar>
 
@@ -164,7 +164,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
           {/* Comment Bubble */}
           <div className="relative inline-block bg-[#F0F2F5] px-3.5 py-2.5 rounded-2xl max-w-full">
             <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
-              <span className="text-xs font-bold text-[#233A6C] hover:underline cursor-pointer">
+              <span className="text-xs font-bold text-[#053697] hover:underline cursor-pointer">
                 {comment.user?.name || "User"}
               </span>
               {/* <span
@@ -178,7 +178,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
               </span> */}
             </div>
 
-            <p className="text-xs text-[#233A6C] leading-relaxed whitespace-pre-line">
+            <p className="text-xs text-[#053697] leading-relaxed whitespace-pre-line">
               {comment.content}
             </p>
 
@@ -196,24 +196,24 @@ export const CommentItem: React.FC<CommentItemProps> = ({
           </div>
 
           {/* Comment Actions */}
-          <div className="flex items-center gap-3 text-[11px] text-[#233A6C70] font-semibold px-2 mt-1">
+          <div className="flex items-center gap-3 text-[11px] text-[#05369770] font-semibold px-2 mt-1">
             <button
               type="button"
               disabled={isLiking}
               onClick={() => onLikeCommentClick(comment.id)}
               className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
                 comment.isLiked
-                  ? "bg-[#308D6F18] text-[#308D6F] font-bold"
-                  : "text-[#233A6C70] hover:text-[#308D6F] hover:bg-gray-100"
+                  ? "bg-[#2FC19118] text-[#2FC191] font-bold"
+                  : "text-[#05369770] hover:text-[#2FC191] hover:bg-gray-100"
               }`}
             >
               {isLiking ? (
-                <Loader2 className="w-3 h-3 animate-spin text-[#308D6F] shrink-0" />
+                <Loader2 className="w-3 h-3 animate-spin text-[#2FC191] shrink-0" />
               ) : (
                 <Heart
                   className="w-3 h-3 shrink-0"
-                  fill={comment.isLiked ? "#308D6F" : "none"}
-                  stroke={comment.isLiked ? "#308D6F" : "currentColor"}
+                  fill={comment.isLiked ? "#2FC191" : "none"}
+                  stroke={comment.isLiked ? "#2FC191" : "currentColor"}
                 />
               )}
               <span>
@@ -229,7 +229,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
               onClick={() =>
                 onReplyClick(comment.id, comment.user?.name || "User")
               }
-              className="hover:underline hover:text-[#308D6F] flex items-center gap-0.5 cursor-pointer"
+              className="hover:underline hover:text-[#2FC191] flex items-center gap-0.5 cursor-pointer"
             >
               <CornerDownRight className="w-3 h-3 inline" />
               Reply
@@ -263,7 +263,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                     isQuickReactionOpen ? null : comment.id
                   )
                 }
-                className="p-1 text-gray-400 hover:text-[#308D6F] transition-colors cursor-pointer"
+                className="p-1 text-gray-400 hover:text-[#2FC191] transition-colors cursor-pointer"
                 title="React"
               >
                 <Smile className="w-3.5 h-3.5" />
@@ -290,7 +290,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
 
       {/* Nested Replies */}
       {comment?.replies && comment?.replies?.length > 0 && (
-        <div className="border-l-2 border-[#233A6C15] pl-3.5 sm:pl-4 ml-4 space-y-3 pt-1">
+        <div className="border-l-2 border-[#05369715] pl-3.5 sm:pl-4 ml-4 space-y-3 pt-1">
           {comment?.replies?.map((reply) => (
             <CommentItem
               key={reply.id}

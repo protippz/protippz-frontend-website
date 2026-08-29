@@ -371,10 +371,10 @@ export const PostModal: React.FC<PostModalProps> = ({
 
             {!isLoggedIn && (
               <div className="absolute inset-0 bg-white/80 backdrop-blur-md z-20 flex flex-col items-center justify-center p-6 text-center rounded-2xl border border-gray-200/80 shadow-md animate-in fade-in duration-200">
-                <div className="w-12 h-12 rounded-full bg-[#308D6F]/10 flex items-center justify-center mb-3 text-[#308D6F] shadow-xs">
+                <div className="w-12 h-12 rounded-full bg-[#2FC191]/10 flex items-center justify-center mb-3 text-[#2FC191] shadow-xs">
                   <Lock className="w-6 h-6" />
                 </div>
-                <h3 className="text-sm sm:text-base font-bold text-[#233A6C] mb-1">
+                <h3 className="text-sm sm:text-base font-bold text-[#053697] mb-1">
                   Log in to join the discussion
                 </h3>
                 <p className="text-xs text-gray-500 max-w-sm mb-4 leading-relaxed">
@@ -383,7 +383,7 @@ export const PostModal: React.FC<PostModalProps> = ({
                 <button
                   type="button"
                   onClick={handleGoToLogin}
-                  className="px-5 py-2.5 rounded-xl bg-[#308D6F] hover:bg-[#257259] text-white font-bold text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-[#2FC191] hover:bg-[#2FC191]/90 text-white font-bold text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-2"
                 >
                   <LogIn className="w-4 h-4" />
                   <span>Go to Login</span>
@@ -414,13 +414,13 @@ export const PostModal: React.FC<PostModalProps> = ({
           />
         ) : (
           <div className="p-3 sm:p-4 bg-gray-50/90 border-t text-center text-xs text-gray-600 font-medium flex items-center justify-center gap-2 shrink-0">
-            <Lock className="w-4 h-4 text-[#308D6F]" />
+            <Lock className="w-4 h-4 text-[#2FC191]" />
             <span>
               Please{" "}
               <button
                 type="button"
                 onClick={handleGoToLogin}
-                className="text-[#308D6F] font-bold hover:underline cursor-pointer"
+                className="text-[#2FC191] font-bold hover:underline cursor-pointer"
               >
                 sign in
               </button>{" "}

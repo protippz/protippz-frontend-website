@@ -101,7 +101,7 @@ function FAQItem({
       >
         <span
           className="text-sm sm:text-[15px] font-semibold leading-snug transition-colors duration-150"
-          style={{ color: isOpen ? "#308D6F" : "#1A2A23" }}
+          style={{ color: isOpen ? "#2FC191" : "#1A2A23" }}
         >
           {question}
         </span>
@@ -110,8 +110,8 @@ function FAQItem({
         <span
           className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-200 mt-0.5"
           style={{
-            borderColor: isOpen ? "rgba(42,146,109,0.3)" : "#D0D7DE",
-            background: isOpen ? "rgba(42,146,109,0.08)" : "transparent",
+            borderColor: isOpen ? "rgba(47,193,145,0.3)" : "#D0D7DE",
+            background: isOpen ? "rgba(47,193,145,0.08)" : "transparent",
           }}
         >
           <svg
@@ -124,7 +124,7 @@ function FAQItem({
           >
             <path
               d="M5 1v8M1 5h8"
-              stroke={isOpen ? "#308D6F" : "#57606A"}
+              stroke={isOpen ? "#2FC191" : "#57606A"}
               strokeWidth="1.4"
               strokeLinecap="round"
             />
@@ -139,7 +139,7 @@ function FAQItem({
       >
         <div
           className="px-6 pb-5 border-t"
-          style={{ borderColor: "rgba(42,146,109,0.12)" }}
+          style={{ borderColor: "rgba(47,193,145,0.12)" }}
         >
           <p className="text-sm text-[#57606A] leading-relaxed pt-4">
             {answer}
@@ -168,21 +168,21 @@ function FAQ() {
           <div
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5 border"
             style={{
-              background: "rgba(42,146,109,0.06)",
-              borderColor: "rgba(42,146,109,0.22)",
+              background: "rgba(47,193,145,0.06)",
+              borderColor: "rgba(47,193,145,0.22)",
             }}
           >
             <span
-              className="w-1.5 h-1.5 rounded-full bg-[#308D6F] animate-pulse"
+              className="w-1.5 h-1.5 rounded-full bg-[#2FC191] animate-pulse"
               aria-hidden="true"
             />
-            <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#308D6F]">
+            <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#2FC191]">
               FAQ
             </span>
           </div>
 
           <h2 className="text-4xl font-e sm:text-5xl font-black text-[#1A2A23] mb-4 leading-[1.1] tracking-[-0.03em]">
-            Frequently asked <span className="text-[#308D6F]">questions</span>
+            Frequently asked <span className="text-[#2FC191]">questions</span>
           </h2>
 
           <p className="text-[#57606A] text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
@@ -202,7 +202,7 @@ function FAQ() {
               >
                 {/* Category label */}
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xs font-semibold tracking-[0.16em] uppercase text-[#308D6F]">
+                  <span className="text-xs font-semibold tracking-[0.16em] uppercase text-[#2FC191]">
                     {section.category}
                   </span>
                   <div

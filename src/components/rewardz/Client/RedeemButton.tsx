@@ -273,7 +273,7 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({ item }) => {
               <Button
                 type="primary"
                 htmlType="submit"
-                className="w-full bg-[#053697] hover:bg-[#467eee] h-[42px] max-w-[320px] mx-auto block"
+                className="w-full bg-[#053697] hover:bg-[#053697]/90 h-[42px] max-w-[320px] mx-auto block"
               >
                 Verify Otp
               </Button>

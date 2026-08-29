@@ -291,21 +291,21 @@ const Testimonials: React.FC = () => {
           <div
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6 border"
             style={{
-              background: "rgba(42,146,109,0.06)",
-              borderColor: "rgba(42,146,109,0.22)",
+              background: "rgba(47,193,145,0.06)",
+              borderColor: "rgba(47,193,145,0.22)",
             }}
           >
             <span
-              className="w-1.5 h-1.5 rounded-full bg-[#308D6F] animate-pulse"
+              className="w-1.5 h-1.5 rounded-full bg-[#2FC191] animate-pulse"
               aria-hidden="true"
             />
-            <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#308D6F]">
+            <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#2FC191]">
               Trusted by thousands
             </span>
           </div>
-          <h1 className="text-2xl font-e sm:text-4xl md:text-5xl font-bold text-[#154098] mb-4">
+          <h1 className="text-2xl font-e sm:text-4xl md:text-5xl font-bold text-[#053697] mb-4">
             Fans & Athletes Already Making{" "}
-            <span className="text-[#308D6F]">an impact</span>
+            <span className="text-[#2FC191]">an impact</span>
           </h1>
 
           <p className="text-black/40 max-w-2xl text-sm md:text-base mx-auto">
@@ -331,31 +331,31 @@ const Testimonials: React.FC = () => {
 
         <div className="w-full flex items-center justify-center">
           <AvatarGroup className="**:grayscale **:hover:grayscale-0 transition-all">
-            <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#228c6b]/30">
+            <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback className="text-xs bg-[#228c6b]/20 text-[#1a8a66]">
+              <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">
                 CN
               </AvatarFallback>
             </Avatar>
-            <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#228c6b]/30">
+            <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
               <AvatarImage
                 src="https://github.com/maxleiter.png"
                 alt="@maxleiter"
               />
-              <AvatarFallback className="text-xs bg-[#228c6b]/20 text-[#1a8a66]">
+              <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">
                 ML
               </AvatarFallback>
             </Avatar>
-            <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#228c6b]/30">
+            <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
               <AvatarImage
                 src="https://github.com/evilrabbit.png"
                 alt="@evilrabbit"
               />
-              <AvatarFallback className="text-xs bg-[#228c6b]/20 text-[#1a8a66]">
+              <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">
                 ER
               </AvatarFallback>
             </Avatar>
-            <AvatarGroupCount className="w-9 h-9 text-xs border-2 border-white bg-[#228c6b]/20 text-[#1a8a66] font-semibold">
+            <AvatarGroupCount className="w-9 h-9 text-xs border-2 border-white bg-[#2FC191]/20 text-[#2FC191] font-semibold">
               +3
             </AvatarGroupCount>
           </AvatarGroup>
