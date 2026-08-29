@@ -101,7 +101,7 @@ function FAQItem({
       >
         <span
           className="text-sm sm:text-[15px] font-semibold leading-snug transition-colors duration-150"
-          style={{ color: isOpen ? "#2FC191" : "#1A2A23" }}
+          style={{ color: isOpen ? "#2FC191" : "#053697" }}
         >
           {question}
         </span>
