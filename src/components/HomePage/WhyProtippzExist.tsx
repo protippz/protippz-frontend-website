@@ -112,15 +112,15 @@ function WhyProtippzExist() {
             id="why-protippz-heading"
             className="text-2xl max-w-4xl mx-auto font-e sm:text-5xl font-black text-[#154098] mb-5 leading-[1.1] tracking-[-0.03em]"
           >
-            Athletes are underpaid,{" "}
-            <span className="text-[#308D6F]">undervalued,</span>{" "}
-            <span className="text-[#308D6F]">and overlooked</span>
+            SUPPORT THE ATHLETES YOU LOVE.{" "}
+            <span className="text-[#308D6F]">GET MORE FROM THE GAME.</span>
           </h2>
 
           <p className="text-[#57606A] text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
-            Despite the talent, passion, and fans behind them, many athletes
-            struggle to turn their dedication into real income. PROTIPPZ turns
-            fan support into real income and real impact.
+            PROTIPPZ brings fans and athletes closer together. Fans can directly
+            support their favorite athletes, earn rewards, and unlock new
+            experiences, while athletes gain new ways to engage their supporters
+            and earn beyond traditional sponsorships and NIL deals.
           </p>
         </div>
 
