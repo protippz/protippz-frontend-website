@@ -101,6 +101,7 @@ export default function CommunityPage({
     const params: Record<string, any> = {
       page,
       limit,
+      status: "Published",
     };
     if (selectedCategory && selectedCategory !== "All") {
       params.category = selectedCategory;
