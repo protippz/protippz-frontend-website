@@ -28,7 +28,7 @@ function ConnectionBoth() {
           </div>
 
           <h2 className="text-4xl font-e sm:text-5xl font-black text-[#053697] mb-4 leading-[1.1] tracking-[-0.03em]">
-            Why fan love <span className="text-[#2FC191]">PROTIPPZ</span>
+            Why fans love <span className="text-[#2FC191]">PROTIPPZ</span>
           </h2>
 
           <p className="text-[#57606A] text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
