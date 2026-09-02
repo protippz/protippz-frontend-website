@@ -36,14 +36,14 @@ export const ModalPostContent: React.FC<ModalPostContentProps> = ({
         )}
 
         {summary && (
-          <p className="text-xs sm:text-sm font-medium leading-relaxed">
+          <p className="text-xs sm:text-sm font-medium leading-relaxed text-slate-600">
             {summary}
           </p>
         )}
 
-        <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-line">
+        <div className="rich-text-content text-xs sm:text-sm leading-relaxed">
           <div dangerouslySetInnerHTML={{ __html: content }} />
-        </p>
+        </div>
 
         {tags && tags.length > 0 && (
           <div className="flex items-center gap-1.5 flex-wrap pt-1">

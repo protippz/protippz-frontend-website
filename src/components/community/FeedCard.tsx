@@ -20,6 +20,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getEmbedVideoUrl, sharePostLink } from "./helpers";
 import { levelColors, categoryStyles } from "./data/mockData";
 import { Post, ContentCategory } from "@/types/community";
+import { BlogArticleModal } from "./BlogArticleModal";
 
 interface FeedCardProps {
   post: Post;
@@ -52,12 +53,27 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
   onCommentClick,
 }) {
   const [isExpandedText, setIsExpandedText] = useState(false);
+  const [isBlogModalOpen, setIsBlogModalOpen] = useState(false);
+
+  const isBlogArticle =
+    post?.category?.toLowerCase() === "blog article" ||
+    post?.category === "Blog Article";
+
   const userLevel = post?.user?.level || "Bronze";
   const levelColor = levelColors[userLevel] || levelColors.Bronze;
   const catStyle = post?.category ? categoryStyles[post.category] : null;
   const postContent = post?.content || "";
   const isLongText = postContent.length > 110;
   const videoEmbedSrc = getEmbedVideoUrl(post?.videoUrl, post?.videoEmbedCode);
+
+  const handleSeeMoreClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isBlogArticle) {
+      setIsBlogModalOpen(true);
+    } else {
+      setIsExpandedText((prev) => !prev);
+    }
+  };
 
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -146,38 +162,43 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
       {/* Main Content Area */}
       <div className="mb-2.5">
         {post?.title && (
-          <h2 className="text-sm sm:text-base md:text-lg font-bold transition-colors leading-snug cursor-pointer">
+          <h2
+            onClick={(e) => {
+              if (isBlogArticle) {
+                e.stopPropagation();
+                setIsBlogModalOpen(true);
+              }
+            }}
+            className="text-sm sm:text-base md:text-lg font-bold transition-colors leading-snug cursor-pointer hover:text-[#2FC191]"
+          >
             {post.title}
           </h2>
         )}
 
         {post?.summary && (
-          <p className="text-[11px] mt-4 sm:text-xs font-medium mb-1.5 leading-relaxed cursor-pointer">
+          <p className="text-xs font-medium mb-1.5 leading-relaxed cursor-pointer text-slate-600">
             {post.summary}
           </p>
         )}
 
         {/* Text with See More / See Less Toggle */}
-        <div className="text-[11px] mb-12 sm:text-xs leading-relaxed whitespace-pre-wrap cursor-pointer">
-          {isExpandedText || !isLongText ? (
+        <div className="rich-text-content rich-text-content-preview text-[#334155] mb-3 leading-relaxed cursor-pointer">
+          {isExpandedText || (!isLongText && !isBlogArticle) ? (
             <div dangerouslySetInnerHTML={{ __html: postContent }} />
           ) : (
             <div
               dangerouslySetInnerHTML={{
-                __html: postContent.slice(0, 110).trim() + "...",
+                __html: postContent.slice(0, 110).trim() + (isLongText ? "..." : ""),
               }}
             />
           )}
-          {isLongText && (
+          {(isLongText || isBlogArticle) && (
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsExpandedText((prev) => !prev);
-              }}
-              className="text-[11px] font-bold text-[#2FC191] hover:underline cursor-pointer ml-1 inline-block"
+              onClick={handleSeeMoreClick}
+              className="text-xs font-bold text-[#2FC191] hover:underline cursor-pointer ml-1 inline-block"
             >
-              {isExpandedText ? "See less" : "See more"}
+              {isBlogArticle ? "See more" : isExpandedText ? "See less" : "See more"}
             </button>
           )}
         </div>
@@ -213,7 +234,15 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
           />
         </div>
       ) : post?.image ? (
-        <div className="mb-2.5 rounded-xl overflow-hidden bg-black/5 border border-border cursor-pointer">
+        <div
+          className="mb-2.5 rounded-xl overflow-hidden bg-black/5 border border-border cursor-pointer"
+          onClick={(e) => {
+            if (isBlogArticle) {
+              e.stopPropagation();
+              setIsBlogModalOpen(true);
+            }
+          }}
+        >
           <Image
             src={post.image}
             alt="Post media preview"
@@ -265,6 +294,17 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
           <span className="hidden sm:inline">Share</span>
         </button>
       </div>
+
+      {/* Full Screen Reader Modal for Blog Articles */}
+      {isBlogArticle && (
+        <BlogArticleModal
+          post={post}
+          isOpen={isBlogModalOpen}
+          onClose={() => setIsBlogModalOpen(false)}
+          onLike={onLike}
+          onCommentClick={onCommentClick}
+        />
+      )}
     </article>
   );
 });
