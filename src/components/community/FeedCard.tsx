@@ -78,7 +78,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
 
   return (
     <article
-      onClick={() => onCommentClick(post)}
+      // onClick={() => onCommentClick(post)}
       className="p-3.5 sm:p-4 md:p-5 rounded-2xl bg-white border border-border hover:border-[#2FC19135] transition-colors cursor-pointer group"
     >
       {/* Header Meta Info */}
@@ -146,23 +146,27 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
       {/* Main Content Area */}
       <div className="mb-2.5">
         {post?.title && (
-          <h2 className="text-sm sm:text-base md:text-lg font-bold text-[#053697] mb-1 group-hover:text-[#2FC191] transition-colors leading-snug cursor-pointer">
+          <h2 className="text-sm sm:text-base md:text-lg font-bold transition-colors leading-snug cursor-pointer">
             {post.title}
           </h2>
         )}
 
         {post?.summary && (
-          <p className="text-[11px] sm:text-xs font-medium text-[#05369775] mb-1.5 leading-relaxed cursor-pointer">
+          <p className="text-[11px] mt-4 sm:text-xs font-medium mb-1.5 leading-relaxed cursor-pointer">
             {post.summary}
           </p>
         )}
 
         {/* Text with See More / See Less Toggle */}
-        <div className="text-[11px] sm:text-xs leading-relaxed text-[#05369790] whitespace-pre-wrap cursor-pointer">
+        <div className="text-[11px] mb-12 sm:text-xs leading-relaxed whitespace-pre-wrap cursor-pointer">
           {isExpandedText || !isLongText ? (
-            postContent
+            <div dangerouslySetInnerHTML={{ __html: postContent }} />
           ) : (
-            <>{postContent.slice(0, 110).trim()}... </>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: postContent.slice(0, 110).trim() + "...",
+              }}
+            />
           )}
           {isLongText && (
             <button
@@ -196,13 +200,13 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
       {/* Media Content (Video or Image) */}
       {videoEmbedSrc ? (
         <div
-          className="mb-2.5 rounded-xl overflow-hidden bg-black aspect-video relative border border-border"
+          className="mb-2.5 rounded-xl overflow-hidden bg-black aspect-video relative border border-border w-full!"
           onClick={(e) => e.stopPropagation()}
         >
           <iframe
             src={videoEmbedSrc}
             title={post?.title || "Embedded Video"}
-            className="absolute inset-0 w-full h-full border-0"
+            className="absolute inset-0 h-full border-0 aspect-video"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen

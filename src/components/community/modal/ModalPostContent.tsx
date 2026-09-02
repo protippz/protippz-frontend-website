@@ -30,19 +30,19 @@ export const ModalPostContent: React.FC<ModalPostContentProps> = ({
       {/* Text & Meta */}
       <div className="space-y-2">
         {title && (
-          <h2 className="text-base sm:text-xl font-bold text-[#053697] leading-snug">
+          <h2 className="text-base sm:text-xl font-bold leading-snug">
             {title}
           </h2>
         )}
 
         {summary && (
-          <p className="text-xs sm:text-sm font-medium text-[#05369775] leading-relaxed">
+          <p className="text-xs sm:text-sm font-medium leading-relaxed">
             {summary}
           </p>
         )}
 
-        <p className="text-xs sm:text-sm leading-relaxed text-[#05369790] whitespace-pre-line">
-          {content}
+        <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-line">
+          <div dangerouslySetInnerHTML={{ __html: content }} />
         </p>
 
         {tags && tags.length > 0 && (
