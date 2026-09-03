@@ -20,7 +20,6 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getEmbedVideoUrl, sharePostLink } from "./helpers";
 import { levelColors, categoryStyles } from "./data/mockData";
 import { Post, ContentCategory } from "@/types/community";
-import { BlogArticleModal } from "./BlogArticleModal";
 
 interface FeedCardProps {
   post: Post;
@@ -53,7 +52,6 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
   onCommentClick,
 }) {
   const [isExpandedText, setIsExpandedText] = useState(false);
-  const [isBlogModalOpen, setIsBlogModalOpen] = useState(false);
 
   const isBlogArticle =
     post?.category?.toLowerCase() === "blog article" ||
@@ -69,7 +67,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
   const handleSeeMoreClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isBlogArticle) {
-      setIsBlogModalOpen(true);
+      onCommentClick(post);
     } else {
       setIsExpandedText((prev) => !prev);
     }
@@ -87,6 +85,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
       ogImage: post?.ogImage || post?.image,
       content: postContent,
       slug: post?.slug,
+      category: post?.category,
     });
   };
 
@@ -166,7 +165,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
             onClick={(e) => {
               if (isBlogArticle) {
                 e.stopPropagation();
-                setIsBlogModalOpen(true);
+                onCommentClick(post);
               }
             }}
             className="text-sm sm:text-base md:text-lg font-bold transition-colors leading-snug cursor-pointer hover:text-[#2FC191]"
@@ -239,7 +238,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
           onClick={(e) => {
             if (isBlogArticle) {
               e.stopPropagation();
-              setIsBlogModalOpen(true);
+              onCommentClick(post);
             }
           }}
         >
@@ -248,7 +247,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
             alt="Post media preview"
             width={700}
             height={360}
-            className="w-full h-auto max-h-[260px] sm:max-h-[340px] object-cover rounded-xl transition-transform duration-500 group-hover:scale-[1.005]"
+            className="w-full h-auto max-h-[260px] sm:max-h-[440px] object-contain rounded-xl transition-transform duration-500"
           />
         </div>
       ) : null}
@@ -294,17 +293,6 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
           <span className="hidden sm:inline">Share</span>
         </button>
       </div>
-
-      {/* Full Screen Reader Modal for Blog Articles */}
-      {isBlogArticle && (
-        <BlogArticleModal
-          post={post}
-          isOpen={isBlogModalOpen}
-          onClose={() => setIsBlogModalOpen(false)}
-          onLike={onLike}
-          onCommentClick={onCommentClick}
-        />
-      )}
     </article>
   );
 });

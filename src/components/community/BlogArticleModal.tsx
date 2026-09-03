@@ -75,6 +75,7 @@ export const BlogArticleModal: React.FC<BlogArticleModalProps> = ({
       ogImage: post.ogImage || post.image,
       content: post.content,
       slug: post.slug,
+      category: post.category,
     });
   };
 

@@ -16,6 +16,7 @@ import CommunitySearchBar from "@/components/community/CommunitySearchBar";
 import FeedCard from "@/components/community/FeedCard";
 import MediaSidebar from "@/components/community/MediaSidebar";
 import PostModal from "@/components/community/PostModal";
+import BlogArticleModal from "@/components/community/BlogArticleModal";
 import {
   Post,
   Comment,
@@ -508,15 +509,20 @@ export default function CommunityPage({
 
   const [triggerGetSinglePost] = useLazyGetSingleCommunityPostQuery();
   const [hasDeepLinkChecked, setHasDeepLinkChecked] = useState(false);
+  const [isBlogView, setIsBlogView] = useState(true);
 
-  // Check for direct deep-link ?post=slug or /community/post/slug or initialPostId on load
+  const isSelectedBlog =
+    selectedPostForModal?.category?.toLowerCase() === "blog article" ||
+    selectedPostForModal?.category === "Blog Article";
+
+  // Check for direct deep-link ?post=slug or /community/post/slug or /community/blog/slug or initialPostId on load
   useEffect(() => {
     if (typeof window === "undefined" || hasDeepLinkChecked) return;
 
     let targetPostId = initialPostId;
     if (!targetPostId) {
       const pathname = window.location.pathname;
-      const match = pathname.match(/\/community\/post\/([^/]+)/);
+      const match = pathname.match(/\/community\/(?:post|blog)\/([^/]+)/);
       if (match && match[1]) {
         targetPostId = decodeURIComponent(match[1]);
       } else {
@@ -534,6 +540,7 @@ export default function CommunityPage({
 
       if (existing) {
         setSelectedPostForModal(existing);
+        setIsBlogView(true);
         setIsModalOpen(true);
       } else {
         triggerGetSinglePost(postParam)
@@ -543,6 +550,7 @@ export default function CommunityPage({
             if (raw) {
               const mapped = mapBackendItemToPost(raw);
               setSelectedPostForModal(mapped);
+              setIsBlogView(true);
               setIsModalOpen(true);
             }
           })
@@ -556,11 +564,16 @@ export default function CommunityPage({
   // Modal Handlers with URL Sync
   const handleOpenModal = useCallback((post: Post) => {
     setSelectedPostForModal(post);
+    setIsBlogView(true);
     setIsModalOpen(true);
 
     if (typeof window !== "undefined") {
       const postSlug = post.slug || post.id;
-      const newPath = `/community/post/${encodeURIComponent(postSlug)}`;
+      const isBlog =
+        post?.category?.toLowerCase() === "blog article" ||
+        post?.category === "Blog Article";
+      const routePrefix = isBlog ? "/community/blog" : "/community/post";
+      const newPath = `${routePrefix}/${encodeURIComponent(postSlug)}`;
       window.history.pushState({ postSlug }, "", newPath);
     }
   }, []);
@@ -676,17 +689,27 @@ export default function CommunityPage({
         </div>
       </div>
 
-      {/* Post Details & Discussion Modal */}
-      <PostModal
-        post={selectedPostForModal}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onLike={handleLikePost}
-        onAddComment={handleAddComment}
-        onDeleteComment={handleDeleteComment}
-        onLikeComment={handleLikeComment}
-        isPostingComment={isPostingComment}
-      />
+      {/* Post Details & Discussion Modal OR Fullscreen Blog Modal */}
+      {isModalOpen && isSelectedBlog && isBlogView ? (
+        <BlogArticleModal
+          post={selectedPostForModal}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onLike={handleLikePost}
+          onCommentClick={() => setIsBlogView(false)}
+        />
+      ) : (
+        <PostModal
+          post={selectedPostForModal}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onLike={handleLikePost}
+          onAddComment={handleAddComment}
+          onDeleteComment={handleDeleteComment}
+          onLikeComment={handleLikeComment}
+          isPostingComment={isPostingComment}
+        />
+      )}
     </div>
   );
 }

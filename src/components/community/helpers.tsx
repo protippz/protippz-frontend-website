@@ -103,15 +103,21 @@ export interface ShareOptions {
   metaDescription?: string;
   ogImage?: string;
   content?: string;
+  category?: string;
 }
 
 export const sharePostLink = async (options: ShareOptions): Promise<void> => {
   const postSlug = options.slug || options.postId || "";
   if (!postSlug) return;
 
+  const isBlog =
+    options.category?.toLowerCase() === "blog article" ||
+    options.category === "Blog Article";
+  const routePrefix = isBlog ? "/community/blog" : "/community/post";
+
   const shareUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/community/post/${encodeURIComponent(postSlug)}`
+      ? `${window.location.origin}${routePrefix}/${encodeURIComponent(postSlug)}`
       : "";
 
   if (!shareUrl) return;
