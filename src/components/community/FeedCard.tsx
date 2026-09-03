@@ -24,7 +24,7 @@ import { Post, ContentCategory } from "@/types/community";
 interface FeedCardProps {
   post: Post;
   onLike: (postId: string) => void;
-  onCommentClick: (post: Post) => void;
+  onCommentClick: (post: Post, openBlogReader?: boolean) => void;
 }
 
 const getCategoryIcon = (category?: ContentCategory) => {
@@ -67,7 +67,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
   const handleSeeMoreClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isBlogArticle) {
-      onCommentClick(post);
+      onCommentClick(post, true);
     } else {
       setIsExpandedText((prev) => !prev);
     }
@@ -165,7 +165,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
             onClick={(e) => {
               if (isBlogArticle) {
                 e.stopPropagation();
-                onCommentClick(post);
+                onCommentClick(post, true);
               }
             }}
             className="text-sm sm:text-base md:text-lg font-bold transition-colors leading-snug cursor-pointer hover:text-[#2FC191]"
@@ -238,7 +238,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
           onClick={(e) => {
             if (isBlogArticle) {
               e.stopPropagation();
-              onCommentClick(post);
+              onCommentClick(post, true);
             }
           }}
         >
@@ -276,7 +276,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            onCommentClick(post);
+            onCommentClick(post, false);
           }}
           className="flex items-center gap-1.5 py-1 px-2.5 rounded-full bg-gray-100/80 text-[#053697] hover:bg-gray-200 transition-colors cursor-pointer"
         >

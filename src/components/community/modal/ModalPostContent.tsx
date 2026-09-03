@@ -78,7 +78,7 @@ export const ModalPostContent: React.FC<ModalPostContentProps> = ({
             alt="Post Attachment"
             width={700}
             height={400}
-            className="w-full h-auto max-h-[280px] sm:max-h-[380px] object-cover rounded-xl"
+            className="w-full h-auto max-h-[280px] sm:max-h-[380px] object-contain rounded-xl"
           />
         </div>
       ) : null}

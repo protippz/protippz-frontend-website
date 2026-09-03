@@ -496,14 +496,10 @@ body {
 .rich-text-content video,
 .rich-text-content embed,
 .rich-text-content object {
-  width: 100% !important;
-  max-width: 100% !important;
-  height: auto !important;
-  aspect-ratio: 16 / 9;
+  max-width: 100%;
   border-radius: 0.5rem;
   margin-top: 0.35rem;
   margin-bottom: 0.35rem;
-  display: block;
   border: 0;
 }
 

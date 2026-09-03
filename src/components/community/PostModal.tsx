@@ -72,6 +72,8 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const modalBodyRef = useRef<HTMLDivElement>(null);
+  const shouldScrollToBottomRef = useRef(false);
 
   const currentUser: User = useMemo(() => {
     if (userData) {
@@ -135,6 +137,23 @@ export const PostModal: React.FC<PostModalProps> = ({
 
     return topLevel;
   }, [commentsApiResponse]);
+
+  // Smoothly scroll to newly submitted comment
+  useEffect(() => {
+    if (shouldScrollToBottomRef.current && modalBodyRef.current) {
+      const timer = setTimeout(() => {
+        if (modalBodyRef.current) {
+          modalBodyRef.current.scrollTo({
+            top: modalBodyRef.current.scrollHeight,
+            behavior: "smooth",
+          });
+        }
+        shouldScrollToBottomRef.current = false;
+      }, 120);
+
+      return () => clearTimeout(timer);
+    }
+  }, [processedComments]);
 
   // Handle Comment Like with targeted loading state per comment
   const handleCommentLikeClick = async (commentId: string) => {
@@ -248,6 +267,8 @@ export const PostModal: React.FC<PostModalProps> = ({
       finalContent = `@${replyingTo.userName} ${finalContent}`;
     }
 
+    shouldScrollToBottomRef.current = true;
+
     onAddComment(
       post.id,
       finalContent,
@@ -319,6 +340,7 @@ export const PostModal: React.FC<PostModalProps> = ({
 
         {/* Scrollable Modal Body */}
         <div
+          ref={modalBodyRef}
           data-lenis-prevent
           className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 custom-scrollbar"
         >

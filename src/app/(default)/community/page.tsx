@@ -562,17 +562,21 @@ export default function CommunityPage({
   }, [posts, triggerGetSinglePost, hasDeepLinkChecked, initialPostId]);
 
   // Modal Handlers with URL Sync
-  const handleOpenModal = useCallback((post: Post) => {
+  const handleOpenModal = useCallback((post: Post, openBlogReader?: boolean) => {
     setSelectedPostForModal(post);
-    setIsBlogView(true);
+
+    const isBlog =
+      post?.category?.toLowerCase() === "blog article" ||
+      post?.category === "Blog Article";
+
+    const shouldShowBlogReader = openBlogReader ?? isBlog;
+
+    setIsBlogView(shouldShowBlogReader);
     setIsModalOpen(true);
 
     if (typeof window !== "undefined") {
       const postSlug = post.slug || post.id;
-      const isBlog =
-        post?.category?.toLowerCase() === "blog article" ||
-        post?.category === "Blog Article";
-      const routePrefix = isBlog ? "/community/blog" : "/community/post";
+      const routePrefix = shouldShowBlogReader ? "/community/blog" : "/community/post";
       const newPath = `${routePrefix}/${encodeURIComponent(postSlug)}`;
       window.history.pushState({ postSlug }, "", newPath);
     }
@@ -697,6 +701,7 @@ export default function CommunityPage({
           onClose={handleCloseModal}
           onLike={handleLikePost}
           onCommentClick={() => setIsBlogView(false)}
+          onSelectPost={(newPost) => handleOpenModal(newPost, true)}
         />
       ) : (
         <PostModal
