@@ -73,7 +73,29 @@ export const PostModal: React.FC<PostModalProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalBodyRef = useRef<HTMLDivElement>(null);
+  const commentsSectionRef = useRef<HTMLDivElement>(null);
   const shouldScrollToBottomRef = useRef(false);
+
+  // Auto-scroll to comments section when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        if (commentsSectionRef.current) {
+          commentsSectionRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        } else if (modalBodyRef.current) {
+          modalBodyRef.current.scrollTo({
+            top: modalBodyRef.current.scrollHeight,
+            behavior: "smooth",
+          });
+        }
+      }, 180);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, post?.id]);
 
   const currentUser: User = useMemo(() => {
     if (userData) {
@@ -375,7 +397,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           />
 
           {/* Comments Section Container */}
-          <div className="relative min-h-[220px]">
+          <div ref={commentsSectionRef} className="relative min-h-[220px]">
             <CommentList
               comments={activeComments}
               totalCommentCount={totalCommentCount}
