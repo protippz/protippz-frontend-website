@@ -23,14 +23,14 @@ interface PostModalProps {
     postId: string,
     content: string,
     parentId?: string,
-    imageFile?: File
+    imageFile?: File,
   ) => void;
   onDeleteComment?: (postId: string, commentId: string) => Promise<any> | void;
   onLikeComment?: (postId: string, commentId: string) => Promise<any> | void;
   onCommentReaction?: (
     postId: string,
     commentId: string,
-    emoji: string
+    emoji: string,
   ) => void;
   isPostingComment?: boolean;
 }
@@ -125,6 +125,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     }) as { data?: any; isLoading: boolean };
 
   // Transform raw API comment list into frontend Comment hierarchy
+  // Transform raw API comment list into frontend Comment hierarchy
   const processedComments = useMemo(() => {
     const rawList =
       commentsApiResponse?.data?.result ||
@@ -203,7 +204,7 @@ export const PostModal: React.FC<PostModalProps> = ({
   // Handle Comment Delete with targeted loading state per comment
   const handleDeleteCommentClick = async (
     postId: string,
-    commentId: string
+    commentId: string,
   ) => {
     if (!isLoggedIn) {
       handleGoToLogin();
@@ -295,7 +296,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       post.id,
       finalContent,
       replyingTo?.id,
-      selectedImage || undefined
+      selectedImage || undefined,
     );
     setCommentText("");
     setSelectedImage(null);
@@ -378,10 +379,7 @@ export const PostModal: React.FC<PostModalProps> = ({
           />
 
           {/* Stats Bar */}
-          <ModalStatsBar
-            likes={post.likes}
-            commentsCount={totalCommentCount}
-          />
+          <ModalStatsBar likes={post.likes} commentsCount={totalCommentCount} />
 
           {/* Action Toolbar */}
           <ModalActionToolbar
@@ -422,7 +420,8 @@ export const PostModal: React.FC<PostModalProps> = ({
                   Log in to join the discussion
                 </h3>
                 <p className="text-xs text-gray-500 max-w-sm mb-4 leading-relaxed">
-                  You need to be signed in to post comments, reply to existing comments, or like posts.
+                  You need to be signed in to post comments, reply to existing
+                  comments, or like posts.
                 </p>
                 <button
                   type="button"
