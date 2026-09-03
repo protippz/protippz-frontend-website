@@ -725,17 +725,16 @@ const Navbar: React.FC = () => {
               Sign In
             </Link>
           )}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="lg:hidden flex items-center">
-          <button
-            onClick={showDrawer}
-            className="p-2 rounded-lg bg-slate-100 text-[#053697] hover:bg-[#2FC191]/10 hover:text-[#2FC191] transition-all cursor-pointer"
-            aria-label="Toggle mobile menu"
-          >
-            <MenuIcon className="w-5 h-5 text-[#053697]" />
-          </button>
+          {/* Mobile Menu Button */}
+          <div className="lg:hidden flex items-center">
+            <button
+              onClick={showDrawer}
+              className="p-2 rounded-lg bg-slate-100 text-[#053697] hover:bg-[#2FC191]/10 hover:text-[#2FC191] transition-all cursor-pointer"
+              aria-label="Toggle mobile menu"
+            >
+              <MenuIcon className="w-5 h-5 text-[#053697]" />
+            </button>
+          </div>
         </div>
       </nav>
 

@@ -21,8 +21,8 @@ function HeroSection() {
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
   return (
     <>
-      <section className="relativ w-full overflow-hidden h-fit py-10">
-        <div className="relative z-10 max-w-355 mx-auto px-4 sm:px-0 h-full flex flex-col lg:flex-row items-center justify-between">
+      <section className="relativ w-full overflow-hidden h-fit py-10 px-2">
+        <div className="relative z-10 w-full max-w-355 mx-auto px-2 sm:px-4 h-full flex flex-col lg:flex-row items-center justify-between">
           {/* ── Left content ── */}
           <div className="flex-1 w-full relative text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#2FC191]/15 border border-[#2FC191]/30 text-[#2FC191] text-sm font-semibold mb-6 tracking-wide">
@@ -75,7 +75,7 @@ function HeroSection() {
             </div>
 
             {/* Social proof */}
-            <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4">
+            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-4">
               <AvatarGroup className="**:grayscale **:hover:grayscale-0 transition-all">
                 <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
                   <AvatarImage
@@ -129,11 +129,11 @@ function HeroSection() {
           </div>
 
           {/* ── Right: Mockup ── */}
-          <div className="flex-1 overflow-hidden w-full h-full flex items-center justify-center sm:justify-end">
+          <div className="flex-1 overflow-hidden w-full h-full flex items-center  justify-center sm:justify-end">
             <Image
               src={IMAGE.mockup3}
               alt="PROTIPPZ App Mockup"
-              className="w-fit object-contain h-full max-h-[calc(100vh-25rem)]"
+              className="w-fit object-contain h-full  mx-auto sm:ml-auto"
               priority
               fetchPriority="high"
               placeholder="empty"
