@@ -19,6 +19,7 @@ const ContactUsPage: React.FC = () => {
       setLoading(false);
     }
   };
+  // Update landing page
   return (
     <div
       className="flex items-center justify-center min-h-screen w-full"
