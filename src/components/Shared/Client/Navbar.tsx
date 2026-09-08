@@ -637,7 +637,7 @@ const Navbar: React.FC = () => {
         </ul>
 
         {/* Action Buttons for Desktop */}
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden lg:flex items-center space-x-4">
           {data?.loading ? (
             <div className="flex items-center space-x-2.5">
               <div className="w-24 h-8 rounded-full bg-slate-200/80 animate-pulse" />
@@ -725,16 +725,17 @@ const Navbar: React.FC = () => {
               Sign In
             </Link>
           )}
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center">
-            <button
-              onClick={showDrawer}
-              className="p-2 rounded-lg bg-slate-100 text-[#053697] hover:bg-[#2FC191]/10 hover:text-[#2FC191] transition-all cursor-pointer"
-              aria-label="Toggle mobile menu"
-            >
-              <MenuIcon className="w-5 h-5 text-[#053697]" />
-            </button>
-          </div>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden flex items-center">
+          <button
+            onClick={showDrawer}
+            className="p-2 rounded-lg bg-slate-100 text-[#053697] hover:bg-[#2FC191]/10 hover:text-[#2FC191] transition-all cursor-pointer"
+            aria-label="Toggle mobile menu"
+          >
+            <MenuIcon className="w-5 h-5 text-[#053697]" />
+          </button>
         </div>
       </nav>
 
