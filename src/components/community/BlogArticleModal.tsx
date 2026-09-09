@@ -15,6 +15,7 @@ import {
   Newspaper,
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import OptimizedPostImage from "./OptimizedPostImage";
 import { getEmbedVideoUrl, sharePostLink } from "./helpers";
 import { categoryStyles } from "./data/mockData";
 import { Post, mapBackendItemToPost } from "@/types/community";
@@ -291,14 +292,16 @@ export const BlogArticleModal: React.FC<BlogArticleModalProps> = ({
                 />
               </div>
             ) : post.image ? (
-              <div className="mb-3 rounded-xl overflow-hidden bg-gray-100 border border-border shadow-xs">
-                <Image
+              <div className="mb-3">
+                <OptimizedPostImage
                   src={post.image}
                   alt={post.title || "Article media image"}
                   width={1200}
                   height={675}
-                  className="w-full h-auto max-h-[420px] object-contain rounded-xl"
-                  priority
+                  priority={true}
+                  sizes="(max-width: 1024px) 100vw, 1200px"
+                  maxHeightClass="max-h-[420px]"
+                  enableLightbox={true}
                 />
               </div>
             ) : null}

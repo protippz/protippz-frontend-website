@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import OptimizedPostImage from "./OptimizedPostImage";
 import { getEmbedVideoUrl, sharePostLink } from "./helpers";
 import { levelColors, categoryStyles } from "./data/mockData";
 import { Post, ContentCategory } from "@/types/community";
@@ -233,21 +234,21 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
           />
         </div>
       ) : post?.image ? (
-        <div
-          className="mb-2.5 rounded-xl overflow-hidden bg-black/5 border border-border cursor-pointer"
-          onClick={(e) => {
-            if (isBlogArticle) {
-              e.stopPropagation();
-              onCommentClick(post, true);
-            }
-          }}
-        >
-          <Image
+        <div className="mb-2.5">
+          <OptimizedPostImage
             src={post.image}
-            alt="Post media preview"
+            alt={post.title || "Post media preview"}
             width={700}
             height={360}
-            className="w-full h-auto max-h-[260px] sm:max-h-[440px] object-contain rounded-xl transition-transform duration-500"
+            enableLightbox={!isBlogArticle}
+            onClick={
+              isBlogArticle
+                ? (e) => {
+                    e.stopPropagation();
+                    onCommentClick(post, true);
+                  }
+                : undefined
+            }
           />
         </div>
       ) : null}

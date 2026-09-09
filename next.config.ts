@@ -19,7 +19,19 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+      {
+        protocol: "http",
+        hostname: "**",
+      },
+    ],
+    minimumCacheTTL: 86400,
+    formats: ["image/avif", "image/webp"],
+    dangerouslyAllowSVG: true,
   },
 };
 

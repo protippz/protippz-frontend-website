@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import OptimizedPostImage from "../OptimizedPostImage";
 import { getEmbedVideoUrl } from "../helpers";
 
 interface ModalPostContentProps {
@@ -72,15 +72,14 @@ export const ModalPostContent: React.FC<ModalPostContentProps> = ({
           />
         </div>
       ) : image ? (
-        <div className="rounded-xl overflow-hidden bg-black/5 border border-border">
-          <Image
-            src={image}
-            alt="Post Attachment"
-            width={700}
-            height={400}
-            className="w-full h-auto max-h-[280px] sm:max-h-[380px] object-contain rounded-xl"
-          />
-        </div>
+        <OptimizedPostImage
+          src={image}
+          alt={title || "Post Attachment"}
+          width={700}
+          height={400}
+          maxHeightClass="max-h-[280px] sm:max-h-[380px]"
+          enableLightbox={true}
+        />
       ) : null}
     </div>
   );

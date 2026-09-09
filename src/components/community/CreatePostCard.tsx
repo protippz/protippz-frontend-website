@@ -9,8 +9,8 @@ import {
   Send,
   Users,
 } from 'lucide-react'
-import Image from 'next/image'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import OptimizedPostImage from './OptimizedPostImage'
 import { getLevelIcon } from './helpers'
 import { mockUsers } from './data/mockData'
 import { CreatePostData, Post } from '@/types/community'
@@ -133,16 +133,17 @@ export const CreatePostCard: React.FC<CreatePostCardProps> = ({
       {/* Image Preview */}
       {localPreview && (
         <div className="relative mt-4 rounded-xl overflow-hidden group">
-          <Image
+          <OptimizedPostImage
             width={600}
             height={350}
             src={localPreview}
             alt="Upload Preview"
-            className="w-full h-auto max-h-[350px] object-cover rounded-xl border border-gray-100"
+            maxHeightClass="max-h-[350px]"
+            enableLightbox={true}
           />
           <button
             onClick={() => setLocalPreview(null)}
-            className="absolute top-3 right-3 p-2 bg-black/60 hover:bg-black/80 rounded-full text-white cursor-pointer transition-colors shadow"
+            className="absolute top-3 right-3 p-2 bg-black/60 hover:bg-black/80 rounded-full text-white cursor-pointer transition-colors shadow z-20"
           >
             <X className="w-4 h-4" />
           </button>
