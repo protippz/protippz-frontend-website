@@ -322,14 +322,14 @@ export default function SportsTicker() {
         </div>
 
         {/* View all news link */}
-        {/* <Link
+        <Link
           href="/sports-news"
           className="shrink-0 flex items-center gap-1.5 px-3 h-full border-l border-border hover:bg-[#2FC191]/10 text-xs font-semibold text-[#053697] hover:text-[#2FC191] transition-colors duration-200"
           title="View all sports news"
         >
           <span className="hidden sm:inline">View All News</span>
           <ExternalLink className="w-3.5 h-3.5" />
-        </Link> */}
+        </Link>
 
         {/* Pause / play button */}
         <button
