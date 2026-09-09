@@ -35,29 +35,29 @@
 // function TickerItem({ item }: { item: TickerHeadline }) {
 //   const inner = (
 //     <span className="flex items-center gap-3 px-8 border-r border-border cursor-default group-hover:text-foreground transition-colors duration-200">
-//       <span className="text-lg leading-none select-none" aria-hidden="true">{item.emoji}</span>
+//       <span className="text-lg leading-none select-none" aria-hidden="true">{item?.emoji}</span>
 //       <span
-//         className={`shrink-0 text-xs font-semibold tracking-wide uppercase px-2 py-1 rounded-full ${badgeStyles[item.badgeType] ?? badgeStyles.default}`}
+//         className={`shrink-0 text-xs font-semibold tracking-wide uppercase px-2 py-1 rounded-full ${badgeStyles[item?.badgeType] ?? badgeStyles.default}`}
 //       >
-//         {item.badge}
+//         {item?.badge}
 //       </span>
 //       <span className="text-xs italic font-medium text-white whitespace-nowrap leading-none">
-//         {item.text}
+//         {item?.text}
 //       </span>
 //       <span className="text-xs text-white/60 whitespace-nowrap ml-1 tabular-nums">
-//         {relativeTime(item.publishedAt)}
+//         {relativeTime(item?.publishedAt)}
 //       </span>
 //     </span>
 //   )
 
-//   if (item.link) {
+//   if (item?.link) {
 //     return (
 //       <a
-//         href={item.link}
+//         href={item?.link}
 //         target="_blank"
 //         rel="noopener noreferrer"
 //         className="group flex items-center"
-//         aria-label={item.text}
+//         aria-label={item?.text}
 //       >
 //         {inner}
 //       </a>
@@ -145,7 +145,7 @@
 //               play={!paused}
 //             >
 //               {headlines.map((item) => (
-//                 <TickerItem key={item.id} item={item} />
+//                 <TickerItem key={item?.id} item={item} />
 //               ))}
 //             </Marquee>
 //           )}
@@ -193,30 +193,30 @@ function TickerItem({ item }: { item: TickerHeadline }) {
   const inner = (
     <span className="flex items-center gap-3 px-8 border-r border-border cursor-default group-hover:text-foreground transition-colors duration-200">
       <span className="text-lg leading-none select-none" aria-hidden="true">
-        {item.emoji}
+        {item?.emoji}
       </span>
       <span
-        className={`shrink-0 text-xs font-semibold tracking-wide uppercase px-2 py-1 rounded-full ${badgeStyles[item.badgeType] ?? badgeStyles.default}`}
+        className={`shrink-0 text-xs font-semibold tracking-wide uppercase px-2 py-1 rounded-full ${badgeStyles[item?.badgeType] ?? badgeStyles.default}`}
       >
-        {item.badge}
+        {item?.badge}
       </span>
       <span className="text-xs italic font-medium text-muted-foreground whitespace-nowrap leading-none">
-        {item.text}
+        {item?.text}
       </span>
       <span className="text-xs text-muted-foreground/60 whitespace-nowrap ml-1 tabular-nums">
-        {relativeTime(item.publishedAt)}
+        {relativeTime(item?.publishedAt)}
       </span>
     </span>
   );
 
-  if (item.link) {
+  if (item?.link) {
     return (
       <a
-        href={item.link}
+        href={item?.link}
         target="_blank"
         rel="noopener noreferrer"
         className="group flex items-center"
-        aria-label={item.text}
+        aria-label={item?.text}
       >
         {inner}
       </a>
@@ -237,7 +237,9 @@ export default function SportsTicker() {
   const fetchHeadlines = useCallback(async () => {
     try {
       const res = await fetch("/api/sports-news-ticker");
+
       const data = await res.json();
+      console.log(JSON.stringify(data, null, 2));
       if (data.success && data.headlines?.length) {
         setHeadlines(data.headlines);
         setError(false);
@@ -311,7 +313,7 @@ export default function SportsTicker() {
               play={!paused}
             >
               {headlines.map((item) => (
-                <TickerItem key={item.id} item={item} />
+                <TickerItem key={item?.id} item={item} />
               ))}
             </Marquee>
           )}

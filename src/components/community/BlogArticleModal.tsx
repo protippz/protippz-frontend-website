@@ -11,14 +11,19 @@ import {
   Clock,
   BookOpen,
   Users,
-  Sparkles,
   Newspaper,
+  CheckCircle2,
+  ChevronRight,
+  TrendingUp,
+  Award,
+  Link as LinkIcon,
+  Flame,
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import OptimizedPostImage from "./OptimizedPostImage";
 import { getEmbedVideoUrl, sharePostLink } from "./helpers";
 import { categoryStyles } from "./data/mockData";
-import { Post, mapBackendItemToPost } from "@/types/community";
+import { Post, ContentCategory, mapBackendItemToPost } from "@/types/community";
 import { useGetAllCommunityPostsQuery } from "@/Redux/Apis/communityApis";
 
 interface BlogArticleModalProps {
@@ -30,6 +35,16 @@ interface BlogArticleModalProps {
   onSelectPost?: (post: Post) => void;
 }
 
+const CATEGORIES: ContentCategory[] = [
+  "All",
+  "Blog Article",
+  "Press Release",
+  "Company News",
+  "Promotional Content",
+  "Community Update",
+  "Product Announcement",
+];
+
 export const BlogArticleModal: React.FC<BlogArticleModalProps> = ({
   post,
   isOpen,
@@ -38,10 +53,10 @@ export const BlogArticleModal: React.FC<BlogArticleModalProps> = ({
   onCommentClick,
   onSelectPost,
 }) => {
-  // Fetch all blog articles for sidebar list
+  // Fetch all blog articles for recommendation grid
   const { data: blogPostsResponse, isLoading: isBlogPostsLoading } =
     useGetAllCommunityPostsQuery(
-      { category: "Blog Article", limit: 20, status: "Published" },
+      { limit: 20, status: "Published" },
       { skip: !isOpen },
     );
 
@@ -54,7 +69,7 @@ export const BlogArticleModal: React.FC<BlogArticleModalProps> = ({
 
     if (!Array.isArray(rawList)) return post ? [post] : [];
     const mapped = rawList.map(mapBackendItemToPost);
-    if (post && !mapped.some((p) => p.id === post.id)) {
+    if (post && !mapped.some((p) => p.id === post?.id)) {
       return [post, ...mapped];
     }
     return mapped;
@@ -88,54 +103,48 @@ export const BlogArticleModal: React.FC<BlogArticleModalProps> = ({
 
   if (!isOpen || !post) return null;
 
-  const catStyle = post.category ? categoryStyles[post.category] : null;
-  const userName = post.user?.name || "ProTippz Author";
-  const videoEmbedSrc = getEmbedVideoUrl(post.videoUrl, post.videoEmbedCode);
+  const catStyle = post?.category ? categoryStyles[post?.category] : null;
+  const userName = post?.user?.name || "ProTippz Editorial";
+  const videoEmbedSrc = getEmbedVideoUrl(post?.videoUrl, post?.videoEmbedCode);
 
   const handleShare = async () => {
     await sharePostLink({
-      postId: post.id,
-      title: post.title,
-      seoTitle: post.seoTitle,
-      summary: post.summary,
-      metaDescription: post.metaDescription,
-      ogImage: post.ogImage || post.image,
-      content: post.content,
-      slug: post.slug,
-      category: post.category,
+      postId: post?.id,
+      title: post?.title,
+      seoTitle: post?.seoTitle,
+      summary: post?.summary,
+      metaDescription: post?.metaDescription,
+      ogImage: post?.ogImage || post?.image,
+      content: post?.content,
+      slug: post?.slug,
+      category: post?.category,
     });
   };
 
+  const recentStories = sidebarBlogs
+    .filter((p) => p.id !== post?.id)
+    .slice(0, 3);
+
   return (
-    <div className="fixed inset-0 z-[99999] bg-[#FAFBFB] overflow-y-auto flex flex-col animate-in fade-in duration-200">
-      {/* Sticky Header Navigation Bar */}
-      <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-border shadow-xs px-4 sm:px-8 py-3.5 transition-all">
-        <div className="max-w-355 mx-auto w-full flex items-center justify-between">
+    <div className="fixed inset-0 z-[99999] bg-[#FAFBFB] overflow-y-auto flex flex-col text-slate-800 animate-in fade-in duration-200">
+      {/* 1. Sticky Editorial Navigation Header */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200/90 shadow-xs px-4 sm:px-8 py-3 transition-all shrink-0">
+        <div className="max-w-7xl mx-auto w-full flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={onClose}
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-[#053697] font-semibold text-xs sm:text-sm transition-all cursor-pointer active:scale-95 shrink-0"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Feed</span>
+            <ArrowLeft className="w-4 h-4 text-[#2FC191]" />
+            <span className="hidden sm:inline">Back to Community</span>
+            <span className="sm:hidden">Back</span>
           </button>
 
-          {/* Center Category & Reading Indicator */}
-          <div className="hidden sm:flex items-center gap-2 max-w-md truncate text-center">
-            <span
-              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0"
-              style={{
-                backgroundColor: catStyle?.bg || "#2FC19115",
-                color: catStyle?.text || "#2FC191",
-                border: `1px solid ${catStyle?.border || "#2FC19130"}`,
-              }}
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              {post.category || "Blog Article"}
-            </span>
-            {post.title && (
-              <span className="text-xs font-semibold text-[#053697] truncate">
-                {post.title}
+          {/* Center Title Indicator */}
+          <div className="hidden md:flex items-center gap-2.5 max-w-lg truncate text-center">
+            {post?.title && (
+              <span className="text-xs font-bold text-[#053697] truncate">
+                {post?.title}
               </span>
             )}
           </div>
@@ -144,35 +153,33 @@ export const BlogArticleModal: React.FC<BlogArticleModalProps> = ({
           <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
-              onClick={() => onLike(post.id)}
-              className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold transition-all cursor-pointer active:scale-95 ${
-                post.isLiked
+              onClick={() => onLike(post?.id)}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer active:scale-95 ${
+                post?.isLiked
                   ? "bg-[#2FC191] text-white shadow-xs"
                   : "bg-gray-100 text-[#053697] hover:bg-gray-200"
               }`}
             >
               <Heart
                 className="w-4 h-4"
-                fill={post.isLiked ? "white" : "none"}
+                fill={post?.isLiked ? "white" : "none"}
               />
-              <span>{post.likes}</span>
+              <span>{post?.likes}</span>
             </button>
 
             <button
               type="button"
-              onClick={() => {
-                onCommentClick(post);
-              }}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-gray-100 text-[#053697] hover:bg-gray-200 text-xs font-bold transition-all cursor-pointer active:scale-95"
+              onClick={() => onCommentClick(post)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gray-100 text-[#053697] hover:bg-gray-200 text-xs font-bold transition-all cursor-pointer active:scale-95"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>{post.comments}</span>
+              <span>{post?.comments}</span>
             </button>
 
             <button
               type="button"
               onClick={handleShare}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-gray-100 text-[#053697] hover:bg-gray-200 text-xs font-bold transition-all cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gray-100 text-[#053697] hover:bg-gray-200 text-xs font-bold transition-all cursor-pointer active:scale-95"
             >
               <Share2 className="w-4 h-4" />
               <span className="hidden md:inline">Share</span>
@@ -190,248 +197,331 @@ export const BlogArticleModal: React.FC<BlogArticleModalProps> = ({
         </div>
       </header>
 
-      {/* Main Fullscreen Article Layout with Right Sidebar */}
-      <main className="flex-1 w-full max-w-355 mx-auto px-3 sm:px-6 py-4 sm:py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-          {/* Main Column: Active Blog Article Detail */}
-          <div className="lg:col-span-8 xl:col-span-8 order-1 min-w-0 space-y-3">
-            {/* Article Meta Header */}
-            <div className="space-y-2 mb-3">
-              <div className="flex items-center gap-2 flex-wrap text-xs">
-                <span
-                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold"
-                  style={{
-                    backgroundColor: catStyle?.bg || "#2FC19115",
-                    color: catStyle?.text || "#2FC191",
-                    border: `1px solid ${catStyle?.border || "#2FC19130"}`,
-                  }}
-                >
-                  <BookOpen className="w-3.5 h-3.5" />
-                  {post.category || "Blog Article"}
-                </span>
+      {/* 2. Top Full-Width Featured Hero Header Banner (White & #2FC191 Theme) */}
+      <div className="relative w-full bg-gradient-to-b from-[#053697]/10 via-[#FAFBFB] to-[#FAFBFB] border-b border-gray-200/80 overflow-hidden py-10 sm:py-16 px-4 sm:px-8 min-h-[320px] sm:min-h-[520px] flex items-center justify-center">
+        {/* Featured Image Background with Gradient Tint */}
+        {post?.image ? (
+          <div className="absolute inset-0 w-full h-full">
+            <Image
+              src={post?.image}
+              alt={post?.title || "Hero banner"}
+              fill
+              className="object-cover object-center opacity-15 blur-[1px]"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#FAFBFB] via-[#FAFBFB]/80 to-transparent" />
+          </div>
+        ) : null}
 
-                {post.readTime && (
-                  <span className="flex items-center gap-1 text-[#05369780] font-medium bg-gray-100 px-2 py-0.5 rounded-full text-xs">
-                    <Clock className="w-3.5 h-3.5 text-[#2FC191]" />
-                    {post.readTime}
-                  </span>
-                )}
+        {/* Ambient Glow Effects */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[250px] bg-[#2FC191]/15 blur-[100px] rounded-full pointer-events-none" />
 
-                <span className="text-[#05369740]">•</span>
-                <span className="text-[#05369770] font-medium">
-                  {post.timestamp}
-                </span>
-              </div>
+        <div className="relative z-10 max-w-4xl mx-auto text-center space-y-3.5 px-2">
+          <div className="flex items-center justify-center gap-2 flex-wrap text-xs">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-[#2FC191] text-white shadow-xs">
+              <Flame className="w-3.5 h-3.5" />
+              {post?.category || "Sports Article"}
+            </span>
 
-              {/* Main Title */}
-              {post.title && (
-                <h1 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-[#053697] tracking-tight leading-snug">
-                  {post.title}
-                </h1>
-              )}
-
-              {/* Summary / Subtitle */}
-              {post.summary && (
-                <p className="text-xs sm:text-base font-medium text-slate-600 leading-relaxed border-l-3 border-[#2FC191] pl-3 py-0.5 bg-[#2FC1910a] rounded-r-lg">
-                  {post.summary}
-                </p>
-              )}
-
-              {/* Author Card Header */}
-              <div className="flex items-center justify-between gap-3 border-t border-b border-border/80 py-2">
-                <div className="flex items-center gap-2.5">
-                  <Avatar className="w-9 h-9 border-2 border-[#2FC19130] shrink-0">
-                    <AvatarImage src={post.user?.avatar} alt={userName} />
-                    <AvatarFallback>
-                      <Users className="w-4 h-4 text-[#053697]" />
-                    </AvatarFallback>
-                  </Avatar>
-
-                  <div>
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="font-bold text-xs sm:text-sm text-[#053697]">
-                        {userName}
-                      </span>
-                      {post.authorRole && (
-                        <span className="text-[10px] font-bold text-[#2FC191] bg-[#2FC19115] px-1.5 py-0.2 rounded-full">
-                          {post.authorRole}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-[10px] text-slate-500">
-                      u/{userName.replace(/\s+/g, "")}
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-[#05369720] hover:border-[#2FC191] text-[#053697] hover:text-[#2FC191] text-xs font-semibold transition-all cursor-pointer"
-                >
-                  <Share2 className="w-3.5 h-3.5" />
-                  <span>Share Article</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Featured Media Container */}
-            {post.videoEmbedCode ? (
-              <div
-                className="mb-3"
-                dangerouslySetInnerHTML={{ __html: post.videoEmbedCode }}
-              />
-            ) : videoEmbedSrc ? (
-              <div className="mb-3">
-                <iframe
-                  src={videoEmbedSrc}
-                  title={post.title || "Embedded Video"}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                />
-              </div>
-            ) : post.image ? (
-              <div className="mb-3">
-                <OptimizedPostImage
-                  src={post.image}
-                  alt={post.title || "Article media image"}
-                  width={1200}
-                  height={675}
-                  priority={true}
-                  sizes="(max-width: 1024px) 100vw, 1200px"
-                  maxHeightClass="max-h-[420px]"
-                  enableLightbox={true}
-                />
-              </div>
-            ) : null}
-
-            {/* Rich Text Main Article Body */}
-            <article className="rich-text-content rich-text-content-article bg-white p-3.5 sm:p-5 rounded-xl border border-border/80 shadow-2xs mb-3">
-              <div dangerouslySetInnerHTML={{ __html: post.content }} />
-            </article>
-
-            {/* Article Tags */}
-            {post.tags && post.tags.length > 0 && (
-              <div className="flex items-center gap-1.5 flex-wrap mb-3">
-                <span className="text-xs font-bold text-[#053697]">Tags:</span>
-                {post.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-[11px] font-semibold text-[#2FC191] bg-[#2FC19112] hover:bg-[#2FC19125] px-2.5 py-0.5 rounded-full cursor-pointer transition-colors"
-                  >
-                    #{tag}
-                  </span>
-                ))}
-              </div>
+            {post?.readTime && (
+              <span className="flex items-center gap-1 text-[#053697] font-semibold bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs border border-gray-200/80 shadow-2xs">
+                <Clock className="w-3.5 h-3.5 text-[#2FC191]" />
+                {post?.readTime}
+              </span>
             )}
-
-            {/* Article Bottom Engagement & Comments CTA */}
-            <div className="p-3.5 sm:p-4 rounded-xl bg-linear-to-br from-[#053697]/5 via-white to-[#2FC191]/10 border border-[#2FC19130] shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-              <div className="space-y-1 max-w-lg">
-                <h3 className="text-lg font-bold text-[#053697] flex items-center justify-center sm:justify-start gap-2">
-                  Enjoyed this article?
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Join the conversation! Leave a reply, share your thoughts, or
-                  ask the author a question.
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => onLike(post.id)}
-                  className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-xs sm:text-sm transition-all cursor-pointer active:scale-95 shadow-sm ${
-                    post.isLiked
-                      ? "bg-[#2FC191] text-white"
-                      : "bg-white text-[#053697] border border-border hover:border-[#2FC191]"
-                  }`}
-                >
-                  <Heart
-                    className="w-4 h-4"
-                    fill={post.isLiked ? "white" : "none"}
-                  />
-                  <span>{post.isLiked ? "Liked" : "Like Article"}</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    onCommentClick(post);
-                  }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#053697] hover:bg-[#053697]/90 text-white font-bold text-xs sm:text-sm transition-all cursor-pointer active:scale-95 shadow-md"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Comments ({post.comments})</span>
-                </button>
-              </div>
-            </div>
           </div>
 
-          {/* Right Sidebar: More Blog Articles List */}
-          <aside className="lg:col-span-4 xl:col-span-4 order-2 sticky top-20 z-20">
-            <div className="bg-white rounded-2xl border border-gray-200/90 shadow-2xs overflow-hidden">
-              {/* Header */}
-              <div className="p-3.5 sm:p-4 border-b border-gray-200/80 flex items-center justify-between bg-gray-50/50">
-                <h3 className="font-extrabold text-sm sm:text-base text-[#053697] flex items-center gap-2">
-                  <Newspaper className="w-4.5 h-4.5 text-[#2FC191]" />
-                  <span>More Articles</span>
-                </h3>
-                <span className="text-[10px] font-bold text-[#2FC191] bg-[#2FC19115] px-2 py-0.5 rounded-full">
-                  {sidebarBlogs.length} Stories
-                </span>
+          {/* Full-Width Large Title Overlay */}
+          {post?.title && (
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#053697] tracking-tight leading-tight sm:leading-tight max-w-3xl mx-auto">
+              {post?.title}
+            </h1>
+          )}
+
+          {/* Subtitle Meta */}
+          <div className="flex items-center justify-center gap-3 text-xs sm:text-sm text-slate-500 font-medium pt-1">
+            <span>{post?.timestamp || "Updated Today"}</span>
+            <span>•</span>
+            <span className="text-[#053697] font-bold">By {userName}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Main Editorial Content & Layout */}
+      <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-8 relative">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Floating Social Bar (Desktop Left Margin) */}
+          <aside className="hidden lg:flex lg:col-span-1 flex-col items-center gap-3 sticky top-28 z-20">
+            <button
+              type="button"
+              onClick={() => onLike(post?.id)}
+              className={`p-3 rounded-full border transition-all cursor-pointer ${
+                post?.isLiked
+                  ? "bg-[#2FC191] text-white border-[#2FC191] shadow-md scale-105"
+                  : "bg-white border-gray-200 text-slate-500 hover:text-[#053697] hover:border-[#2FC191]"
+              }`}
+              title="Like Article"
+            >
+              <Heart
+                className="w-5 h-5"
+                fill={post?.isLiked ? "white" : "none"}
+              />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onCommentClick(post)}
+              className="p-3 rounded-full bg-white border border-gray-200 text-slate-500 hover:text-[#053697] hover:border-[#2FC191] transition-all cursor-pointer"
+              title="Comments"
+            >
+              <MessageCircle className="w-5 h-5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={handleShare}
+              className="p-3 rounded-full bg-white border border-gray-200 text-slate-500 hover:text-[#053697] hover:border-[#2FC191] transition-all cursor-pointer"
+              title="Share"
+            >
+              <Share2 className="w-5 h-5" />
+            </button>
+
+            <button
+              type="button"
+              onClick={handleShare}
+              className="p-3 rounded-full bg-white border border-gray-200 text-slate-500 hover:text-[#053697] hover:border-[#2FC191] transition-all cursor-pointer"
+              title="Copy Link"
+            >
+              <LinkIcon className="w-5 h-5" />
+            </button>
+          </aside>
+
+          {/* Central Editorial Content Column - Single Unified White Box */}
+          <div className="lg:col-span-11 min-w-0 space-y-6">
+            <article className="bg-white border border-gray-200/90 rounded-xl p-5 sm:p-8 space-y-6 shadow-2xs">
+              {/* 1. Overview Header Banner */}
+              <div className="p-4 rounded-lg bg-emerald-50/70 border border-[#2FC191]/30 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-[#2FC191] text-white flex items-center justify-center font-black shrink-0 shadow-2xs">
+                  <Award className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-sm text-[#053697]">
+                    ProTippz Editorial Research & Analysis
+                  </h4>
+                  <p className="text-xs text-slate-600">
+                    Comprehensive sports analysis, player predictions, and
+                    statistical insights.
+                  </p>
+                </div>
               </div>
 
-              {/* Sidebar Scrollable Divided Article List */}
-              <div className="max-h-[calc(100vh-220px)] overflow-y-auto custom-sidebar-scrollbar divide-y divide-gray-100">
-                {isBlogPostsLoading && sidebarBlogs.length === 0 ? (
-                  <div className="p-4 space-y-3">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <div key={i} className="animate-pulse space-y-2 py-2">
-                        <div className="h-4 bg-gray-200 rounded w-5/6" />
-                        <div className="h-3 bg-gray-200 rounded w-1/3" />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  sidebarBlogs.map((item) => {
-                    const isActive = item.id === post.id;
-                    return (
-                      <div
-                        key={item.id}
-                        onClick={() => {
-                          if (onSelectPost && !isActive) {
-                            onSelectPost(item);
-                          }
-                        }}
-                        className={`relative px-4 py-3.5 transition-colors cursor-pointer group border-l-4 ${
-                          isActive
-                            ? "bg-slate-50/90 border-[#2FC191]"
-                            : "bg-white hover:bg-slate-50/60 border-transparent"
-                        }`}
-                      >
-                        <h4
-                          className={`text-xs sm:text-sm font-bold leading-snug line-clamp-2 transition-colors ${
-                            isActive
-                              ? "text-[#053697]"
-                              : "text-slate-800 group-hover:text-[#2FC191]"
-                          }`}
-                        >
-                          {item.title || "Untitled Article"}
-                        </h4>
+              {/* 2. Executive Summary & Context */}
+              {post?.summary && (
+                <div className="space-y-1.5 pt-1">
+                  <p className="font-extrabold text-[#2FC191] text-xs uppercase tracking-wider">
+                    Executive Summary & Context
+                  </p>
+                  <p className="text-xs sm:text-sm font-medium text-slate-700 leading-relaxed">
+                    {post?.summary}
+                  </p>
+                </div>
+              )}
 
-                        <p className="text-[11px] text-slate-400 font-medium mt-1">
-                          {item.timestamp || "Recently"} • u/
-                          {(item.user?.name || "Author").replace(/\s+/g, "")}
-                        </p>
-                      </div>
-                    );
-                  })
-                )}
+              {/* Divider Line */}
+              <div className="border-t border-gray-200/80" />
+
+              {/* 3. Featured Image / Video Media Container */}
+              {post?.videoEmbedCode ? (
+                <div
+                  className="overflow-hidden border border-gray-200/80 rounded-lg"
+                  dangerouslySetInnerHTML={{ __html: post?.videoEmbedCode }}
+                />
+              ) : videoEmbedSrc ? (
+                <div className="overflow-hidden bg-black aspect-video relative border border-gray-200/80 rounded-lg">
+                  <iframe
+                    src={videoEmbedSrc}
+                    title={post?.title || "Embedded Video"}
+                    className="absolute inset-0 w-full h-full border-0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                </div>
+              ) : post?.image ? (
+                <div className="overflow-hidden border border-gray-200/80 bg-gray-50 rounded-lg">
+                  <OptimizedPostImage
+                    src={post?.image}
+                    alt={post?.title || "Article media image"}
+                    width={1200}
+                    height={675}
+                    priority={true}
+                    sizes="(max-width: 1024px) 100vw, 1200px"
+                    maxHeightClass="max-h-[460px]"
+                    enableLightbox={true}
+                  />
+                </div>
+              ) : null}
+
+              {/* 4. Editorial Rich Text Body (Safe from explicit color overriding HTML content) */}
+              <div className="rich-text-content rich-text-content-article leading-relaxed text-slate-800 text-sm sm:text-base space-y-4 pt-1">
+                <div dangerouslySetInnerHTML={{ __html: post?.content }} />
+              </div>
+
+              {/* Divider Line */}
+              <div className="border-t border-gray-200/80" />
+
+              {/* 5. Featured Recommendation / Projection Subsection */}
+              <div className="space-y-3 pt-1">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-md bg-[#2FC191] text-white text-[11px] font-black uppercase">
+                      FEATURED INSIGHT
+                    </span>
+                    <span className="text-xs font-bold text-[#053697]">
+                      ProTippz Editorial Projection
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-bold text-[#2FC191] bg-[#2FC191]/15 px-2 py-0.5 rounded-full border border-[#2FC191]/30">
+                    High Confidence
+                  </span>
+                </div>
+
+                <div className="space-y-1">
+                  <h3 className="text-base sm:text-xl font-extrabold text-[#053697]">
+                    {post?.title
+                      ? post?.title
+                      : "Recommended Prediction & Analysis"}
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Based on statistical matchup modeling, historical trends,
+                    and expert review.
+                  </p>
+                </div>
+
+                <div className="pt-2 flex items-center gap-2 text-xs font-bold text-[#2FC191]">
+                  <CheckCircle2 className="w-4 h-4 text-[#2FC191]" />
+                  <span>Verified Sports Insight</span>
+                </div>
+              </div>
+
+              {/* Divider Line */}
+              <div className="border-t border-gray-200/80" />
+
+              {/* 6. Author Bio Subsection */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-1">
+                <Avatar className="w-12 h-12 border-2 border-[#2FC191] shrink-0 shadow-2xs">
+                  <AvatarImage src={post?.user?.avatar} alt={userName} />
+                  <AvatarFallback>
+                    <Users className="w-5 h-5 text-[#053697]" />
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="space-y-0.5 flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h4 className="text-sm font-extrabold text-[#053697]">
+                      {userName}
+                    </h4>
+                    {post?.authorRole && (
+                      <span className="text-[10px] font-bold text-[#2FC191] bg-[#2FC191]/15 px-2 py-0.5 rounded-full border border-[#2FC191]/30">
+                        {post?.authorRole}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Sports analyst & editorial writer on ProTippz. Covering
+                    breaking news, game predictions, and loyalty rewards.
+                  </p>
+                </div>
+              </div>
+            </article>
+
+            {/* Bottom Section: "Keep Researching" Categories */}
+            <div className="pt-2">
+              <div className="p-5 rounded-xl bg-white border border-gray-200/90 shadow-2xs space-y-3">
+                <h4 className="text-sm font-black text-[#053697] flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4 text-[#2FC191]" />
+                  <span>Keep Researching</span>
+                </h4>
+
+                <div className="flex items-center gap-2 flex-wrap">
+                  {CATEGORIES.map((cat) => (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => onClose()}
+                      className="px-2.5 py-1 rounded-md text-xs font-bold bg-slate-100 hover:bg-[#2FC191] text-[#053697] hover:text-white transition-colors cursor-pointer"
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </aside>
+
+            {/* "Latest Stories" 3-Card Visual Grid */}
+            {recentStories.length > 0 && (
+              <div className="space-y-4 pt-4">
+                <div className="flex items-center justify-between border-b border-gray-200/90 pb-3">
+                  <h3 className="text-base font-black text-[#053697] flex items-center gap-2">
+                    <Newspaper className="w-4.5 h-4.5 text-[#2FC191]" />
+                    <span>Latest Sports Stories</span>
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="text-xs font-bold text-[#2FC191] hover:underline cursor-pointer flex items-center gap-1"
+                  >
+                    <span>View All</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {recentStories.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => {
+                        if (onSelectPost) {
+                          onSelectPost(item);
+                        }
+                      }}
+                      className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-[#2FC191] hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
+                    >
+                      {item.image ? (
+                        <div className="relative w-full h-32 bg-gray-100 overflow-hidden">
+                          <Image
+                            src={item.image}
+                            alt={item.title || "Story"}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-full h-32 bg-gray-100 flex items-center justify-center">
+                          <BookOpen className="w-7 h-7 text-gray-400" />
+                        </div>
+                      )}
+
+                      <div className="p-3.5 space-y-2 flex-1 flex flex-col justify-between">
+                        <div>
+                          <span className="text-[10px] font-extrabold text-[#2FC191] uppercase">
+                            {item.category || "Article"}
+                          </span>
+                          <h4 className="text-xs font-bold text-[#053697] leading-snug line-clamp-2 mt-1 group-hover:text-[#2FC191] transition-colors">
+                            {item.title || "Untitled Article"}
+                          </h4>
+                        </div>
+
+                        <div className="text-[11px] text-slate-400 font-medium pt-2 border-t border-gray-100">
+                          {item.timestamp || "Recently"}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </main>
     </div>
