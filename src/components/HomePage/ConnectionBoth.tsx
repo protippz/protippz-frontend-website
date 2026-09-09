@@ -108,20 +108,6 @@ function ConnectionBoth() {
                 alt="Female athlete supported by PROTIPPZ fans"
               />
               <div className="absolute top-0 left-0 w-full h-full bg-linear-to-l to-[#F0F5F4] via-transparent from-transparent"></div>
-
-              {/* Floating stat pill   top right */}
-              <div
-                className="absolute top-5 right-5 flex items-center gap-2.5 rounded-xl border px-4 py-2.5 bg-white/90 backdrop-blur-sm"
-                style={{ borderColor: "#D0D7DE" }}
-              >
-                <span
-                  className="w-2 h-2 rounded-full bg-[#2FC191] animate-pulse"
-                  aria-hidden="true"
-                />
-                <span className="text-xs font-semibold text-[#053697]">
-                  Live tips flowing
-                </span>
-              </div>
             </div>
           </div>
         </div>

@@ -79,7 +79,7 @@ function HeroSection() {
               <AvatarGroup className="**:grayscale **:hover:grayscale-0 transition-all">
                 <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
                   <AvatarImage
-                    src="https://github.com/shadcn.png"
+                    src=""
                     alt="@shadcn"
                   />
                   <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">
@@ -88,7 +88,7 @@ function HeroSection() {
                 </Avatar>
                 <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
                   <AvatarImage
-                    src="https://github.com/maxleiter.png"
+                    src=""
                     alt="@maxleiter"
                   />
                   <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">
@@ -97,7 +97,7 @@ function HeroSection() {
                 </Avatar>
                 <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
                   <AvatarImage
-                    src="https://github.com/evilrabbit.png"
+                    src=""
                     alt="@evilrabbit"
                   />
                   <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">

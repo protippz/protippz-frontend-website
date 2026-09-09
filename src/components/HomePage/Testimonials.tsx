@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Star, Quote } from "lucide-react";
-import Image from "next/image";
 import "./testimonial.css";
 import {
   Avatar,
@@ -14,7 +13,6 @@ import {
 
 interface Testimonial {
   id: number;
-  profile_image: string;
   name: string;
   rating: number;
   fan_type: string;
@@ -25,6 +23,13 @@ interface MarqueeColumnProps {
   testimonials: Testimonial[];
   direction: "up" | "down";
   speed?: number;
+}
+
+function getInitials(name: string): string {
+  if (!name) return "U";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
 // ─── Single Card ──────────────────────────────────────────────────────────────
@@ -53,17 +58,12 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
     {/* Description */}
     <p className="card-description">{testimonial.description}</p>
 
-    {/* Profile */}
+    {/* Profile with Name Letter Avatar */}
     <div className="card-profile">
       <div className="avatar-wrap">
-        <Image
-          src={testimonial.profile_image}
-          alt={testimonial.name}
-          width={40}
-          height={40}
-          className="avatar-img"
-          unoptimized
-        />
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#2FC191] to-[#053697] text-white flex items-center justify-center font-extrabold text-xs shadow-xs border-2 border-white shrink-0">
+          {getInitials(testimonial.name)}
+        </div>
         <span className="online-dot" />
       </div>
       <div>
@@ -154,8 +154,6 @@ const Testimonials: React.FC = () => {
   const testimonialData: Testimonial[] = [
     {
       id: 1,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "Alex Thompson",
       rating: 5,
       fan_type: "Soccer",
@@ -164,8 +162,6 @@ const Testimonials: React.FC = () => {
     },
     {
       id: 2,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "Sarah Johnson",
       rating: 5,
       fan_type: "Cricket",
@@ -174,8 +170,6 @@ const Testimonials: React.FC = () => {
     },
     {
       id: 3,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "Michael Chen",
       rating: 4,
       fan_type: "Basketball",
@@ -184,8 +178,6 @@ const Testimonials: React.FC = () => {
     },
     {
       id: 4,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "Emma Wilson",
       rating: 5,
       fan_type: "Tennis",
@@ -194,8 +186,6 @@ const Testimonials: React.FC = () => {
     },
     {
       id: 5,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "David Martinez",
       rating: 4,
       fan_type: "Football",
@@ -204,8 +194,6 @@ const Testimonials: React.FC = () => {
     },
     {
       id: 6,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "Lisa Anderson",
       rating: 5,
       fan_type: "Volleyball",
@@ -214,8 +202,6 @@ const Testimonials: React.FC = () => {
     },
     {
       id: 7,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "James Taylor",
       rating: 4,
       fan_type: "Swimming",
@@ -224,8 +210,6 @@ const Testimonials: React.FC = () => {
     },
     {
       id: 8,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "Robert Brown",
       rating: 5,
       fan_type: "Baseball",
@@ -234,8 +218,6 @@ const Testimonials: React.FC = () => {
     },
     {
       id: 9,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "Maria Garcia",
       rating: 4,
       fan_type: "Rugby",
@@ -244,8 +226,6 @@ const Testimonials: React.FC = () => {
     },
     {
       id: 10,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "Thomas Lee",
       rating: 5,
       fan_type: "Golf",
@@ -254,8 +234,6 @@ const Testimonials: React.FC = () => {
     },
     {
       id: 11,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "Jennifer White",
       rating: 4,
       fan_type: "Hockey",
@@ -264,8 +242,6 @@ const Testimonials: React.FC = () => {
     },
     {
       id: 12,
-      profile_image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
       name: "Christopher Moore",
       rating: 5,
       fan_type: "Boxing",
@@ -329,28 +305,22 @@ const Testimonials: React.FC = () => {
           </div>
         </div>
 
-        <div className="w-full flex items-center justify-center">
+        <div className="w-full flex items-center justify-center mt-6">
           <AvatarGroup className="**:grayscale **:hover:grayscale-0 transition-all">
             <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src="" alt="@shadcn" />
               <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">
                 CN
               </AvatarFallback>
             </Avatar>
             <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
-              <AvatarImage
-                src="https://github.com/maxleiter.png"
-                alt="@maxleiter"
-              />
+              <AvatarImage src="" alt="@maxleiter" />
               <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">
                 ML
               </AvatarFallback>
             </Avatar>
             <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
-              <AvatarImage
-                src="https://github.com/evilrabbit.png"
-                alt="@evilrabbit"
-              />
+              <AvatarImage src="" alt="@evilrabbit" />
               <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">
                 ER
               </AvatarFallback>
