@@ -16,6 +16,7 @@ interface OptimizedPostImageProps {
   maxHeightClass?: string;
   aspectRatio?: string;
   enableLightbox?: boolean;
+  objectFit?: "cover" | "contain" | "fill";
   onClick?: (e: React.MouseEvent) => void;
 }
 
@@ -51,6 +52,7 @@ export const OptimizedPostImage: React.FC<OptimizedPostImageProps> = ({
   maxHeightClass = "max-h-[260px] sm:max-h-[440px]",
   aspectRatio,
   enableLightbox = true,
+  objectFit = "contain",
   onClick,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -112,7 +114,13 @@ export const OptimizedPostImage: React.FC<OptimizedPostImageProps> = ({
             setIsLoading(false);
             setHasError(true);
           }}
-          className={`w-full h-auto object-contain transition-all duration-500 ease-out ${maxHeightClass} ${
+          className={`w-full ${
+            objectFit === "cover"
+              ? "h-full object-cover"
+              : objectFit === "fill"
+              ? "h-full object-fill"
+              : "h-auto object-contain"
+          } transition-all duration-500 ease-out ${maxHeightClass} ${
             isLoading ? "opacity-0 scale-[0.98]" : "opacity-100 scale-100"
           } ${enableLightbox ? "group-hover:scale-[1.01]" : ""} ${className}`}
         />

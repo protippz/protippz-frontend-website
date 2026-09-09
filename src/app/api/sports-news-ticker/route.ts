@@ -98,36 +98,63 @@ function getFallbackHeadlines(): TickerHeadline[] {
 
 // ─── Route handler ────────────────────────────────────────────────────────────
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const limitParam = parseInt(searchParams.get('limit') || '12', 10)
+    const categoryParam = searchParams.get('category')?.toUpperCase() || 'ALL'
+    const searchQueryParam = searchParams.get('search')?.trim().toLowerCase() || ''
+
+    // Calculate per-sport limit based on total limit requested (min 2, max 15 per sport)
+    const maxPerSport = Math.max(2, Math.min(15, Math.ceil(limitParam / SPORT_CONFIGS.length)))
+
+    const filteredConfigs = categoryParam === 'ALL'
+      ? SPORT_CONFIGS
+      : SPORT_CONFIGS.filter((c) => c.badge === categoryParam)
+
+    const configsToFetch = filteredConfigs.length > 0 ? filteredConfigs : SPORT_CONFIGS
+
     const results = await Promise.allSettled(
-      SPORT_CONFIGS.map(async (config) => {
-        const data = await fetchESPN(config.url)
+      configsToFetch.map(async (config) => {
+        const fetchLimit = categoryParam !== 'ALL' ? Math.min(limitParam, 20) : maxPerSport
+        const data = await fetchESPN(`${config.url}?limit=${fetchLimit}`)
         if (!data?.articles?.length) return []
 
-        return data.articles.slice(0, config.limit).map((article): TickerHeadline => ({
+        return data.articles.slice(0, fetchLimit).map((article): TickerHeadline => ({
           id: article.id,
           text: article.headline,
           description: article.description ?? '',
           emoji: config.emoji,
           badge: config.badge,
           badgeType: config.badgeType,
-          imageUrl: article.images?.find(img => img.type === 'header')?.url,
+          imageUrl: article.images?.find(img => img.type === 'header')?.url || article.images?.[0]?.url,
           link: article.links?.web?.href,
           publishedAt: article.published,
         }))
       })
     )
 
-    const headlines: TickerHeadline[] = results
+    let headlines: TickerHeadline[] = results
       .filter((r): r is PromiseFulfilledResult<TickerHeadline[]> => r.status === 'fulfilled')
       .flatMap(r => r.value)
 
+    if (searchQueryParam) {
+      headlines = headlines.filter(
+        (h) =>
+          h.text.toLowerCase().includes(searchQueryParam) ||
+          h.description.toLowerCase().includes(searchQueryParam) ||
+          h.badge.toLowerCase().includes(searchQueryParam)
+      )
+    }
+
+    headlines = headlines.slice(0, limitParam)
+
     return NextResponse.json({
       success: true,
-      headlines: headlines.length > 0 ? headlines : getFallbackHeadlines(),
+      headlines: headlines.length > 0 ? headlines : (searchQueryParam ? [] : getFallbackHeadlines()),
       lastUpdated: new Date().toISOString(),
       count: headlines.length,
+      limit: limitParam,
     })
   } catch {
     return NextResponse.json({
