@@ -55,7 +55,7 @@ export default function RootLayout({
             image: "https://protippz.com/assets/seo-banner.jpg",
             publisher: {
               "@type": "Organization",
-              name: "ProTippz",
+              name: "PROTIPPZ",
               logo: "https://protippz.com/assets/logo.png",
             },
             potentialAction: {

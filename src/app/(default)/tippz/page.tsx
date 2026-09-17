@@ -1,141 +1,168 @@
 import React from "react";
-import Heading from "@/components/Shared/Heading";
-import Cards from "@/components/Tippz/Cards";
+import Image from "next/image";
+import Cards, { TippzStepItem } from "@/components/Tippz/Cards";
+import PhoneMockup from "@/components/Tippz/PhoneMockup";
 import Money from "@/Assets/Money.png";
 import player from "@/Assets/player.webp";
-export const metadata = {
-  title: "PROTIPPZ - TIPPZ",
-  description:
-    "Learn how to tip your favorite player/team, earn rewards, and win prizes with TIPPZ.",
-};
 import playstore from "@/Assets/playstore.png";
-import appstore from "@/Assets/appsore.png";
-import phoneImage2 from "@/Assets/phone_image2.png";
-import Image from "next/image";
-import Link from "next/link";
+import qrCode from "@/Assets/qrcode.png";
 import SeoPage from "@/components/seo/SeoPage";
 import { getSEOMetadata } from "@/components/seo/seo";
+import {
+  Sparkles,
+  ShieldCheck,
+  Award,
+  Zap,
+  Smartphone,
+  Trophy,
+  CheckCircle2,
+} from "lucide-react";
 
-const cardData = [
+export const metadata = {
+  title: "PROTIPPZ - TIPPZ | How Direct Athlete Tipping Works",
+  description:
+    "Learn how to tip your favorite collegiate and pro athletes, earn reward points, and win exclusive prizes on PROTIPPZ.",
+};
+
+const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=com.coryrains.protppz&hl=en";
+
+const cardData: TippzStepItem[] = [
   {
     _id: "1",
+    stepNumber: "01",
     image: player,
     title: "Choose a Player or Team",
     description:
-      "Select your favorite player or team from a variety of sports and leagues including professional and college.",
+      "Select your favorite athlete or team across major collegiate and professional sports leagues.",
+    linkHref: "/playerz",
+    linkText: "Explore Playerz",
   },
   {
     _id: "2",
+    stepNumber: "02",
     image: Money,
-    title: "Send them Tippz",
+    title: "Send Them Tippz",
     description:
-      "After selecting your player or team, you can show your support and love for their game by sending them tips.",
+      "Show immediate support and back their game performance with secure, real-time micro-tips.",
+    linkHref: "/teamz",
+    linkText: "Explore Teamz",
   },
   {
     _id: "3",
+    stepNumber: "03",
     videoUrl: "/videos/video.mp4",
     title: "Earn Rewards & Win Prizes",
     description:
-      "You are eligible to earn rewards and win prizes when you send Tippz. Rewards and prizes include exclusive sports merchandise, tickets, and more.",
+      "Accumulate reward points with every tip sent and redeem for authentic sports merchandise, tickets, and weekly giveaways.",
+    linkHref: "/rewardz",
+    linkText: "Explore Rewardz",
   },
 ];
 
 const TipsPage = () => {
   const seoMetadata = getSEOMetadata("sportsTipping");
+
   return (
     <>
-      <h1 className="hidden">
-        PROTIPPZ | Sports Fan Engagement Platform & NIL Deals
-      </h1>
-      <p className="hidden">
-        Join PROTIPPZ sports community for sports tipping, fan engagement, and
-        the best NIL deals for college athletes.
-      </p>
-      <span className="hidden">sports tipping</span>
-      <span className="hidden">sports fans</span>
-      <span className="hidden">best nil deals</span>
-      <span className="hidden">sports fan engagement</span>
-      <span className="hidden">gender pay gap in sports</span>
-      <span className="hidden">college sports</span>
-      <span className="hidden">support athletes</span>
-      <span className="hidden">sports community</span>
-      <span className="hidden">fan engagement platform</span>
-      <span className="hidden">fan appreciation</span>
-      <span className="hidden">nil deals for college athletes</span>
-      <span className="hidden">nil tipping</span>
-      <h2 className="hidden">Welcome to the PROTIPPZ Sports Community</h2>
-      <p className="hidden">
-        Join our platform for sports tipping, fan engagement, and the best NIL
-        deals for college athletes.
-      </p>
-      <h3 className="hidden">Sports Fan Engagement</h3>
-      <p className="hidden">
-        Connect with your favorite athletes and teams in our vibrant sports
-        community.
-      </p>
-      <h3 className="hidden">NIL Deals for College Athletes</h3>
-      <p className="hidden">
-        Discover and support the best NIL deals that help college sports stars
-        thrive.
-      </p>
-      <h3 className="hidden">Support Athletes</h3>
-      <p className="hidden">
-        Show your fan appreciation through our innovative tipping platform.
-      </p>
-      <h1 className="hidden">
-        PROTIPPZ | Sports Fan Engagement Platform & NIL Deals
-      </h1>
       <SeoPage metadata={seoMetadata} />
-      <div className="max-w-355 mx-auto sm:p-0 px-2">
-        <Heading
-          headingText="TIPPZ"
-          subHeadingText="Tip your favorite player/team, earn rewards, and win prizes."
-        />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
-          {cardData &&
-            Array.isArray(cardData) &&
-            cardData?.map((card) => <Cards key={card._id} data={card} />)}
-        </div>
-      </div>
-      <hr className="h-[4px] w-full mt-6 bg-[#2FC191]" />
-      <hr className="h-[4px] w-full mb-6 -mt-[1px] bg-[#053697]" />
-      <div className="max-w-355 mx-auto px-4 py-8 flex flex-col items-center">
-        <h2 className="text-2xl font-bold text-[#053697] mb-4">
-          Download Today
-        </h2>
-        <div className="flex gap-4 mb-8">
-          <Link
-            href="https://play.google.com/store/apps/details?id=com.protipz.cory"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src={playstore}
-              alt="Google Play Store"
-              width={120}
-              height={40}
-            />
-          </Link>
-          <a href="https://apple.com" target="_blank" rel="noopener noreferrer">
-            <Image
-              src={appstore}
-              alt="Apple App Store"
-              width={120}
-              height={40}
-            />
-          </a>
-        </div>
-        {/* <AdContainer /> */}
-        <div className="relative w-full max-w-xs md:max-w-sm">
-          <Image
-            src={phoneImage2}
-            alt="App Preview"
-            layout="responsive"
-            width={300}
-            height={600}
-            className="rounded-lg shadow-lg"
-          />
+      <div className="w-full bg-[#FAF9F6] min-h-screen py-8 md:py-12">
+        <div className="max-w-355 mx-auto px-4 sm:px-6 lg:px-8 space-y-10 md:space-y-4">
+          {/* ================= HEADER SECTION ================= */}
+          <div className="text-center max-w-2xl mx-auto space-y-2.5">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#053697] leading-tight tracking-tight">
+              TIPPZ
+            </h1>
+
+            <p className="text-stone-600 text-xs sm:text-sm leading-relaxed max-w-xl mx-auto">
+              Tip your favorite player/team, earn rewards, and win prizes.
+            </p>
+          </div>
+
+          {/* ================= STEP CARDS GRID ================= */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+            {cardData.map((card) => (
+              <Cards key={card._id} data={card} />
+            ))}
+          </div>
+
+          {/* ================= DOWNLOAD APP BANNER (LIGHT BORDERED) ================= */}
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-6 sm:p-8 md:p-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* Left Details */}
+              <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[#1f8763] text-[11px] font-semibold">
+                  <Smartphone className="w-3 h-3 text-[#2FC191]" />
+                  Available on Android
+                </div>
+
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#053697] tracking-tight leading-snug">
+                  Download the PROTIPPZ App Today
+                </h2>
+
+                <p className="text-stone-600 text-xs sm:text-sm leading-relaxed max-w-lg mx-auto lg:mx-0">
+                  Tip athletes live during the game, track your transaction log,
+                  save your favorite stars, and unlock exclusive rewards right
+                  from your mobile phone.
+                </p>
+
+                {/* Feature Bullet List */}
+                {/* <ul className="space-y-2 pt-1 text-left inline-block lg:block">
+                  {appFeatures.map((feat, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-center gap-2 text-xs sm:text-[13px] text-stone-700 font-medium"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#2FC191] shrink-0" />
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul> */}
+
+                {/* QR Code and Store Badge */}
+                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+                  {/* <div className="flex items-center gap-2.5 bg-stone-50 border border-stone-200/90 px-3 py-2 rounded-xl">
+                    <div className="bg-white p-1 rounded-lg border border-stone-200/60 shrink-0">
+                      <Image
+                        src={qrCode}
+                        alt="QR Code"
+                        width={44}
+                        height={44}
+                        className="w-11 h-11 object-contain"
+                      />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-[10px] text-stone-500">Scan to get app</p>
+                      <span className="text-[11px] font-bold text-[#053697]">
+                        Instant Android Setup
+                      </span>
+                    </div>
+                  </div> */}
+
+                  <a
+                    href={PLAY_STORE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block"
+                    aria-label="Get on Google Play"
+                  >
+                    <Image
+                      src={playstore}
+                      alt="Google Play"
+                      width={120}
+                      height={36}
+                    />
+                  </a>
+                </div>
+              </div>
+
+              {/* Right Phone Mockup Preview */}
+              <div className="lg:col-span-5 flex justify-center">
+                <PhoneMockup />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>

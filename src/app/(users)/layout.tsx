@@ -84,13 +84,13 @@ export default function RootLayout({
           {JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Website',
-            name: 'PROTIPPZ ',
+            name: 'PROTIPPZ',
             url: 'https://protippz.com',
             description: 'protippz',
 
             publisher: {
               '@type': 'Organization',
-              name: 'ProTippz',
+              name: 'PROTIPPZ',
             },
             potentialAction: {
               '@type': 'SearchAction',

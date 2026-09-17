@@ -45,7 +45,7 @@ const Banner = () => {
             description: "protippz",
             publisher: {
               "@type": "Organization",
-              name: "ProTipz",
+              name: "PROTIPPZ",
               logo: "https://protippz.com",
             },
           })}

@@ -1,105 +1,156 @@
 "use client";
-import React, { useState, Suspense } from "react";
-import { Select, Input, Button, Typography, Form } from "antd";
 
-import { FaSearch } from "react-icons/fa";
-import { useRouter } from "next/navigation";
-
-const { Option } = Select;
-const { Text } = Typography;
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Search, SlidersHorizontal, ArrowUpDown, X } from "lucide-react";
 
 const SearchAndSortComponent: React.FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [sortBy, setSortBy] = useState("name");
   const [order, setOrder] = useState("A to Z");
   const [search, setSearch] = useState("");
 
-  const handleSortByChange = (value: string) => {
-    setSortBy(value);
-    const CurrentParams = new URLSearchParams(window.location.search);
-    if (order == "A to Z") {
-      CurrentParams.set("sort", value);
+  // Sync initial state from current URL params
+  useEffect(() => {
+    const currentSort = searchParams?.get("sort") || "";
+    const currentSearch = searchParams?.get("searchTerm") || "";
+
+    setSearch(currentSearch);
+
+    if (currentSort.startsWith("-")) {
+      setOrder("Z to A");
+      setSortBy(currentSort.replace("-", "") || "name");
+    } else if (currentSort) {
+      setOrder("A to Z");
+      setSortBy(currentSort);
     } else {
-      CurrentParams.set("sort", `-${value}`);
+      setSortBy("name");
+      setOrder("A to Z");
     }
-    router.replace(`?${CurrentParams.toString()}`, { scroll: false });
+  }, [searchParams]);
+
+  const updateUrlParams = (newSortBy: string, newOrder: string) => {
+    const currentParams = new URLSearchParams(window.location.search);
+    const sortValue = newOrder === "Z to A" ? `-${newSortBy}` : newSortBy;
+    currentParams.set("sort", sortValue);
+    currentParams.set("page", "1");
+    router.replace(`?${currentParams.toString()}`, { scroll: false });
   };
 
-  const handleOrderChange = (value: string) => {
-    setOrder(value);
-    const CurrentParams = new URLSearchParams(window.location.search);
-    if (value == "A to Z") {
-      CurrentParams.set("sort", sortBy);
+  const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newSortBy = e.target.value;
+    setSortBy(newSortBy);
+    updateUrlParams(newSortBy, order);
+  };
+
+  const handleOrderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newOrder = e.target.value;
+    setOrder(newOrder);
+    updateUrlParams(sortBy, newOrder);
+  };
+
+  const handleSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const currentParams = new URLSearchParams(window.location.search);
+    const trimmed = search.trim();
+    if (trimmed) {
+      currentParams.set("searchTerm", trimmed);
     } else {
-      CurrentParams.set("sort", `-${sortBy}`);
+      currentParams.delete("searchTerm");
     }
-    router.replace(`?${CurrentParams.toString()}`, { scroll: false });
+    currentParams.set("page", "1");
+    router.replace(`?${currentParams.toString()}`, { scroll: false });
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
-
-  const handleSearch = () => {
-    const CurrentParams = new URLSearchParams(window.location.search);
-    CurrentParams.set("searchTerm", `${search}`);
-    setSearch(search);
-    router.replace(`?${CurrentParams.toString()}`, { scroll: false });
+  const handleClearSearch = () => {
+    setSearch("");
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.delete("searchTerm");
+    currentParams.set("page", "1");
+    router.replace(`?${currentParams.toString()}`, { scroll: false });
   };
 
   return (
-    <div className="w-full flex flex-col gap-4 p-4 md:flex-row md:justify-between md:items-center">
-      <div className="flex flex-col items-start gap-2 w-full md:flex-row md:items-center md:w-auto">
-        <Text strong className="text-[#053697]">
-          Sort By:
-        </Text>
-        <Form
-          requiredMark={false}
-          className="flex flex-col sm:flex-row gap-2 w-full md:w-auto"
+    <div className="w-full bg-white border border-stone-200/90 rounded-xl p-3 sm:p-3.5 mb-6">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3.5">
+        {/* Left Side: Sort Controls */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="flex items-center gap-1.5 text-[#053697] font-bold text-xs sm:text-sm shrink-0">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#2FC191]" />
+            <span>Sort By:</span>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            {/* Sort Field Selector */}
+            <div className="relative flex-1 sm:w-36">
+              <select
+                value={sortBy}
+                onChange={handleSortByChange}
+                aria-label="Sort by field"
+                className="w-full appearance-none bg-stone-50 hover:bg-white text-stone-800 text-xs sm:text-sm font-semibold rounded-lg border border-stone-200 hover:border-[#2FC191] focus:border-[#2FC191] focus:ring-1 focus:ring-[#2FC191] py-2 pl-3 pr-8 outline-none transition-colors cursor-pointer"
+              >
+                <option value="name">Name</option>
+                <option value="sport">Sports</option>
+              </select>
+              <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400">
+                <ArrowUpDown className="w-3.5 h-3.5 text-stone-400" />
+              </div>
+            </div>
+
+            {/* Sort Order Selector */}
+            <div className="relative flex-1 sm:w-36">
+              <select
+                value={order}
+                onChange={handleOrderChange}
+                aria-label="Sort order"
+                className="w-full appearance-none bg-stone-50 hover:bg-white text-stone-800 text-xs sm:text-sm font-semibold rounded-lg border border-stone-200 hover:border-[#2FC191] focus:border-[#2FC191] focus:ring-1 focus:ring-[#2FC191] py-2 pl-3 pr-8 outline-none transition-colors cursor-pointer"
+              >
+                <option value="A to Z">A to Z (Asc)</option>
+                <option value="Z to A">Z to A (Desc)</option>
+              </select>
+              <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400">
+                <ArrowUpDown className="w-3.5 h-3.5 text-stone-400" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side: Search Form */}
+        <form
+          onSubmit={handleSearchSubmit}
+          className="flex items-center gap-2 w-full lg:w-auto"
         >
-          <Select
-            className="border-2 border-[#2FC191] focus:border-[#2FC191] rounded-lg h-[42px] w-full md:w-32"
-            value={sortBy}
-            onChange={handleSortByChange}
+          <div className="relative flex-1 sm:w-64">
+            <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search team by name..."
+              className="w-full bg-stone-50 hover:bg-white focus:bg-white text-stone-800 text-xs sm:text-sm font-medium rounded-lg border border-stone-200 hover:border-[#2FC191] focus:border-[#2FC191] focus:ring-1 focus:ring-[#2FC191] py-2 pl-8.5 pr-8 outline-none transition-colors placeholder-stone-400"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                aria-label="Clear search"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-stone-200 text-stone-400 hover:text-stone-600 transition-colors cursor-pointer"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="px-4 py-2 rounded-lg bg-[#053697] hover:bg-[#042a78] text-white font-bold text-xs sm:text-sm tracking-wide transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
           >
-            <Option value="name">Name</Option>
-            <Option value="sport">Sports</Option>
-            {/* <Option value="position">Position</Option> */}
-          </Select>
-          <Select
-            className="border-2 border-[#2FC191] focus:border-[#2FC191] rounded-lg h-[42px] w-full md:w-32"
-            value={order}
-            onChange={handleOrderChange}
-          >
-            <Option value="A to Z">A to Z</Option>
-            <Option value="Z to A">Z to A</Option>
-          </Select>
-        </Form>
-      </div>
-      <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
-        <Input
-          className="border-2 border-[#2FC191] focus:border-[#2FC191] rounded-md w-full md:w-48"
-          placeholder="Type here to search"
-          prefix={<FaSearch />}
-          value={search}
-          onChange={handleSearchChange}
-          style={{ height: 42 }}
-        />
-        <Button
-          type="primary"
-          className="bg-[#053697] text-white w-full sm:w-auto md:h-[42px]"
-          onMouseEnter={(event: any) => (
-            (event.target.style.backgroundColor = "#053697c9"),
-            (event.target.style.color = "#fff")
-          )}
-          onMouseLeave={(event: any) => (
-            (event.target.style.backgroundColor = "#053697"),
-            (event.target.style.color = "#fff")
-          )}
-          onClick={handleSearch}
-        >
-          Search
-        </Button>
+            <Search className="w-3.5 h-3.5" />
+            <span>Search</span>
+          </button>
+        </form>
       </div>
     </div>
   );

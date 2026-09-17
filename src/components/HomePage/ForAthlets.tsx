@@ -38,7 +38,7 @@ function ForAthletes() {
           <p className="text-[#57606A] text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
             Build a stronger connection with your fans, create new income
             opportunities, and get recognized beyond traditional contracts and
-            sponsorships. PROTIPP.
+            sponsorships with PROTIPPZ.
           </p>
         </div>
 

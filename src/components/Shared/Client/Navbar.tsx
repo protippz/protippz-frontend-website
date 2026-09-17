@@ -593,7 +593,7 @@ const Navbar: React.FC = () => {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs transition-all duration-200">
+    <header className="sticky top-0 z-999 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs transition-all duration-200">
       <nav className="flex items-center justify-between max-w-355 mx-auto px-4 py-3">
         {/* Brand Logo */}
         <Link

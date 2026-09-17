@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import CommunityPage from "../../page";
-import { CommunityPostBackendItem } from "@/types/community";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { CommunityPostBackendItem, mapBackendItemToPost } from "@/types/community";
+import BlogArticleView from "@/components/community/BlogArticleView";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -80,16 +82,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const blogUrl = `${BASE_SITE_URL}/community/blog/${encodeURIComponent(id)}`;
-  const authorName = post.user?.name || "ProTippz Author";
+  const authorName = post.user?.name || "Douglas Reyner";
   const isPng = ogImageUrl.toLowerCase().endsWith(".png");
   const imageMime = isPng ? "image/png" : "image/jpeg";
   const oembedUrl = `${BASE_SITE_URL}/api/oembed?url=${encodeURIComponent(blogUrl)}`;
 
   return {
-    title,
+    title: `${title} - ProTippz`,
     description: metaDescription,
     keywords: [
       "ProTippz",
+      "CEO Times",
+      "Sports Economy",
+      "NIL Deals",
+      "Fan Engagement",
       "Blog Article",
       post.category || "Sports",
       authorName,
@@ -133,8 +139,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: [ogImageUrl],
     },
     other: {
-      "image": ogImageUrl,
-      "thumbnail": ogImageUrl,
+      image: ogImageUrl,
+      thumbnail: ogImageUrl,
       "twitter:image:src": ogImageUrl,
       "twitter:domain": "protippz.com",
       "article:published_time": post.createdAt || "",
@@ -147,51 +153,69 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BlogPage({ params }: PageProps) {
   const resolvedParams = await params;
-  const post = await getPostData(resolvedParams.id);
+  const rawPost = await getPostData(resolvedParams.id);
 
-  const title = post?.seoTitle || post?.title || DEFAULT_SEO_TITLE;
-  const rawDescription = post?.description
-    ? post.description.replace(/<[^>]*>?/gm, "").trim()
+  if (!rawPost) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center space-y-4">
+        <h2 className="text-2xl font-bold text-slate-800">Article Not Found</h2>
+        <p className="text-slate-500 text-sm max-w-md">
+          The sports article you are looking for might have been moved or is currently unavailable.
+        </p>
+        <Link
+          href="/community"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#2FC191] text-[#053697] font-bold text-sm shadow-sm hover:bg-[#28ad81] transition-all"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Explore ProTippz Community</span>
+        </Link>
+      </div>
+    );
+  }
+
+  const mappedPost = mapBackendItemToPost(rawPost);
+
+  const title = mappedPost.seoTitle || mappedPost.title || DEFAULT_SEO_TITLE;
+  const rawDescription = mappedPost.content
+    ? mappedPost.content.replace(/<[^>]*>?/gm, "").trim()
     : "";
   const metaDescription =
-    post?.metaDescription ||
+    mappedPost.metaDescription ||
     (rawDescription.length > 0
       ? rawDescription.slice(0, 160)
       : DEFAULT_SEO_DESCRIPTION);
   let ogImageUrl =
-    post?.ogImage ||
-    (post?.images && post.images.length > 0 ? post.images[0] : null) ||
-    DEFAULT_OG_IMAGE;
+    mappedPost.ogImage || mappedPost.image || DEFAULT_OG_IMAGE;
 
   if (ogImageUrl && !ogImageUrl.startsWith("http://") && !ogImageUrl.startsWith("https://")) {
     ogImageUrl = `${BASE_SITE_URL}${ogImageUrl.startsWith("/") ? "" : "/"}${ogImageUrl}`;
   }
 
   const blogUrl = `${BASE_SITE_URL}/community/blog/${encodeURIComponent(resolvedParams.id)}`;
-  const authorName = post?.user?.name || "ProTippz Author";
+  const authorName = mappedPost.user?.name || "Douglas Reyner";
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": title,
-    "description": metaDescription,
-    "image": [ogImageUrl],
-    "datePublished": post?.createdAt,
-    "dateModified": post?.updatedAt,
-    "author": {
+    headline: title,
+    description: metaDescription,
+    image: [ogImageUrl],
+    datePublished: rawPost.createdAt,
+    dateModified: rawPost.updatedAt,
+    author: {
       "@type": "Person",
-      "name": authorName,
+      name: authorName,
     },
-    "publisher": {
+    publisher: {
       "@type": "Organization",
-      "name": "ProTippz",
-      "url": BASE_SITE_URL,
-      "logo": {
+      name: "ProTippz",
+      url: BASE_SITE_URL,
+      logo: {
         "@type": "ImageObject",
-        "url": `${BASE_SITE_URL}/favicon.png`,
+        url: `${BASE_SITE_URL}/favicon.png`,
       },
     },
-    "mainEntityOfPage": {
+    mainEntityOfPage: {
       "@type": "WebPage",
       "@id": blogUrl,
     },
@@ -203,7 +227,7 @@ export default async function BlogPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <CommunityPage initialPostId={resolvedParams.id} />
+      <BlogArticleView post={mappedPost} />
     </>
   );
 }

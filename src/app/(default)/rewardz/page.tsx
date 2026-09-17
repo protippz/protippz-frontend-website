@@ -94,7 +94,7 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
             <div className="mt-4 flex justify-center md:justify-start">
               <Link
                 target="_blank"
-                href="https://play.google.com/store/apps/details?id=com.protipz.cory"
+                href="https://play.google.com/store/apps/details?id=com.coryrains.protppz&hl=en"
                 className="text-[#053697] font-semibold flex items-center"
               >
                 Download Today <FaLongArrowAltRight className="ml-2" />

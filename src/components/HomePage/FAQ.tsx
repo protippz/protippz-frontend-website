@@ -1,79 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { get } from "@/ApisRequests/server";
 
-const faqs = [
-  {
-    category: "General",
-    items: [
-      {
-        question: "What is PROTIPPZ?",
-        answer:
-          "PROTIPPZ is a platform that lets fans directly tip and support athletes they love. We bridge the gap between fan passion and athlete income, no delays, just real support that makes a real difference.",
-      },
-      {
-        question: "Who can use PROTIPPZ?",
-        answer:
-          "PROTIPPZ is currently available to fans and athletes residing in the United States and Canada. Whether you are a fan wanting to support your favorite athlete or a female athlete looking to earn direct income from your community, you can get started today.",
-      },
-      {
-        question: "Where is PROTIPPZ available?",
-        answer:
-          "PROTIPPZ is currently available in the United States and Canada, operating in USD ($). We are working on expanding our platform and payout infrastructure to support international athletes and fans in future releases.",
-      },
-    ],
-  },
-  {
-    category: "Tipping & Payments",
-    items: [
-      {
-        question: "How do I send a tip to an athlete?",
-        answer:
-          'Simply search for an athlete by name, sport, or team then tap "Send Tip", choose your amount, and confirm. Your tip is processed securely and credited directly to the athlete.',
-      },
-      {
-        question: "What payment methods are supported?",
-        answer:
-          "We support all major credit and debit cards through Stripe, as well as PayPal. All transactions are billed in USD ($) and protected with industry-standard encryption.",
-      },
-      {
-        question: "Are there any fees for tipping?",
-        answer:
-          "PROTIPPZ charges a small platform fee to keep the service running and secure. Athletes receive the majority of every tip we are transparent about our fee structure and display it clearly before you confirm any transaction.",
-      },
-    ],
-  },
-  {
-    category: "Rewards & Points",
-    items: [
-      {
-        question: "How does the rewards system work?",
-        answer:
-          "Every tip you send earns you PROTIPPZ points. Accumulate enough points and you unlock exclusive rewards from signed merch and behind-the-scenes content to meet-and-greets and VIP fan experiences with your favourite athletes.",
-      },
-      {
-        question: "Do my points expire?",
-        answer:
-          "Points remain active as long as your account is in good standing. We occasionally run bonus point events and seasonal campaigns, so keep an eye on the app for opportunities to earn faster.",
-      },
-    ],
-  },
-  {
-    category: "For Athletes",
-    items: [
-      {
-        question: "How do athletes receive their tips?",
-        answer:
-          "Eligible athletes in the U.S. and Canada can withdraw their earnings directly via Stripe Connect, ACH direct bank transfer, or check. Withdrawals are processed within 1–3 business days with full visibility into balance and transaction history.",
-      },
-      // {
-      //   question: "How do I sign up as an athlete?",
-      //   answer:
-      //     'Download the PROTIPPZ app, select "I am an athlete" during onboarding, and complete our quick verification process. Once approved, your profile goes live and fans can start supporting you immediately.',
-      // },
-    ],
-  },
-];
+interface FaqInterface {
+  _id: string;
+  question: string;
+  answer: string;
+  createdAt?: string;
+  updatedAt?: string;
+  id?: string;
+}
 
 function FAQItem({
   question,
@@ -96,7 +33,7 @@ function FAQItem({
     >
       <button
         onClick={onToggle}
-        className="w-full flex items-start justify-between gap-4 px-6 py-5 text-left group"
+        className="w-full flex items-start justify-between gap-4 px-6 py-5 text-left group cursor-pointer"
         aria-expanded={isOpen}
       >
         <span
@@ -135,13 +72,13 @@ function FAQItem({
       {/* Answer panel */}
       <div
         className="overflow-hidden transition-all duration-300 ease-in-out"
-        style={{ maxHeight: isOpen ? "400px" : "0px" }}
+        style={{ maxHeight: isOpen ? "500px" : "0px" }}
       >
         <div
           className="px-6 pb-5 border-t"
           style={{ borderColor: "rgba(47,193,145,0.12)" }}
         >
-          <p className="text-sm text-[#57606A] leading-relaxed pt-4">
+          <p className="text-sm text-[#57606A] leading-relaxed pt-4 whitespace-pre-line">
             {answer}
           </p>
         </div>
@@ -151,7 +88,26 @@ function FAQItem({
 }
 
 function FAQ() {
-  const [openItem, setOpenItem] = useState<string | null>("What is PROTIPPZ?");
+  const [faqs, setFaqs] = useState<FaqInterface[]>([]);
+  const [openItem, setOpenItem] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const res = await get("/manage/get-faq");
+        if (res?.data && Array.isArray(res.data)) {
+          setFaqs(res.data);
+          if (res.data.length > 0) {
+            setOpenItem(res.data[0]?.question || null);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load FAQs:", error);
+      }
+    };
+
+    fetchFaqs();
+  }, []);
 
   const toggle = (question: string) => {
     setOpenItem((prev) => (prev === question ? null : question));
@@ -159,9 +115,6 @@ function FAQ() {
 
   return (
     <section className="relative w-full mt-4">
-      {/* Silk top border */}
-      {/* <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#D0D7DE] to-transparent" /> */}
-
       <div className="max-w-355 mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
@@ -181,7 +134,7 @@ function FAQ() {
             </span>
           </div>
 
-          <h2 className="text-4xl font-e sm:text-5xl font-black text-[#053697] mb-4 leading-[1.1] tracking-[-0.03em]">
+          <h2 className="text-4xl font-extrabold sm:text-5xl font-black text-[#053697] mb-4 leading-[1.1] tracking-[-0.03em]">
             Frequently asked <span className="text-[#2FC191]">questions</span>
           </h2>
 
@@ -191,45 +144,21 @@ function FAQ() {
           </p>
         </div>
 
-        {/* FAQ Grid */}
+        {/* FAQ List */}
         <div className="grid grid-cols-1">
-          {/* Right   FAQ items */}
-          <div className="lg:col-span-9 flex flex-col gap-10">
-            {faqs.map((section) => (
-              <div
-                key={section.category}
-                id={`faq-${section.category.toLowerCase().replace(/\s+/g, "-")}`}
-              >
-                {/* Category label */}
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xs font-semibold tracking-[0.16em] uppercase text-[#2FC191]">
-                    {section.category}
-                  </span>
-                  <div
-                    className="flex-1 h-px"
-                    style={{ background: "#D0D7DE" }}
-                  />
-                </div>
-
-                <div className="flex flex-col gap-2.5">
-                  {section.items.map((item) => (
-                    <FAQItem
-                      key={item.question}
-                      question={item.question}
-                      answer={item.answer}
-                      isOpen={openItem === item.question}
-                      onToggle={() => toggle(item.question)}
-                    />
-                  ))}
-                </div>
-              </div>
+          <div className="flex flex-col gap-2.5">
+            {faqs.map((item) => (
+              <FAQItem
+                key={item._id || item.id || item.question}
+                question={item.question}
+                answer={item.answer}
+                isOpen={openItem === item.question}
+                onToggle={() => toggle(item.question)}
+              />
             ))}
           </div>
         </div>
       </div>
-
-      {/* Silk bottom border */}
-      {/* <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#D0D7DE] to-transparent" /> */}
     </section>
   );
 }

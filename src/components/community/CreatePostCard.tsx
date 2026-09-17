@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import OptimizedPostImage from './OptimizedPostImage'
 import { getLevelIcon } from './helpers'
-import { mockUsers } from './data/mockData'
+import { useAuth } from '@/provider/ContextProvider'
 import { CreatePostData, Post } from '@/types/community'
 
 interface CreatePostCardProps {
@@ -22,7 +22,9 @@ interface CreatePostCardProps {
 export const CreatePostCard: React.FC<CreatePostCardProps> = ({
   onCreatePost,
 }) => {
-  const currentUser = mockUsers[0] // Sarah Johnson (simulation)
+  const { userData } = useAuth()
+  const currentUserName = userData?.name || 'ProTippz Fan'
+  const currentUserAvatar = userData?.profile_image
   const [content, setContent] = useState('')
   const [showCreatePost, setShowCreatePost] = useState(false)
   const [localPreview, setLocalPreview] = useState<string | null>(null)
@@ -67,21 +69,18 @@ export const CreatePostCard: React.FC<CreatePostCardProps> = ({
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <Avatar className="w-10 h-10 border border-[#05369715]">
-          <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
+          <AvatarImage src={currentUserAvatar} alt={currentUserName} />
           <AvatarFallback>
             <Users className="w-5 h-5 text-[#05369760]" />
           </AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <p className="font-semibold text-sm sm:text-base" style={{ color: '#053697' }}>
-            {currentUser.name}
+            {currentUserName}
           </p>
           <div className="flex items-center gap-1.5 mt-0.5">
-            <span className="p-0.5 rounded-full bg-[#B794F620] text-[#805AD5]">
-              {getLevelIcon(currentUser.level)}
-            </span>
             <span className="text-[11px] font-bold" style={{ color: '#2FC191' }}>
-              {currentUser.level}
+              ProTippz Member
             </span>
           </div>
         </div>

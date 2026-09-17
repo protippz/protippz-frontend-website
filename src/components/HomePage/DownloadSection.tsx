@@ -27,14 +27,14 @@ const DownloadSection = () => {
     <section className="flex relative justify-center items-center pt-12 px-4 mt-20 md:mt-0  flex-col gap-10">
       <Head>
         {/* ✅ Primary Meta Tags */}
-        <title>Download ProTipz App - Best Sports Tipping Platform</title>
+        <title>Download PROTIPPZ App - Best Sports Tipping Platform</title>
         <meta
           name="description"
-          content="Download the ProTipz app today! Available on Google Play and the App Store. Tip your favorite players, earn rewards, and win prizes."
+          content="Download the PROTIPPZ app today! Available on Google Play. Tip your favorite players, earn rewards, and win prizes."
         />
         <meta
           name="keywords"
-          content="download ProTipz app, sports tipping app, best sports tipping platform, earn rewards, tip players online, Google Play, App Store"
+          content="download PROTIPPZ app, sports tipping app, best sports tipping platform, earn rewards, tip players online, Google Play"
         />
         <meta name="robots" content="index, follow" />
 
@@ -42,24 +42,24 @@ const DownloadSection = () => {
         <meta property="og:type" content="website" />
         <meta
           property="og:title"
-          content="Download ProTipz App - Available on Google Play & App Store"
+          content="Download PROTIPPZ App - Available on Google Play"
         />
         <meta
           property="og:description"
-          content="Tip your favorite players and teams, earn rewards, and win prizes with the ProTipz app."
+          content="Tip your favorite players and teams, earn rewards, and win prizes with the PROTIPPZ app."
         />
         <meta property="og:image" content="/seo-image.jpg" />
-        <meta property="og:url" content="https://yourwebsite.com/download" />
+        <meta property="og:url" content="https://protippz.com/download" />
 
         {/* ✅ Twitter Cards */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Download ProTipz App - Available on Google Play & App Store"
+          content="Download PROTIPPZ App - Available on Google Play"
         />
         <meta
           name="twitter:description"
-          content="Get the ProTipz app now and start tipping your favorite players and teams. Earn rewards and join the best sports tipping community."
+          content="Get the PROTIPPZ app now and start tipping your favorite players and teams. Earn rewards and join the best sports tipping community."
         />
         <meta name="twitter:image" content="/seo-image.jpg" />
 
@@ -68,8 +68,8 @@ const DownloadSection = () => {
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            name: "ProTipz App",
-            operatingSystem: "Android, iOS",
+            name: "PROTIPPZ App",
+            operatingSystem: "Android",
             applicationCategory: "Sports",
             offers: {
               "@type": "Offer",
@@ -77,17 +77,17 @@ const DownloadSection = () => {
               priceCurrency: "USD",
             },
             downloadUrl:
-              "https://play.google.com/store/apps/details?id=com.protipz.cory",
+              "https://play.google.com/store/apps/details?id=com.coryrains.protppz&hl=en",
             description:
-              "Download ProTipz, the best sports tipping app to tip players, earn rewards, and win prizes.",
-            image: "https://yourwebsite.com/seo-image.jpg",
+              "Download PROTIPPZ, the best sports tipping app to tip players, earn rewards, and win prizes.",
+            image: "https://protippz.com/assets/seo-banner.jpg",
           })}
         </script>
       </Head>
       <div>
         <h3 className="text-3xl text-center text-[#053697]">Download Today</h3>
         <p className="text-xl text-center text-[#2FC191]">
-          Available at Google Play & Apple Store
+          Available on Google Play
         </p>
       </div>
       <div className="max-w-355 mx-auto flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12 relative">
@@ -124,7 +124,7 @@ const DownloadSection = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <Link
-                  href="https://play.google.com/store/apps/details?id=com.protipz.cory"
+                  href="https://play.google.com/store/apps/details?id=com.coryrains.protppz&hl=en"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

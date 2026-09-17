@@ -3,12 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaYoutube,
-} from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import {
   ArrowUp,
   Mail,
@@ -20,16 +15,24 @@ import {
   Smartphone,
   CheckCircle2,
 } from "lucide-react";
-import logo from "@/Assets/logo.png";
-import appsore from "@/Assets/appsore.png";
+import { IMAGE } from "@/constant/image.index";
 import playstore from "@/Assets/playstore.png";
 import qrCode from "@/Assets/qrcode.png";
 import toast from "react-hot-toast";
+import { useContextData } from "@/provider/ContextProvider";
+
+const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=com.coryrains.protppz&hl=en";
 
 const Footer: React.FC = () => {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const authData = useContextData();
+  const isLoggedIn = Boolean(authData?.userData?._id);
+  const userRole = authData?.userData?.user?.role;
+  const isPlayerOrTeam = userRole === "player" || userRole === "team";
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,30 +59,49 @@ const Footer: React.FC = () => {
 
   const currentYear = new Date().getFullYear();
 
+  // Public platform routes accessible without login
   const platformLinks = [
-    { name: "Tippz", href: "/tippz" },
-    { name: "Playerz", href: "/playerz" },
-    { name: "Teamz", href: "/teamz" },
-    { name: "Media & Community", href: "/community" },
-    { name: "Rewardz", href: "/rewardz" },
-    { name: "Official Store", href: "https://protippz.store", external: true },
-    { name: "Sports News", href: "/sports-news" },
+    { name: "TIPPZ", href: "/tippz" },
+    { name: "PLAYERZ", href: "/playerz" },
+    { name: "TEAMZ", href: "/teamz" },
+    { name: "MEDIA & COMMUNITY", href: "/community" },
+    { name: "REWARDZ", href: "/rewardz" },
+    { name: "STORE", href: "https://protippz.store", external: true },
   ];
 
-  const fanHubLinks = [
-    { name: "Deposit Funds", href: "/deposit" },
-    { name: "Tippz History", href: "/tippz-history" },
-    { name: "Transaction Log", href: "/transaction-log" },
-    { name: "My Favorites", href: "/favorites" },
-    { name: "Invite Friends", href: "/invite-friends" },
-    { name: "Help & FAQs", href: "/faqs" },
-  ];
+  // Protected routes only displayed when user is logged in
+  const userHubLinks = isPlayerOrTeam
+    ? [
+        { name: "Athlete Dashboard", href: "/home" },
+        { name: "My Tip History", href: "/my-tip-history" },
+        { name: "Withdraw Earnings", href: "/player-withdraw" },
+        { name: "Address Info", href: "/address" },
+        { name: "Tax Information", href: "/tax-information" },
+        { name: "Help & FAQs", href: "/faqs" },
+      ]
+    : [
+        { name: "My Profile", href: "/profile" },
+        { name: "Deposit Funds", href: "/deposit" },
+        { name: "Tippz History", href: "/tippz-history" },
+        { name: "Transaction Log", href: "/transaction-log" },
+        { name: "My Favorites", href: "/favorites" },
+        { name: "Invite Friends", href: "/invite-friends" },
+        { name: "Help & FAQs", href: "/faqs" },
+      ];
 
+  const hubTitle = isPlayerOrTeam ? "Athlete Hub" : "Fan Hub";
+
+  // Legal and support links
   const legalLinks = [
     { name: "Terms of Service", href: "/terms" },
     { name: "Privacy Policy", href: "/privacy" },
     { name: "Contact Support", href: "/contact" },
-    { name: "Delete Account", href: "/delete-account" },
+    ...(isLoggedIn
+      ? [
+          { name: "Change Password", href: "/change-password" },
+          { name: "Delete Account", href: "/delete-account" },
+        ]
+      : []),
   ];
 
   const socialLinks = [
@@ -106,102 +128,32 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="relative bg-gradient-to-b from-[#071f50] via-[#05183f] to-[#020b1d] text-white pt-16 pb-24 md:pb-16 overflow-hidden border-t-4 border-[#2FC191]">
+    <footer className="relative mt-4 bg-slate-50 text-slate-800 pt-16 pb-24 md:pb-16 overflow-hidden border-t border-slate-200/80">
       {/* Subtle Background Glows */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#2FC191]/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#053697]/30 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#2FC191]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#053697]/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative max-w-355 mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ================= NEWSLETTER & COMMUNITY CTA CARD ================= */}
-        <div className="relative rounded-3xl bg-gradient-to-r from-[#0a296b]/90 via-[#062054]/90 to-[#08235a]/90 border border-white/15 p-6 sm:p-8 md:p-10 shadow-2xl backdrop-blur-md mb-16 overflow-hidden">
-          {/* Decorative Corner Light */}
-          <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#2FC191]/20 rounded-full blur-2xl pointer-events-none" />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
-            <div className="lg:col-span-7 space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2FC191]/15 border border-[#2FC191]/30 text-[#2FC191] text-xs font-bold tracking-wide uppercase">
-                <Zap className="w-3.5 h-3.5" />
-                Stay Ahead of the Game
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                Join the <span className="text-[#2FC191]">PROTIPPZ</span> Movement
-              </h3>
-              <p className="text-slate-300 text-sm sm:text-base max-w-xl leading-relaxed">
-                Receive instant tipping updates, exclusive athlete reward drops, NIL news, and special community perks straight to your inbox.
-              </p>
-
-              {/* Trust Badges */}
-              <div className="pt-2 flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-300">
-                <span className="flex items-center gap-1.5 text-emerald-300">
-                  <ShieldCheck className="w-4 h-4 text-[#2FC191]" /> 100% Direct Athlete Support
-                </span>
-                <span className="flex items-center gap-1.5 text-emerald-300">
-                  <Award className="w-4 h-4 text-[#2FC191]" /> NIL Compliant
-                </span>
-                <span className="flex items-center gap-1.5 text-emerald-300">
-                  <CheckCircle2 className="w-4 h-4 text-[#2FC191]" /> No Spam, Cancel Anytime
-                </span>
-              </div>
-            </div>
-
-            {/* Newsletter Input */}
-            <div className="lg:col-span-5 w-full">
-              {isSubscribed ? (
-                <div className="p-4 rounded-2xl bg-[#2FC191]/15 border border-[#2FC191]/30 text-emerald-200 text-sm font-semibold flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-[#2FC191] shrink-0" />
-                  <span>You are subscribed! Welcome to the ProTippz community.</span>
-                </div>
-              ) : (
-                <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2.5">
-                  <div className="relative flex-1">
-                    <Mail className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email address..."
-                      required
-                      className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-none focus:border-[#2FC191] focus:ring-2 focus:ring-[#2FC191]/30 transition-all backdrop-blur-sm"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="px-6 py-3.5 rounded-xl bg-[#2FC191] hover:bg-[#28ad81] active:scale-95 text-[#041738] font-bold text-sm tracking-wide transition-all duration-200 shadow-lg shadow-[#2FC191]/25 flex items-center justify-center gap-2 cursor-pointer shrink-0 disabled:opacity-70"
-                  >
-                    {loading ? (
-                      <span className="animate-pulse">Subscribing...</span>
-                    ) : (
-                      <>
-                        <span>Subscribe</span>
-                        <ChevronRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* ================= MAIN NAVIGATION GRID ================= */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14 border-b border-white/10">
+        {/* ================= MAIN NAVIGATION GRID (LIGHT MODE) ================= */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14 border-b border-slate-200">
           {/* Col 1: Brand & Bio */}
           <div className="lg:col-span-4 space-y-5">
             <Link href="/" className="inline-block group">
-              <div className="p-2.5 bg-white rounded-2xl inline-block shadow-md group-hover:shadow-lg transition-transform group-hover:scale-105 duration-200">
+              <div className="p-2 bg-white rounded-xl inline-block border border-slate-200/80 shadow-xs transition-all duration-200">
                 <Image
-                  src={logo}
+                  src={IMAGE.logo}
                   alt="PROTIPPZ"
                   width={140}
                   height={45}
-                  className="h-9 w-auto object-contain"
+                  className="h-8 w-auto object-contain"
                 />
               </div>
             </Link>
 
-            <p className="text-slate-300 text-sm leading-relaxed max-w-sm">
-              The ultimate sports fan engagement platform. Directly tip your favorite athletes, back collegiate & pro stars, discover top talent, and unlock exclusive rewards.
+            <p className="text-slate-600 text-sm leading-relaxed max-w-sm">
+              The ultimate sports fan engagement platform. Directly tip your
+              favorite athletes, back collegiate & pro stars, discover top
+              talent, and unlock exclusive rewards.
             </p>
 
             {/* Social Icons */}
@@ -217,7 +169,7 @@ const Footer: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={item.name}
-                    className="w-9 h-9 rounded-xl bg-white/10 hover:bg-[#2FC191] hover:text-[#041738] text-slate-200 flex items-center justify-center transition-all duration-200 border border-white/10 hover:border-[#2FC191] hover:scale-110 active:scale-95 shadow-xs"
+                    className="w-9 h-9 rounded-xl bg-white hover:bg-[#2FC191] hover:text-white text-slate-600 flex items-center justify-center transition-all duration-200 border border-slate-200/90 hover:border-[#2FC191] hover:scale-110 active:scale-95 shadow-xs"
                     title={item.name}
                   >
                     {item.icon}
@@ -227,9 +179,13 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Col 2: Platform Links */}
-          <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+          {/* Col 2: Platform Links (Always Visible: TIPPZ, PLAYERZ, TEAMZ, MEDIA & COMMUNITY, REWARDZ, STORE) */}
+          <div
+            className={
+              isLoggedIn ? "lg:col-span-2 space-y-4" : "lg:col-span-3 space-y-4"
+            }
+          >
+            <h4 className="text-sm font-bold text-[#053697] uppercase tracking-wider flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#2FC191]" />
               Platform
             </h4>
@@ -239,12 +195,12 @@ const Footer: React.FC = () => {
                   <Link
                     href={link.href}
                     target={link.external ? "_blank" : "_self"}
-                    className="text-slate-300 hover:text-[#2FC191] transition-colors duration-200 flex items-center gap-1.5 group"
+                    className="text-slate-600 hover:text-[#053697] hover:font-medium transition-colors duration-200 flex items-center gap-1.5 group"
                   >
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#2FC191] group-hover:translate-x-0.5 transition-transform" />
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#2FC191] group-hover:translate-x-0.5 transition-transform" />
                     <span>{link.name}</span>
                     {link.external && (
-                      <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-[#2FC191]" />
+                      <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-[#053697]" />
                     )}
                   </Link>
                 </li>
@@ -252,30 +208,36 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Col 3: Fan Hub */}
-          <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#2FC191]" />
-              Fan Hub
-            </h4>
-            <ul className="space-y-2.5 text-sm">
-              {fanHubLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-slate-300 hover:text-[#2FC191] transition-colors duration-200 flex items-center gap-1.5 group"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#2FC191] group-hover:translate-x-0.5 transition-transform" />
-                    <span>{link.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Col 3: Fan Hub / Athlete Hub (ONLY Rendered When User Is Logged In) */}
+          {isLoggedIn && (
+            <div className="lg:col-span-2 space-y-4">
+              <h4 className="text-sm font-bold text-[#053697] uppercase tracking-wider flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#2FC191]" />
+                {hubTitle}
+              </h4>
+              <ul className="space-y-2.5 text-sm">
+                {userHubLinks.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      className="text-slate-600 hover:text-[#053697] hover:font-medium transition-colors duration-200 flex items-center gap-1.5 group"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#2FC191] group-hover:translate-x-0.5 transition-transform" />
+                      <span>{link.name}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Col 4: Legal & Support */}
-          <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+          <div
+            className={
+              isLoggedIn ? "lg:col-span-2 space-y-4" : "lg:col-span-2 space-y-4"
+            }
+          >
+            <h4 className="text-sm font-bold text-[#053697] uppercase tracking-wider flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#2FC191]" />
               Legal & Help
             </h4>
@@ -284,9 +246,9 @@ const Footer: React.FC = () => {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-slate-300 hover:text-[#2FC191] transition-colors duration-200 flex items-center gap-1.5 group"
+                    className="text-slate-600 hover:text-[#053697] hover:font-medium transition-colors duration-200 flex items-center gap-1.5 group"
                   >
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#2FC191] group-hover:translate-x-0.5 transition-transform" />
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#2FC191] group-hover:translate-x-0.5 transition-transform" />
                     <span>{link.name}</span>
                   </Link>
                 </li>
@@ -296,7 +258,7 @@ const Footer: React.FC = () => {
             <div className="pt-2">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/10 hover:bg-[#2FC191]/20 border border-white/15 hover:border-[#2FC191] text-xs font-semibold text-slate-200 hover:text-white transition-all"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white hover:bg-[#2FC191]/10 border border-slate-200 hover:border-[#2FC191] text-xs font-semibold text-slate-700 hover:text-[#053697] transition-all shadow-xs"
               >
                 <Mail className="w-3.5 h-3.5 text-[#2FC191]" />
                 <span>Contact Support</span>
@@ -304,18 +266,22 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Col 5: App Download & QR Code */}
-          <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+          {/* Col 5: App Download & QR Code (Google Play Store) */}
+          <div
+            className={
+              isLoggedIn ? "lg:col-span-2 space-y-4" : "lg:col-span-3 space-y-4"
+            }
+          >
+            <h4 className="text-sm font-bold text-[#053697] uppercase tracking-wider flex items-center gap-1.5">
               <Smartphone className="w-4 h-4 text-[#2FC191]" />
               Get the App
             </h4>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              Scan or tap below to download PROTIPPZ for iOS & Android.
+            <p className="text-slate-500 text-xs leading-relaxed">
+              Scan or tap below to download PROTIPPZ on Google Play.
             </p>
 
-            <div className="flex items-center gap-3 bg-white/5 border border-white/10 p-2.5 rounded-2xl">
-              <div className="bg-white p-1 rounded-xl shrink-0">
+            <div className="flex items-center gap-3 bg-white border border-slate-200 p-2.5 rounded-2xl shadow-xs">
+              <div className="bg-slate-50 p-1 rounded-xl shrink-0 border border-slate-100">
                 <Image
                   src={qrCode}
                   alt="QR Code"
@@ -324,69 +290,72 @@ const Footer: React.FC = () => {
                   className="w-14 h-14 object-contain"
                 />
               </div>
-              <div className="flex flex-col gap-1.5 min-w-0">
+              <div className="flex flex-col gap-1 min-w-0">
                 <a
-                  href="https://play.google.com/store/apps/details?id=com.protipz.cory"
+                  href={PLAY_STORE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition-transform hover:scale-105"
+                  className="transition-transform hover:scale-105 inline-block"
                   aria-label="Get on Google Play"
                 >
                   <Image
                     src={playstore}
                     alt="Google Play"
-                    width={96}
-                    height={28}
-                    className="h-6 w-auto object-contain"
+                    width={110}
+                    height={32}
+                    className="h-7 w-auto object-contain"
                   />
                 </a>
-                <a
-                  href="https://apple.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-transform hover:scale-105"
-                  aria-label="Download on App Store"
-                >
-                  <Image
-                    src={appsore}
-                    alt="App Store"
-                    width={96}
-                    height={28}
-                    className="h-6 w-auto object-contain"
-                  />
-                </a>
+                <span className="text-[11px] text-slate-400 font-medium">
+                  Available on Google Play
+                </span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ================= BOTTOM BAR ================= */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        {/* ================= BOTTOM BAR (LIGHT MODE) ================= */}
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
             <p>© {currentYear} PROTIPPZ. All rights reserved.</p>
-            <span className="hidden sm:inline-block text-slate-600">•</span>
-            <p className="text-slate-400">
+            <span className="hidden sm:inline-block text-slate-300">•</span>
+            <p className="text-slate-500">
               NIL Compliant • Real-time athlete tips • Direct fan connection
             </p>
           </div>
 
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-4 text-slate-300">
-              <Link href="/privacy" className="hover:text-[#2FC191] transition-colors">
+            <div className="flex items-center gap-4 text-slate-600">
+              <Link
+                href="/privacy"
+                className="hover:text-[#053697] transition-colors"
+              >
                 Privacy
               </Link>
-              <Link href="/terms" className="hover:text-[#2FC191] transition-colors">
+              <Link
+                href="/terms"
+                className="hover:text-[#053697] transition-colors"
+              >
                 Terms
               </Link>
-              <Link href="/contact" className="hover:text-[#2FC191] transition-colors">
+              <Link
+                href="/contact"
+                className="hover:text-[#053697] transition-colors"
+              >
                 Support
+              </Link>
+              <Link
+                href="/faqs"
+                className="hover:text-[#053697] transition-colors"
+              >
+                FAQs
               </Link>
             </div>
 
             {/* Back to Top Button */}
             <button
               onClick={scrollToTop}
-              className="p-2.5 rounded-xl bg-white/10 hover:bg-[#2FC191] hover:text-[#041738] text-slate-300 transition-all duration-200 border border-white/10 hover:border-[#2FC191] cursor-pointer active:scale-95 shadow-xs"
+              className="p-2.5 rounded-xl bg-white hover:bg-[#2FC191] hover:text-white text-slate-600 transition-all duration-200 border border-slate-200 hover:border-[#2FC191] cursor-pointer active:scale-95 shadow-xs"
               title="Back to Top"
               aria-label="Scroll back to top"
             >
