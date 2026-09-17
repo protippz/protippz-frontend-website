@@ -44,8 +44,8 @@ export default function PoweredByStripe() {
                     />
                     <Feature
                         icon={<Globe className="h-5 w-5" />}
-                        title="Global Fan Support"
-                        description="Sports are global support should be too. Fans around the world can support athletes securely, no matter where the game is played."
+                        title="Seamless Fan Support"
+                        description="Fans can support athletes securely and seamlessly across supported leagues and teams, no matter where the game is played."
                     />
                     <Feature
                         icon={<ShieldCheck className="h-5 w-5" />}

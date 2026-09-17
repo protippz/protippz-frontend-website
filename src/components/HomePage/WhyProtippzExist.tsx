@@ -14,7 +14,7 @@ const steps = [
     number: "01",
     title: "Find a player",
     description:
-      "Discover and support your favourite athletes from around the world. Search by sport, country, or team.",
+      "Discover and support your favourite athletes across the U.S. and Canada. Search by sport, league, or team.",
     icon: (
       <svg
         width="16"
@@ -86,7 +86,7 @@ function WhyProtippzExist() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full"
+      className="relative w-full bg-white!"
       aria-labelledby="why-protippz-heading"
     >
       <div className="relative w-full max-w-355 mx-auto px-4 sm:px-6 lg:px-8 py-12">

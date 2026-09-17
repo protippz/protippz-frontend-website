@@ -261,7 +261,7 @@ const Testimonials: React.FC = () => {
 
   return (
     <>
-      <section className="testimonials-root w-full! px-2">
+      <section className="testimonials-root w-full!  px-2">
         {/* Header */}
         <div className="text-center mb-12">
           <div

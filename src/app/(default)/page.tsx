@@ -147,7 +147,7 @@ export default function Home() {
       {/* <TopHero /> */}
       <ForAthletes />
       <ConnectionBoth />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <FAQ />
       {/* <PoweredByStripe /> */}
       {/* <DownloadSection />

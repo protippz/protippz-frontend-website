@@ -112,7 +112,7 @@ export const EmojiPicker: React.FC<EmojiPickerProps> = ({
     >
       {/* Header with Search & Close */}
       <div className="p-2.5 bg-gray-50/80 border-b border-gray-100 flex items-center gap-2">
-        <div className="relative flex-1">
+        {/* <div className="relative flex-1">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
           <input
             type="text"
@@ -121,7 +121,7 @@ export const EmojiPicker: React.FC<EmojiPickerProps> = ({
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl bg-white border border-gray-200 outline-none text-[#053697] focus:border-[#2FC191]"
           />
-        </div>
+        </div> */}
         <button
           onClick={onClose}
           className="p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-200/50 transition-colors"

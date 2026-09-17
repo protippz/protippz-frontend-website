@@ -21,7 +21,7 @@ function HeroSection() {
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
   return (
     <>
-      <section className="relativ w-full overflow-hidden h-fit py-10 px-2">
+      <section className="relativ w-full bg-white overflow-hidden h-fit py-10 px-2">
         <div className="relative z-10 w-full max-w-355 mx-auto px-2 sm:px-4 h-full flex flex-col lg:flex-row items-center justify-between">
           {/* ── Left content ── */}
           <div className="flex-1 w-full relative text-center lg:text-left">

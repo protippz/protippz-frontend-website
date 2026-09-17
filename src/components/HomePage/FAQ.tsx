@@ -9,17 +9,17 @@ const faqs = [
       {
         question: "What is PROTIPPZ?",
         answer:
-          "PROTIPPZ is a platform that lets fans directly tip and support female athletes they love. We bridge the gap between fan passion and athlete income   no middlemen, no delays, just real support that makes a real difference.",
+          "PROTIPPZ is a platform that lets fans directly tip and support athletes they love. We bridge the gap between fan passion and athlete income, no delays, just real support that makes a real difference.",
       },
       {
         question: "Who can use PROTIPPZ?",
         answer:
-          "Anyone can use PROTIPPZ   whether you are a fan wanting to support your favourite athlete, or a female athlete looking to earn direct income from your community. We welcome fans and athletes from all sports and countries.",
+          "PROTIPPZ is currently available to fans and athletes residing in the United States and Canada. Whether you are a fan wanting to support your favorite athlete or a female athlete looking to earn direct income from your community, you can get started today.",
       },
       {
-        question: "Is PROTIPPZ available worldwide?",
+        question: "Where is PROTIPPZ available?",
         answer:
-          "Yes. PROTIPPZ is built for a global audience. Athletes and fans from any country can sign up and start connecting. We support multiple currencies and payment methods to make it seamless.",
+          "PROTIPPZ is currently available in the United States and Canada, operating in USD ($). We are working on expanding our platform and payout infrastructure to support international athletes and fans in future releases.",
       },
     ],
   },
@@ -29,17 +29,17 @@ const faqs = [
       {
         question: "How do I send a tip to an athlete?",
         answer:
-          'Simply search for an athlete by name, sport, or country   then tap "Send Tip", choose your amount, and confirm. The tip reaches the athlete instantly with no hidden fees eating into their earnings.',
+          'Simply search for an athlete by name, sport, or team then tap "Send Tip", choose your amount, and confirm. Your tip is processed securely and credited directly to the athlete.',
       },
       {
         question: "What payment methods are supported?",
         answer:
-          "We support all major credit and debit cards, Apple Pay, Google Pay, and select local payment methods depending on your region. All transactions are secured with industry-standard encryption.",
+          "We support all major credit and debit cards through Stripe, as well as PayPal. All transactions are billed in USD ($) and protected with industry-standard encryption.",
       },
       {
         question: "Are there any fees for tipping?",
         answer:
-          "PROTIPPZ charges a small platform fee to keep the service running and secure. Athletes receive the majority of every tip   we are transparent about our fee structure and display it clearly before you confirm any transaction.",
+          "PROTIPPZ charges a small platform fee to keep the service running and secure. Athletes receive the majority of every tip we are transparent about our fee structure and display it clearly before you confirm any transaction.",
       },
     ],
   },
@@ -49,7 +49,7 @@ const faqs = [
       {
         question: "How does the rewards system work?",
         answer:
-          "Every tip you send earns you PROTIPPZ points. Accumulate enough points and you unlock exclusive rewards   from signed merch and behind-the-scenes content to meet-and-greets and VIP fan experiences with your favourite athletes.",
+          "Every tip you send earns you PROTIPPZ points. Accumulate enough points and you unlock exclusive rewards from signed merch and behind-the-scenes content to meet-and-greets and VIP fan experiences with your favourite athletes.",
       },
       {
         question: "Do my points expire?",
@@ -64,13 +64,13 @@ const faqs = [
       {
         question: "How do athletes receive their tips?",
         answer:
-          "Athletes can withdraw their earnings directly to their bank account or preferred payment method. Withdrawals are processed within 1–3 business days, and athletes always have full visibility into their balance and transaction history.",
+          "Eligible athletes in the U.S. and Canada can withdraw their earnings directly via Stripe Connect, ACH direct bank transfer, or check. Withdrawals are processed within 1–3 business days with full visibility into balance and transaction history.",
       },
-      {
-        question: "How do I sign up as an athlete?",
-        answer:
-          'Download the PROTIPPZ app, select "I am an athlete" during onboarding, and complete a short verification process. Once approved, your profile goes live and fans can start supporting you immediately.',
-      },
+      // {
+      //   question: "How do I sign up as an athlete?",
+      //   answer:
+      //     'Download the PROTIPPZ app, select "I am an athlete" during onboarding, and complete our quick verification process. Once approved, your profile goes live and fans can start supporting you immediately.',
+      // },
     ],
   },
 ];
@@ -158,7 +158,7 @@ function FAQ() {
   };
 
   return (
-    <section className="relative w-full">
+    <section className="relative w-full mt-4">
       {/* Silk top border */}
       {/* <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-[#D0D7DE] to-transparent" /> */}
 

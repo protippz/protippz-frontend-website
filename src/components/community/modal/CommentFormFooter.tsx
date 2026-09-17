@@ -145,14 +145,14 @@ export const CommentFormFooter: React.FC<CommentFormFooterProps> = ({
 
           {/* Image & Emoji Buttons */}
           <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
-            <button
+            {/* <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
               className="p-1 text-gray-400 hover:text-[#2FC191] transition-colors cursor-pointer"
               title="Attach an image"
             >
               <ImageIcon className="w-4 h-4" />
-            </button>
+            </button> */}
 
             <button
               type="button"
