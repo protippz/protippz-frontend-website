@@ -60,7 +60,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
 
   const userLevel = post?.user?.level || "Bronze";
   const levelColor = levelColors[userLevel] || levelColors.Bronze;
-  const catStyle = post?.category ? categoryStyles[post.category] : null;
+  const catStyle = post?.category ? categoryStyles[post?.category] : null;
   const postContent = post?.content || "";
   const isLongText = postContent.length > 110;
   const videoEmbedSrc = getEmbedVideoUrl(post?.videoUrl, post?.videoEmbedCode);
@@ -100,20 +100,20 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
       {/* Header Meta Info */}
       <div className="flex items-center justify-between gap-2 flex-wrap mb-2">
         <div className="flex items-center gap-1.5 flex-wrap text-[11px]">
-          <Avatar className="w-6.5 h-6.5 sm:w-7 sm:h-7 border border-[#05369715] shrink-0 cursor-pointer">
+          <Avatar className="w-12 h-12 border border-[#05369715] shrink-0 cursor-pointer">
             <AvatarImage src={post?.user?.avatar} alt={userName} />
             <AvatarFallback>
-              <Users className="w-3 h-3 text-[#05369760]" />
+              <Users className="w-6 h-6 text-[#05369760]" />
             </AvatarFallback>
           </Avatar>
 
-          <span className="font-semibold text-xs text-[#053697] group-hover:text-[#2FC191] transition-colors cursor-pointer">
-            u/{userName.replace(/\s+/g, "")}
+          <span className="text-base text-[#053697] group-hover:text-[#2FC191] transition-colors cursor-pointer">
+            {userName.replace(/\s+/g, "")}
           </span>
 
           {post?.authorRole && (
             <span className="text-[9px] sm:text-[10px] font-bold text-[#2FC191] bg-[#2FC19112] px-1.5 py-0.5 rounded cursor-default">
-              {post.authorRole}
+              {post?.authorRole}
             </span>
           )}
 
@@ -133,8 +133,8 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
                   border: `1px solid ${catStyle.border}`,
                 }}
               >
-                {getCategoryIcon(post.category)}
-                {post.category}
+                {getCategoryIcon(post?.category)}
+                {post?.category}
               </span>
             </>
           )}
@@ -144,7 +144,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
           {post?.readTime && (
             <span className="flex items-center gap-1 text-[10px] sm:text-[11px] text-[#05369760] font-medium">
               <Clock className="w-3 h-3" />
-              {post.readTime}
+              {post?.readTime}
             </span>
           )}
           {post?.isTrending && (
@@ -169,15 +169,15 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
                 onCommentClick(post, true);
               }
             }}
-            className="text-sm sm:text-base md:text-lg font-bold transition-colors leading-snug cursor-pointer hover:text-[#2FC191]"
+            className="text-xl font-bold transition-colors leading-snug cursor-pointer hover:text-[#2FC191]"
           >
-            {post.title}
+            {post?.title}
           </h2>
         )}
 
         {post?.summary && (
-          <p className="text-xs font-medium mb-1.5 leading-relaxed cursor-pointer text-slate-600">
-            {post.summary}
+          <p className="text-base font-mediumm line-clamp-3 mb-1.5 leading-relaxed cursor-pointer text-slate-600">
+            {post?.summary}
           </p>
         )}
 
@@ -188,7 +188,8 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
           ) : (
             <div
               dangerouslySetInnerHTML={{
-                __html: postContent.slice(0, 110).trim() + (isLongText ? "..." : ""),
+                __html:
+                  postContent.slice(0, 110).trim() + (isLongText ? "..." : ""),
               }}
             />
           )}
@@ -198,15 +199,19 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
               onClick={handleSeeMoreClick}
               className="text-xs font-bold text-[#2FC191] hover:underline cursor-pointer ml-1 inline-block"
             >
-              {isBlogArticle ? "See more" : isExpandedText ? "See less" : "See more"}
+              {isBlogArticle
+                ? "See more"
+                : isExpandedText
+                  ? "See less"
+                  : "See more"}
             </button>
           )}
         </div>
 
         {/* Tags */}
-        {post?.tags && post.tags.length > 0 && (
+        {post?.tags && post?.tags.length > 0 && (
           <div className="flex items-center gap-1.5 flex-wrap mt-2">
-            {post.tags.map((tag) => (
+            {post?.tags.map((tag) => (
               <span
                 key={tag}
                 className="text-[10px] sm:text-[11px] font-semibold text-[#2FC191] hover:underline cursor-pointer"
@@ -236,8 +241,8 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
       ) : post?.image ? (
         <div className="mb-2.5">
           <OptimizedPostImage
-            src={post.image}
-            alt={post.title || "Post media preview"}
+            src={post?.image}
+            alt={post?.title || "Post media preview"}
             width={700}
             height={360}
             enableLightbox={!isBlogArticle}
@@ -258,7 +263,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            if (post?.id) onLike(post.id);
+            if (post?.id) onLike(post?.id);
           }}
           className={`flex items-center gap-1.5 py-1 px-2.5 rounded-full transition-colors cursor-pointer ${
             post?.isLiked
