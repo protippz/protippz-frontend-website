@@ -11,7 +11,7 @@ const SearchAndSortComponent: React.FC = () => {
   const [sortBy, setSortBy] = useState("name");
   const [order, setOrder] = useState("A to Z");
   const [search, setSearch] = useState("");
-
+  // new ui
   useEffect(() => {
     const currentSort = searchParams?.get("sort") || "";
     const currentSearch = searchParams?.get("searchTerm") || "";
