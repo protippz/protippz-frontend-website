@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, LogIn } from "lucide-react";
 import { useAuth } from "@/provider/ContextProvider";
-import { Post, User, mapBackendCommentToComment } from "@/types/community";
+import { Post, User, Comment, mapBackendCommentToComment } from "@/types/community";
 import { mockUsers } from "./data/mockData";
 import { useGetCommentsByPostQuery } from "@/Redux/Apis/commentApis";
 import { ModalHeader } from "./modal/ModalHeader";
@@ -124,8 +124,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       skip: !isOpen || !post?.id,
     }) as { data?: any; isLoading: boolean };
 
-  // Transform raw API comment list into frontend Comment hierarchy
-  // Transform raw API comment list into frontend Comment hierarchy
+  // Transform raw API comment list and sync optimistic comments into frontend Comment hierarchy
   const processedComments = useMemo(() => {
     const rawList =
       commentsApiResponse?.data?.result ||
@@ -133,21 +132,44 @@ export const PostModal: React.FC<PostModalProps> = ({
       commentsApiResponse?.result ||
       (Array.isArray(commentsApiResponse) ? commentsApiResponse : []);
 
-    if (!Array.isArray(rawList)) return [];
+    const mapped: Comment[] = Array.isArray(rawList)
+      ? rawList.map(mapBackendCommentToComment)
+      : [];
 
-    const mapped = rawList.map(mapBackendCommentToComment);
+    // Existing IDs in the API response (including nested replies)
+    const existingIds = new Set<string>();
+    const collectIds = (items: Comment[]) => {
+      items.forEach((item) => {
+        existingIds.add(item.id);
+        if (item.replies) collectIds(item.replies);
+      });
+    };
+    collectIds(mapped);
 
-    const hasNested = mapped.some((c) => c.replies && c.replies.length > 0);
-    if (hasNested) return mapped;
+    // Merge any optimistic comments from post.commentsList that are not yet in the API response
+    const optimisticComments: Comment[] = [];
+    if (post?.commentsList && Array.isArray(post.commentsList)) {
+      post.commentsList.forEach((c) => {
+        if (!existingIds.has(c.id)) {
+          optimisticComments.push(c);
+        }
+      });
+    }
 
-    const topLevel: any[] = [];
-    const commentMap = new Map<string, any>();
+    const allComments = [...mapped, ...optimisticComments];
+    if (allComments.length === 0) return [];
 
-    mapped.forEach((c) => {
+    const hasNested = allComments.some((c) => c.replies && c.replies.length > 0);
+    if (hasNested) return allComments;
+
+    const topLevel: Comment[] = [];
+    const commentMap = new Map<string, Comment>();
+
+    allComments.forEach((c) => {
       commentMap.set(c.id, { ...c, replies: [] });
     });
 
-    mapped.forEach((c) => {
+    allComments.forEach((c) => {
       const current = commentMap.get(c.id)!;
       if (c.parentId && commentMap.has(c.parentId)) {
         const parent = commentMap.get(c.parentId)!;
@@ -159,7 +181,7 @@ export const PostModal: React.FC<PostModalProps> = ({
     });
 
     return topLevel;
-  }, [commentsApiResponse]);
+  }, [commentsApiResponse, post?.commentsList]);
 
   // Smoothly scroll to newly submitted comment
   useEffect(() => {

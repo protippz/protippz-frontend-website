@@ -11,6 +11,8 @@ interface BlogArticleModalProps {
   onLike?: (postId: string) => void;
   onCommentClick?: (post: Post) => void;
   onSelectPost?: (post: Post) => void;
+  scrollToComments?: boolean;
+  onDeleteComment?: (postId: string, commentId: string) => Promise<any> | void;
 }
 
 export const BlogArticleModal: React.FC<BlogArticleModalProps> = ({
@@ -18,6 +20,8 @@ export const BlogArticleModal: React.FC<BlogArticleModalProps> = ({
   isOpen,
   onClose,
   onSelectPost,
+  scrollToComments = false,
+  onDeleteComment,
 }) => {
   // Lock background scrolling when full screen blog modal is active
   useEffect(() => {
@@ -45,15 +49,31 @@ export const BlogArticleModal: React.FC<BlogArticleModalProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
+  // Scroll to top when selected blog post changes (unless opening directly to comments)
+  useEffect(() => {
+    if (!scrollToComments) {
+      const container = document.getElementById("blog-modal-container");
+      if (container) {
+        container.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+  }, [post?.id, post?.slug, scrollToComments]);
+
   if (!isOpen || !post) return null;
 
   return (
-    <div className="fixed inset-0 z-[99999] bg-white overflow-y-auto flex flex-col text-slate-900 animate-in fade-in duration-200">
+    <div
+      id="blog-modal-container"
+      className="fixed inset-0 z-[99999] bg-white overflow-y-auto flex flex-col text-slate-900 animate-in fade-in duration-200"
+    >
       <BlogArticleView
+        key={post.id || post.slug}
         post={post}
         isModal={true}
         onClose={onClose}
         onSelectPost={onSelectPost}
+        scrollToComments={scrollToComments}
+        onDeleteComment={onDeleteComment}
       />
     </div>
   );

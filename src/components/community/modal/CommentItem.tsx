@@ -17,6 +17,7 @@ interface CommentItemProps {
   postId: string;
   comment: Comment;
   isReply?: boolean;
+  isLastReply?: boolean;
   likingCommentIds: Record<string, boolean>;
   deletingCommentIds: Record<string, boolean>;
   activeReactionCommentId: string | null;
@@ -35,6 +36,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   postId,
   comment,
   isReply = false,
+  isLastReply = false,
   likingCommentIds,
   deletingCommentIds,
   activeReactionCommentId,
@@ -54,7 +56,28 @@ export const CommentItem: React.FC<CommentItemProps> = ({
 
   if (isReply) {
     return (
-      <div className="flex items-start gap-2.5">
+      <div className="relative flex items-start gap-2.5 group/reply">
+        {/* SVG Thread Connector: branches from parent vertical line and curves into avatar */}
+        <div className="absolute -left-6 sm:-left-7 top-0 bottom-0 w-6 sm:w-7 pointer-events-none">
+          <svg
+            className="w-full h-full text-[#05369725] stroke-current"
+            fill="none"
+            viewBox="0 0 24 40"
+            preserveAspectRatio="none"
+          >
+            {/* Curved L-branch turning into reply avatar center (y=16) */}
+            <path
+              d="M 1 0 V 8 Q 1 16 9 16 H 24"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            {/* Continuation line for subsequent replies */}
+            {!isLastReply && (
+              <path d="M 1 16 V 40" strokeWidth="2" />
+            )}
+          </svg>
+        </div>
+
         <Avatar className="w-7 h-7 mt-0.5 border border-[#05369715] shrink-0 cursor-pointer">
           <AvatarImage src={comment.user?.avatar} alt={comment.user?.name} />
           <AvatarFallback>
@@ -288,15 +311,16 @@ export const CommentItem: React.FC<CommentItemProps> = ({
         </div>
       </div>
 
-      {/* Nested Replies */}
+      {/* Nested Replies with SVG Thread */}
       {comment?.replies && comment?.replies?.length > 0 && (
-        <div className="border-l-2 border-[#05369715] pl-3.5 sm:pl-4 ml-4 space-y-3 pt-1">
-          {comment?.replies?.map((reply) => (
+        <div className="relative pl-6 sm:pl-7 ml-3.5 space-y-3 pt-1">
+          {comment?.replies?.map((reply, idx) => (
             <CommentItem
               key={reply.id}
               postId={postId}
               comment={reply}
               isReply={true}
+              isLastReply={idx === (comment.replies?.length ?? 1) - 1}
               likingCommentIds={likingCommentIds}
               deletingCommentIds={deletingCommentIds}
               activeReactionCommentId={activeReactionCommentId}

@@ -262,9 +262,10 @@ export default function CommunityPage({
       const newComment: Comment = {
         id: tempCommentId,
         user: {
-          id: "curr_user",
-          name: "You",
+          id: userData?._id || "curr_user",
+          name: userData?.name || "You",
           avatar:
+            userData?.profile_image ||
             "http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png",
           level: "Gold",
           xp: 100,
@@ -509,11 +510,8 @@ export default function CommunityPage({
 
   const [triggerGetSinglePost] = useLazyGetSingleCommunityPostQuery();
   const [hasDeepLinkChecked, setHasDeepLinkChecked] = useState(false);
-  const [isBlogView, setIsBlogView] = useState(true);
-
-  const isSelectedBlog =
-    selectedPostForModal?.category?.toLowerCase() === "blog article" ||
-    selectedPostForModal?.category === "Blog Article";
+  const [modalMode, setModalMode] = useState<"blog" | "post">("post");
+  const [shouldScrollToComments, setShouldScrollToComments] = useState(false);
 
   // Check for direct deep-link ?post=slug or /community/post/slug or /community/blog/slug or initialPostId on load
   useEffect(() => {
@@ -540,7 +538,11 @@ export default function CommunityPage({
 
       if (existing) {
         setSelectedPostForModal(existing);
-        setIsBlogView(true);
+        const isBlog =
+          existing?.category?.toLowerCase() === "blog article" ||
+          existing?.category?.toLowerCase() === "blog" ||
+          existing?.category === "Blog Article";
+        setModalMode(isBlog ? "blog" : "post");
         setIsModalOpen(true);
       } else {
         triggerGetSinglePost(postParam)
@@ -550,7 +552,11 @@ export default function CommunityPage({
             if (raw) {
               const mapped = mapBackendItemToPost(raw);
               setSelectedPostForModal(mapped);
-              setIsBlogView(true);
+              const isBlog =
+                mapped?.category?.toLowerCase() === "blog article" ||
+                mapped?.category?.toLowerCase() === "blog" ||
+                mapped?.category === "Blog Article";
+              setModalMode(isBlog ? "blog" : "post");
               setIsModalOpen(true);
             }
           })
@@ -562,29 +568,36 @@ export default function CommunityPage({
   }, [posts, triggerGetSinglePost, hasDeepLinkChecked, initialPostId]);
 
   // Modal Handlers with URL Sync
-  const handleOpenModal = useCallback((post: Post, openBlogReader?: boolean) => {
-    setSelectedPostForModal(post);
+  const handleOpenModal = useCallback(
+    (post: Post, openBlogReader?: boolean, scrollToComments?: boolean) => {
+      setSelectedPostForModal(post);
+      setShouldScrollToComments(Boolean(scrollToComments));
 
-    const isBlog =
-      post?.category?.toLowerCase() === "blog article" ||
-      post?.category === "Blog Article";
+      const isBlog =
+        post?.category?.toLowerCase() === "blog article" ||
+        post?.category?.toLowerCase() === "blog" ||
+        post?.category === "Blog Article";
 
-    const shouldShowBlogReader = openBlogReader ?? isBlog;
+      // If openBlogReader is explicitly provided, use it; otherwise default to isBlog
+      const showBlog = openBlogReader !== undefined ? openBlogReader : isBlog;
 
-    setIsBlogView(shouldShowBlogReader);
-    setIsModalOpen(true);
+      setModalMode(showBlog ? "blog" : "post");
+      setIsModalOpen(true);
 
-    if (typeof window !== "undefined") {
-      const postSlug = post.slug || post.id;
-      const routePrefix = shouldShowBlogReader ? "/community/blog" : "/community/post";
-      const newPath = `${routePrefix}/${encodeURIComponent(postSlug)}`;
-      window.history.pushState({ postSlug }, "", newPath);
-    }
-  }, []);
+      if (typeof window !== "undefined") {
+        const postSlug = post.slug || post.id;
+        const routePrefix = showBlog ? "/community/blog" : "/community/post";
+        const newPath = `${routePrefix}/${encodeURIComponent(postSlug)}`;
+        window.history.pushState({ postSlug }, "", newPath);
+      }
+    },
+    [],
+  );
 
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     setSelectedPostForModal(null);
+    setShouldScrollToComments(false);
 
     if (typeof window !== "undefined") {
       window.history.pushState({}, "", "/community");
@@ -694,26 +707,30 @@ export default function CommunityPage({
       </div>
 
       {/* Post Details & Discussion Modal OR Fullscreen Blog Modal */}
-      {isModalOpen && isSelectedBlog && isBlogView ? (
-        <BlogArticleModal
-          post={selectedPostForModal}
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          onLike={handleLikePost}
-          onCommentClick={() => setIsBlogView(false)}
-          onSelectPost={(newPost) => handleOpenModal(newPost, true)}
-        />
-      ) : (
-        <PostModal
-          post={selectedPostForModal}
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          onLike={handleLikePost}
-          onAddComment={handleAddComment}
-          onDeleteComment={handleDeleteComment}
-          onLikeComment={handleLikeComment}
-          isPostingComment={isPostingComment}
-        />
+      {isModalOpen && selectedPostForModal && (
+        modalMode === "blog" ? (
+          <BlogArticleModal
+            post={selectedPostForModal}
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            onLike={handleLikePost}
+            onCommentClick={() => setModalMode("post")}
+            onSelectPost={(newPost) => handleOpenModal(newPost, true, false)}
+            scrollToComments={shouldScrollToComments}
+            onDeleteComment={handleDeleteComment}
+          />
+        ) : (
+          <PostModal
+            post={selectedPostForModal}
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            onLike={handleLikePost}
+            onAddComment={handleAddComment}
+            onDeleteComment={handleDeleteComment}
+            onLikeComment={handleLikeComment}
+            isPostingComment={isPostingComment}
+          />
+        )
       )}
     </div>
   );

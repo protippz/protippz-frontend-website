@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
+  ArrowUp,
+  X,
   Calendar,
   Clock,
   Heart,
@@ -15,6 +17,9 @@ import {
   Send,
   User as UserIcon,
   Search,
+  Trash2,
+  Loader2,
+  CornerDownRight,
 } from "lucide-react";
 import {
   FaFacebookF,
@@ -23,7 +28,12 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Post, Comment, mapBackendItemToPost, mapBackendCommentToComment } from "@/types/community";
+import {
+  Post,
+  Comment,
+  mapBackendItemToPost,
+  mapBackendCommentToComment,
+} from "@/types/community";
 import { useAuth } from "@/provider/ContextProvider";
 import {
   useLikeCommunityPostMutation,
@@ -32,15 +42,18 @@ import {
 import {
   useGetCommentsByPostQuery,
   useCreateCommentMutation,
+  useDeleteCommentMutation,
 } from "@/Redux/Apis/commentApis";
 import toast from "react-hot-toast";
-import { getEmbedVideoUrl } from "./helpers";
+import { copyToClipboard, getEmbedVideoUrl } from "./helpers";
 
 interface BlogArticleViewProps {
   post: Post;
   isModal?: boolean;
   onClose?: () => void;
   onSelectPost?: (post: Post) => void;
+  scrollToComments?: boolean;
+  onDeleteComment?: (postId: string, commentId: string) => Promise<any> | void;
 }
 
 export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
@@ -48,11 +61,16 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
   isModal = false,
   onClose,
   onSelectPost,
+  scrollToComments = false,
+  onDeleteComment,
 }) => {
   const router = useRouter();
   const { userData } = useAuth();
   const [likePostApi] = useLikeCommunityPostMutation();
-  const [createCommentApi, { isLoading: isPostingComment }] = useCreateCommentMutation();
+  const [createCommentApi, { isLoading: isPostingComment }] =
+    useCreateCommentMutation();
+  const [deleteCommentApi] = useDeleteCommentMutation();
+  const [deletingCommentId, setDeletingCommentId] = useState<string | null>(null);
   const [commentInput, setCommentInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState(false);
@@ -61,11 +79,17 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [likesCount, setLikesCount] = useState(post.likes);
 
+  useEffect(() => {
+    setIsLiked(post.isLiked);
+    setLikesCount(post.likes);
+  }, [post.id, post.isLiked, post.likes]);
+
   // Fetch real blog posts matching: category="Blog Article", status="Published", page=1, limit=10
-  const { data: blogPostsData, isLoading: isPostsLoading } = useGetAllCommunityPostsQuery(
-    { page: 1, limit: 10, status: "Published", category: "Blog Article" },
-    { skip: false }
-  );
+  const { data: blogPostsData, isLoading: isPostsLoading } =
+    useGetAllCommunityPostsQuery(
+      { page: 1, limit: 10, status: "Published", category: "Blog Article" },
+      { skip: false },
+    );
 
   const recentStories: Post[] = useMemo(() => {
     const rawList =
@@ -83,10 +107,33 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
   }, [blogPostsData, post.id, post.slug]);
 
   // Fetch comments for this post
-  const { data: commentsResponse, refetch: refetchComments } = useGetCommentsByPostQuery(
-    { postId: post.id, page: 1, limit: 20 },
-    { skip: !post.id }
-  );
+  const { data: commentsResponse, refetch: refetchComments } =
+    useGetCommentsByPostQuery(
+      { postId: post.id, page: 1, limit: 20 },
+      { skip: !post.id },
+    );
+
+  const scrollToCommentsSection = (focusInput = true) => {
+    const commentsElem = document.getElementById("comments-section");
+    const textarea = document.getElementById("blog-comment-textarea");
+    if (commentsElem) {
+      commentsElem.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (focusInput) {
+        setTimeout(() => textarea?.focus(), 350);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (scrollToComments) {
+      const timer = setTimeout(() => {
+        scrollToCommentsSection(true);
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [scrollToComments, post.id, post.slug]);
+
+  const [deletedCommentIds, setDeletedCommentIds] = useState<string[]>([]);
 
   const commentsList: Comment[] = useMemo(() => {
     const raw =
@@ -95,46 +142,83 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
       commentsResponse?.result ||
       [];
     if (!Array.isArray(raw)) return [];
-    return raw.map(mapBackendCommentToComment);
-  }, [commentsResponse]);
+    return raw
+      .map(mapBackendCommentToComment)
+      .filter((c) => !deletedCommentIds.includes(c.id));
+  }, [commentsResponse, deletedCommentIds]);
 
   const handleLike = async () => {
     const prevLiked = isLiked;
     const prevCount = likesCount;
 
     setIsLiked(!prevLiked);
-    setLikesCount(prevLiked ? Math.max(0, prevCount - 1) : prevCount + 1);
+    setLikesCount((prev: number) =>
+      !prevLiked ? prev + 1 : Math.max(0, prev - 1),
+    );
 
     try {
       await likePostApi(post.id).unwrap();
     } catch (err) {
+      console.error("Failed to like blog post:", err);
       setIsLiked(prevLiked);
       setLikesCount(prevCount);
-      toast.error("Unable to update like.");
     }
   };
 
-  const handleAddComment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!commentInput.trim()) return;
+  const [replyingTo, setReplyingTo] = useState<{
+    id: string;
+    userName: string;
+  } | null>(null);
 
-    if (!userData?._id) {
-      toast.error("Please sign in to leave a comment.");
-      router.push("/sign-in");
-      return;
+  const handleReplyClick = (commentId: string, userName: string) => {
+    setReplyingTo({ id: commentId, userName });
+    const textarea = document.getElementById("blog-comment-textarea");
+    if (textarea) {
+      textarea.scrollIntoView({ behavior: "smooth", block: "center" });
+      setTimeout(() => textarea.focus(), 150);
     }
+  };
+
+  const handleCreateComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!commentInput.trim() || isPostingComment) return;
 
     try {
-      const formData = new FormData();
-      formData.append("communityPost", post.id);
-      formData.append("text", commentInput.trim());
+      await createCommentApi({
+        communityPost: post.id,
+        text: commentInput.trim(),
+        parent: replyingTo?.id || null,
+      }).unwrap();
 
-      await createCommentApi(formData).unwrap();
       setCommentInput("");
+      setReplyingTo(null);
       refetchComments();
-      toast.success("Comment posted successfully!");
-    } catch (error) {
-      toast.error("Failed to post comment.");
+      toast.success(replyingTo ? "Reply posted!" : "Comment added!");
+    } catch (err) {
+      console.error("Failed to post comment:", err);
+      toast.error(replyingTo ? "Failed to post reply" : "Failed to submit comment");
+    }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!commentId || deletingCommentId) return;
+    setDeletingCommentId(commentId);
+    setDeletedCommentIds((prev) => [...prev, commentId]);
+
+    try {
+      if (onDeleteComment) {
+        await onDeleteComment(post.id, commentId);
+      } else {
+        await deleteCommentApi(commentId).unwrap();
+      }
+      refetchComments();
+      toast.success("Comment deleted");
+    } catch (err) {
+      console.error("Failed to delete comment:", err);
+      setDeletedCommentIds((prev) => prev.filter((id) => id !== commentId));
+      toast.error("Failed to delete comment");
+    } finally {
+      setDeletingCommentId(null);
     }
   };
 
@@ -151,60 +235,96 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
   const shareTitle = post.title || "PROTIPPZ Article";
 
   const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(currentUrl);
+    const postSlug = post.slug || post.id;
+    const shareUrl =
+      typeof window !== "undefined"
+        ? `${window.location.origin}/community/blog/${encodeURIComponent(postSlug)}`
+        : "";
+
+    if (!shareUrl) return;
+
+    const success = await copyToClipboard(shareUrl);
+    if (success) {
       setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
       toast.success("Article link copied to clipboard!");
-      setTimeout(() => setCopied(false), 2500);
-    } catch {
-      toast.error("Failed to copy link.");
+    } else {
+      toast.error("Failed to copy link");
     }
   };
 
-  const authorName = post.user?.name || "Douglas Reyner";
+  const authorName = post.user?.name || "PROTIPPZ Editorial Team";
+  const authorAvatar =
+    post.user?.avatar ||
+    "http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png";
   const authorRole = post.authorRole || "Contributor Content";
   const categoryName = post.category || "GLOBAL BUSINESS TRENDS";
   const videoEmbedSrc = getEmbedVideoUrl(post.videoUrl, post.videoEmbedCode);
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans antialiased">
-      {/* Optional Top Bar for Navigation / Back when in modal or page */}
-      {isModal && onClose && (
-        <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 py-2.5 flex items-center justify-between max-w-6xl mx-auto">
+      {/* Top Bar for Navigation / Back when in modal or page */}
+      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 py-2.5 flex items-center justify-between max-w-355 mx-auto">
+        <div className="flex items-center gap-2">
           <button
-            onClick={onClose}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-[#053697] bg-slate-100 px-3 py-1.5 rounded-md transition-colors cursor-pointer"
+            type="button"
+            onClick={() => {
+              if (onClose) onClose();
+              router.push("/community");
+            }}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-[#053697] bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-md transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5 text-[#2FC191]" />
-            <span>Close Article</span>
+            <span>Back to Community</span>
           </button>
-          <div className="flex items-center gap-2">
+
+          {isModal && onClose && (
             <button
-              onClick={handleLike}
-              className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                isLiked
-                  ? "bg-[#2FC191] text-white"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-              }`}
+              type="button"
+              onClick={onClose}
+              className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-2.5 py-1.5 rounded-md transition-colors cursor-pointer"
             >
-              <Heart className="w-3.5 h-3.5" fill={isLiked ? "white" : "none"} />
-              <span>{likesCount}</span>
+              <X className="w-3.5 h-3.5" />
+              <span>Close</span>
             </button>
-            <button
-              onClick={handleCopyLink}
-              className="p-1.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer"
-              title="Copy Link"
-            >
-              <Share2 className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          )}
         </div>
-      )}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleLike}
+            className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              isLiked
+                ? "bg-[#2FC191] text-white"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            <Heart className="w-3.5 h-3.5" fill={isLiked ? "white" : "none"} />
+            <span>{likesCount}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToCommentsSection(true)}
+            className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all cursor-pointer"
+            title="Jump to Comments"
+          >
+            <MessageCircle className="w-3.5 h-3.5 text-[#2FC191]" />
+            <span>{commentsList.length}</span>
+          </button>
+          <button
+            type="button"
+            onClick={handleCopyLink}
+            className="p-1.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer"
+            title="Copy Link"
+          >
+            <Share2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
 
       {/* Main Container */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <div className="max-w-355 mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-          
           {/* ================= LEFT / MAIN EDITORIAL ARTICLE (8 Cols) ================= */}
           <article className="lg:col-span-8 min-w-0">
             {/* 1. Category Badges */}
@@ -219,7 +339,8 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
 
             {/* 2. Main Article Title (H1) */}
             <h1 className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#111827] tracking-tight leading-[1.25] mb-4">
-              {post.title || "PROTIPPZ Revolutionizes Sports Economy with Fan-Powered Athlete Support"}
+              {post.title ||
+                "PROTIPPZ Revolutionizes Sports Economy with Fan-Powered Athlete Support"}
             </h1>
 
             {/* 3. Author Byline Row */}
@@ -344,8 +465,13 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                       : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                   }`}
                 >
-                  <Heart className="w-3.5 h-3.5" fill={isLiked ? "white" : "none"} />
-                  <span>{isLiked ? "Liked" : "Like"} ({likesCount})</span>
+                  <Heart
+                    className="w-3.5 h-3.5"
+                    fill={isLiked ? "white" : "none"}
+                  />
+                  <span>
+                    {isLiked ? "Liked" : "Like"} ({likesCount})
+                  </span>
                 </button>
               </div>
             </div>
@@ -363,37 +489,70 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900">{authorName}</h4>
+                  <h4 className="text-sm font-bold text-slate-900">
+                    {authorName}
+                  </h4>
                   <p className="text-xs text-slate-500">
-                    Covers global markets, corporate finance, and executive leadership.
+                    Covers global markets, corporate finance, and executive
+                    leadership.
                   </p>
                 </div>
               </div>
               <p className="text-xs text-slate-500 leading-relaxed pt-1 border-t border-slate-200">
-                This article features partner, contributor, or branded content from a third party. Members of the CEO Times editorial staff were not involved in the creation of this content. All views and opinions are those of the contributor alone.
+                This article features partner, contributor, or branded content
+                from a third party. Members of the CEO Times editorial staff
+                were not involved in the creation of this content. All views and
+                opinions are those of the contributor alone.
               </p>
             </div>
 
             {/* 9. Discussion & Comments */}
-            <div className="mt-10 pt-6 border-t border-slate-200 space-y-5">
+            <div id="comments-section" className="mt-10 pt-6 border-t border-slate-200 space-y-5">
               <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <MessageCircle className="w-4 h-4 text-[#2FC191]" />
                 <span>Comments ({commentsList.length})</span>
               </h3>
 
-              <form onSubmit={handleAddComment} className="flex gap-2.5">
+              {/* Replying Banner Indicator */}
+              {replyingTo && (
+                <div className="flex items-center justify-between px-3 py-1.5 bg-[#2FC19115] border border-[#2FC19130] rounded-xs text-xs animate-in fade-in duration-150">
+                  <span className="text-[#2FC191] font-semibold flex items-center gap-1.5">
+                    <CornerDownRight className="w-3.5 h-3.5 shrink-0" />
+                    <span>
+                      Replying to <strong className="text-slate-800">@{replyingTo.userName}</strong>
+                    </span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setReplyingTo(null)}
+                    className="p-1 text-slate-400 hover:text-slate-700 transition-colors rounded-full cursor-pointer"
+                    title="Cancel reply"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+
+              <form onSubmit={handleCreateComment} className="flex gap-2.5">
                 <Avatar className="w-8 h-8 border border-slate-200 shrink-0">
                   <AvatarImage src={userData?.profile_image} alt="You" />
                   <AvatarFallback className="bg-slate-100 text-slate-700 text-xs font-bold">
-                    {userData?.name ? userData.name[0] : <UserIcon className="w-3.5 h-3.5" />}
+                    {userData?.name ? (
+                      userData.name[0]
+                    ) : (
+                      <UserIcon className="w-3.5 h-3.5" />
+                    )}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 relative">
                   <textarea
+                    id="blog-comment-textarea"
                     value={commentInput}
                     onChange={(e) => setCommentInput(e.target.value)}
                     placeholder={
-                      userData?._id
+                      replyingTo
+                        ? `Reply to @${replyingTo.userName}...`
+                        : userData?._id
                         ? "Leave a comment..."
                         : "Sign in to leave a comment..."
                     }
@@ -403,34 +562,201 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                   <button
                     type="submit"
                     disabled={isPostingComment || !commentInput.trim()}
-                    className="absolute right-2 bottom-3 px-3 py-1 bg-[#2FC191] hover:bg-[#28ad81] disabled:opacity-50 text-white font-bold text-[11px] rounded-xs cursor-pointer shadow-2xs transition-all"
+                    className="absolute right-2 bottom-3 px-3 py-1 bg-[#2FC191] hover:bg-[#28ad81] disabled:opacity-50 text-white font-bold text-[11px] rounded-xs cursor-pointer shadow-2xs transition-all flex items-center gap-1"
                   >
-                    Submit
+                    {isPostingComment && <Loader2 className="w-3 h-3 animate-spin" />}
+                    <span>{isPostingComment ? "Posting..." : replyingTo ? "Reply" : "Submit"}</span>
                   </button>
                 </div>
               </form>
 
               {/* Comments List */}
               <div className="space-y-2.5">
-                {commentsList.map((c) => (
-                  <div key={c.id} className="p-3 bg-slate-50 border border-slate-200/80 rounded-xs space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-800">
-                        {c.user?.name || "Reader"}
-                      </span>
-                      <span className="text-[10px] text-slate-400">{c.timestamp}</span>
-                    </div>
-                    <p className="text-xs text-slate-600 leading-relaxed">{c.content}</p>
+                {commentsList.length === 0 ? (
+                  <div className="py-8 text-center bg-slate-50 border border-dashed border-slate-200 rounded-xs">
+                    <MessageCircle className="w-6 h-6 mx-auto text-slate-300 mb-1.5" />
+                    <p className="text-xs text-slate-400 font-medium">
+                      No comments yet. Be the first to start the discussion!
+                    </p>
                   </div>
-                ))}
+                ) : (
+                  commentsList.map((c) => (
+                    <div
+                      key={c.id}
+                      className="p-3 bg-slate-50 border border-slate-200/80 rounded-xs space-y-1.5 group/comment"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Avatar className="w-6 h-6 border border-slate-200 shrink-0">
+                            <AvatarImage src={c.user?.avatar} alt={c.user?.name} />
+                            <AvatarFallback className="text-[10px] bg-emerald-50 text-[#053697] font-bold">
+                              {c.user?.name ? c.user.name[0] : "R"}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="text-xs font-bold text-slate-800">
+                            {c.user?.name || "Reader"}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-slate-400">
+                            {c.timestamp}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleReplyClick(c.id, c.user?.name || "Reader")}
+                            className="text-slate-400 hover:text-[#2FC191] hover:bg-[#2FC19110] transition-all px-1.5 py-0.5 rounded cursor-pointer flex items-center gap-1 text-[11px] font-semibold"
+                            title="Reply to comment"
+                          >
+                            <CornerDownRight className="w-3 h-3" />
+                            <span>Reply</span>
+                          </button>
+                          <button
+                            type="button"
+                            disabled={deletingCommentId === c.id}
+                            onClick={() => handleDeleteComment(c.id)}
+                            className="text-slate-400 hover:text-red-600 hover:bg-red-50/80 transition-all px-1.5 py-0.5 rounded cursor-pointer disabled:opacity-50 flex items-center gap-1 text-[11px] font-medium"
+                            title="Delete comment"
+                          >
+                            {deletingCommentId === c.id ? (
+                              <Loader2 className="w-3 h-3 animate-spin text-red-600" />
+                            ) : (
+                              <Trash2 className="w-3 h-3" />
+                            )}
+                            <span>{deletingCommentId === c.id ? "Deleting..." : "Delete"}</span>
+                          </button>
+                        </div>
+                      </div>
+                      <p className="text-xs text-slate-600 leading-relaxed">
+                        {c.content}
+                      </p>
+
+                      {/* Nested Replies with SVG thread hierarchy */}
+                      {c.replies && c.replies.length > 0 && (
+                        <div className="relative pl-6 sm:pl-7 ml-3.5 space-y-3 pt-2">
+                          {c.replies
+                            .filter((r) => !deletedCommentIds.includes(r.id))
+                            .map((r, idx, arr) => {
+                              const isLastReply = idx === arr.length - 1;
+                              return (
+                                <div
+                                  key={r.id}
+                                  className="relative flex items-start gap-2.5 group/reply"
+                                >
+                                  {/* SVG Thread Connector: branches from parent vertical line and curves into avatar */}
+                                  <div className="absolute -left-6 sm:-left-7 top-0 bottom-0 w-6 sm:w-7 pointer-events-none">
+                                    <svg
+                                      className="w-full h-full text-slate-300 stroke-current"
+                                      fill="none"
+                                      viewBox="0 0 24 40"
+                                      preserveAspectRatio="none"
+                                    >
+                                      {/* Curved L-branch turning into reply avatar center (y=16) */}
+                                      <path
+                                        d="M 1 0 V 8 Q 1 16 9 16 H 24"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                      />
+                                      {/* Continuation line for subsequent replies */}
+                                      {!isLastReply && (
+                                        <path d="M 1 16 V 40" strokeWidth="2" />
+                                      )}
+                                    </svg>
+                                  </div>
+
+                                  <Avatar className="w-7 h-7 mt-0.5 border border-slate-200 shrink-0">
+                                    <AvatarImage
+                                      src={r.user?.avatar}
+                                      alt={r.user?.name}
+                                    />
+                                    <AvatarFallback className="text-[10px] bg-slate-100 text-slate-700">
+                                      {r.user?.name ? r.user.name[0] : "R"}
+                                    </AvatarFallback>
+                                  </Avatar>
+
+                                  <div className="flex-1 min-w-0 p-2.5 bg-white border border-slate-200/80 rounded-xs space-y-1">
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-xs font-bold text-slate-800">
+                                        {r.user?.name || "Reader"}
+                                      </span>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-[10px] text-slate-400">
+                                          {r.timestamp}
+                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={() =>
+                                            handleReplyClick(c.id, r.user?.name || "Reader")
+                                          }
+                                          className="text-slate-400 hover:text-[#2FC191] hover:bg-[#2FC19110] transition-all px-1.5 py-0.5 rounded cursor-pointer flex items-center gap-1 text-[10px] font-semibold"
+                                          title="Reply to comment"
+                                        >
+                                          <CornerDownRight className="w-2.5 h-2.5" />
+                                          <span>Reply</span>
+                                        </button>
+                                        <button
+                                          type="button"
+                                          disabled={deletingCommentId === r.id}
+                                          onClick={() => handleDeleteComment(r.id)}
+                                          className="text-slate-400 hover:text-red-600 hover:bg-red-50/80 transition-all px-1.5 py-0.5 rounded cursor-pointer disabled:opacity-50 flex items-center gap-1 text-[10px] font-medium"
+                                          title="Delete reply"
+                                        >
+                                          {deletingCommentId === r.id ? (
+                                            <Loader2 className="w-3 h-3 animate-spin text-red-600" />
+                                          ) : (
+                                            <Trash2 className="w-3 h-3" />
+                                          )}
+                                          <span>{deletingCommentId === r.id ? "Deleting..." : "Delete"}</span>
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <p className="text-xs text-slate-600 leading-relaxed">
+                                      {r.content}
+                                    </p>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Back to Community Action at Bottom of Comments */}
+              <div className="pt-4 flex items-center justify-between border-t border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onClose) onClose();
+                    router.push("/community");
+                  }}
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#053697] hover:text-[#2FC191] bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-md transition-colors cursor-pointer"
+                >
+                  <ArrowLeft className="w-4 h-4 text-[#2FC191]" />
+                  <span>Back to Community</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const container = document.getElementById("blog-modal-container");
+                    if (container) {
+                      container.scrollTo({ top: 0, behavior: "smooth" });
+                    } else {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3 py-2 rounded-md transition-colors cursor-pointer"
+                >
+                  <ArrowUp className="w-3.5 h-3.5" />
+                  <span>Back to Top</span>
+                </button>
               </div>
             </div>
-
           </article>
 
           {/* ================= RIGHT / EDITORIAL SIDEBAR (4 Cols) ================= */}
           <aside className="lg:col-span-4 space-y-8 lg:pl-2 sticky top-20 self-start">
-            
             {/* 1. SEARCH WIDGET */}
             {/* <div className="space-y-2">
               <h4 className="text-[11px] font-black text-slate-800 uppercase tracking-wider pb-1 border-b-2 border-slate-800">
@@ -517,7 +843,10 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                         key={item.id}
                         onClick={() => {
                           if (onSelectPost) {
-                            onSelectPost(item);
+                            onSelectPost({
+                              ...item,
+                              category: "Blog Article",
+                            });
                           } else {
                             router.push(blogUrl);
                           }
@@ -557,9 +886,7 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                 )}
               </div>
             </div>
-
           </aside>
-
         </div>
       </div>
     </div>
