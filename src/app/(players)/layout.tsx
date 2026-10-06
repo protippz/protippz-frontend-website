@@ -81,7 +81,7 @@ export default function RootLayout({
         </nav>
       </div>
       <AuthProvider>
-        <div className="min-h-[72vh] flex flex-col justify-center items-center">
+        <div className="min-h-[72vh]">
           {children}
         </div>
         <Footer />

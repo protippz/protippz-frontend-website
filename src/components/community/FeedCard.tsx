@@ -193,7 +193,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
         </div>
 
         {/* Popular Sports Blog Card Main Layout */}
-        <div className="flex flex-row gap-3.5 sm:gap-5 md:gap-6 items-start justify-between mb-3">
+        <div className="flex flex-col md:flex-row gap-3.5 sm:gap-5 md:gap-6 items-start justify-between mb-3">
           {/* Left Column: Title, Excerpt, Date/Meta */}
           <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
             <div>

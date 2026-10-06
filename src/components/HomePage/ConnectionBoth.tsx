@@ -1,5 +1,6 @@
 import { IMAGE } from "@/constant/image.index";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 function ConnectionBoth() {
@@ -64,21 +65,23 @@ function ConnectionBoth() {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-white transition-all duration-150 hover:opacity-90 active:scale-[0.98]"
-                  style={{ background: "#2FC191" }}
-                >
-                  Start tipping
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path
-                      d="M2 6h8M6 2.5L9.5 6 6 9.5"
-                      stroke="white"
-                      strokeWidth="1.3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
+                <Link href="/sign-up?role=fan">
+                  <button
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold text-white transition-all duration-150 hover:opacity-90 active:scale-[0.98] cursor-pointer"
+                    style={{ background: "#2FC191" }}
+                  >
+                    Start tipping
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2 6h8M6 2.5L9.5 6 6 9.5"
+                        stroke="white"
+                        strokeWidth="1.3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </Link>
 
                 <button
                   className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold border transition-all duration-150 hover:bg-[#F6F8FA] active:scale-[0.98]"

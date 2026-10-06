@@ -1,14 +1,19 @@
 import { get } from "@/ApisRequests/server";
 import rewardbg from "@/Assets/rewardbgs.png";
+import InfiniteRewardList from "@/components/rewardz/Client/InfiniteRewardList";
 import Rewards from "@/components/rewardz/Rewards";
-import RewardzCards from "@/components/rewardz/RewardzCards";
 import SearchAndSortComponent from "@/components/rewardz/SearchAndSortComponent";
-import PaginationComponents from "@/components/Shared/Client/Pagination";
 import Heading from "@/components/Shared/Heading";
 import GoToTop from "@/components/ui/GoToTop";
-import { Empty } from "antd";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { FaLongArrowAltRight } from "react-icons/fa";
+
+export const metadata = {
+  title: "PROTIPPZ - REWARDZ",
+  description:
+    "Earn points by sending Tippz and redeem them for exclusive merchandise, tickets, and cash prizes.",
+};
 
 export interface RewardInterface {
   _id: string;
@@ -22,53 +27,57 @@ export interface RewardInterface {
   pointRequired: number;
   description: string;
 }
+
 interface searchParamsInterface {
   [key: string]: string | undefined | number;
 }
+
 interface PageProps {
   searchParams: Promise<searchParamsInterface>;
 }
+
 const RewardzPage = async ({ searchParams }: PageProps) => {
-  const { searchTerm, category, page } = await searchParams;
-  const params = { category, searchTerm, page };
-  const [data, meta] = await getReward(params);
-  const rewardData = data as RewardInterface[];
+  const { searchTerm, category, page, limit } = await searchParams;
+  const cookie = cookies();
+  const token = (await cookie).get("token")?.value;
+
+  const params = {
+    category: category ? String(category) : undefined,
+    searchTerm: searchTerm ? String(searchTerm) : undefined,
+    page: page ? String(page) : "1",
+    limit: limit ? String(limit) : "20",
+  };
+
+  const [data, meta] = await getReward(params, token);
+  const rewardData = (data || []) as RewardInterface[];
+
   return (
     <>
-      <div className="max-w-355 mx-auto mt-10">
+      <div className="max-w-355 mx-auto mt-6 sm:mt-10 px-2 sm:px-4">
         <GoToTop />
         <Rewards />
         <Heading headingText="REWARDZ" subHeadingText="Select a Reward" />
-        {/* <AdContainer /> */}
         <SearchAndSortComponent />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
-          {rewardData?.length > 0 ? (
-            rewardData?.map((item) => (
-              <RewardzCards item={item} key={item?._id} />
-            ))
-          ) : (
-            <div className="col-span-3 py-28">
-              <Empty description="No Results Found. Search Again." />
-            </div>
-          )}
-        </div>
-        {rewardData?.length > 0 ? (
-          <div className="flex justify-center items-center">
-            <PaginationComponents paginationData={meta} />
-          </div>
-        ) : (
-          ""
-        )}
+
+        <InfiniteRewardList
+          initialData={rewardData}
+          initialMeta={meta}
+          token={token}
+          searchTerm={params.searchTerm}
+          category={params.category}
+          limit={20}
+        />
       </div>
+
       <div
         style={{
           backgroundImage: `url(${rewardbg.src})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        className="flex flex-col items-center justify-between mb-10 box-border w-full"
+        className="flex flex-col items-center justify-between mt-16 mb-10 box-border w-full"
       >
-        <div className="w-full md:flex md:items-center md:justify-between max-w-355 mx-auto  min-h-[600px]">
+        <div className="w-full md:flex md:items-center md:justify-between max-w-355 mx-auto min-h-[600px] px-4">
           <div className="w-full md:w-1/2 text-center md:text-left">
             <h2 className="text-3xl font-bold text-[#053697] mb-4">
               Send Tippz. Earn Rewardz! Win Prizes!!
@@ -109,11 +118,13 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
 
 export default RewardzPage;
 
-const getReward = async (params: searchParamsInterface) => {
+const getReward = async (params: searchParamsInterface, token?: string) => {
   const paramsUrl = Object.entries(params)
-    .filter(([key, value]) => value !== undefined)
+    .filter(([key, value]) => value !== undefined && value !== "")
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
-  const res = await get(`/reward/get-all?${paramsUrl}&limit=200`);
+  const res = await get(`/reward/get-all?${paramsUrl}`, {
+    headers: token ? { Authorization: `${token}` } : {},
+  });
   return [res.data?.result, res.data?.meta];
 };

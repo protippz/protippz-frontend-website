@@ -2,8 +2,8 @@ import React, { memo } from "react";
 import Image from "next/image";
 import { imageUrl } from "@/ApisRequests/server";
 import BookmarkButton from "../Shared/Client/BookmarkButton";
-import bg from "@/Assets/bg.png";
-import player from "@/Assets/playerDefult.jpg";
+import defaultPlayer from "@/Assets/playerDefult.jpg";
+import leagueLogo from "@/Assets/PT Logo.png";
 import { Player } from "@/app/(default)/playerz/page";
 import SendTipsButton from "./Client/SendTipsButton";
 import MotionDiv from "./Motion";
@@ -13,145 +13,150 @@ interface PlayerzCardsProps {
   token: string | undefined | null;
 }
 
-const textReveal = {
-  hidden: { y: "100%", opacity: 0 },
+const cardReveal = {
+  hidden: { y: "4%", opacity: 0 },
   visible: {
     y: "0%",
     opacity: 1,
     transition: {
-      duration: 0.5,
-      ease: "easeOut",
-    },
-  },
-};
-
-const cardReveal = {
-  hidden: { y: "10%" },
-  visible: {
-    y: "0%",
-    transition: {
-      duration: 0.5,
+      duration: 0.35,
       ease: "easeOut",
     },
   },
 };
 
 const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
+  const expLabel = item?.experience || "Jr.";
+
   return (
     <MotionDiv
       variants={cardReveal}
       initial="hidden"
       animate="visible"
-      className="relative border overflow-hidden border-green-300 rounded-lg shadow-md max-w-lg mx-auto w-full flex flex-col justify-between"
+      className="group relative bg-white rounded-[22px] border border-slate-200/85 hover:border-[#2FC191]/50 shadow-[0_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0_14px_34px_rgba(5,54,151,0.11)] transition-all duration-300 p-5 sm:p-6 flex flex-col justify-between overflow-hidden"
     >
-      <div className="absolute h-full w-full ">
-        <Image
-          src={item?.player_bg_image ? imageUrl(item?.player_bg_image) : bg}
-          alt={item.name}
-          width={130}
-          height={150}
-          className="object-cover  rounded-md h-full w-full"
-        />
-      </div>
-      <div className="absolute h-full w-full bg-white bg-opacity-80"></div>
-      <div className=" p-4 z-40 ">
-        <div className="flex flex-col justify-between pr-20 mt-6">
-          <div className="text-left">
-            <MotionDiv
-              className="text-sm font-semibold text-green-500"
-              variants={textReveal}
-              initial="hidden"
-              animate="visible"
-            >
-              Name
-            </MotionDiv>
-            <MotionDiv
-              className="font-bold text-[#053697] text-lg"
-              variants={textReveal}
-              initial="hidden"
-              animate="visible"
-            >
-              {item?.name}
-            </MotionDiv>
-            <MotionDiv
-              className="text-sm font-semibold text-green-500 mt-2"
-              variants={textReveal}
-              initial="hidden"
-              animate="visible"
-            >
-              Team
-            </MotionDiv>
-            <MotionDiv
-              className="text-[#053697] w-10/12"
-              variants={textReveal}
-              initial="hidden"
-              animate="visible"
-            >
-              {item?.team?.name}
-            </MotionDiv>
-            <MotionDiv
-              variants={textReveal}
-              initial="hidden"
-              animate="visible"
-              className="flex items-center gap-2"
-            >
-              <MotionDiv className="text-sm font-semibold text-green-500 mt-2">
-                Position :
-              </MotionDiv>
-              <MotionDiv className="text-sm mt-2 text-[#053697]">
-                {item.position}
-              </MotionDiv>
-            </MotionDiv>
-            <MotionDiv
-              variants={textReveal}
-              initial="hidden"
-              animate="visible"
-              className="flex items-center gap-2"
-            >
-              <MotionDiv className="text-sm font-semibold text-green-500 mt-2">
-                Jersey No.
-              </MotionDiv>
-              <MotionDiv className="text-sm mt-2 text-[#053697]">
-                {item?.jerceyNumber || "N/A"}
-              </MotionDiv>
-            </MotionDiv>
+      {/* Top Header: Year/Exp on Left + Favorite Pill on Right */}
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs sm:text-[13px] font-extrabold text-[#2FC191]">
+          {expLabel}
+        </span>
 
-            <MotionDiv
-              variants={textReveal}
-              initial="hidden"
-              animate="visible"
-              className="flex items-center gap-2"
-            >
-              <MotionDiv className="text-sm font-semibold text-green-500 mt-2">
-                Experience.
-              </MotionDiv>
-              <MotionDiv className="text-sm mt-2 text-[#053697]">
-                {item?.experience || "N/A"}
-              </MotionDiv>
-            </MotionDiv>
+        <BookmarkButton
+          isBookmark={item?.isBookmark}
+          type="player"
+          _id={item?._id}
+          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f1f3f6] hover:bg-amber-50/80 border border-slate-200/70 text-xs font-semibold text-slate-700 cursor-pointer transition-all duration-150 select-none"
+        >
+          <span
+            className={`text-xs leading-none ${
+              item?.isBookmark ? "text-amber-500 font-bold" : "text-slate-400"
+            }`}
+          >
+            {item?.isBookmark ? "★" : "☆"}
+          </span>
+          <span className="text-[11px] font-bold text-slate-700">Favorite</span>
+        </BookmarkButton>
+      </div>
+
+      {/* Player Name */}
+      <h3 className="text-xl sm:text-[22px] font-black tracking-wide text-[#053697] uppercase mt-1 mb-2.5 line-clamp-1">
+        {item.name}
+      </h3>
+
+      {/* Subtle Horizontal Divider */}
+      <div className="w-full h-px bg-slate-200/60 mb-3" />
+
+      {/* Main Content: Left Details & Right Photo Column */}
+      <div className="flex items-end justify-between gap-4">
+        {/* Left Column: Team & Stats */}
+        <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
+          {/* Team Info */}
+          <div>
+            <span className="text-[11px] font-medium text-slate-400">Team</span>
+            <div className="flex items-center gap-1.5 mt-1">
+              <div className="w-4 h-4 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
+                <Image
+                  src={leagueLogo}
+                  alt="Team"
+                  width={14}
+                  height={14}
+                  className="object-contain"
+                />
+              </div>
+              <span className="text-xs sm:text-[13px] font-bold text-[#053697] line-clamp-1">
+                {item.team?.name || "Independent"}
+              </span>
+            </div>
           </div>
-          <div className="absolute top-4 right-4 text-green-500 text-2xl">
-            <BookmarkButton
-              _id={item?._id}
-              isBookmark={item?.isBookmark}
-              type="player"
-            />
+
+          {/* Stats: Position | Jersey | Exp */}
+          <div className="flex items-center gap-2 sm:gap-2.5 pt-3">
+            {/* Position */}
+            <div className="flex flex-col">
+              <span className="text-[10px] text-slate-400 font-medium mb-1">
+                Position
+              </span>
+              <div className="bg-[#f0f2f5] border border-slate-200/70 rounded-lg px-2.5 py-1 text-[11px] sm:text-xs font-bold text-[#053697] whitespace-nowrap">
+                {item?.position || "G (Point Guard)"}
+              </div>
+            </div>
+
+            {/* Jersey */}
+            <div className="flex flex-col">
+              <span className="text-[10px] text-slate-400 font-medium mb-1">
+                Jersey
+              </span>
+              <div className="bg-[#f0f2f5] border border-slate-200/70 rounded-lg px-2.5 py-1 text-[11px] sm:text-xs font-bold text-[#053697] whitespace-nowrap min-w-[32px] text-center">
+                {item?.jerceyNumber ? `#${item.jerceyNumber}` : "--"}
+              </div>
+            </div>
+
+            {/* Exp */}
+            <div className="flex flex-col">
+              <span className="text-[10px] text-slate-400 font-medium mb-1">
+                Exp.
+              </span>
+              <div className="bg-[#f0f2f5] border border-slate-200/70 rounded-lg px-2.5 py-1 text-[11px] sm:text-xs font-bold text-[#053697] whitespace-nowrap min-w-[32px] text-center">
+                {item?.experience || "Jr."}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="absolute -right-8 top-16 w-40 h-40 ">
-          <Image
-            src={item?.player_image ? imageUrl(item?.player_image) : player}
-            alt={item.name}
-            width={110}
-            height={130}
-            className="object-cover rounded-md"
-            unoptimized={false}
+        {/* Right Column: Photo + Send Tip Button */}
+        <div className="w-[115px] sm:w-[125px] shrink-0 flex flex-col items-center gap-2">
+          {/* Athlete Photo Container */}
+          <div className="relative w-full h-[115px] sm:h-[125px] rounded-2xl bg-slate-100 overflow-hidden border border-slate-200/70 shadow-2xs">
+            <Image
+              src={
+                item?.player_image ? imageUrl(item.player_image) : defaultPlayer
+              }
+              alt={item.name}
+              fill
+              className="object-cover object-top"
+              unoptimized={false}
+            />
+
+            {/* Mini Team Icon on bottom-right of photo */}
+            <div className="absolute bottom-1.5 right-1.5 w-5 h-5 rounded-full bg-white border border-slate-200 shadow-2xs flex items-center justify-center p-0.5">
+              <Image
+                src={leagueLogo}
+                alt="Logo"
+                width={14}
+                height={14}
+                className="object-contain"
+              />
+            </div>
+          </div>
+
+          {/* Send Tip Button */}
+          <SendTipsButton
+            token={token}
+            item={item}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all cursor-pointerw-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all cursor-pointerw-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all cursor-pointerw-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
+            buttonText="Send Tip"
           />
         </div>
-      </div>
-      <div className="flex justify-end m-2 z-1">
-        <SendTipsButton token={token} item={item} />
       </div>
     </MotionDiv>
   );

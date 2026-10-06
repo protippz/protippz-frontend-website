@@ -14,9 +14,16 @@ import PlayerDetailsServer from "./PlayerDetailsServer";
 interface SendTipsButtonProps {
   item: Player;
   token: string | undefined | null;
+  className?: string;
+  buttonText?: React.ReactNode;
 }
 
-const SendTipsButton: React.FC<SendTipsButtonProps> = ({ item, token }) => {
+const SendTipsButton: React.FC<SendTipsButtonProps> = ({
+  item,
+  token,
+  className,
+  buttonText,
+}) => {
   const [form] = Form.useForm();
   const [amount, setAmount] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -118,9 +125,12 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({ item, token }) => {
         <button
           id='tippz'
           onClick={(e) => showModal(e)}
-          className="bg-[#053697] text-white font-bold py-2 px-4 rounded-md hover:bg-[#184eb9]/90 focus:outline-none"
+          className={
+            className ||
+            "bg-[#053697] text-white font-bold py-2 px-4 rounded-md hover:bg-[#184eb9]/90 focus:outline-none"
+          }
         >
-          Send Tippz
+          {buttonText || "Send Tippz"}
         </button>
       </div>
       <Modal

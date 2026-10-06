@@ -1,5 +1,6 @@
 import { IMAGE } from "@/constant/image.index";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
 
@@ -143,9 +144,11 @@ function ForAthletes() {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button className="bg-[#053697] hover:bg-[#053697]/90 text-white rounded-full px-7 py-5 text-sm font-semibold uppercase tracking-wide cursor-pointer transition-colors">
-                  Join as an Athlete
-                </Button>
+                <Link href="/sign-up?role=athlete">
+                  <Button className="w-full sm:w-auto bg-[#053697] hover:bg-[#053697]/90 text-white rounded-full px-7 py-5 text-sm font-semibold uppercase tracking-wide cursor-pointer transition-colors">
+                    Join as an Athlete
+                  </Button>
+                </Link>
                 <Button
                   variant="outline"
                   className="border-[#053697] text-[#053697] hover:bg-[#053697]/5 rounded-full px-7 py-5 text-sm font-semibold uppercase tracking-wide cursor-pointer transition-colors bg-transparent"

@@ -222,11 +222,6 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
     }
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-    router.push(`/community?search=${encodeURIComponent(searchQuery.trim())}`);
-  };
 
   const currentUrl =
     typeof window !== "undefined"
@@ -254,9 +249,6 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
   };
 
   const authorName = post.user?.name || "PROTIPPZ Editorial Team";
-  const authorAvatar =
-    post.user?.avatar ||
-    "http://dsuotz3idqy4q.cloudfront.net/uploads/images/og_images/1787317787613-logo.bacbe230.png";
   const authorRole = post.authorRole || "Contributor Content";
   const categoryName = post.category || "GLOBAL BUSINESS TRENDS";
   const videoEmbedSrc = getEmbedVideoUrl(post.videoUrl, post.videoEmbedCode);
@@ -380,12 +372,13 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                 />
               </div>
             ) : post.image ? (
-              <div className="relative w-full h-[300px] sm:h-[420px] mb-5 overflow-hidden bg-slate-100 rounded-xs">
+              <div className="relative w-full mb-5 overflow-hidden rounded-xs">
                 <Image
                   src={post.image}
                   alt={post.title || "Featured article image"}
-                  fill
-                  className="object-cover object-center"
+                  width={800}
+                  height={400}
+                  className="object-contain object-center"
                   priority
                 />
               </div>

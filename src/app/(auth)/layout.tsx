@@ -66,11 +66,7 @@ export default function RootLayout({
 
       <NextTopLoader />
       <AuthProvider>
-        <Navbar />
-        <div className="min-h-[72vh] flex flex-col justify-center items-center">
-          {children}
-        </div>
-        <Footer />
+        {children}
       </AuthProvider>
     </>
   );

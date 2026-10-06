@@ -6,6 +6,7 @@ import NextTopLoader from "nextjs-toploader";
 import ShocaseMarquee from "@/components/HomePage/ShocaseMarquee";
 import Head from "next/head";
 import Header from "@/components/Shared/Client/Header";
+import SportsTicker from "@/components/Shared/SportsTicker";
 
 export const metadata: Metadata = {
   title: "PROTIPPZ",
@@ -69,10 +70,11 @@ export default function RootLayout({
       {/* <ShocaseMarquee /> */}
       <AuthProvider>
         <Navbar />
-        <div className="min-h-[72vh] flex flex-col justify-center items-center">
+        <div className="min-h-[72vh]">
           {children}
         </div>
         <Footer />
+         <SportsTicker />
       </AuthProvider>
     </>
   );

@@ -10,9 +10,15 @@ import { RewardInterface } from "@/app/(default)/rewardz/page";
 
 interface SendTipsButtonProps {
   item: RewardInterface;
+  className?: string;
+  buttonText?: React.ReactNode;
 }
 
-const RedeemButton: React.FC<SendTipsButtonProps> = ({ item }) => {
+const RedeemButton: React.FC<SendTipsButtonProps> = ({
+  item,
+  className,
+  buttonText,
+}) => {
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [isEmailVerificationModalOpen, setIsEmailVerificationModalOpen] =
     useState(false);
@@ -138,10 +144,14 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({ item }) => {
   return (
     <>
       <button
+        type="button"
         onClick={showGuideModal}
-        className="bg-[#053697] text-white font-bold py-2 px-4 rounded-md hover:bg-[#053697]/90 focus:outline-none"
+        className={
+          className ||
+          "bg-[#053697] text-white font-bold py-2 px-4 rounded-md hover:bg-[#053697]/90 focus:outline-none cursor-pointer"
+        }
       >
-        Redeem
+        {buttonText || "Redeem"}
       </button>
       {/* Guide Modal */}
       <Modal

@@ -1,11 +1,12 @@
 import GoogleAnalytics from "@/components/GoogleAnalytics/GoogleAnalytics";
-import SportsTicker from "@/components/Shared/SportsTicker";
 import ClickjackingFixed from "@/components/ethical_process/ClickjackingFixed";
+import OneSignalHandler from "@/components/OneSignal/OneSignalHandler";
 import { AuthProvider } from "@/provider/ContextProvider";
 import type { Metadata } from "next";
 import Script from "next/script";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
+
 export const metadata: Metadata = {
   title: "PROTIPPZ",
   description: "protippz",
@@ -45,8 +46,13 @@ export default function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <body>
+        <Script
+          src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+          strategy="afterInteractive"
+        />
         <NextTopLoader />
         <AuthProvider>
+          <OneSignalHandler />
           <Script
             id="chatbot-script"
             strategy="afterInteractive"
@@ -61,7 +67,6 @@ export default function RootLayout({
             }}
           />
           <ClickjackingFixed>{children}</ClickjackingFixed>
-          <SportsTicker />
         </AuthProvider>
         <GoogleAnalytics />
       </body>

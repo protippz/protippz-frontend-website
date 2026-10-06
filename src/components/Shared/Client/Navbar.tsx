@@ -720,7 +720,7 @@ const Navbar: React.FC = () => {
           ) : (
             <Link
               href="/sign-in"
-              className="bg-[#2FC191] hover:bg-[#2FC191]/90 text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-xs hover:shadow-md transition-all duration-200 whitespace-nowrap active:scale-95"
+              className="bg-[#053697] hover:bg-[#053697]/90 text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-xs hover:shadow-md transition-all duration-200 whitespace-nowrap active:scale-95"
             >
               Sign In
             </Link>
@@ -855,7 +855,7 @@ const Navbar: React.FC = () => {
               <Link
                 href="/sign-in"
                 onClick={closeDrawer}
-                className="block text-center w-full py-3 px-4 bg-[#2FC191] hover:bg-[#2FC191]/90 text-white font-semibold rounded-xl shadow-xs text-sm transition-all"
+                className="block text-center w-full py-3 px-4 bg-[#053697] hover:bg-[#053697]/90 text-white font-semibold rounded-xl shadow-xs text-sm transition-all"
               >
                 Sign In
               </Link>

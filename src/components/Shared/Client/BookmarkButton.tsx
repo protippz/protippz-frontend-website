@@ -8,10 +8,14 @@ const BookmarkButton = ({
   isBookmark,
   type,
   _id,
+  className,
+  children,
 }: {
   isBookmark: boolean;
   type: string;
   _id: string;
+  className?: string;
+  children?: React.ReactNode;
 }) => {
   const router = useRouter();
   const BookmarkHandler = async () => {
@@ -55,9 +59,9 @@ const BookmarkButton = ({
   return (
     <span
       onClick={BookmarkHandler}
-      className="text-4xl cursor-pointer select-none"
+      className={className || "text-4xl cursor-pointer select-none"}
     >
-      {isBookmark ? "★" : "☆"}
+      {children !== undefined ? children : (isBookmark ? "★" : "☆")}
     </span>
   );
 };

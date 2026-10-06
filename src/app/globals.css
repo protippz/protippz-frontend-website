@@ -663,3 +663,17 @@ body {
   line-height: 1.7;
 }
 
+/* Position Chatbot Widget at Bottom-Left to avoid overlapping with bottom-right elements */
+#webagent-chat-container,
+#webagent-root,
+#webagent-launcher,
+.webagent-chat-container,
+.webagent-launcher-button,
+div[id*="webagent"],
+div[class*="webagent"],
+iframe[src*="webagent"],
+iframe[id*="webagent"] {
+  left: 20px !important;
+  bottom: 50px !important;
+  right: auto !important;
+}

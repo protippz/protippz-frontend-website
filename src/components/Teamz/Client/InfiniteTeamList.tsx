@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import TeamzCards from "@/components/Teamz/TeamzCards";
 import { TeamInterface } from "@/app/(default)/teamz/page";
 import { get } from "@/ApisRequests/server";
-import { Empty, Spin } from "antd";
+import { ShieldAlert, Loader2 } from "lucide-react";
 
 interface InfiniteTeamListProps {
   initialData: TeamInterface[];
@@ -123,19 +123,33 @@ const InfiniteTeamList: React.FC<InfiniteTeamListProps> = ({
 
   if (!teams || teams.length === 0) {
     return (
-      <div className="col-span-3 py-20 flex justify-center items-center">
-        <Empty description="No Results Found. Search Again." />
+      <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-2xl my-8">
+        <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mb-3">
+          <ShieldAlert className="w-7 h-7" />
+        </div>
+        <h3 className="text-base font-bold text-slate-900">No Teams Found</h3>
+        <p className="text-xs text-slate-500 max-w-sm mt-1">
+          We couldn&apos;t find any teams matching your current filters. Try selecting another league or clearing your search.
+        </p>
       </div>
     );
   }
 
   return (
     <div className="w-full px-2">
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-2 mt-10">
         {teams.map((item: TeamInterface) => (
           <TeamzCards token={token} item={item} key={item?._id} />
         ))}
       </div>
+
+      {/* Loading more spinner */}
+      {loading && (
+        <div className="w-full py-8 flex items-center justify-center gap-2 text-slate-500 text-xs font-semibold">
+          <Loader2 className="w-4 h-4 animate-spin text-[#053697]" />
+          <span>Loading more teams...</span>
+        </div>
+      )}
 
       {/* Invisible Bottom Sentinel for seamless background loading */}
       <div ref={sentinelRef} className="w-full h-4" />
