@@ -48,31 +48,43 @@ const TeamPage = async ({ searchParams }: ParamsProps) => {
   const token = (await cookie).get("token")?.value;
 
   return (
-    <div className="max-w-355 mx-auto mt-6 sm:mt-8">
+    <div className="max-w-355 mx-auto mt-2 sm:mt-3 px-2 sm:px-4 pb-14">
       <GoToTop />
 
-      {/* Sticky Filter & Search Control Header */}
-      <div className="sticky top-[52px] sm:top-[58px] z-30 bg-[#fafbfb]/95 backdrop-blur-md pt-2 pb-2 space-y-3">
-        <Suspense
-          fallback={
-            <div className="w-full h-14 bg-gray-100 animate-pulse rounded-2xl mb-3" />
-          }
-        >
-          <League />
-        </Suspense>
-        {/* <AdContainer /> */}
-        <SearchAndSortComponent />
-      </div>
+      {/* Unified Master Container Card: Sticky shell with independent scrolling for sidebar and cards */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-slate-200 lg:sticky lg:top-[64px] h-[calc(100vh-125px)] min-h-[550px]">
+        {/* Left Column: League Filter Sidebar (scrolls independently) */}
+        <aside className="w-full lg:w-72 xl:w-80 lg:shrink-0 bg-white h-full flex flex-col overflow-hidden">
+          <Suspense
+            fallback={
+              <div className="w-full h-full bg-white animate-pulse" />
+            }
+          >
+            <League />
+          </Suspense>
+        </aside>
 
-      <InfiniteTeamList
-        initialData={playersData || []}
-        initialMeta={meta}
-        token={token}
-        searchTerm={searchTerm || undefined}
-        sort={sort || undefined}
-        league={league || undefined}
-        limit={20}
-      />
+        {/* Right Column: Top Header + Scrollable Cards Area */}
+        <main className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#fafbfb]">
+          {/* Top Header: Search & Sort Bar (fixed at top of main) */}
+          <div className="shrink-0 bg-white border-b border-slate-200 z-10">
+            <SearchAndSortComponent />
+          </div>
+
+          {/* Cards Content Area: Independently Scrollable */}
+          <div className="flex-1 overflow-y-auto custom-sidebar-scrollbar p-4 sm:p-6 lg:p-7 min-h-0">
+            <InfiniteTeamList
+              initialData={playersData || []}
+              initialMeta={meta}
+              token={token}
+              searchTerm={searchTerm || undefined}
+              sort={sort || undefined}
+              league={league || undefined}
+              limit={20}
+            />
+          </div>
+        </main>
+      </div>
     </div>
   );
 };

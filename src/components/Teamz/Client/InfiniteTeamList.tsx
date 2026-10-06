@@ -103,21 +103,39 @@ const InfiniteTeamList: React.FC<InfiniteTeamListProps> = ({
   useEffect(() => {
     if (observerRef.current) observerRef.current.disconnect();
 
+    const scrollContainer =
+      sentinelRef.current?.closest(".overflow-y-auto") as HTMLElement | null;
+
     observerRef.current = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore && !loading) {
           loadMore();
         }
       },
-      { threshold: 0, rootMargin: "600px 0px" }
+      { root: scrollContainer, threshold: 0, rootMargin: "400px 0px" }
     );
 
     if (sentinelRef.current) {
       observerRef.current.observe(sentinelRef.current);
     }
 
+    const handleScroll = () => {
+      if (!scrollContainer || loading || !hasMore) return;
+      const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
+      if (scrollHeight - scrollTop - clientHeight < 600) {
+        loadMore();
+      }
+    };
+
+    if (scrollContainer) {
+      scrollContainer.addEventListener("scroll", handleScroll, { passive: true });
+    }
+
     return () => {
       if (observerRef.current) observerRef.current.disconnect();
+      if (scrollContainer) {
+        scrollContainer.removeEventListener("scroll", handleScroll);
+      }
     };
   }, [hasMore, loading, loadMore]);
 
@@ -136,8 +154,8 @@ const InfiniteTeamList: React.FC<InfiniteTeamListProps> = ({
   }
 
   return (
-    <div className="w-full px-2">
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-2 mt-10">
+    <div className="w-full">
+      <div className="w-full grid grid-cols-1 gap-4">
         {teams.map((item: TeamInterface) => (
           <TeamzCards token={token} item={item} key={item?._id} />
         ))}

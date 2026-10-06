@@ -17,7 +17,7 @@ export default League;
 
 const getLeagues = async () => {
   try {
-    const res = await get("/league/get-all?limit=20&page=1");
+    const res = await get("/league/get-all?limit=30&page=1");
     return [res.data?.result, res.data?.meta];
   } catch (error) {
     console.error("Failed to load leagues:", error);

@@ -73,7 +73,7 @@ const SearchAndSortComponent: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-white border border-stone-200/90 rounded-xl p-3 sm:p-3.5 shadow-2xs">
+    <div className="w-full bg-white p-3.5 sm:p-4">
       <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3.5">
         {/* Left Side: Sort Controls */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
