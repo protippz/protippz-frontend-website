@@ -562,95 +562,52 @@ const LeagueFilterHub: React.FC<LeagueFilterHubProps> = ({
       </div>
 
       {/* ========================================================= */}
-      {/* 2. MOBILE FILTER BAR (Visible below lg screens)          */}
+      {/* 2. MOBILE & TABLET FILTER BAR (Visible below lg screens) */}
       {/* ========================================================= */}
-      <div className="lg:hidden w-full bg-white p-3 sm:p-3.5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-          {/* Filter Trigger Button */}
-          <div className="flex items-center justify-between gap-2">
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-[#053697] hover:bg-[#053697]/90 text-white text-xs font-semibold transition-colors cursor-pointer shrink-0"
-            >
-              {isPending ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
-              ) : (
-                <Filter className="w-3.5 h-3.5" />
-              )}
-              <span>Filter by League</span>
-              <span className="px-1.5 py-0.5 rounded-full bg-white/20 text-[10px] font-bold">
-                {totalCount}
-              </span>
-            </button>
-
-            {activeLeague && (
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 text-[#053697] text-xs font-bold truncate max-w-[160px]">
-                <span className="truncate">{activeLeague.name}</span>
-                <button
-                  type="button"
-                  onClick={handleClearLeagueFilter}
-                  className="p-0.5 hover:bg-blue-100 rounded"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
+      <div className="lg:hidden w-full bg-white px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-200">
+        <div className="flex items-center justify-between gap-2.5">
+          {/* Main Filter by League Button */}
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+            className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-2 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-2xs hover:shadow-xs shrink-0"
+          >
+            {isPending ? (
+              <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin text-white" />
+            ) : (
+              <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FC191]" />
             )}
-          </div>
+            <span>Filter by League</span>
+            <span className="px-2 py-0.5 rounded-full bg-white/20 text-[10px] sm:text-[11px] font-extrabold">
+              {totalCount}
+            </span>
+          </button>
 
-          {/* Quick League Pills for Mobile */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 sm:pt-0">
-            <button
-              type="button"
-              onClick={handleClearLeagueFilter}
-              disabled={isPending}
-              className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-colors border ${
-                !activeLeagueId
-                  ? "bg-[#053697] text-white border-[#053697]"
-                  : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
-              }`}
-            >
-              All
-            </button>
-
-            {quickLeagues.map((leagueItem) => {
-              const isSelected = activeLeagueId === leagueItem._id;
-              return (
-                <button
-                  key={leagueItem._id}
-                  type="button"
-                  onClick={() => handleSelectLeague(leagueItem._id)}
-                  disabled={isPending}
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-colors border ${
-                    isSelected
-                      ? "bg-[#053697] text-white border-[#053697]"
-                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
-                  }`}
-                >
-                  <div className="relative w-4 h-4 shrink-0 flex items-center justify-center">
-                    <LeagueLogoImage
-                      src={leagueItem.league_image}
-                      alt={leagueItem.name}
-                      width={16}
-                      height={16}
-                    />
-                  </div>
-                  <span className="truncate max-w-[100px]">
-                    {leagueItem.name}
-                  </span>
-                </button>
-              );
-            })}
-
+          {/* Active League Indicator Chip or Browse Trigger */}
+          {activeLeague ? (
+            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-blue-50 border border-blue-200 text-[#053697] text-xs font-bold truncate max-w-[180px] sm:max-w-xs">
+              <span className="text-[10px] uppercase font-bold text-slate-400 shrink-0 hidden sm:inline">Active:</span>
+              <span className="truncate">{activeLeague.name}</span>
+              <button
+                type="button"
+                onClick={handleClearLeagueFilter}
+                className="p-0.5 hover:bg-blue-100 rounded text-slate-400 hover:text-[#053697] transition-colors ml-0.5 cursor-pointer"
+                title="Clear league filter"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
             <button
               type="button"
               onClick={() => setIsModalOpen(true)}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-[#053697] hover:bg-blue-50 shrink-0 transition-colors flex items-center gap-1"
+              className="text-xs font-semibold text-slate-500 hover:text-[#053697] transition-colors flex items-center gap-1 cursor-pointer"
             >
-              <span>More</span>
-              <ChevronRight className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Browse {totalCount} conferences</span>
+              <span className="sm:hidden text-[11px]">All conferences</span>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
             </button>
-          </div>
+          )}
         </div>
       </div>
 

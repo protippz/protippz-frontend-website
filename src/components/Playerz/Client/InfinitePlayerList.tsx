@@ -34,7 +34,7 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(
-    initialMeta?.totalPage ? initialMeta.totalPage > 1 : false
+    initialMeta?.totalPage ? initialMeta.totalPage > 1 : false,
   );
 
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -79,7 +79,7 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
           // Exclude potential duplicates by _id
           const existingIds = new Set(prev.map((item) => item._id));
           const uniqueNewItems = newItems.filter(
-            (item: Player) => !existingIds.has(item._id)
+            (item: Player) => !existingIds.has(item._id),
           );
           return [...prev, ...uniqueNewItems];
         });
@@ -103,41 +103,65 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
   useEffect(() => {
     if (observerRef.current) observerRef.current.disconnect();
 
+    const scrollContainer = sentinelRef.current?.closest(
+      ".overflow-y-auto",
+    ) as HTMLElement | null;
+
     observerRef.current = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore && !loading) {
           loadMore();
         }
       },
-      { threshold: 0, rootMargin: "600px 0px" }
+      { root: scrollContainer, threshold: 0, rootMargin: "400px 0px" },
     );
 
     if (sentinelRef.current) {
       observerRef.current.observe(sentinelRef.current);
     }
 
+    const handleScroll = () => {
+      if (!scrollContainer || loading || !hasMore) return;
+      const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
+      if (scrollHeight - scrollTop - clientHeight < 600) {
+        loadMore();
+      }
+    };
+
+    if (scrollContainer) {
+      scrollContainer.addEventListener("scroll", handleScroll, {
+        passive: true,
+      });
+    }
+
     return () => {
       if (observerRef.current) observerRef.current.disconnect();
+      if (scrollContainer) {
+        scrollContainer.removeEventListener("scroll", handleScroll);
+      }
     };
   }, [hasMore, loading, loadMore]);
 
   if (!players || players.length === 0) {
     return (
-      <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-2xl my-8">
+      <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-2xl my-4">
         <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mb-3">
           <UserX className="w-7 h-7" />
         </div>
-        <h3 className="text-base font-bold text-slate-900">No Athletes Found</h3>
+        <h3 className="text-base font-bold text-slate-900">
+          No Athletes Found
+        </h3>
         <p className="text-xs text-slate-500 max-w-sm mt-1">
-          We couldn&apos;t find any players matching your current filters. Try selecting another team or clearing your search.
+          We couldn&apos;t find any players matching your current filters. Try
+          selecting another team or clearing your search.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="w-full px-2">
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-2 mt-10">
+    <div className="w-full">
+      <div className="w-full grid grid-cols-1 gap-4 sm:gap-5">
         {players.map((item: Player) => (
           <PlayerzCards token={token} item={item} key={item?._id} />
         ))}

@@ -73,45 +73,45 @@ const SearchAndSortComponent: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-white p-3.5 sm:p-4">
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3.5">
+    <div className="w-full bg-white px-3 sm:px-4 py-2.5 sm:py-3">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2.5 sm:gap-3">
         {/* Left Side: Sort Controls */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-          <div className="flex items-center gap-1.5 text-[#053697] font-bold text-xs sm:text-sm shrink-0">
+        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          <div className="flex items-center gap-1 text-[#053697] font-bold text-xs sm:text-sm shrink-0">
             <SlidersHorizontal className="w-3.5 h-3.5 text-[#2FC191]" />
-            <span>Sort By:</span>
+            <span>Sort:</span>
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-1 sm:flex-initial">
             {/* Sort Field Selector */}
-            <div className="relative flex-1 sm:w-36">
+            <div className="relative w-28 sm:w-32 md:w-36">
               <select
                 value={sortBy}
                 onChange={handleSortByChange}
                 aria-label="Sort by field"
-                className="w-full appearance-none bg-stone-50 hover:bg-white text-stone-800 text-xs sm:text-sm font-semibold rounded-lg border border-stone-200 hover:border-[#2FC191] focus:border-[#2FC191] focus:ring-1 focus:ring-[#2FC191] py-2 pl-3 pr-8 outline-none transition-colors cursor-pointer"
+                className="w-full appearance-none bg-stone-50 hover:bg-white text-stone-800 text-xs sm:text-sm font-semibold rounded-lg border border-stone-200 hover:border-[#2FC191] focus:border-[#2FC191] focus:ring-1 focus:ring-[#2FC191] py-1.5 sm:py-2 pl-2.5 sm:pl-3 pr-7 outline-none transition-colors cursor-pointer"
               >
                 <option value="name">Name</option>
                 <option value="sport">Sports</option>
               </select>
-              <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400">
-                <ArrowUpDown className="w-3.5 h-3.5 text-stone-400" />
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400">
+                <ArrowUpDown className="w-3 h-3 text-stone-400" />
               </div>
             </div>
 
             {/* Sort Order Selector */}
-            <div className="relative flex-1 sm:w-36">
+            <div className="relative w-28 sm:w-32 md:w-36">
               <select
                 value={order}
                 onChange={handleOrderChange}
                 aria-label="Sort order"
-                className="w-full appearance-none bg-stone-50 hover:bg-white text-stone-800 text-xs sm:text-sm font-semibold rounded-lg border border-stone-200 hover:border-[#2FC191] focus:border-[#2FC191] focus:ring-1 focus:ring-[#2FC191] py-2 pl-3 pr-8 outline-none transition-colors cursor-pointer"
+                className="w-full appearance-none bg-stone-50 hover:bg-white text-stone-800 text-xs sm:text-sm font-semibold rounded-lg border border-stone-200 hover:border-[#2FC191] focus:border-[#2FC191] focus:ring-1 focus:ring-[#2FC191] py-1.5 sm:py-2 pl-2.5 sm:pl-3 pr-7 outline-none transition-colors cursor-pointer"
               >
-                <option value="A to Z">A to Z (Asc)</option>
-                <option value="Z to A">Z to A (Desc)</option>
+                <option value="A to Z">A to Z</option>
+                <option value="Z to A">Z to A</option>
               </select>
-              <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400">
-                <ArrowUpDown className="w-3.5 h-3.5 text-stone-400" />
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400">
+                <ArrowUpDown className="w-3 h-3 text-stone-400" />
               </div>
             </div>
           </div>
@@ -120,23 +120,23 @@ const SearchAndSortComponent: React.FC = () => {
         {/* Right Side: Search Form */}
         <form
           onSubmit={handleSearchSubmit}
-          className="flex items-center gap-2 w-full lg:w-auto"
+          className="flex items-center gap-2 w-full md:w-auto min-w-0"
         >
-          <div className="relative flex-1 sm:w-64">
-            <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <div className="relative flex-1 md:w-48 lg:w-60 min-w-0">
+            <Search className="w-3.5 h-3.5 text-stone-400 absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search team by name..."
-              className="w-full bg-stone-50 hover:bg-white focus:bg-white text-stone-800 text-xs sm:text-sm font-medium rounded-lg border border-stone-200 hover:border-[#2FC191] focus:border-[#2FC191] focus:ring-1 focus:ring-[#2FC191] py-2 pl-8.5 pr-8 outline-none transition-colors placeholder-stone-400"
+              placeholder="Search team..."
+              className="w-full bg-stone-50 hover:bg-white focus:bg-white text-stone-800 text-xs sm:text-sm font-medium rounded-lg border border-stone-200 hover:border-[#2FC191] focus:border-[#2FC191] focus:ring-1 focus:ring-[#2FC191] py-1.5 sm:py-2 pl-8 pr-7 outline-none transition-colors placeholder-stone-400"
             />
             {search && (
               <button
                 type="button"
                 onClick={handleClearSearch}
                 aria-label="Clear search"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-stone-200 text-stone-400 hover:text-stone-600 transition-colors cursor-pointer"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-stone-200 text-stone-400 hover:text-stone-600 transition-colors cursor-pointer"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -145,7 +145,7 @@ const SearchAndSortComponent: React.FC = () => {
 
           <button
             type="submit"
-            className="px-4 py-2 rounded-lg bg-[#053697] hover:bg-[#042a78] text-white font-bold text-xs sm:text-sm tracking-wide transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-[#053697] hover:bg-[#042a78] text-white font-bold text-xs sm:text-sm tracking-wide transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
           >
             <Search className="w-3.5 h-3.5" />
             <span>Search</span>

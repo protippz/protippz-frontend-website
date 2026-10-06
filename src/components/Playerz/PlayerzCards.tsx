@@ -33,11 +33,11 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
       variants={cardReveal}
       initial="hidden"
       animate="visible"
-      className="group relative bg-white rounded-[22px] border border-slate-200/85 hover:border-[#2FC191]/50 shadow-[0_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0_14px_34px_rgba(5,54,151,0.11)] transition-all duration-300 p-5 sm:p-6 flex flex-col justify-between overflow-hidden"
+      className="group relative bg-white rounded-2xl sm:rounded-[22px] border border-slate-200/85 hover:border-slate-300 shadow-[0_2px_12px_rgba(15,23,42,0.04)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.07)] transition-all duration-200 p-4 sm:p-5 lg:p-6 flex flex-col justify-between overflow-hidden"
     >
-      {/* Top Header: Year/Exp on Left + Favorite Pill on Right */}
+      {/* Top Header: Class/Exp on Left + Favorite Button on Right */}
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs sm:text-[13px] font-extrabold text-[#2FC191]">
+        <span className="text-xs sm:text-[13px] font-bold text-[#2FC191]">
           {expLabel}
         </span>
 
@@ -64,11 +64,11 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
       </h3>
 
       {/* Subtle Horizontal Divider */}
-      <div className="w-full h-px bg-slate-200/60 mb-3" />
+      <div className="w-full h-px bg-slate-200/60 mb-3 sm:mb-4" />
 
-      {/* Main Content: Left Details & Right Photo Column */}
-      <div className="flex items-end justify-between gap-4">
-        {/* Left Column: Team & Stats */}
+      {/* Main Content: Left Details & Right Logo/CTA Column */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        {/* Left Column: Team & Metadata Modules */}
         <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
           {/* Team Info */}
           <div>
@@ -89,15 +89,15 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
             </div>
           </div>
 
-          {/* Stats: Position | Jersey | Exp */}
-          <div className="flex items-center gap-2 sm:gap-2.5 pt-3">
+          {/* Compact Information Modules (Same muted labels & rounded light-gray pills) */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 pt-3 sm:pt-4">
             {/* Position */}
             <div className="flex flex-col">
               <span className="text-[10px] text-slate-400 font-medium mb-1">
                 Position
               </span>
-              <div className="bg-[#f0f2f5] border border-slate-200/70 rounded-lg px-2.5 py-1 text-[11px] sm:text-xs font-bold text-[#053697] whitespace-nowrap">
-                {item?.position || "G (Point Guard)"}
+              <div className="bg-[#f0f2f5] border border-slate-200/70 rounded-lg px-2.5 py-1 text-[11px] sm:text-xs font-bold text-[#053697] whitespace-nowrap min-w-[28px] text-center">
+                {item?.position || "G"}
               </div>
             </div>
 
@@ -117,45 +117,62 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                 Exp.
               </span>
               <div className="bg-[#f0f2f5] border border-slate-200/70 rounded-lg px-2.5 py-1 text-[11px] sm:text-xs font-bold text-[#053697] whitespace-nowrap min-w-[32px] text-center">
-                {item?.experience || "Jr."}
+                {expLabel}
               </div>
             </div>
+
+            {/* Sport (Carefully added using the exact same pill style) */}
+            {item?.league?.sport && (
+              <div className="flex flex-col">
+                <span className="text-[10px] text-slate-400 font-medium mb-1">
+                  Sport
+                </span>
+                <div className="bg-[#f0f2f5] border border-slate-200/70 rounded-lg px-2.5 py-1 text-[11px] sm:text-xs font-bold text-[#053697] whitespace-nowrap">
+                  {item.league.sport}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Right Column: Photo + Send Tip Button */}
-        <div className="w-[115px] sm:w-[125px] shrink-0 flex flex-col items-center gap-2">
-          {/* Athlete Photo Container */}
-          <div className="relative w-full h-[115px] sm:h-[125px] rounded-2xl bg-slate-100 overflow-hidden border border-slate-200/70 shadow-2xs">
+        {/* Right Column: Logo in soft rounded container + Send Tip Button */}
+        <div className="w-full sm:w-[130px] lg:w-[140px] shrink-0 flex flex-row sm:flex-col items-center justify-between sm:justify-start gap-2.5 sm:gap-2">
+          {/* Logo / Media Container (soft light-gray/blue rounded container matching reference) */}
+          <div className="relative w-[110px] sm:w-full h-[85px] sm:h-[105px] rounded-xl sm:rounded-2xl bg-[#f0f4f9] overflow-hidden border border-slate-200/70 shadow-2xs flex items-center justify-center p-2 shrink-0">
             <Image
               src={
                 item?.player_image ? imageUrl(item.player_image) : defaultPlayer
               }
               alt={item.name}
               fill
-              className="object-cover object-top"
+              className="object-contain p-1"
               unoptimized={false}
             />
-
-            {/* Mini Team Icon on bottom-right of photo */}
-            <div className="absolute bottom-1.5 right-1.5 w-5 h-5 rounded-full bg-white border border-slate-200 shadow-2xs flex items-center justify-center p-0.5">
-              <Image
-                src={leagueLogo}
-                alt="Logo"
-                width={14}
-                height={14}
-                className="object-contain"
-              />
-            </div>
           </div>
 
-          {/* Send Tip Button */}
-          <SendTipsButton
-            token={token}
-            item={item}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all cursor-pointerw-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all cursor-pointerw-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all cursor-pointerw-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
-            buttonText="Send Tip"
-          />
+          {/* Send Tip Button & Profile Link */}
+          <div className="flex-1 sm:w-full">
+            <SendTipsButton item={item} token={token}>
+              {({ openTip, openDetails }) => (
+                <div className="w-full flex flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={openTip}
+                    className="w-full inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
+                  >
+                    Send Tip
+                  </button>
+                  <button
+                    type="button"
+                    onClick={openDetails}
+                    className="hidden sm:inline-block mt-1 text-[11px] font-semibold text-slate-400 hover:text-[#053697] transition-colors cursor-pointer text-center"
+                  >
+                    View Profile →
+                  </button>
+                </div>
+              )}
+            </SendTipsButton>
+          </div>
         </div>
       </div>
     </MotionDiv>

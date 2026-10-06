@@ -16,6 +16,12 @@ interface SendTipsButtonProps {
   token: string | undefined | null;
   className?: string;
   buttonText?: React.ReactNode;
+  children?:
+    | React.ReactNode
+    | ((actions: {
+        openTip: () => void;
+        openDetails: () => void;
+      }) => React.ReactNode);
 }
 
 const SendTipsButton: React.FC<SendTipsButtonProps> = ({
@@ -23,6 +29,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
   token,
   className,
   buttonText,
+  children,
 }) => {
   const [form] = Form.useForm();
   const [amount, setAmount] = useState("");
@@ -33,7 +40,11 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
   const data = useContextData();
   const router = useRouter();
 
-  const showModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const navigateToLogin = () => {
+    router.push("/sign-in");
+  };
+
+  const openTip = () => {
     if (!data?.userData?.user) {
       return Swal.fire({
         title: "You need to log in!",
@@ -48,16 +59,34 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
         }
       });
     }
-    const targetId = e.currentTarget.id;
-    if (targetId === 'details') {
-      showDetailsModal(true);
-    } else if (targetId === 'tippz') {
-      setIsModalOpen(true);
-    }
+    setIsModalOpen(true);
   };
 
-  const navigateToLogin = () => {
-    router.push("/sign-in");
+  const openDetails = () => {
+    if (!data?.userData?.user) {
+      return Swal.fire({
+        title: "You need to log in!",
+        text: "Please log in to view player details.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Go to Login",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigateToLogin();
+        }
+      });
+    }
+    showDetailsModal(true);
+  };
+
+  const showModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const targetId = e.currentTarget.id;
+    if (targetId === "details") {
+      openDetails();
+    } else {
+      openTip();
+    }
   };
 
   const handleCancel = () => {
@@ -94,7 +123,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
             headers: {
               Authorization: `${localStorage.getItem("token")}`,
             },
-          }
+          },
         );
         if (MakeTip?.success) {
           toast.success(MakeTip?.message);
@@ -104,35 +133,34 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
           setIsPaymentModalOpen(false);
           setIsOopsModalOpen(true);
         }
-      } catch (error) { }
+      } catch (error) {}
     } else {
       router.push(
-        `/send-tip?amount=${amount}&entityType=Player&entityId=${item?._id}`
+        `/send-tip?amount=${amount}&entityType=Player&entityId=${item?._id}`,
       );
     }
   };
 
   return (
     <>
-      <div className="flex items-center gap-2">
-        {/* <button
-          id='details'
-          onClick={(e) => showModal(e)}
-          className="bg-[#37C86D] text-white font-bold py-2 px-4 rounded-md hover:bg-[#184eb9]/90 focus:outline-none"
-        >
-          See Details
-        </button> */}
-        <button
-          id='tippz'
-          onClick={(e) => showModal(e)}
-          className={
-            className ||
-            "bg-[#053697] text-white font-bold py-2 px-4 rounded-md hover:bg-[#184eb9]/90 focus:outline-none"
-          }
-        >
-          {buttonText || "Send Tippz"}
-        </button>
-      </div>
+      {typeof children === "function" ? (
+        children({ openTip, openDetails })
+      ) : children ? (
+        children
+      ) : (
+        <div className="flex items-center gap-2">
+          <button
+            id="tippz"
+            onClick={(e) => showModal(e)}
+            className={
+              className ||
+              "bg-[#053697] text-white font-bold py-2 px-4 rounded-md hover:bg-[#184eb9]/90 focus:outline-none"
+            }
+          >
+            {buttonText || "Send Tippz"}
+          </button>
+        </div>
+      )}
       <Modal
         title=""
         visible={isModalOpen}
@@ -251,7 +279,12 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
           </Button>
         </div>
       </Modal>
-      <PlayerDetailsServer token={token} id={item?._id} detailsModal={detailsModal} showDetailsModal={showDetailsModal} />
+      <PlayerDetailsServer
+        token={token}
+        id={item?._id}
+        detailsModal={detailsModal}
+        showDetailsModal={showDetailsModal}
+      />
     </>
   );
 };

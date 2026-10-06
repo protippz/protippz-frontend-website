@@ -33,7 +33,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
       variants={cardReveal}
       initial="hidden"
       animate="visible"
-      className="group relative bg-white rounded-[22px] border border-slate-200/85 hover:border-[#2FC191]/50 shadow-[0_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0_14px_34px_rgba(5,54,151,0.11)] transition-all duration-300 p-5 sm:p-6 flex flex-col justify-between overflow-hidden"
+      className="group relative bg-white rounded-2xl sm:rounded-[22px] border border-slate-200/85 hover:border-[#2FC191]/50 shadow-[0_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0_14px_34px_rgba(5,54,151,0.11)] transition-all duration-300 p-4 sm:p-5 lg:p-6 flex flex-col justify-between overflow-hidden"
     >
 
       {/* Top Background Team Image Overlay (If available, very subtle) */}
