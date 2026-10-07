@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 import { Player } from "@/app/(default)/playerz/page";
 import { useContextData } from "@/provider/ContextProvider";
 import Swal from "sweetalert2";
-import PlayerDetailsServer from "./PlayerDetailsServer";
 
 interface SendTipsButtonProps {
   item: Player;
@@ -34,7 +33,6 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
   const [form] = Form.useForm();
   const [amount, setAmount] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [detailsModal, showDetailsModal] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isOopsModalOpen, setIsOopsModalOpen] = useState(false);
   const data = useContextData();
@@ -63,21 +61,9 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
   };
 
   const openDetails = () => {
-    if (!data?.userData?.user) {
-      return Swal.fire({
-        title: "You need to log in!",
-        text: "Please log in to view player details.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Go to Login",
-        cancelButtonText: "Cancel",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigateToLogin();
-        }
-      });
+    if (item?._id) {
+      router.push(`/playerz/${item._id}`);
     }
-    showDetailsModal(true);
   };
 
   const showModal = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -279,12 +265,6 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
           </Button>
         </div>
       </Modal>
-      <PlayerDetailsServer
-        token={token}
-        id={item?._id}
-        detailsModal={detailsModal}
-        showDetailsModal={showDetailsModal}
-      />
     </>
   );
 };

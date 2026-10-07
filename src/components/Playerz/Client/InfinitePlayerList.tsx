@@ -160,8 +160,8 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
   }
 
   return (
-    <div className="w-full">
-      <div className="w-full grid grid-cols-1 gap-4 sm:gap-5">
+    <div className="w-full p-2.5 sm:p-4">
+      <div className="w-full grid grid-cols-1">
         {players.map((item: Player) => (
           <PlayerzCards token={token} item={item} key={item?._id} />
         ))}

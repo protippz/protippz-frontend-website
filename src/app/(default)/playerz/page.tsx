@@ -90,7 +90,7 @@ const PlayerZPage = async ({ searchParams }: ParamsProps) => {
           </div>
 
           {/* Cards Content Area: Independently Scrollable */}
-          <div className="flex-1 overflow-y-auto custom-sidebar-scrollbar p-3 sm:p-5 lg:p-7 min-h-0">
+          <div className="flex-1 overflow-y-auto custom-sidebar-scrollbar min-h-0">
             <InfinitePlayerList
               initialData={data || []}
               initialMeta={meta}

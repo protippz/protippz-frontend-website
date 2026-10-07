@@ -3,179 +3,160 @@ import Image from "next/image";
 import { imageUrl } from "@/ApisRequests/server";
 import BookmarkButton from "../Shared/Client/BookmarkButton";
 import defaultPlayer from "@/Assets/playerDefult.jpg";
-import leagueLogo from "@/Assets/PT Logo.png";
 import { Player } from "@/app/(default)/playerz/page";
 import SendTipsButton from "./Client/SendTipsButton";
-import MotionDiv from "./Motion";
 
 interface PlayerzCardsProps {
   item: Player;
   token: string | undefined | null;
 }
 
-const cardReveal = {
-  hidden: { y: "4%", opacity: 0 },
-  visible: {
-    y: "0%",
-    opacity: 1,
-    transition: {
-      duration: 0.35,
-      ease: "easeOut",
-    },
-  },
-};
-
 const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
   const expLabel = item?.experience || "Jr.";
 
   return (
-    <MotionDiv
-      variants={cardReveal}
-      initial="hidden"
-      animate="visible"
-      className="group relative bg-white rounded-2xl sm:rounded-[22px] border border-slate-200/85 hover:border-slate-300 shadow-[0_2px_12px_rgba(15,23,42,0.04)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.07)] transition-all duration-200 p-4 sm:p-5 lg:p-6 flex flex-col justify-between overflow-hidden"
-    >
-      {/* Top Header: Class/Exp on Left + Favorite Button on Right */}
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-xs sm:text-[13px] font-bold text-[#2FC191]">
-          {expLabel}
-        </span>
+    <SendTipsButton item={item} token={token}>
+      {({ openTip, openDetails }) => {
 
-        <BookmarkButton
-          isBookmark={item?.isBookmark}
-          type="player"
-          _id={item?._id}
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#f1f3f6] hover:bg-amber-50/80 border border-slate-200/70 text-xs font-semibold text-slate-700 cursor-pointer transition-all duration-150 select-none"
-        >
-          <span
-            className={`text-xs leading-none ${
-              item?.isBookmark ? "text-amber-500 font-bold" : "text-slate-400"
-            }`}
-          >
-            {item?.isBookmark ? "★" : "☆"}
-          </span>
-          <span className="text-[11px] font-bold text-slate-700">Favorite</span>
-        </BookmarkButton>
-      </div>
 
-      {/* Player Name */}
-      <h3 className="text-xl sm:text-[22px] font-black tracking-wide text-[#053697] uppercase mt-1 mb-2.5 line-clamp-1">
-        {item.name}
-      </h3>
-
-      {/* Subtle Horizontal Divider */}
-      <div className="w-full h-px bg-slate-200/60 mb-3 sm:mb-4" />
-
-      {/* Main Content: Left Details & Right Logo/CTA Column */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        {/* Left Column: Team & Metadata Modules */}
-        <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
-          {/* Team Info */}
-          <div>
-            <span className="text-[11px] font-medium text-slate-400">Team</span>
-            <div className="flex items-center gap-1.5 mt-1">
-              <div className="w-4 h-4 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
+        return (
+          <div className="relative bg-white border border-slate-200/90 rounded-xl overflow-hidden mb-4 sm:mb-5">
+            {/* Top Primary Entity Section */}
+            <div className="flex flex-col md:flex-row items-stretch p-2 gap-4">
+              {/* Left Column: Player Photo */}
+              <div
+                onClick={openDetails}
+                className="relative w-full md:w-[260px] lg:w-[290px] h-[190px] sm:h-[210px] md:h-auto min-h-[190px] shrink-0 rounded-lg overflow-hidden bg-slate-100 border border-slate-200/80 cursor-pointer"
+                title={`View profile for ${item.name}`}
+              >
                 <Image
-                  src={leagueLogo}
-                  alt="Team"
-                  width={14}
-                  height={14}
-                  className="object-contain"
+                  src={
+                    item?.player_image ? imageUrl(item.player_image) : defaultPlayer
+                  }
+                  alt={item.name || "Player"}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 290px"
+                  className="object-contain object-top"
                 />
               </div>
-              <span className="text-xs sm:text-[13px] font-bold text-[#053697] line-clamp-1">
-                {item.team?.name || "Independent"}
-              </span>
-            </div>
-          </div>
 
-          {/* Compact Information Modules (Same muted labels & rounded light-gray pills) */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 pt-3 sm:pt-4">
-            {/* Position */}
-            <div className="flex flex-col">
-              <span className="text-[10px] text-slate-400 font-medium mb-1">
-                Position
-              </span>
-              <div className="bg-[#f0f2f5] border border-slate-200/70 rounded-lg px-2.5 py-1 text-[11px] sm:text-xs font-bold text-[#053697] whitespace-nowrap min-w-[28px] text-center">
-                {item?.position || "G"}
-              </div>
-            </div>
+              {/* Right Column: Entity Overview & Action */}
+              <div className="flex-1 min-w-0 flex flex-col justify-between">
+                <div>
+                  {/* Top Line: Title & Price + Select Button */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h3
+                        onClick={openDetails}
+                        className="text-lg sm:text-[21px] font-bold text-[#0275d8] hover:text-[#0056b3] transition-colors cursor-pointer tracking-tight line-clamp-1"
+                        title={item.name}
+                      >
+                        {item.name}
+                      </h3>
+                    </div>
 
-            {/* Jersey */}
-            <div className="flex flex-col">
-              <span className="text-[10px] text-slate-400 font-medium mb-1">
-                Jersey
-              </span>
-              <div className="bg-[#f0f2f5] border border-slate-200/70 rounded-lg px-2.5 py-1 text-[11px] sm:text-xs font-bold text-[#053697] whitespace-nowrap min-w-[32px] text-center">
-                {item?.jerceyNumber ? `#${item.jerceyNumber}` : "--"}
-              </div>
-            </div>
+                    {/* Pricing & SELECT Action Button */}
+                    <div className="shrink-0 flex flex-col items-end gap-1.5 ml-2">
+                      <div className="text-right whitespace-nowrap text-xs text-slate-500 font-normal">
+                        {item?.totalTips ? (
+                          <>
+                            total tips{" "}
+                            <span className="text-base sm:text-lg font-bold text-slate-900">
+                              ${item.totalTips.toLocaleString()}
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            from{" "}
+                            <span className="text-base sm:text-lg font-bold text-slate-900">
+                              $5
+                            </span>{" "}
+                            / tip
+                          </>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={openTip}
+                        className="px-5 sm:px-6 py-2 rounded bg-[#053697] text-white text-xs sm:text-[13px] font-extrabold uppercase tracking-wider cursor-pointer"
+                      >
+                        SELECT
+                      </button>
+                    </div>
+                  </div>
 
-            {/* Exp */}
-            <div className="flex flex-col">
-              <span className="text-[10px] text-slate-400 font-medium mb-1">
-                Exp.
-              </span>
-              <div className="bg-[#f0f2f5] border border-slate-200/70 rounded-lg px-2.5 py-1 text-[11px] sm:text-xs font-bold text-[#053697] whitespace-nowrap min-w-[32px] text-center">
-                {expLabel}
-              </div>
-            </div>
+                  {/* Rating / Meta Line */}
+                  <div className="flex items-center gap-1.5 mt-1 sm:mt-1.5 flex-wrap">
+                    <span className="text-slate-300">•</span>
+                    <span className="text-xs font-semibold text-slate-600 line-clamp-1">
+                      {item.team?.name || "Independent"}
+                    </span>
 
-            {/* Sport (Carefully added using the exact same pill style) */}
-            {item?.league?.sport && (
-              <div className="flex flex-col">
-                <span className="text-[10px] text-slate-400 font-medium mb-1">
-                  Sport
-                </span>
-                <div className="bg-[#f0f2f5] border border-slate-200/70 rounded-lg px-2.5 py-1 text-[11px] sm:text-xs font-bold text-[#053697] whitespace-nowrap">
-                  {item.league.sport}
+                    {/* Bookmark Favorite Button */}
+                    <div className="ml-auto">
+                      <BookmarkButton
+                        isBookmark={item?.isBookmark}
+                        type="player"
+                        _id={item?._id}
+                        className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-amber-500 cursor-pointer transition-colors"
+                      >
+                        <span
+                          className={
+                            item?.isBookmark ? "text-amber-500" : "text-slate-400"
+                          }
+                        >
+                          {item?.isBookmark ? "★" : "☆"}
+                        </span>
+                        <span className="text-[11px] font-semibold">
+                          Favorite
+                        </span>
+                      </BookmarkButton>
+                    </div>
+                  </div>
+
+                  {/* Amenity / Feature Tag Badges */}
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-3">
+                    {item?.position && (
+                      <span className="px-2.5 py-1 text-xs text-slate-700 bg-white border border-slate-300 rounded-[3px] font-medium">
+                        Position: {item.position}
+                      </span>
+                    )}
+                    {item?.jerceyNumber && (
+                      <span className="px-2.5 py-1 text-xs text-slate-700 bg-white border border-slate-300 rounded-[3px] font-medium">
+                        Jersey #{item.jerceyNumber}
+                      </span>
+                    )}
+                    <span className="px-2.5 py-1 text-xs text-slate-700 bg-white border border-slate-300 rounded-[3px] font-medium">
+                      Class: {expLabel}
+                    </span>
+                    {item?.league?.sport && (
+                      <span className="px-2.5 py-1 text-xs text-slate-700 bg-white border border-slate-300 rounded-[3px] font-medium">
+                        {item.league.sport}
+                      </span>
+                    )}
+                    {item?.league?.name && (
+                      <span className="px-2.5 py-1 text-xs text-slate-700 bg-white border border-slate-300 rounded-[3px] font-medium">
+                        {item.league.name}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Description Paragraph */}
+                  <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed mt-2.5 line-clamp-2">
+                    {item?.name} plays{" "}
+                    {item?.position ? `${item.position} for ` : ""}
+                    {item?.team?.name || "Independent"}
+                    {item?.league?.name ? ` in the ${item.league.name}` : ""}.
+                    Support their athletic development, training, and season with
+                    direct digital tips!
+                  </p>
                 </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
-
-        {/* Right Column: Logo in soft rounded container + Send Tip Button */}
-        <div className="w-full sm:w-[130px] lg:w-[140px] shrink-0 flex flex-row sm:flex-col items-center justify-between sm:justify-start gap-2.5 sm:gap-2">
-          {/* Logo / Media Container (soft light-gray/blue rounded container matching reference) */}
-          <div className="relative w-[110px] sm:w-full h-[85px] sm:h-[105px] rounded-xl sm:rounded-2xl bg-[#f0f4f9] overflow-hidden border border-slate-200/70 shadow-2xs flex items-center justify-center p-2 shrink-0">
-            <Image
-              src={
-                item?.player_image ? imageUrl(item.player_image) : defaultPlayer
-              }
-              alt={item.name}
-              fill
-              className="object-contain p-1"
-              unoptimized={false}
-            />
-          </div>
-
-          {/* Send Tip Button & Profile Link */}
-          <div className="flex-1 sm:w-full">
-            <SendTipsButton item={item} token={token}>
-              {({ openTip, openDetails }) => (
-                <div className="w-full flex flex-col items-center">
-                  <button
-                    type="button"
-                    onClick={openTip}
-                    className="w-full inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
-                  >
-                    Send Tip
-                  </button>
-                  <button
-                    type="button"
-                    onClick={openDetails}
-                    className="hidden sm:inline-block mt-1 text-[11px] font-semibold text-slate-400 hover:text-[#053697] transition-colors cursor-pointer text-center"
-                  >
-                    View Profile →
-                  </button>
-                </div>
-              )}
-            </SendTipsButton>
-          </div>
-        </div>
-      </div>
-    </MotionDiv>
+        );
+      }}
+    </SendTipsButton>
   );
 };
 

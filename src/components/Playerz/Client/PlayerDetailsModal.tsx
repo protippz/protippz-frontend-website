@@ -149,7 +149,7 @@ const PlayerDetailsModal: React.FC<IPlayerDetailsProps> = ({ id, token, detailsM
                   width: '40px',
                   height: '40px',
                   borderRadius: '4px',
-                  objectFit: 'cover',
+                  objectFit: 'contain',
                   marginRight: '12px'
                 }}
               />
