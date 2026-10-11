@@ -168,8 +168,8 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                       NIL
                     </span>
 
-                    {/* Column 1: Total Direct Tips */}
-                    <div className="pr-3 sm:pr-4">
+                    
+                    {/* <div className="pr-3 sm:pr-4">
                       <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 tracking-wider uppercase">
                         TOTAL DIRECT TIPS
                       </p>
@@ -181,9 +181,9 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                           TIPS
                         </span>
                       </div>
-                    </div>
+                    </div> */}
 
-                    {/* Column 2: Community Raised */}
+                    
                     <div className="pl-4 sm:pl-6 relative z-10">
                       <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 tracking-wider uppercase">
                         COMMUNITY RAISED
@@ -197,9 +197,9 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                   </div>
                 </div>
 
-                {/* Bottom Action Row */}
+                
                 <div className="flex items-center gap-2.5 sm:gap-3 mt-4 sm:mt-5 pt-1">
-                  {/* Primary Tip Athlete Button */}
+                  
                   <button
                     type="button"
                     onClick={openTip}
@@ -209,7 +209,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                     <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#053697]" />
                   </button>
 
-                  {/* Minimum Tip Badge */}
+                  
                   <div className="h-11 sm:h-12 px-3.5 sm:px-5 rounded-xl bg-white border border-slate-200 text-slate-700 font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center shrink-0">
                     MIN $5.00
                   </div>

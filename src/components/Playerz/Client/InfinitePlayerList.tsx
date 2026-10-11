@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import PlayerzCards from "@/components/Playerz/PlayerzCards";
 import { Player } from "@/app/(default)/playerz/page";
-import { get } from "@/ApisRequests/server";
+import { fetchMorePlayers } from "@/app/actions/players";
 import { UserX, Loader2 } from "lucide-react";
 
 interface InfinitePlayerListProps {
@@ -31,116 +31,151 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
   limit = 20,
 }) => {
   const [players, setPlayers] = useState<Player[]>(initialData);
-  const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
-  const [hasMore, setHasMore] = useState<boolean>(
-    initialMeta?.totalPage ? initialMeta.totalPage > 1 : false,
-  );
+  const [hasMore, setHasMore] = useState<boolean>(() => {
+    const totalP = Number(initialMeta?.totalPage);
+    if (!isNaN(totalP) && totalP > 0) return totalP > 1;
+    return (initialData?.length || 0) >= limit;
+  });
 
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  // Synchronous lock refs to guarantee no duplicate or concurrent requests
+  const isFetchingRef = useRef<boolean>(false);
+  const hasMoreRef = useRef<boolean>(hasMore);
+  const pageRef = useRef<number>(1);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  // Sync state whenever server props (filters / initial data) change
   useEffect(() => {
-    setPlayers(initialData);
-    setPage(1);
-    setHasMore(initialMeta?.totalPage ? initialMeta.totalPage > 1 : false);
-  }, [initialData, initialMeta, searchTerm, sort, team]);
+    hasMoreRef.current = hasMore;
+  }, [hasMore]);
+
+  // Sync state ONLY when filter parameters change (search, sort, team)
+  const prevFilterKey = useRef(
+    `${searchTerm || ""}|${sort || ""}|${team || ""}`
+  );
+  useEffect(() => {
+    const currentKey = `${searchTerm || ""}|${sort || ""}|${team || ""}`;
+    if (prevFilterKey.current !== currentKey) {
+      prevFilterKey.current = currentKey;
+      setPlayers(initialData);
+      pageRef.current = 1;
+      const totalP = Number(initialMeta?.totalPage);
+      const canMore =
+        !isNaN(totalP) && totalP > 0
+          ? totalP > 1
+          : (initialData?.length || 0) >= limit;
+      setHasMore(canMore);
+      hasMoreRef.current = canMore;
+      isFetchingRef.current = false;
+      setLoading(false);
+    }
+  }, [initialData, initialMeta, searchTerm, sort, team, limit]);
 
   const loadMore = useCallback(async () => {
-    if (loading || !hasMore) return;
+    // Strictly block if already fetching or if all items are exhausted
+    if (isFetchingRef.current || !hasMoreRef.current) return;
 
+    isFetchingRef.current = true;
     setLoading(true);
-    const nextPage = page + 1;
+
+    const nextPage = pageRef.current + 1;
 
     try {
-      const param: Record<string, string | number | undefined> = {
+      // Use Next.js Server Action to avoid browser cross-origin CORS limitations
+      const res = await fetchMorePlayers({
         searchTerm,
         sort,
         team,
         page: nextPage,
         limit,
-      };
-
-      const paramsUrl = Object.entries(param)
-        .filter(([, value]) => value !== undefined && value !== "")
-        .map(([key, value]) => `${key}=${value}`)
-        .join("&");
-
-      const res = await get(`/player/get-all?${paramsUrl}`, {
-        headers: token ? { Authorization: `${token}` } : {},
       });
 
-      const newItems = res.data?.result || [];
-      const meta = res.data?.meta;
-
-      if (Array.isArray(newItems) && newItems.length > 0) {
-        setPlayers((prev) => {
-          // Exclude potential duplicates by _id
-          const existingIds = new Set(prev.map((item) => item._id));
-          const uniqueNewItems = newItems.filter(
-            (item: Player) => !existingIds.has(item._id),
-          );
-          return [...prev, ...uniqueNewItems];
-        });
-        setPage(nextPage);
-
-        if (meta?.totalPage) {
-          setHasMore(nextPage < meta.totalPage);
-        } else {
-          setHasMore(newItems.length >= limit);
-        }
-      } else {
+      if (!res.success) {
+        console.error("fetchMorePlayers server action error:", res.error);
         setHasMore(false);
+        hasMoreRef.current = false;
+        return;
       }
+
+      const newItems: Player[] = res.result || [];
+      const meta = res.meta;
+      const totalPage = Number(meta?.totalPage);
+
+      if (!Array.isArray(newItems) || newItems.length === 0) {
+        // No items returned: reached the end
+        setHasMore(false);
+        hasMoreRef.current = false;
+        return;
+      }
+
+      // Append items, filtering out any existing IDs
+      setPlayers((prev) => {
+        const existingIds = new Set(prev.map((item) => item._id));
+        const uniqueNewItems = newItems.filter(
+          (item: Player) => !existingIds.has(item._id)
+        );
+
+        if (uniqueNewItems.length === 0) {
+          setHasMore(false);
+          hasMoreRef.current = false;
+          return prev;
+        }
+
+        return [...prev, ...uniqueNewItems];
+      });
+
+      pageRef.current = nextPage;
+
+      // Determine if more pages exist
+      let canLoadMore = false;
+      if (!isNaN(totalPage) && totalPage > 0) {
+        canLoadMore = nextPage < totalPage;
+      } else {
+        canLoadMore = newItems.length >= limit;
+      }
+
+      setHasMore(canLoadMore);
+      hasMoreRef.current = canLoadMore;
     } catch (err) {
       console.error("Error loading more players:", err);
+      setHasMore(false);
+      hasMoreRef.current = false;
     } finally {
+      isFetchingRef.current = false;
       setLoading(false);
     }
-  }, [loading, hasMore, page, limit, searchTerm, sort, team, token]);
+  }, [searchTerm, sort, team, limit]);
 
+  // Robust IntersectionObserver: uses viewport (root: null) so both mobile page scroll
+  // and desktop container scroll trigger seamlessly
   useEffect(() => {
-    if (observerRef.current) observerRef.current.disconnect();
+    if (!hasMore) return;
 
-    const scrollContainer = sentinelRef.current?.closest(
-      ".overflow-y-auto",
-    ) as HTMLElement | null;
+    const sentinelEl = sentinelRef.current;
+    if (!sentinelEl) return;
 
-    observerRef.current = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loading) {
+        if (
+          entries[0].isIntersecting &&
+          hasMoreRef.current &&
+          !isFetchingRef.current
+        ) {
           loadMore();
         }
       },
-      { root: scrollContainer, threshold: 0, rootMargin: "400px 0px" },
+      {
+        root: null, // Viewport root handles both mobile window scroll and desktop container scroll
+        rootMargin: "350px 0px",
+        threshold: 0,
+      }
     );
 
-    if (sentinelRef.current) {
-      observerRef.current.observe(sentinelRef.current);
-    }
-
-    const handleScroll = () => {
-      if (!scrollContainer || loading || !hasMore) return;
-      const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
-      if (scrollHeight - scrollTop - clientHeight < 600) {
-        loadMore();
-      }
-    };
-
-    if (scrollContainer) {
-      scrollContainer.addEventListener("scroll", handleScroll, {
-        passive: true,
-      });
-    }
+    observer.observe(sentinelEl);
 
     return () => {
-      if (observerRef.current) observerRef.current.disconnect();
-      if (scrollContainer) {
-        scrollContainer.removeEventListener("scroll", handleScroll);
-      }
+      observer.disconnect();
     };
-  }, [hasMore, loading, loadMore]);
+  }, [hasMore, loadMore]);
 
   if (!players || players.length === 0) {
     return (
@@ -167,7 +202,7 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
         ))}
       </div>
 
-      {/* Loading more spinner */}
+      {/* Loading spinner: only shown while actively fetching next page */}
       {loading && (
         <div className="w-full py-8 flex items-center justify-center gap-2 text-slate-500 text-xs font-semibold">
           <Loader2 className="w-4 h-4 animate-spin text-[#053697]" />
@@ -175,8 +210,15 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
         </div>
       )}
 
-      {/* Invisible Bottom Sentinel for seamless background loading */}
-      <div ref={sentinelRef} className="w-full h-4" />
+      {/* Sentinel element: rendered in DOM ONLY if more items are available */}
+      {hasMore && <div ref={sentinelRef} className="w-full h-8" />}
+
+      {/* End of results message: only shown when completely exhausted */}
+      {!hasMore && players.length > 0 && (
+        <div className="w-full py-8 text-center text-xs text-slate-400 font-medium">
+          All {players.length} athletes loaded
+        </div>
+      )}
     </div>
   );
 };

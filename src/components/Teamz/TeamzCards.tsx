@@ -179,13 +179,12 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                   </div>
 
                   {/* Stats Box */}
-                  <div className="border border-slate-200/90 rounded-2xl p-4 sm:p-5 mt-3 sm:mt-4 grid grid-cols-2 divide-x divide-slate-200 relative overflow-hidden bg-white">
-                    {/* Subtle NIL Watermark */}
+                  {/* <div className="border border-slate-200/90 rounded-2xl p-4 sm:p-5 mt-3 sm:mt-4 grid grid-cols-2 divide-x divide-slate-200 relative overflow-hidden bg-white">
                     <span className="absolute right-3 -bottom-2 text-6xl sm:text-7xl font-black text-slate-100 select-none pointer-events-none opacity-60 tracking-tighter leading-none">
                       NIL
                     </span>
 
-                    {/* Column 1: Total Direct Tips */}
+                    
                     <div className="pr-3 sm:pr-4">
                       <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 tracking-wider uppercase">
                         TOTAL DIRECT TIPS
@@ -200,7 +199,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                       </div>
                     </div>
 
-                    {/* Column 2: Community Raised */}
+                    
                     <div className="pl-4 sm:pl-6 relative z-10">
                       <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 tracking-wider uppercase">
                         COMMUNITY RAISED
@@ -211,12 +210,12 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
-                {/* Bottom Action Row */}
+                
                 <div className="flex items-center gap-2.5 sm:gap-3 mt-4 sm:mt-5 pt-1">
-                  {/* Primary Tip Team Button */}
+                  
                   <button
                     type="button"
                     onClick={openTip}
@@ -226,10 +225,10 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                     <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#053697]" />
                   </button>
 
-                  {/* Minimum Tip Badge */}
-                  <div className="h-11 sm:h-12 px-3.5 sm:px-5 rounded-xl bg-white border border-slate-200 text-slate-700 font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center shrink-0">
+                  
+                  {/* <div className="h-11 sm:h-12 px-3.5 sm:px-5 rounded-xl bg-white border border-slate-200 text-slate-700 font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center shrink-0">
                     MIN $5.00
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

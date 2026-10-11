@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -21,6 +21,9 @@ const SearchAndSortComponent: React.FC = () => {
   const [search, setSearch] = useState("");
   const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
+  const [maxPanelHeight, setMaxPanelHeight] = useState<string>("85vh");
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -61,12 +64,74 @@ const SearchAndSortComponent: React.FC = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isMobileSheetOpen) {
-        setIsMobileSheetOpen(false);
+        handleCloseModal();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMobileSheetOpen]);
+
+  // Keyboard avoider: Track visualViewport height and offset for mobile virtual keyboards
+  useEffect(() => {
+    if (!isMobileSheetOpen) {
+      setKeyboardOffset(0);
+      setMaxPanelHeight("85vh");
+      return;
+    }
+
+    const handleViewportChange = () => {
+      if (typeof window === "undefined") return;
+      const vv = window.visualViewport;
+      if (!vv) return;
+
+      // Difference between layout viewport bottom and visual viewport bottom
+      const offsetFromBottom = Math.max(
+        0,
+        Math.round(window.innerHeight - (vv.height + vv.offsetTop))
+      );
+      const simpleOffset = Math.max(
+        0,
+        Math.round(window.innerHeight - vv.height)
+      );
+      const effectiveOffset = Math.max(offsetFromBottom, simpleOffset);
+
+      // Only treat as virtual keyboard if offset > 50px (avoids minor browser chrome shifts)
+      const activeKeyboard = effectiveOffset > 50 ? effectiveOffset : 0;
+      setKeyboardOffset(activeKeyboard);
+
+      // Constrain panel height so it never overflows off the top of the screen
+      const visibleHeight = vv.height;
+      const safeMaxHeight = Math.max(260, Math.floor(visibleHeight - 20));
+      setMaxPanelHeight(`${safeMaxHeight}px`);
+    };
+
+    handleViewportChange();
+
+    const vv = window.visualViewport;
+    if (vv) {
+      vv.addEventListener("resize", handleViewportChange);
+      vv.addEventListener("scroll", handleViewportChange);
+    }
+    window.addEventListener("resize", handleViewportChange);
+
+    return () => {
+      if (vv) {
+        vv.removeEventListener("resize", handleViewportChange);
+        vv.removeEventListener("scroll", handleViewportChange);
+      }
+      window.removeEventListener("resize", handleViewportChange);
+    };
+  }, [isMobileSheetOpen]);
+
+  const handleCloseModal = () => {
+    if (
+      typeof document !== "undefined" &&
+      document.activeElement instanceof HTMLElement
+    ) {
+      document.activeElement.blur();
+    }
+    setIsMobileSheetOpen(false);
+  };
 
   const updateUrlParams = (newSortBy: string, newOrder: string) => {
     const currentParams = new URLSearchParams(window.location.search);
@@ -104,7 +169,7 @@ const SearchAndSortComponent: React.FC = () => {
   const handleMobileSearchSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     handleSearchSubmit();
-    setIsMobileSheetOpen(false);
+    handleCloseModal();
   };
 
   const handleClearSearch = () => {
@@ -254,180 +319,222 @@ const SearchAndSortComponent: React.FC = () => {
       </div>
 
       {/* ========================================================= */}
-      {/* 3. MOBILE SLIDE-UP BOTTOM SHEET DRAWER                   */}
+      {/* 3. MOBILE SLIDE-UP BOTTOM SHEET DRAWER (KEYBOARD AVOIDER) */}
       {/* ========================================================= */}
       {mounted &&
         isMobileSheetOpen &&
         createPortal(
-          <div className="fixed inset-0 z-[9999] lg:hidden flex flex-col justify-end">
+          <div className="fixed inset-0 z-[9999] lg:hidden">
             {/* Backdrop */}
             <div
               className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
-              onClick={() => setIsMobileSheetOpen(false)}
+              onClick={handleCloseModal}
             />
 
-            {/* Bottom Sheet Panel */}
-            <div className="relative w-full bg-white rounded-t-3xl shadow-2xl p-5 z-10 animate-in slide-in-from-bottom duration-300 space-y-4 max-h-[85vh] overflow-y-auto">
-              {/* Drag Handle */}
-              <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto" />
+            {/* Keyboard-avoiding container anchored at bottom */}
+            <div
+              className="fixed inset-x-0 bottom-0 z-10 flex flex-col justify-end pointer-events-none"
+              style={{
+                bottom: `${keyboardOffset}px`,
+                transition: "bottom 0.15s cubic-bezier(0.2, 0, 0, 1)",
+              }}
+            >
+              {/* Bottom Sheet Panel */}
+              <div
+                className="relative w-full bg-white rounded-t-3xl shadow-2xl p-5 animate-in slide-in-from-bottom duration-300 space-y-4 overflow-y-auto overscroll-contain pointer-events-auto"
+                style={{
+                  maxHeight: maxPanelHeight,
+                }}
+              >
+                {/* Drag Handle */}
+                <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto" />
 
-              {/* Sheet Header */}
-              <div className="flex items-center justify-between pt-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-[#053697]/10 text-[#053697] flex items-center justify-center">
-                    <SlidersHorizontal className="w-4 h-4 text-[#053697]" />
+                {/* Sheet Header */}
+                <div className="flex items-center justify-between pt-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-[#053697]/10 text-[#053697] flex items-center justify-center">
+                      <SlidersHorizontal className="w-4 h-4 text-[#053697]" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-slate-900 leading-tight">
+                        Search &amp; Sort Athletes
+                      </h3>
+                      <p className="text-xs text-slate-500">
+                        Filter players by name, position, or order
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900 leading-tight">
-                      Search &amp; Sort Athletes
-                    </h3>
-                    <p className="text-xs text-slate-500">
-                      Filter players by name, position, or order
-                    </p>
-                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleCloseModal}
+                    className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setIsMobileSheetOpen(false)}
-                  className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
+                {/* Search Form inside Sheet */}
+                <form
+                  onSubmit={handleMobileSearchSubmit}
+                  className="space-y-2 pt-1"
                 >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Search Form inside Sheet */}
-              <form
-                onSubmit={handleMobileSearchSubmit}
-                className="space-y-2 pt-1"
-              >
-                <label className="text-xs font-bold text-slate-700 block">
-                  Athlete Name
-                </label>
-                <div className="relative flex items-center gap-2">
-                  <div className="relative flex-1">
-                    <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      placeholder="Search player name..."
-                      autoFocus
-                      className="w-full h-10 pl-9 pr-8 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#053697] focus:ring-1 focus:ring-blue-100 outline-none"
-                    />
-                    {search && (
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-slate-700 block">
+                      Athlete Name
+                    </label>
+                    {keyboardOffset > 50 && (
                       <button
                         type="button"
-                        onClick={handleClearSearch}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                        onClick={() => {
+                          if (
+                            typeof document !== "undefined" &&
+                            document.activeElement instanceof HTMLElement
+                          ) {
+                            document.activeElement.blur();
+                          }
+                        }}
+                        className="text-[11px] font-semibold text-[#053697] hover:underline cursor-pointer"
                       >
-                        <X className="w-3.5 h-3.5" />
+                        Hide Keyboard &darr;
                       </button>
                     )}
                   </div>
+                  <div className="relative flex items-center gap-2">
+                    <div className="relative flex-1">
+                      <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        ref={searchInputRef}
+                        type="search"
+                        enterKeyHint="search"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Search player name..."
+                        autoFocus
+                        onFocus={(e) => {
+                          setTimeout(() => {
+                            e.target.scrollIntoView({
+                              behavior: "smooth",
+                              block: "nearest",
+                            });
+                          }, 150);
+                        }}
+                        className="w-full h-10 pl-9 pr-8 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#053697] focus:ring-1 focus:ring-blue-100 outline-none"
+                      />
+                      {search && (
+                        <button
+                          type="button"
+                          onClick={handleClearSearch}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                    <button
+                      type="submit"
+                      className="h-10 px-4 rounded-xl bg-[#053697] hover:bg-[#042870] text-white text-xs font-bold tracking-wide transition-colors shrink-0 cursor-pointer"
+                    >
+                      Search
+                    </button>
+                  </div>
+                </form>
+
+                {/* Sort By Section */}
+                <div className="space-y-2 pt-2 border-t border-slate-100">
+                  <label className="text-xs font-bold text-slate-700 block">
+                    Sort By
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { label: "Name", value: "name" },
+                      { label: "Position", value: "position" },
+                    ].map((field) => {
+                      const isSelected = sortBy === field.value;
+                      return (
+                        <button
+                          key={field.value}
+                          type="button"
+                          onClick={() => {
+                            setSortBy(field.value);
+                            updateUrlParams(field.value, order);
+                          }}
+                          className={`py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer ${
+                            isSelected
+                              ? "border-[#053697] bg-blue-50/70 text-[#053697]"
+                              : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                          }`}
+                        >
+                          <span>{field.label}</span>
+                          {isSelected && (
+                            <Check className="w-3.5 h-3.5 text-[#053697]" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Sort Order Section */}
+                <div className="space-y-2 pt-2 border-t border-slate-100">
+                  <label className="text-xs font-bold text-slate-700 block">
+                    Sort Order
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { label: "A to Z (Ascending)", value: "A to Z" },
+                      { label: "Z to A (Descending)", value: "Z to A" },
+                    ].map((ord) => {
+                      const isSelected = order === ord.value;
+                      return (
+                        <button
+                          key={ord.value}
+                          type="button"
+                          onClick={() => {
+                            setOrder(ord.value);
+                            updateUrlParams(sortBy, ord.value);
+                          }}
+                          className={`py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer ${
+                            isSelected
+                              ? "border-[#053697] bg-blue-50/70 text-[#053697]"
+                              : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                          }`}
+                        >
+                          <span className="truncate">{ord.label}</span>
+                          {isSelected && (
+                            <Check className="w-3.5 h-3.5 text-[#053697] shrink-0 ml-1" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Footer Actions */}
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
                   <button
-                    type="submit"
-                    className="h-10 px-4 rounded-xl bg-[#053697] hover:bg-[#042870] text-white text-xs font-bold tracking-wide transition-colors shrink-0 cursor-pointer"
+                    type="button"
+                    onClick={() => {
+                      handleClearSearch();
+                      setSortBy("name");
+                      setOrder("A to Z");
+                      updateUrlParams("name", "A to Z");
+                    }}
+                    disabled={!isFiltered}
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5 cursor-pointer"
                   >
-                    Search
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Reset</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleCloseModal}
+                    className="flex-1 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] text-white text-xs font-bold transition-colors cursor-pointer"
+                  >
+                    Done
                   </button>
                 </div>
-              </form>
-
-              {/* Sort By Section */}
-              <div className="space-y-2 pt-2 border-t border-slate-100">
-                <label className="text-xs font-bold text-slate-700 block">
-                  Sort By
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { label: "Name", value: "name" },
-                    { label: "Position", value: "position" },
-                  ].map((field) => {
-                    const isSelected = sortBy === field.value;
-                    return (
-                      <button
-                        key={field.value}
-                        type="button"
-                        onClick={() => {
-                          setSortBy(field.value);
-                          updateUrlParams(field.value, order);
-                        }}
-                        className={`py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer ${
-                          isSelected
-                            ? "border-[#053697] bg-blue-50/70 text-[#053697]"
-                            : "border-slate-200 text-slate-700 hover:bg-slate-50"
-                        }`}
-                      >
-                        <span>{field.label}</span>
-                        {isSelected && (
-                          <Check className="w-3.5 h-3.5 text-[#053697]" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Sort Order Section */}
-              <div className="space-y-2 pt-2 border-t border-slate-100">
-                <label className="text-xs font-bold text-slate-700 block">
-                  Sort Order
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { label: "A to Z (Ascending)", value: "A to Z" },
-                    { label: "Z to A (Descending)", value: "Z to A" },
-                  ].map((ord) => {
-                    const isSelected = order === ord.value;
-                    return (
-                      <button
-                        key={ord.value}
-                        type="button"
-                        onClick={() => {
-                          setOrder(ord.value);
-                          updateUrlParams(sortBy, ord.value);
-                        }}
-                        className={`py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer ${
-                          isSelected
-                            ? "border-[#053697] bg-blue-50/70 text-[#053697]"
-                            : "border-slate-200 text-slate-700 hover:bg-slate-50"
-                        }`}
-                      >
-                        <span className="truncate">{ord.label}</span>
-                        {isSelected && (
-                          <Check className="w-3.5 h-3.5 text-[#053697] shrink-0 ml-1" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Footer Actions */}
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleClearSearch();
-                    setSortBy("name");
-                    setOrder("A to Z");
-                    updateUrlParams("name", "A to Z");
-                  }}
-                  disabled={!isFiltered}
-                  className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5 cursor-pointer"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Reset</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setIsMobileSheetOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] text-white text-xs font-bold transition-colors cursor-pointer"
-                >
-                  Done
-                </button>
               </div>
             </div>
           </div>,
