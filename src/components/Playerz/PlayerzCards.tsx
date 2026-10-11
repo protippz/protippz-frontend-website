@@ -54,12 +54,12 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
     <SendTipsButton item={item} token={token}>
       {({ openTip, openDetails }) => {
         return (
-          <div className="relative bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl shadow-sm hover:shadow-md transition-shadow overflow-hidden mb-4 sm:mb-6">
+          <div className="relative bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl shadow-sm overflow-hidden mb-4 sm:mb-6">
             <div className="flex flex-col md:flex-row items-stretch">
               {/* Left Column: Player Photo with Bottom Overlay Badges */}
               <div
                 onClick={openDetails}
-                className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[340px] md:h-auto min-h-[300px] md:min-h-[360px] bg-slate-900 shrink-0 overflow-hidden cursor-pointer group"
+                className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[340px] md:h-auto min-h-[300px] md:min-h-[360px] bg-slate-900 shrink-0 overflow-hidden cursor-pointer"
                 title={`View profile for ${item?.name || "Player"}`}
               >
                 <Image
@@ -71,7 +71,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                   alt={item?.name || "Player"}
                   fill
                   sizes="(max-width: 768px) 100vw, 340px"
-                  className="object-cover object-top group-hover:scale-[1.02] transition-transform duration-300"
+                  className="object-contain object-top"
                 />
 
                 {/* Subtle gradient vignette at bottom of photo to ensure badges pop */}

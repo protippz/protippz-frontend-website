@@ -344,16 +344,10 @@ const LeagueFilterHub: React.FC<LeagueFilterHubProps> = ({
         {/* Sidebar Header */}
         <div className="shrink-0 p-4 sm:p-4.5 border-b border-slate-100 flex items-center justify-between gap-3 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/40">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-xl bg-[#053697]/10 text-[#053697] flex items-center justify-center shrink-0">
-              <Trophy className="w-4 h-4 text-[#053697]" />
-            </div>
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-slate-900 leading-tight">
                 Filter by League
               </h2>
-              <p className="text-[11px] text-slate-500 truncate mt-0.5">
-                {totalCount} Athletic Conferences
-              </p>
             </div>
           </div>
 
@@ -373,33 +367,6 @@ const LeagueFilterHub: React.FC<LeagueFilterHubProps> = ({
               {totalCount}
             </span>
           )}
-        </div>
-
-        {/* Search Input Box */}
-        <div className="shrink-0 p-3 border-b border-slate-100 bg-slate-50/50">
-          <div className="relative">
-            {isSearching ? (
-              <Loader2 className="w-3.5 h-3.5 text-[#053697] animate-spin absolute left-3 top-1/2 -translate-y-1/2" />
-            ) : (
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            )}
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search leagues..."
-              className="w-full h-9 pl-8.5 pr-7 rounded-xl border border-slate-200 bg-white text-xs text-slate-900 placeholder:text-slate-400 focus:border-[#053697] focus:ring-1 focus:ring-blue-100 outline-none transition-colors"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            )}
-          </div>
         </div>
 
         {/* Active Filter Pill Summary (if filtered) */}

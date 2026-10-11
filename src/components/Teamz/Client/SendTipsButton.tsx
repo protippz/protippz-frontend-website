@@ -15,6 +15,12 @@ interface SendTipsButtonProps {
   token: string | undefined | null;
   className?: string;
   buttonText?: React.ReactNode;
+  children?:
+    | React.ReactNode
+    | ((actions: {
+        openTip: () => void;
+        openDetails: () => void;
+      }) => React.ReactNode);
 }
 
 const SendTipsButton: React.FC<SendTipsButtonProps> = ({
@@ -22,6 +28,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
   item,
   className,
   buttonText,
+  children,
 }) => {
   const [form] = Form.useForm();
   const [amount, setAmount] = useState("");
@@ -33,7 +40,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
   const data = useContextData();
   const router = useRouter();
 
-  const showModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const openTip = () => {
     if (!data?.userData?.user) {
       return Swal.fire({
         title: "You need to log in!",
@@ -48,11 +55,19 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
         }
       });
     }
+    setIsModalOpen(true);
+  };
+
+  const openDetails = () => {
+    showDetailsModal(true);
+  };
+
+  const showModal = (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetId = e.currentTarget.id;
-    if (targetId === 'details') {
-      showDetailsModal(true);
-    } else if (targetId === 'tippz') {
-      setIsModalOpen(true);
+    if (targetId === "details") {
+      openDetails();
+    } else {
+      openTip();
     }
   };
   const navigateToLogin = () => {
@@ -112,25 +127,24 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
 
   return (
     <>
-      <div className="flex items-center gap-2">
-        {/* <button
-          id='details'
-          onClick={(e) => showModal(e)}
-          className="bg-[#37C86D] text-white font-bold py-2 px-4 rounded-md hover:bg-[#184eb9]/90 focus:outline-none"
-        >
-          See Details
-        </button> */}
-        <button
-          id='tippz'
-          onClick={(e) => showModal(e)}
-          className={
-            className ||
-            "bg-[#053697] text-white font-bold py-2 px-4 rounded-md hover:bg-[#184eb9]/90 focus:outline-none"
-          }
-        >
-          {buttonText || "Send Tippz"}
-        </button>
-      </div>
+      {typeof children === "function" ? (
+        children({ openTip, openDetails })
+      ) : children ? (
+        children
+      ) : (
+        <div className="flex items-center gap-2">
+          <button
+            id="tippz"
+            onClick={openTip}
+            className={
+              className ||
+              "bg-[#053697] text-white font-bold py-2 px-4 rounded-md hover:bg-[#184eb9]/90 focus:outline-none"
+            }
+          >
+            {buttonText || "Send Tippz"}
+          </button>
+        </div>
+      )}
       <Modal
         title=""
         visible={isModalOpen}

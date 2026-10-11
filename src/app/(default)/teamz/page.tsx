@@ -1,6 +1,5 @@
 import { get } from "@/ApisRequests/server";
 import InfiniteTeamList from "@/components/Teamz/Client/InfiniteTeamList";
-import SearchAndSortComponent from "@/components/Teamz/SearchAndSortComponent";
 import League from "@/components/Teamz/Teams";
 import GoToTop from "@/components/ui/GoToTop";
 import { SearchParams } from "next/dist/server/request/search-params";
@@ -64,15 +63,10 @@ const TeamPage = async ({ searchParams }: ParamsProps) => {
           </Suspense>
         </aside>
 
-        {/* Right Column: Top Header + Scrollable Cards Area */}
+        {/* Right Column: Scrollable Cards Area */}
         <main className="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-[#fafbfb]">
-          {/* Top Header: Search & Sort Bar (fixed at top of main) */}
-          <div className="shrink-0 bg-white border-b border-slate-200 z-10">
-            <SearchAndSortComponent />
-          </div>
-
           {/* Cards Content Area: Independently Scrollable */}
-          <div className="flex-1 overflow-y-auto custom-sidebar-scrollbar p-3 sm:p-5 lg:p-7 min-h-0">
+          <div className="flex-1 overflow-y-auto custom-sidebar-scrollbar p-2.5 sm:p-4 min-h-0">
             <InfiniteTeamList
               initialData={playersData || []}
               initialMeta={meta}

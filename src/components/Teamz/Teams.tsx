@@ -1,15 +1,21 @@
 import React from "react";
 import { get } from "@/ApisRequests/server";
 import LeagueFilterHub, { LeagueItem } from "./Client/LeagueFilterHub";
+import SearchAndSortComponent from "./SearchAndSortComponent";
 
 const League = async () => {
   const [data, meta] = await getLeagues();
 
   return (
-    <LeagueFilterHub
-      initialLeagues={(data as LeagueItem[]) || []}
-      initialMeta={meta}
-    />
+    <div className="flex flex-col h-full min-h-0">
+      <SearchAndSortComponent />
+      <div className="flex-1 min-h-0 flex flex-col">
+        <LeagueFilterHub
+          initialLeagues={(data as LeagueItem[]) || []}
+          initialMeta={meta}
+        />
+      </div>
+    </div>
   );
 };
 
