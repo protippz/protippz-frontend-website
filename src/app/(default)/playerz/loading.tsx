@@ -63,7 +63,7 @@ function SidebarSkeleton() {
   return (
     <div className="flex flex-col h-full min-h-0 divide-y divide-slate-100 animate-pulse">
       {/* Search & Sort Section */}
-      <div className="p-3 sm:p-4 space-y-2.5 bg-white">
+      <div className="hidden lg:block p-3 sm:p-4 space-y-2.5 bg-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-slate-200" />
