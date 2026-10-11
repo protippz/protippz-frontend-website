@@ -339,16 +339,13 @@ const TeamFilterHub: React.FC<TeamFilterHubProps> = ({
         {/* Sidebar Header */}
         <div className="shrink-0 p-4 sm:p-4.5 border-b border-slate-100 flex items-center justify-between gap-3 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/40">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-xl bg-[#053697]/10 text-[#053697] flex items-center justify-center shrink-0">
-              <Shield className="w-4 h-4 text-[#053697]" />
-            </div>
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-slate-900 leading-tight">
                 Filter by Team
               </h2>
-              <p className="text-[11px] text-slate-500 truncate mt-0.5">
+              {/* <p className="text-[11px] text-slate-500 truncate mt-0.5">
                 {totalCount} Official Teams
-              </p>
+              </p> */}
             </div>
           </div>
 
@@ -371,7 +368,7 @@ const TeamFilterHub: React.FC<TeamFilterHubProps> = ({
         </div>
 
         {/* Search Input Box */}
-        <div className="shrink-0 p-3 border-b border-slate-100 bg-slate-50/50">
+        {/* <div className="shrink-0 p-3 border-b border-slate-100 bg-slate-50/50">
           <div className="relative">
             {isSearching ? (
               <Loader2 className="w-3.5 h-3.5 text-[#053697] animate-spin absolute left-3 top-1/2 -translate-y-1/2" />
@@ -395,7 +392,7 @@ const TeamFilterHub: React.FC<TeamFilterHubProps> = ({
               </button>
             )}
           </div>
-        </div>
+        </div> */}
 
         {/* Active Filter Pill Summary (if filtered) */}
         {activeTeam && (
@@ -648,7 +645,7 @@ const TeamFilterHub: React.FC<TeamFilterHubProps> = ({
               </div>
 
               {/* Search Bar inside Modal */}
-              <div className="p-4 bg-slate-50/70">
+              {/* <div className="p-4 bg-slate-50/70">
                 <div className="relative">
                   {isSearching ? (
                     <Loader2 className="w-4 h-4 text-[#053697] animate-spin absolute left-3 top-1/2 -translate-y-1/2" />
@@ -673,7 +670,7 @@ const TeamFilterHub: React.FC<TeamFilterHubProps> = ({
                     </button>
                   )}
                 </div>
-              </div>
+              </div> */}
 
               {/* Team List with Infinite Scroll */}
               <div

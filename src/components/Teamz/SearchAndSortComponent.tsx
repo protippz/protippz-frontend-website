@@ -118,7 +118,7 @@ const SearchAndSortComponent: React.FC = () => {
         </div>
 
         {/* Right Side: Search Form */}
-        <form
+        {/* <form
           onSubmit={handleSearchSubmit}
           className="flex items-center gap-2 w-full md:w-auto min-w-0"
         >
@@ -150,7 +150,7 @@ const SearchAndSortComponent: React.FC = () => {
             <Search className="w-3.5 h-3.5" />
             <span>Search</span>
           </button>
-        </form>
+        </form> */}
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { get } from "@/ApisRequests/server";
 import InfinitePlayerList from "@/components/Playerz/Client/InfinitePlayerList";
-import SearchAndSortComponent from "@/components/Playerz/SearchAndSortComponent";
 import Teams from "@/components/Playerz/Teams";
 import GoToTop from "@/components/ui/GoToTop";
 import { cookies } from "next/headers";
@@ -82,13 +81,8 @@ const PlayerZPage = async ({ searchParams }: ParamsProps) => {
           </Suspense>
         </aside>
 
-        {/* Right Column: Top Header + Scrollable Players Area */}
+        {/* Right Column: Scrollable Players Area */}
         <main className="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-[#fafbfb]">
-          {/* Top Header: Search & Sort Bar (fixed at top of main) */}
-          <div className="shrink-0 bg-white border-b border-slate-200 z-10">
-            <SearchAndSortComponent />
-          </div>
-
           {/* Cards Content Area: Independently Scrollable */}
           <div className="flex-1 overflow-y-auto custom-sidebar-scrollbar min-h-0">
             <InfinitePlayerList
