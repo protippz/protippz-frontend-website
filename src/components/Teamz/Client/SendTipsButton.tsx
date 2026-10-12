@@ -59,7 +59,11 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
   };
 
   const openDetails = () => {
-    showDetailsModal(true);
+    if (item?._id) {
+      router.push(`/teamz/${item._id}`);
+    } else {
+      showDetailsModal(true);
+    }
   };
 
   const showModal = (e: React.MouseEvent<HTMLButtonElement>) => {

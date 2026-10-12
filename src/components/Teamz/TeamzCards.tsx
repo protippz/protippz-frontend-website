@@ -60,7 +60,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (typeof window !== "undefined") {
-      const url = `${window.location.origin}/teamz?team=${item?._id || ""}`;
+      const url = `${window.location.origin}/teamz/${item?._id || ""}`;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(url);
         toast.success("Team link copied to clipboard!");

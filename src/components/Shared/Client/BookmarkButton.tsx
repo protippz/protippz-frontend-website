@@ -32,6 +32,13 @@ const BookmarkButton = ({
       );
       if (res?.success) {
         toast.success(res?.message);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("bookmark-updated", {
+              detail: { type, _id, action: "removed" },
+            })
+          );
+        }
         router.refresh();
       } else {
         toast.error(res?.message);
@@ -49,6 +56,13 @@ const BookmarkButton = ({
       );
       if (res?.success) {
         toast.success(res?.message);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("bookmark-updated", {
+              detail: { type, _id, action: "added" },
+            })
+          );
+        }
         // router.push(type == 'team' ? '/teamz' : '/playerz', { scroll: false })
         router.refresh();
       } else {

@@ -59,7 +59,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
               {/* Left Column: Player Photo with Bottom Overlay Badges */}
               <div
                 onClick={openDetails}
-                className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[340px] md:h-auto min-h-[300px] md:min-h-[360px] bg-slate-900 shrink-0 overflow-hidden cursor-pointer"
+                className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[340px] md:h-auto min-h-[300px] md:min-h-[260px] bg-slate-900 shrink-0 overflow-hidden cursor-pointer"
                 title={`View profile for ${item?.name || "Player"}`}
               >
                 <Image
@@ -162,14 +162,13 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                   </div>
 
                   {/* Stats Box */}
-                  <div className="border border-slate-200/90 rounded-2xl p-4 sm:p-5 mt-3 sm:mt-4 grid grid-cols-2 divide-x divide-slate-200 relative overflow-hidden bg-white">
-                    {/* Subtle NIL Watermark */}
+                  {/* <div className="border border-slate-200/90 rounded-2xl p-4 sm:p-5 mt-3 sm:mt-4 grid grid-cols-2 divide-x divide-slate-200 relative overflow-hidden bg-white">
                     <span className="absolute right-3 -bottom-2 text-6xl sm:text-7xl font-black text-slate-100 select-none pointer-events-none opacity-60 tracking-tighter leading-none">
                       NIL
                     </span>
 
                     
-                    {/* <div className="pr-3 sm:pr-4">
+                    <div className="pr-3 sm:pr-4">
                       <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 tracking-wider uppercase">
                         TOTAL DIRECT TIPS
                       </p>
@@ -181,7 +180,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                           TIPS
                         </span>
                       </div>
-                    </div> */}
+                    </div>
 
                     
                     <div className="pl-4 sm:pl-6 relative z-10">
@@ -194,7 +193,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 
