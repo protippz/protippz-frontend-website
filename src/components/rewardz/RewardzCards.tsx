@@ -1,127 +1,183 @@
+"use client";
+
 import React, { memo } from "react";
 import Image from "next/image";
-import SendTipsButton from "./Client/RedeemButton";
+import RedeemButton from "./Client/RedeemButton";
 import { imageUrl } from "@/ApisRequests/server";
 import { RewardInterface } from "@/app/(default)/rewardz/page";
-import MotionDiv from "../Playerz/Motion";
-import { Sparkles, Coins, Gift, Mail, Package } from "lucide-react";
 import defaultPrize from "@/Assets/category.png";
+import {
+  Coins,
+  Gift,
+  Mail,
+  Package,
+  Share2,
+  Sparkles,
+  ArrowRight,
+} from "lucide-react";
+import toast from "react-hot-toast";
 
 interface RewardCardsProps {
   item: RewardInterface;
 }
 
-const cardReveal = {
-  hidden: { y: "4%", opacity: 0 },
-  visible: {
-    y: "0%",
-    opacity: 1,
-    transition: {
-      duration: 0.35,
-      ease: "easeOut",
-    },
-  },
-};
-
 const RewardzCards: React.FC<RewardCardsProps> = ({ item }) => {
+  const archiveId = item?._id ? item._id.slice(-3).toUpperCase() : "001";
   const categoryName = item?.category?.name || "Reward";
   const deliveryOption = item?.category?.deliveryOption || "Delivery";
   const isEmail = deliveryOption.toLowerCase() === "email";
 
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (typeof window !== "undefined") {
+      const url = `${window.location.origin}/rewardz?category=${
+        item?.category?._id || ""
+      }`;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url);
+        toast.success("Reward link copied to clipboard!");
+      } else {
+        toast.success(`Reward: ${item?.name || "Reward"}`);
+      }
+    }
+  };
+
   return (
-    <MotionDiv
-      variants={cardReveal}
-      initial="hidden"
-      animate="visible"
-      className="group relative bg-white rounded-[22px] border border-slate-200/85 hover:border-[#2FC191]/50 shadow-[0_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0_14px_34px_rgba(5,54,151,0.11)] transition-all duration-300 p-5 sm:p-6 flex flex-col justify-between overflow-hidden h-full"
-    >
-      {/* Top Header: Category Eyebrow & Delivery Method Badge */}
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <span className="text-xs sm:text-[13px] font-extrabold uppercase tracking-wider text-[#2FC191]">
-          {categoryName}
-        </span>
-
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100/90 border border-slate-200/70 text-xs font-semibold text-slate-700">
-          {isEmail ? (
-            <Mail className="w-3.5 h-3.5 text-[#053697]" />
-          ) : (
-            <Package className="w-3.5 h-3.5 text-[#053697]" />
-          )}
-          <span className="text-[11px] font-bold text-slate-700 capitalize">
-            {deliveryOption}
-          </span>
-        </div>
-      </div>
-
-      {/* Main Details: Reward Title & Description */}
-      <div>
-        <h3 className="text-xl sm:text-[22px] font-black tracking-tight text-[#053697] group-hover:text-[#042870] transition-colors line-clamp-1 mt-1 mb-1.5">
-          {item?.name}
-        </h3>
-
-        <p className="text-xs sm:text-[13px] text-slate-500 line-clamp-2 leading-relaxed mb-3">
-          {item?.description ||
-            "Redeem your accumulated reward points to claim this exclusive prize."}
-        </p>
-      </div>
-
-      {/* Subtle Divider */}
-      <div className="w-full h-px bg-slate-200/60 mb-3.5" />
-
-      {/* Visual & Points Row */}
-      <div className="flex items-center justify-between gap-3 mb-2">
-        {/* Left: Points Required */}
-        <div className="flex flex-col">
-          <span className="text-[10px] text-slate-400 font-medium mb-1 uppercase tracking-wider">
-            Points Required
-          </span>
-          <div className="inline-flex items-center gap-1.5 bg-[#f0f2f5] border border-slate-200/70 rounded-xl px-3 py-1.5">
-            <Coins className="w-4 h-4 text-amber-500 shrink-0" />
-            <span className="text-base sm:text-lg font-black text-[#053697]">
-              {item?.pointRequired !== undefined
-                ? item.pointRequired.toLocaleString()
-                : "0"}
-            </span>
-            <span className="text-[10px] font-extrabold text-slate-400 uppercase">
-              Pts
-            </span>
-          </div>
-        </div>
-
-        {/* Right: Reward Image Container */}
-        <div className="relative w-[84px] h-[84px] sm:w-[92px] sm:h-[92px] rounded-2xl bg-gradient-to-br from-slate-50 via-white to-slate-100/90 border border-slate-200/80 p-2 shadow-2xs flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+    <div className="relative bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl hover:border-slate-300 transition-colors overflow-hidden mb-4 sm:mb-6">
+      <div className="flex flex-col md:flex-row items-stretch">
+        {/* Left Column: Reward Image Hero with Bottom Overlay Badges */}
+        <div className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[260px] md:h-auto min-h-[220px] md:min-h-[280px] bg-slate-900 shrink-0 overflow-hidden flex items-center justify-center p-6">
           <Image
             src={item?.reward_image ? imageUrl(item.reward_image) : defaultPrize}
             alt={item?.name || "Reward"}
             fill
-            className="object-contain p-1.5"
-            sizes="(max-width: 640px) 84px, 92px"
+            sizes="(max-width: 768px) 100vw, 340px"
+            className="object-contain p-4"
           />
+
+          {/* Gradient vignette at bottom */}
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
+
+          {/* Badges Overlay at bottom of hero */}
+          <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-center gap-1.5 flex-wrap z-10">
+            {/* Category Badge */}
+            <span className="px-2.5 py-1 rounded-[4px] bg-[#053697] text-white text-[10px] sm:text-[11px] font-black uppercase tracking-wider">
+              {categoryName}
+            </span>
+
+            {/* Delivery Badge */}
+            <span className="px-2.5 py-1 rounded-[4px] bg-white text-[#053697] border border-slate-200 text-[10px] sm:text-[11px] font-black uppercase tracking-wider flex items-center gap-1">
+              {isEmail ? (
+                <Mail className="w-3 h-3 text-[#053697]" />
+              ) : (
+                <Package className="w-3 h-3 text-[#053697]" />
+              )}
+              <span>{deliveryOption}</span>
+            </span>
+
+            {/* Verified Badge */}
+            <span className="px-2.5 py-1 rounded-[4px] bg-[#2FC191] text-[#053697] text-[10px] sm:text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#053697]" />
+              <span>OFFICIAL REWARD</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Right Column: Entity Overview & Actions */}
+        <div className="flex-1 min-w-0 p-4 sm:p-6 lg:p-7 flex flex-col justify-between">
+          <div>
+            {/* Top Line: Archive Tag and Share Action */}
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-1.5 min-w-0 font-mono text-xs sm:text-[13px] truncate">
+                <span className="font-bold text-[#053697]">
+                  [REWARD ARCHIVE: {archiveId}]
+                </span>
+                <span className="text-slate-300">/</span>
+                <span className="text-slate-500 font-medium truncate uppercase">
+                  {categoryName}
+                </span>
+              </div>
+
+              {/* Share Button */}
+              <button
+                type="button"
+                onClick={handleShare}
+                className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:text-[#053697] hover:border-[#053697] hover:bg-slate-50 transition-colors cursor-pointer"
+                title="Share reward"
+                aria-label="Share reward"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Reward Title */}
+            <h3
+              className="text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#053697] tracking-tight leading-none mt-2.5 sm:mt-3 hover:text-[#042870] transition-colors"
+              title={item?.name || "Reward"}
+            >
+              {item?.name || "REWARD ITEM"}
+            </h3>
+
+            {/* Description Box */}
+            <div className="bg-[#f8fafc] border border-slate-100 rounded-xl p-3.5 sm:p-4 mt-3 sm:mt-4 text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+              {item?.description ||
+                "Redeem your accumulated reward points to claim this exclusive prize."}
+            </div>
+
+            {/* Stats / Details Box (2 Columns) */}
+            <div className="border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 grid grid-cols-2 divide-x divide-slate-200 bg-white mt-3.5 sm:mt-4">
+              {/* Points Required */}
+              <div className="pr-4 space-y-1">
+                <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                  POINTS REQUIRED
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Coins className="w-4 h-4 text-amber-500 shrink-0" />
+                  <span className="text-xl sm:text-2xl font-black text-[#053697]">
+                    {item?.pointRequired !== undefined
+                      ? item.pointRequired.toLocaleString()
+                      : "0"}
+                  </span>
+                  <span className="text-[10px] font-extrabold text-slate-400 uppercase">
+                    PTS
+                  </span>
+                </div>
+              </div>
+
+              {/* Delivery Option */}
+              <div className="pl-4 sm:pl-6 space-y-1">
+                <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                  DELIVERY METHOD
+                </div>
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-black text-slate-800 capitalize">
+                  {isEmail ? (
+                    <Mail className="w-4 h-4 text-[#053697] shrink-0" />
+                  ) : (
+                    <Package className="w-4 h-4 text-[#053697] shrink-0" />
+                  )}
+                  <span>{deliveryOption}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Row */}
+          <div className="flex items-center gap-2.5 sm:gap-3 mt-4 sm:mt-5 pt-1">
+            <RedeemButton
+              item={item}
+              className="flex-1 min-w-0 h-11 sm:h-12 px-4 sm:px-6 rounded-xl bg-[#053697] hover:bg-[#042870] text-white font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              buttonText={
+                <>
+                  <Sparkles className="w-4 h-4 text-[#2FC191]" />
+                  <span>REDEEM REWARD</span>
+                  <ArrowRight className="w-4 h-4 text-white ml-0.5" />
+                </>
+              }
+            />
+          </div>
         </div>
       </div>
-
-      {/* Bottom Separator */}
-      <div className="w-full h-px bg-slate-100 my-3" />
-
-      {/* Bottom Footer: Feature Tag & Redeem Button */}
-      <div className="flex items-center justify-between gap-2 pt-1">
-        <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-          <Gift className="w-3.5 h-3.5 text-[#2FC191]" />
-          <span className="text-[11px]">Exclusive Reward</span>
-        </div>
-
-        <SendTipsButton
-          item={item}
-          className="inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
-          buttonText={
-            <>
-              <Sparkles className="w-3.5 h-3.5 text-[#2FC191]" />
-              <span>Redeem</span>
-            </>
-          }
-        />
-      </div>
-    </MotionDiv>
+    </div>
   );
 };
 

@@ -34,8 +34,8 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
   const communityRaisedDisplay = item?.paidAmount
     ? `$${item.paidAmount.toLocaleString()}`
     : item?.totalTips
-    ? `$${(item.totalTips * 10).toLocaleString()}`
-    : "$1,450";
+      ? `$${(item.totalTips * 10).toLocaleString()}`
+      : "$1,450";
 
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -154,64 +154,21 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                   >
                     {item?.name || "ALEXIS ANDREWS"}
                   </h3>
-
-                  {/* Quote / Bio Box */}
-                  <div className="bg-[#f8fafc] border border-slate-100 rounded-xl p-3.5 sm:p-4 mt-3 sm:mt-4 text-xs sm:text-sm text-slate-600 italic font-medium leading-relaxed">
-                    &ldquo;Direct digital tips support my off-season training,
-                    nutrition plans, and collegiate athletic equipment.&rdquo;
-                  </div>
-
-                  {/* Stats Box */}
-                  {/* <div className="border border-slate-200/90 rounded-2xl p-4 sm:p-5 mt-3 sm:mt-4 grid grid-cols-2 divide-x divide-slate-200 relative overflow-hidden bg-white">
-                    <span className="absolute right-3 -bottom-2 text-6xl sm:text-7xl font-black text-slate-100 select-none pointer-events-none opacity-60 tracking-tighter leading-none">
-                      NIL
-                    </span>
-
-                    
-                    <div className="pr-3 sm:pr-4">
-                      <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 tracking-wider uppercase">
-                        TOTAL DIRECT TIPS
-                      </p>
-                      <div className="flex items-baseline gap-1.5 mt-1 sm:mt-1.5">
-                        <span className="text-2xl sm:text-3xl font-black text-[#053697] leading-none">
-                          {totalTipsDisplay}
-                        </span>
-                        <span className="text-xs sm:text-[13px] font-bold text-slate-400 uppercase">
-                          TIPS
-                        </span>
-                      </div>
-                    </div>
-
-                    
-                    <div className="pl-4 sm:pl-6 relative z-10">
-                      <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 tracking-wider uppercase">
-                        COMMUNITY RAISED
-                      </p>
-                      <div className="mt-1 sm:mt-1.5">
-                        <span className="text-2xl sm:text-3xl font-black text-[#00684a] leading-none">
-                          {communityRaisedDisplay}
-                        </span>
-                      </div>
-                    </div>
-                  </div> */}
+                </div>
+                <div className="bg-[#f8fafc] border border-slate-100 rounded-xl p-3.5 sm:p-4 mt-3 sm:mt-4 text-xs sm:text-sm text-slate-600 italic font-medium leading-relaxed">
+                  &ldquo;Direct digital tips support my off-season training,
+                  nutrition plans, and collegiate athletic equipment.&rdquo;
                 </div>
 
-                
                 <div className="flex items-center gap-2.5 sm:gap-3 mt-4 sm:mt-5 pt-1">
-                  
                   <button
                     type="button"
-                    onClick={openTip}
-                    className="flex-1 min-w-0 h-11 sm:h-12 px-4 sm:px-6 rounded-xl bg-[#2FC191] hover:bg-[#28b887] active:scale-[0.99] text-[#053697] font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs hover:shadow"
+                    onClick={openDetails}
+                    className="flex-1 min-w-0 h-11 sm:h-12 px-4 sm:px-6 rounded-xl bg-[#053697] hover:bg-[#053697] active:scale-[0.99] text-[#fff] font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs hover:shadow"
                   >
-                    <span>DIRECT TIP ATHLETE</span>
-                    <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#053697]" />
+                    <span>VIEW PLAYER PROFILE</span>
+                    <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#fff]" />
                   </button>
-
-                  
-                  <div className="h-11 sm:h-12 px-3.5 sm:px-5 rounded-xl bg-white border border-slate-200 text-slate-700 font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center shrink-0">
-                    MIN $5.00
-                  </div>
                 </div>
               </div>
             </div>

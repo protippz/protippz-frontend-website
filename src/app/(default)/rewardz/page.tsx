@@ -2,11 +2,10 @@ import { get } from "@/ApisRequests/server";
 import rewardbg from "@/Assets/rewardbgs.png";
 import InfiniteRewardList from "@/components/rewardz/Client/InfiniteRewardList";
 import Rewards from "@/components/rewardz/Rewards";
-import SearchAndSortComponent from "@/components/rewardz/SearchAndSortComponent";
-import Heading from "@/components/Shared/Heading";
 import GoToTop from "@/components/ui/GoToTop";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { Suspense } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
 
 export const metadata = {
@@ -28,22 +27,19 @@ export interface RewardInterface {
   description: string;
 }
 
-interface searchParamsInterface {
-  [key: string]: string | undefined | number;
-}
-
 interface PageProps {
-  searchParams: Promise<searchParamsInterface>;
+  searchParams: Promise<{ [key: string]: string | undefined | null }>;
 }
 
 const RewardzPage = async ({ searchParams }: PageProps) => {
-  const { searchTerm, category, page, limit } = await searchParams;
+  const { searchTerm, category, sort, page, limit } = await searchParams;
   const cookie = cookies();
   const token = (await cookie).get("token")?.value;
 
   const params = {
     category: category ? String(category) : undefined,
     searchTerm: searchTerm ? String(searchTerm) : undefined,
+    sort: sort ? String(sort) : undefined,
     page: page ? String(page) : "1",
     limit: limit ? String(limit) : "20",
   };
@@ -53,29 +49,48 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
 
   return (
     <>
-      <div className="max-w-355 mx-auto mt-6 sm:mt-10 px-2 sm:px-4">
+      <div className="max-w-355 mx-auto mt-2 sm:mt-3 px-2 sm:px-4 pb-14">
         <GoToTop />
-        <Rewards />
-        <Heading headingText="REWARDZ" subHeadingText="Select a Reward" />
-        <SearchAndSortComponent />
 
-        <InfiniteRewardList
-          initialData={rewardData}
-          initialMeta={meta}
-          token={token}
-          searchTerm={params.searchTerm}
-          category={params.category}
-          limit={20}
-        />
+        {/* Unified Master Container Card: Sticky shell with independent scrolling for sidebar and cards */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-slate-200 lg:sticky lg:top-[64px] h-[calc(100dvh-120px)] sm:h-[calc(100dvh-125px)] lg:h-[calc(100vh-125px)] min-h-[460px] sm:min-h-[520px] lg:min-h-[550px]">
+          {/* Left Column: Category Filter Sidebar (shrink-0 on mobile/tablet, full height scrollable on desktop) */}
+          <aside className="w-full shrink-0 lg:w-72 xl:w-80 lg:shrink-0 bg-white lg:h-full flex flex-col overflow-hidden">
+            <Suspense
+              fallback={
+                <div className="w-full h-14 lg:h-full bg-white animate-pulse" />
+              }
+            >
+              <Rewards />
+            </Suspense>
+          </aside>
+
+          {/* Right Column: Scrollable Rewards Area */}
+          <main className="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-[#fafbfb]">
+            {/* Cards Content Area: Independently Scrollable */}
+            <div className="flex-1 overflow-y-auto custom-sidebar-scrollbar p-2.5 sm:p-4 min-h-0">
+              <InfiniteRewardList
+                initialData={rewardData}
+                initialMeta={meta}
+                token={token}
+                searchTerm={params.searchTerm}
+                sort={params.sort}
+                category={params.category}
+                limit={20}
+              />
+            </div>
+          </main>
+        </div>
       </div>
 
+      {/* Promotional Banner */}
       <div
         style={{
           backgroundImage: `url(${rewardbg.src})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        className="flex flex-col items-center justify-between mt-16 mb-10 box-border w-full"
+        className="flex flex-col items-center justify-between mt-10 mb-10 box-border w-full"
       >
         <div className="w-full md:flex md:items-center md:justify-between max-w-355 mx-auto min-h-[600px] px-4">
           <div className="w-full md:w-1/2 text-center md:text-left">
@@ -118,7 +133,10 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
 
 export default RewardzPage;
 
-const getReward = async (params: searchParamsInterface, token?: string) => {
+const getReward = async (
+  params: { [key: string]: string | undefined },
+  token?: string
+) => {
   const paramsUrl = Object.entries(params)
     .filter(([key, value]) => value !== undefined && value !== "")
     .map(([key, value]) => `${key}=${value}`)

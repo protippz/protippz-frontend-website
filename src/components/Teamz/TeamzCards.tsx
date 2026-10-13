@@ -172,12 +172,6 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                     {item?.name || "OFFICIAL TEAM"}
                   </h3>
 
-                  {/* Statement / Bio Box */}
-                  <div className="bg-[#f8fafc] border border-slate-100 rounded-xl p-3.5 sm:p-4 mt-3 sm:mt-4 text-xs sm:text-sm text-slate-600 italic font-medium leading-relaxed">
-                    &ldquo;Official collegiate team program supporting student-athlete
-                    development, training, nutrition, and season travel.&rdquo;
-                  </div>
-
                   {/* Stats Box */}
                   {/* <div className="border border-slate-200/90 rounded-2xl p-4 sm:p-5 mt-3 sm:mt-4 grid grid-cols-2 divide-x divide-slate-200 relative overflow-hidden bg-white">
                     <span className="absolute right-3 -bottom-2 text-6xl sm:text-7xl font-black text-slate-100 select-none pointer-events-none opacity-60 tracking-tighter leading-none">
@@ -218,10 +212,10 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                   
                   <button
                     type="button"
-                    onClick={openTip}
-                    className="flex-1 min-w-0 h-11 sm:h-12 px-4 sm:px-6 rounded-xl bg-[#2FC191] hover:bg-[#28b887] active:scale-[0.99] text-[#053697] font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs hover:shadow"
+                    onClick={openDetails}
+                    className="flex-1 min-w-0 h-11 sm:h-12 px-4 sm:px-6 rounded-xl bg-[#053697] hover:bg-[#053697] active:scale-[0.99] text-[#fff] font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs hover:shadow"
                   >
-                    <span>DIRECT TIP TEAM</span>
+                    <span>VIEW TEAM PROFILE</span>
                     <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#053697]" />
                   </button>
 
