@@ -33,7 +33,7 @@ function HeroSection() {
               <MapIcon />
             </div>
             {/* Heading */}
-            <h1 className="text-2xl font-e sm:text-5xl xl:text-6xl text-[#053697] leading-[1.08] tracking-tight mb-5">
+            <h1 className="text-2xl  sm:text-5xl xl:text-6xl text-[#053697] leading-[1.08] tracking-tight mb-5">
               <span className="relative inline-block">
                 <span className="relative z-10 text-[#2FC191]">
                   Tip Your Fav Players.
@@ -78,28 +78,19 @@ function HeroSection() {
             <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-4">
               <AvatarGroup className="**:grayscale **:hover:grayscale-0 transition-all">
                 <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
-                  <AvatarImage
-                    src=""
-                    alt="@shadcn"
-                  />
+                  <AvatarImage src="" alt="@shadcn" />
                   <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">
                     CN
                   </AvatarFallback>
                 </Avatar>
                 <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
-                  <AvatarImage
-                    src=""
-                    alt="@maxleiter"
-                  />
+                  <AvatarImage src="" alt="@maxleiter" />
                   <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">
                     ML
                   </AvatarFallback>
                 </Avatar>
                 <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
-                  <AvatarImage
-                    src=""
-                    alt="@evilrabbit"
-                  />
+                  <AvatarImage src="" alt="@evilrabbit" />
                   <AvatarFallback className="text-xs bg-[#2FC191]/20 text-[#2FC191]">
                     ER
                   </AvatarFallback>

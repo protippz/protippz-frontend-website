@@ -120,7 +120,7 @@
 //             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60" />
 //             <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
 //           </span>
-//           <span className="text-base font-black tracking-widest uppercase font-e text-white select-none">
+//           <span className="text-base font-black tracking-widest uppercase  text-white select-none">
 //             Live
 //           </span>
 //         </div>
@@ -285,7 +285,7 @@ export default function SportsTicker() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
           </span>
-          <span className="text-base font-black tracking-widest uppercase font-e text-white select-none">
+          <span className="text-base font-black tracking-widest uppercase  text-white select-none">
             Live
           </span>
         </div>

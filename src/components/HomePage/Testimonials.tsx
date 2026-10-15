@@ -279,7 +279,7 @@ const Testimonials: React.FC = () => {
               Trusted by thousands
             </span>
           </div>
-          <h1 className="text-2xl font-e sm:text-4xl md:text-5xl font-bold text-[#053697] mb-4">
+          <h1 className="text-2xl  sm:text-4xl md:text-5xl font-bold text-[#053697] mb-4">
             Fans & Athletes Already Making{" "}
             <span className="text-[#2FC191]">an impact</span>
           </h1>

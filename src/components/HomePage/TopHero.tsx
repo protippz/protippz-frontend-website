@@ -171,7 +171,7 @@ function TopHero() {
       <div className="flex flex-col md:hidden">
         {/* Text block   always visible on mobile, sits above cards */}
         <div className="px-6 pt-8 pb-4">
-          <h1 className="text-white font-e text-3xl font-black tracking-tight leading-tight">
+          <h1 className="text-white  text-3xl font-black tracking-tight leading-tight">
             The Faces of
             <br />
             Women&apos;s Basketball
@@ -237,7 +237,7 @@ function TopHero() {
         {/* Left panel   fixed width, never scrolls */}
         <div className="shrink-0 w-80 lg:w-96 flex flex-col justify-center px-8 pb-2 gap-4">
           <div>
-            <h1 className="text-[#2FC191] font-e text-4xl font-black tracking-tight leading-tight">
+            <h1 className="text-[#2FC191]  text-4xl font-black tracking-tight leading-tight">
               The Faces of
               <br />
               Women&apos;s Athletes

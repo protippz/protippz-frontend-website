@@ -28,7 +28,7 @@ function ConnectionBoth() {
             </span>
           </div>
 
-          <h2 className="text-4xl font-e sm:text-5xl font-black text-[#053697] mb-4 leading-[1.1] tracking-[-0.03em]">
+          <h2 className="text-4xl  sm:text-5xl font-black text-[#053697] mb-4 leading-[1.1] tracking-[-0.03em]">
             Why fans love <span className="text-[#2FC191]">PROTIPPZ</span>
           </h2>
 
@@ -52,7 +52,7 @@ function ConnectionBoth() {
                 A trusted platform
               </p>
 
-              <h3 className="text-2xl font-e sm:text-3xl lg:text-[2.15rem] font-black text-[#053697] leading-[1.15] tracking-[-0.025em] mb-4">
+              <h3 className="text-2xl  sm:text-3xl lg:text-[2.15rem] font-black text-[#053697] leading-[1.15] tracking-[-0.025em] mb-4">
                 Connecting fans with the{" "}
                 <span className="text-[#2FC191]">athletes</span> they love
               </h3>

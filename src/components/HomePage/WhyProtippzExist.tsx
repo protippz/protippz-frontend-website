@@ -110,7 +110,7 @@ function WhyProtippzExist() {
 
           <h2
             id="why-protippz-heading"
-            className="text-2xl max-w-4xl mx-auto font-e sm:text-5xl font-black text-[#053697] mb-5 leading-[1.1] tracking-[-0.03em]"
+            className="text-2xl max-w-4xl mx-auto  sm:text-5xl font-black text-[#053697] mb-5 leading-[1.1] tracking-[-0.03em]"
           >
             SUPPORT THE ATHLETES YOU LOVE.{" "}
             <span className="text-[#2FC191]">GET MORE FROM THE GAME.</span>

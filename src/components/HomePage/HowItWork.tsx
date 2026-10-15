@@ -200,7 +200,7 @@ export default function HowItWork() {
               How it works
             </span>
           </div>
-          <h1 className="text-2xl font-e sm:text-4xl md:text-5xl font-bold text-[#053697] mb-4">
+          <h1 className="text-2xl  sm:text-4xl md:text-5xl font-bold text-[#053697] mb-4">
             Start supporting athletes in 4{" "}
             <span className="text-[#2FC191]">simple steps</span>
           </h1>

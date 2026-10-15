@@ -32,7 +32,7 @@ function ForAthletes() {
             </span>
           </div>
 
-          <h2 className="text-3xl font-e sm:text-4xl md:text-5xl font-black text-[#053697] mb-4 leading-[1.1] tracking-[-0.03em]">
+          <h2 className="text-3xl  sm:text-4xl md:text-5xl font-black text-[#053697] mb-4 leading-[1.1] tracking-[-0.03em]">
             Why Athletes Love <span className="text-[#2FC191]">PROTIPPZ</span>
           </h2>
 
@@ -103,7 +103,7 @@ function ForAthletes() {
                 ))}
               </div> */}
 
-              <h3 className="text-2xl font-e sm:text-3xl lg:text-4xl font-black text-[#053697] leading-[1.15] tracking-[-0.025em] mb-4">
+              <h3 className="text-2xl  sm:text-3xl lg:text-4xl font-black text-[#053697] leading-[1.15] tracking-[-0.025em] mb-4">
                 Direct Fan Support{" "}
                 <span className="text-[#2FC191]">Built for Athletes</span>
               </h3>
