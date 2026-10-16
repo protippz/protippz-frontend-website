@@ -157,8 +157,8 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
       >
         <div className="text-center">
           <Image
-            src={imageUrl(item?.player_image)}
-            alt={item?.name}
+            src={imageUrl(item?.player_image || "")}
+            alt={item?.name || "Player"}
             width={100}
             height={100}
             className="rounded-full border-2 mx-auto mb-4"

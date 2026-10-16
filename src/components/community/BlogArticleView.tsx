@@ -70,7 +70,9 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
   const [createCommentApi, { isLoading: isPostingComment }] =
     useCreateCommentMutation();
   const [deleteCommentApi] = useDeleteCommentMutation();
-  const [deletingCommentId, setDeletingCommentId] = useState<string | null>(null);
+  const [deletingCommentId, setDeletingCommentId] = useState<string | null>(
+    null,
+  );
   const [commentInput, setCommentInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState(false);
@@ -196,7 +198,9 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
       toast.success(replyingTo ? "Reply posted!" : "Comment added!");
     } catch (err) {
       console.error("Failed to post comment:", err);
-      toast.error(replyingTo ? "Failed to post reply" : "Failed to submit comment");
+      toast.error(
+        replyingTo ? "Failed to post reply" : "Failed to submit comment",
+      );
     }
   };
 
@@ -221,7 +225,6 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
       setDeletingCommentId(null);
     }
   };
-
 
   const currentUrl =
     typeof window !== "undefined"
@@ -255,7 +258,6 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans antialiased">
-      {/* Top Bar for Navigation / Back when in modal or page */}
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 py-2.5 flex items-center justify-between max-w-355 mx-auto">
         <div className="flex items-center gap-2">
           <button
@@ -314,12 +316,9 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
         </div>
       </div>
 
-      {/* Main Container */}
       <div className="max-w-355 mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-          {/* ================= LEFT / MAIN EDITORIAL ARTICLE (8 Cols) ================= */}
           <article className="lg:col-span-8 min-w-0">
-            {/* 1. Category Badges */}
             <div className="flex items-center gap-2 mb-3">
               <span className="px-2.5 py-0.5 bg-[#2FC191] text-white text-[11px] font-bold uppercase tracking-wider rounded-xs">
                 {categoryName}
@@ -500,7 +499,10 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
             </div>
 
             {/* 9. Discussion & Comments */}
-            <div id="comments-section" className="mt-10 pt-6 border-t border-slate-200 space-y-5">
+            <div
+              id="comments-section"
+              className="mt-10 pt-6 border-t border-slate-200 space-y-5"
+            >
               <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <MessageCircle className="w-4 h-4 text-[#2FC191]" />
                 <span>Comments ({commentsList.length})</span>
@@ -512,7 +514,10 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                   <span className="text-[#2FC191] font-semibold flex items-center gap-1.5">
                     <CornerDownRight className="w-3.5 h-3.5 shrink-0" />
                     <span>
-                      Replying to <strong className="text-slate-800">@{replyingTo.userName}</strong>
+                      Replying to{" "}
+                      <strong className="text-slate-800">
+                        @{replyingTo.userName}
+                      </strong>
                     </span>
                   </span>
                   <button
@@ -546,8 +551,8 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                       replyingTo
                         ? `Reply to @${replyingTo.userName}...`
                         : userData?._id
-                        ? "Leave a comment..."
-                        : "Sign in to leave a comment..."
+                          ? "Leave a comment..."
+                          : "Sign in to leave a comment..."
                     }
                     rows={2}
                     className="w-full p-2.5 pr-20 rounded-sm border border-slate-300 focus:outline-none focus:border-[#2FC191] text-xs placeholder-slate-400 resize-none"
@@ -557,8 +562,16 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                     disabled={isPostingComment || !commentInput.trim()}
                     className="absolute right-2 bottom-3 px-3 py-1 bg-[#2FC191] hover:bg-[#28ad81] disabled:opacity-50 text-white font-bold text-[11px] rounded-xs cursor-pointer shadow-2xs transition-all flex items-center gap-1"
                   >
-                    {isPostingComment && <Loader2 className="w-3 h-3 animate-spin" />}
-                    <span>{isPostingComment ? "Posting..." : replyingTo ? "Reply" : "Submit"}</span>
+                    {isPostingComment && (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    )}
+                    <span>
+                      {isPostingComment
+                        ? "Posting..."
+                        : replyingTo
+                          ? "Reply"
+                          : "Submit"}
+                    </span>
                   </button>
                 </div>
               </form>
@@ -581,7 +594,10 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Avatar className="w-6 h-6 border border-slate-200 shrink-0">
-                            <AvatarImage src={c.user?.avatar} alt={c.user?.name} />
+                            <AvatarImage
+                              src={c.user?.avatar}
+                              alt={c.user?.name}
+                            />
                             <AvatarFallback className="text-[10px] bg-emerald-50 text-[#053697] font-bold">
                               {c.user?.name ? c.user.name[0] : "R"}
                             </AvatarFallback>
@@ -596,7 +612,9 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                           </span>
                           <button
                             type="button"
-                            onClick={() => handleReplyClick(c.id, c.user?.name || "Reader")}
+                            onClick={() =>
+                              handleReplyClick(c.id, c.user?.name || "Reader")
+                            }
                             className="text-slate-400 hover:text-[#2FC191] hover:bg-[#2FC19110] transition-all px-1.5 py-0.5 rounded cursor-pointer flex items-center gap-1 text-[11px] font-semibold"
                             title="Reply to comment"
                           >
@@ -615,7 +633,11 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                             ) : (
                               <Trash2 className="w-3 h-3" />
                             )}
-                            <span>{deletingCommentId === c.id ? "Deleting..." : "Delete"}</span>
+                            <span>
+                              {deletingCommentId === c.id
+                                ? "Deleting..."
+                                : "Delete"}
+                            </span>
                           </button>
                         </div>
                       </div>
@@ -678,7 +700,10 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                                         <button
                                           type="button"
                                           onClick={() =>
-                                            handleReplyClick(c.id, r.user?.name || "Reader")
+                                            handleReplyClick(
+                                              c.id,
+                                              r.user?.name || "Reader",
+                                            )
                                           }
                                           className="text-slate-400 hover:text-[#2FC191] hover:bg-[#2FC19110] transition-all px-1.5 py-0.5 rounded cursor-pointer flex items-center gap-1 text-[10px] font-semibold"
                                           title="Reply to comment"
@@ -689,7 +714,9 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                                         <button
                                           type="button"
                                           disabled={deletingCommentId === r.id}
-                                          onClick={() => handleDeleteComment(r.id)}
+                                          onClick={() =>
+                                            handleDeleteComment(r.id)
+                                          }
                                           className="text-slate-400 hover:text-red-600 hover:bg-red-50/80 transition-all px-1.5 py-0.5 rounded cursor-pointer disabled:opacity-50 flex items-center gap-1 text-[10px] font-medium"
                                           title="Delete reply"
                                         >
@@ -698,7 +725,11 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                                           ) : (
                                             <Trash2 className="w-3 h-3" />
                                           )}
-                                          <span>{deletingCommentId === r.id ? "Deleting..." : "Delete"}</span>
+                                          <span>
+                                            {deletingCommentId === r.id
+                                              ? "Deleting..."
+                                              : "Delete"}
+                                          </span>
                                         </button>
                                       </div>
                                     </div>
@@ -732,7 +763,9 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    const container = document.getElementById("blog-modal-container");
+                    const container = document.getElementById(
+                      "blog-modal-container",
+                    );
                     if (container) {
                       container.scrollTo({ top: 0, behavior: "smooth" });
                     } else {
@@ -748,31 +781,7 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
             </div>
           </article>
 
-          {/* ================= RIGHT / EDITORIAL SIDEBAR (4 Cols) ================= */}
           <aside className="lg:col-span-4 space-y-8 lg:pl-2 sticky top-20 self-start">
-            {/* 1. SEARCH WIDGET */}
-            {/* <div className="space-y-2">
-              <h4 className="text-[11px] font-black text-slate-800 uppercase tracking-wider pb-1 border-b-2 border-slate-800">
-                SEARCH
-              </h4>
-              <form onSubmit={handleSearch} className="flex gap-1.5 pt-1">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search articles..."
-                  className="flex-1 px-3 py-1.5 border border-slate-300 rounded-none text-xs text-slate-800 focus:outline-none focus:border-slate-800"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-1.5 bg-black text-white text-xs font-bold uppercase tracking-wider hover:bg-slate-800 transition-colors cursor-pointer rounded-none"
-                >
-                  SEARCH
-                </button>
-              </form>
-            </div> */}
-
-            {/* 2. RECENT POSTS (Text Links) */}
             <div className="space-y-2.5">
               <h4 className="text-sm font-bold text-slate-900 pb-1 border-b border-slate-200">
                 Recent Posts

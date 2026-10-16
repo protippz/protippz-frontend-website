@@ -14,10 +14,6 @@ const DEFAULT_SEO_DESCRIPTION =
 const DEFAULT_OG_IMAGE = "https://protippz.com/assets/seo-banner.jpg";
 const BASE_SITE_URL = "https://protippz.com";
 
-/**
- * Fetch blog article details on the server to populate Open Graph, Twitter Card, and oEmbed tags
- * for social media bots across all platforms.
- */
 async function getPostData(idOrSlug: string): Promise<CommunityPostBackendItem | null> {
   try {
     const res = await fetch(
@@ -58,10 +54,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  // 1. SEO Title
   const title = post.seoTitle || post.title || DEFAULT_SEO_TITLE;
 
-  // 2. Meta Description
   const rawDescription = post.description
     ? post.description.replace(/<[^>]*>?/gm, "").trim()
     : "";
@@ -71,7 +65,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ? rawDescription.slice(0, 160)
       : DEFAULT_SEO_DESCRIPTION);
 
-  // 3. Open Graph Image URL
   let ogImageUrl =
     post.ogImage ||
     (post.images && post.images.length > 0 ? post.images[0] : null) ||

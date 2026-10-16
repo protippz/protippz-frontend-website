@@ -11,27 +11,58 @@ export const metadata = {
     "Learn how to tip your favorite player/team, earn rewards, and win prizes with TIPPZ.",
 };
 
+export interface PlayerTeam {
+  _id?: string;
+  name?: string;
+  team_logo?: string;
+  sport?: string;
+  team_bg_image?: string;
+  totalTips?: number;
+  paidAmount?: number;
+  dueAmount?: number;
+  username?: string;
+  email?: string;
+  isStripeConnected?: boolean;
+  isProfileClaimed?: boolean;
+  [key: string]: any;
+}
+
+export interface PlayerLeague {
+  _id?: string;
+  name?: string;
+  sport?: string;
+  league_image?: string;
+  [key: string]: any;
+}
+
 export interface Player {
   _id: string;
+  user?: string;
   name: string;
-  league: {
-    _id: string;
-    name: string;
-    sport: string;
-  };
-  team: {
-    _id: string;
-    name: string;
-  };
-  position: string;
-  player_image: string;
-  jerceyNumber: string;
-  experience: string;
-  player_bg_image: string;
-  totalTips: number;
-  paidAmount: number;
-  dueAmount: number;
-  isBookmark: boolean;
+  league?: PlayerLeague;
+  team?: PlayerTeam;
+  position?: string;
+  player_image?: string;
+  player_bg_image?: string;
+  totalTips?: number;
+  paidAmount?: number;
+  dueAmount?: number;
+  stripe_account_id?: string;
+  stripAccountId?: string;
+  isStripeConnected?: boolean;
+  jerceyNumber?: number | string;
+  experience?: string;
+  username?: string;
+  email?: string;
+  bio?: string;
+  intagram?: string;
+  instagram?: string;
+  twitter?: string;
+  tiktok?: string;
+  isProfileClaimed?: boolean;
+  isBookmark?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface ParamsProps {
