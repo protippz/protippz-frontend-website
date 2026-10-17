@@ -17,6 +17,7 @@ import {
   Award,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { shareUrl } from "@/lib/share";
 
 interface PlayerzCardsProps {
   item: Player;
@@ -100,17 +101,20 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
     return "#";
   };
 
-  const handleShare = (e: React.MouseEvent) => {
+  const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (typeof window !== "undefined") {
-      const url = `${window.location.origin}/playerz/${item?._id || ""}`;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(url);
-        toast.success("Player link copied to clipboard!");
-      } else {
-        toast.success(`Athlete: ${item?.name || "Player"}`);
-      }
-    }
+    if (typeof window === "undefined") return;
+
+    const url = item?._id
+      ? `${window.location.origin}/playerz/${item._id}`
+      : `${window.location.origin}/playerz`;
+
+    await shareUrl({
+      title: `${item?.name || "Athlete"} | ProTippz`,
+      text: `Support ${item?.name || "this athlete"} on ProTippz!`,
+      url,
+      fallbackSuccessMessage: "Player link copied to clipboard!",
+    });
   };
 
   return (

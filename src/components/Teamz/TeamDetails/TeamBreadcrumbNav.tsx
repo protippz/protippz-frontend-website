@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Share2, Check } from "lucide-react";
 import toast from "react-hot-toast";
+import { shareUrl } from "@/lib/share";
 
 interface TeamBreadcrumbNavProps {
   teamName: string;
@@ -18,18 +19,14 @@ const TeamBreadcrumbNav: React.FC<TeamBreadcrumbNavProps> = ({ teamName }) => {
     const url = typeof window !== "undefined" ? window.location.href : "";
     if (!url) return;
 
-    if (navigator.clipboard) {
-      try {
-        await navigator.clipboard.writeText(url);
-        setCopied(true);
-        toast.success("Team link copied to clipboard!");
-        setTimeout(() => setCopied(false), 2500);
-      } catch (err) {
-        toast.error("Failed to copy link");
-      }
-    } else {
-      toast.success("Team URL: " + url);
-    }
+    await shareUrl({
+      title: `${teamName} | ProTippz`,
+      text: `Support ${teamName} on ProTippz!`,
+      url,
+      fallbackSuccessMessage: "Team link copied to clipboard!",
+    });
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
   };
 
   return (

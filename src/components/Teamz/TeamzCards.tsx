@@ -9,6 +9,7 @@ import { TeamInterface } from "@/app/(default)/teamz/page";
 import SendTipsButton from "./Client/SendTipsButton";
 import { Share2, Star, ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
+import { shareUrl } from "@/lib/share";
 
 interface TeamzCardsProps {
   item: TeamInterface;
@@ -57,17 +58,20 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
     );
   }, [item?.team_bg_image, item?.team_logo]);
 
-  const handleShare = (e: React.MouseEvent) => {
+  const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (typeof window !== "undefined") {
-      const url = `${window.location.origin}/teamz/${item?._id || ""}`;
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(url);
-        toast.success("Team link copied to clipboard!");
-      } else {
-        toast.success(`Team: ${item?.name || "Team"}`);
-      }
-    }
+    if (typeof window === "undefined") return;
+
+    const url = item?._id
+      ? `${window.location.origin}/teamz/${item._id}`
+      : `${window.location.origin}/teamz`;
+
+    await shareUrl({
+      title: `${item?.name || "Team"} | ProTippz`,
+      text: `Support ${item?.name || "this team"} on ProTippz!`,
+      url,
+      fallbackSuccessMessage: "Team link copied to clipboard!",
+    });
   };
 
   return (
