@@ -53,7 +53,7 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
           <NextTopLoader />
-          <AuthProvider>{/*
+          <AuthProvider>
           <Script
             id="chatbot-script"
             strategy="afterInteractive"
@@ -66,7 +66,7 @@ export default function RootLayout({
               (d.getElementsByTagName("head")[0] || d.documentElement).appendChild(s);
             })();`,
             }}
-          />*/}
+          />
             <ClickjackingFixed>{children}</ClickjackingFixed>
           </AuthProvider>
           <GoogleAnalytics />
