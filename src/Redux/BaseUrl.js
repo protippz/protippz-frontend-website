@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://qg114d4c-5000.asse.devtunnels.ms",
+    baseUrl: "https://api.protippz.com",
     prepareHeaders: (headers) => {
       if (typeof window !== "undefined") {
         const token =
