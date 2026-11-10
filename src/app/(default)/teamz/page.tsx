@@ -21,7 +21,6 @@ export interface TeamInterface {
     name: string;
     sport: string;
   };
-  team_bg_image: string;
   totalTips: number;
   paidAmount: number;
   dueAmount: number;

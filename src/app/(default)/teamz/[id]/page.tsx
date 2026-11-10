@@ -75,9 +75,7 @@ export async function generateMetadata({
   const description = `Support ${team.name} with direct digital tips on ProTippz. View team roster, NIL community raised, and follow the program!`;
   const logoUrl = team.team_logo
     ? imageUrl(team.team_logo)
-    : team.team_bg_image
-      ? imageUrl(team.team_bg_image)
-      : undefined;
+    : undefined;
 
   return {
     title,
@@ -131,8 +129,7 @@ export default async function TeamDetailsPage({ params }: PageProps) {
   }
 
   // Extract primary vibrant brand color from team logo or league image
-  const logoUrl =
-    team.team_logo || team.team_bg_image || team.league?.league_image;
+  const logoUrl = team.team_logo || team.league?.league_image;
   const colorTheme = await extractLogoColor(logoUrl);
 
   return (

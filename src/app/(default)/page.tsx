@@ -73,6 +73,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { isTokenValid } from "@/lib/authUtils";
 import PoweredByStripe from "@/components/ad/PoweredByStripe";
 import Banner from "@/components/HomePage/Banner";
 import BrandShowcase from "@/components/HomePage/BrandShowcase";
@@ -99,11 +100,21 @@ export default function Home() {
 
   // If user is successfully logged in, redirect to /community
   useEffect(() => {
-    const token =
-      Cookies.get("token") ||
-      (typeof window !== "undefined" ? localStorage.getItem("token") : null);
-    if (token && token !== "undefined" && token !== "null") {
-      router.replace("/community");
+    const cookieToken = Cookies.get("token");
+    const localToken =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = cookieToken || localToken;
+
+    if (token) {
+      if (isTokenValid(token)) {
+        router.replace("/community");
+      } else {
+        Cookies.remove("token");
+        Cookies.remove("token", { path: "/" });
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("token");
+        }
+      }
     }
   }, [router]);
 

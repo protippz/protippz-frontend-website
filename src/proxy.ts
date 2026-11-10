@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { UNDER_DEVELOPMENT_HTML } from "./lib/underDevelopmentHtml";
+import { isTokenValid } from "./lib/authUtils";
 
 export function proxy(request: NextRequest) {
   const isProduction = process.env.NODE_ENV === "production";
@@ -41,13 +42,10 @@ export function proxy(request: NextRequest) {
     });
   }
 
-  // Authentication check
+  // Authentication check: verify token exists and is not expired
   const rawToken = request.cookies.get("token")?.value;
-  const isLoggedIn =
-    !!rawToken &&
-    rawToken !== "undefined" &&
-    rawToken !== "null" &&
-    rawToken.trim() !== "";
+  const isLoggedIn = isTokenValid(rawToken);
+  const hasStaleToken = Boolean(rawToken) && !isLoggedIn;
 
   const pathname = request.nextUrl.pathname;
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
@@ -72,7 +70,12 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  // Clear dead/expired cookie so it doesn't linger in browser
+  if (hasStaleToken) {
+    response.cookies.delete("token");
+  }
+  return response;
 }
 
 export const middleware = proxy;

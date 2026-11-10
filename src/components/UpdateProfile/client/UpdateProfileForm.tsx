@@ -18,6 +18,7 @@ import {
   ArrowRight,
   ShieldCheck,
 } from "lucide-react";
+import LinkedInImageCropModal from "./LinkedInImageCropModal";
 
 const UpdateProfileForm: React.FC = () => {
   const data = useContextData();
@@ -31,6 +32,8 @@ const UpdateProfileForm: React.FC = () => {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [rawImageFile, setRawImageFile] = useState<File | null>(null);
+  const [isCropModalOpen, setIsCropModalOpen] = useState<boolean>(false);
 
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [options, setOptions] = useState<string[]>([]);
@@ -114,13 +117,21 @@ const UpdateProfileForm: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        return toast.error("Image size cannot exceed 5MB");
+      if (file.size > 10 * 1024 * 1024) {
+        return toast.error("Image size cannot exceed 10MB");
       }
-      setSelectedFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-      toast.success("New photo selected");
+      setRawImageFile(file);
+      setIsCropModalOpen(true);
+      // Reset input value so selecting the same file again triggers onChange
+      e.target.value = "";
     }
+  };
+
+  const handleCropSave = (croppedFile: File, croppedPreviewUrl: string) => {
+    setSelectedFile(croppedFile);
+    setPreviewUrl(croppedPreviewUrl);
+    setIsCropModalOpen(false);
+    toast.success("Photo cropped & adjusted! Click 'Save Changes' to update profile.");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -489,6 +500,14 @@ const UpdateProfileForm: React.FC = () => {
 
         </form>
       </div>
+
+      {/* LinkedIn-Style Image Cropper & Adjuster Modal */}
+      <LinkedInImageCropModal
+        isOpen={isCropModalOpen}
+        file={rawImageFile}
+        onClose={() => setIsCropModalOpen(false)}
+        onSave={handleCropSave}
+      />
     </div>
   );
 };

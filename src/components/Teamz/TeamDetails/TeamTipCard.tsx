@@ -21,7 +21,6 @@ const TeamTipCard: React.FC<TeamTipCardProps> = ({
     _id: team._id,
     name: team.name,
     team_logo: team.team_logo || "",
-    team_bg_image: team.team_bg_image || "",
     league: team.league || { _id: "", name: "NCAA", sport: "Athletics" },
     totalTips: team.totalTips || 0,
     paidAmount: team.paidAmount || 0,

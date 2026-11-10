@@ -59,7 +59,7 @@ const PlayerHeroBanner: React.FC<PlayerHeroBannerProps> = ({
         <div className="relative max-w-355 mx-auto px-2 py-10 flex flex-col md:flex-row items-center md:items-end justify-between gap-2 min-h-[300px] sm:min-h-[360px]">
           {/* Left Top: Team Logo Badge */}
           {teamLogoUrl && (
-            <div className="absolute top-4 sm:top-6 left-4 sm:left-8 z-10">
+            <div className="absolute top-4 sm:top-1 left-4 sm:left-8 z-10">
               <div className="relative w-14 h-14 sm:w-20 sm:h-20 drop-">
                 <Image
                   src={teamLogoUrl}
@@ -74,7 +74,7 @@ const PlayerHeroBanner: React.FC<PlayerHeroBannerProps> = ({
           )}
 
           {/* Middle Left: Player Cutout emerging from the bottom */}
-          <div className="relative z-10 w-40 h-48 shrink-0 flex rounded-md overflow-hidden items-end justify-center mt-6 md:mt-0">
+          <div className="relative z-10 w-48 h-56 shrink-0 flex rounded-md overflow-hidden items-end justify-center mt-6 md:mt-0">
             <div className="relative w-full h-full">
               <Image
                 src={
@@ -85,7 +85,7 @@ const PlayerHeroBanner: React.FC<PlayerHeroBannerProps> = ({
                 alt={player.name}
                 fill
                 sizes="(max-width: 640px) 192px, 304px"
-                className="object-contain object-center drop-shadow-2xl rounded-md border"
+                className="object-contain md:object-cover object-center drop-shadow-2xl rounded-md border"
                 priority
               />
             </div>

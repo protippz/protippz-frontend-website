@@ -11,6 +11,7 @@ import { SignInHandler } from "@/ApisRequests/Auth";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import { post } from "@/ApisRequests/server";
+import { isTokenValid } from "@/lib/authUtils";
 import sfemalePlayer from "@/../public/new/female-player.webp";
 import {
   getOneSignalPushSubscriptionId,
@@ -25,13 +26,24 @@ const SignInPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // If user is already logged in, navigate directly to /community
+  // If user is already logged in with a valid token, navigate directly to /community
   useEffect(() => {
-    const token =
-      Cookies.get("token") ||
-      (typeof window !== "undefined" ? localStorage.getItem("token") : null);
-    if (token && token !== "undefined" && token !== "null") {
-      window.location.href = "/community";
+    const cookieToken = Cookies.get("token");
+    const localToken =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = cookieToken || localToken;
+
+    if (token) {
+      if (isTokenValid(token)) {
+        window.location.href = "/community";
+      } else {
+        // Clear dead / expired token so user can sign in cleanly
+        Cookies.remove("token");
+        Cookies.remove("token", { path: "/" });
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("token");
+        }
+      }
     }
   }, []);
 

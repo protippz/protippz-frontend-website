@@ -16,7 +16,6 @@ export interface PlayerTeam {
   name?: string;
   team_logo?: string;
   sport?: string;
-  team_bg_image?: string;
   totalTips?: number;
   paidAmount?: number;
   dueAmount?: number;

@@ -64,7 +64,7 @@ export const GameStatsHeader: React.FC<GameStatsHeaderProps> = ({
           )}
 
           {/* Filter Pills */}
-          <div className="inline-flex p-1 bg-slate-200/70 rounded-full text-xs font-bold">
+          {/* <div className="inline-flex p-1 bg-slate-200/70 rounded-full text-xs font-bold">
             {(["ALL", "HOME", "AWAY"] as const).map((mode) => (
               <button
                 key={mode}
@@ -82,7 +82,7 @@ export const GameStatsHeader: React.FC<GameStatsHeaderProps> = ({
                     : "Away"}
               </button>
             ))}
-          </div>
+          </div> */}
         </div>
       )}
     </div>

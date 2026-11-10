@@ -87,6 +87,7 @@ const Navbar: React.FC = () => {
       console.warn("[OneSignal] Logout error:", err);
     } finally {
       Cookies.remove("token");
+      Cookies.remove("token", { path: "/" });
       localStorage.removeItem("token");
       window.location.href = "/sign-in";
     }

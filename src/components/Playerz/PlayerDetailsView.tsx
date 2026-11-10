@@ -43,7 +43,6 @@ export interface PlayerDetailsData {
     name: string;
     email?: string;
     team_logo?: string;
-    team_bg_image?: string;
   };
   league?: {
     _id: string;

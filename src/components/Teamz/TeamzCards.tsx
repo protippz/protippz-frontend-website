@@ -48,11 +48,9 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
       ? `$${(item.totalTips * 15).toLocaleString()}`
       : "$2,650";
 
-  const teamImage = item?.team_bg_image
-    ? imageUrl(item.team_bg_image)
-    : item?.team_logo
-      ? imageUrl(item.team_logo)
-      : ptLogo;
+  const teamImage = item?.team_logo
+    ? imageUrl(item.team_logo)
+    : ptLogo;
 
   const [imgSrc, setImgSrc] = useState<any>(teamImage);
   const [logoSrc, setLogoSrc] = useState<any>(
@@ -61,14 +59,12 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
 
   useEffect(() => {
     setImgSrc(
-      item?.team_bg_image
-        ? imageUrl(item.team_bg_image)
-        : item?.team_logo
-          ? imageUrl(item.team_logo)
-          : ptLogo
+      item?.team_logo
+        ? imageUrl(item.team_logo)
+        : ptLogo
     );
     setLogoSrc(item?.team_logo ? imageUrl(item.team_logo) : defaultTeamLogo);
-  }, [item?.team_bg_image, item?.team_logo]);
+  }, [item?.team_logo]);
 
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -104,7 +100,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                   alt={item?.name || "Team"}
                   fill
                   sizes="(max-width: 768px) 100vw, 330px"
-                  className="object-cover object-center p-3 group-hover/photo:scale-[1.02] transition-transform duration-500 ease-out"
+                  className="object-contain object-center p-6 bg-slate-50 group-hover/photo:scale-[1.03] transition-transform duration-500 ease-out"
                   onError={() => setImgSrc(ptLogo)}
                 />
 
@@ -129,12 +125,6 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                   <span className="px-2.5 py-1 rounded-xl bg-white/95 backdrop-blur-md text-[#053697] border border-white/40 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider">
                     {leagueDisplay}
                   </span>
-
-                  {/* Official Team Verification Capsule */}
-                  <span className="px-2.5 py-1 rounded-xl bg-[#2FC191]/95 backdrop-blur-md text-slate-900 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-900 animate-ping" />
-                    <span>OFFICIAL PROGRAM</span>
-                  </span>
                 </div>
               </div>
 
@@ -144,22 +134,6 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                   {/* Top Bar: League Micro-Pill, Archive ID, and Action Icons */}
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 flex-wrap min-w-0">
-                      {/* Organization / Sport Micro-Pill */}
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 border border-slate-200/80 text-slate-800 transition-colors">
-                        <div className="relative w-4 h-4 rounded-full overflow-hidden bg-white shrink-0 border border-slate-200">
-                          <Image
-                            src={logoSrc}
-                            alt={item?.name || "Team"}
-                            fill
-                            sizes="16px"
-                            className="object-contain p-0.5"
-                            onError={() => setLogoSrc(defaultTeamLogo)}
-                          />
-                        </div>
-                        <span className="text-[11px] sm:text-xs font-bold uppercase tracking-tight truncate max-w-[130px] sm:max-w-[180px]">
-                          {sportDisplay} ATHLETICS
-                        </span>
-                      </div>
 
                       {/* Archive & Handle */}
                       <div className="hidden sm:inline-flex items-center gap-1.5 font-mono text-xs text-slate-500">
@@ -232,7 +206,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                   <button
                     type="button"
                     onClick={openTip}
-                    className="h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-[#2FC191] hover:bg-[#28b887] text-[#053697] font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer shrink-0"
+                    className="h-11 sm:h-12 px-5 sm:px-6 rounded-2xl text-white bg-[#2FC191] hover:bg-[#28b887] text-[#053697] font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer shrink-0"
                     title={`Send direct tip to ${item?.name || "Team"}`}
                   >
                     <DollarSign className="w-4 h-4 stroke-[2.5]" />

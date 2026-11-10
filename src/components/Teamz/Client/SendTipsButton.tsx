@@ -184,9 +184,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
 
   const teamLogoSrc = item?.team_logo
     ? imageUrl(item.team_logo)
-    : item?.team_bg_image
-      ? imageUrl(item.team_bg_image)
-      : defaultTeamLogo;
+    : defaultTeamLogo;
   const leagueName = item?.league?.name || "NCAA Program";
   const sportName = item?.league?.sport || "Collegiate Sports";
   const userBalance = Number(data?.userData?.totalAmount || 0);

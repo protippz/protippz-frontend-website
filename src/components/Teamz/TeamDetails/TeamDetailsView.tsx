@@ -16,7 +16,6 @@ export interface TeamDetailsData {
   _id: string;
   name: string;
   team_logo?: string;
-  team_bg_image?: string;
   sport?: string;
   league?: {
     _id: string;
@@ -61,8 +60,7 @@ const TeamDetailsView: React.FC<TeamDetailsViewProps> = ({
       return;
     }
 
-    const logo =
-      team.team_logo || team.team_bg_image || team.league?.league_image;
+    const logo = team.team_logo || team.league?.league_image;
     if (!logo) return;
 
     try {
