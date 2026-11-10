@@ -124,7 +124,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
             <div className="flex flex-col md:flex-row items-stretch p-3.5 sm:p-5 md:p-3 gap-2 sm:gap-2">
               <div
                 onClick={openDetails}
-                className="relative w-full md:w-[280px] lg:w-[310px] xl:w-[330px] h-[220px]  md:h-auto  self-stretch shrink-0 rounded-[20px] sm:rounded-[24px] overflow-hidden cursor-pointer border border-slate-200/60 shadow-inner"
+                className="relative w-full md:w-[250px] lg:w-[310px] xl:w-[270px] h-[220px]  md:h-auto  self-stretch shrink-0 rounded-[20px] sm:rounded-[24px] overflow-hidden cursor-pointer border border-slate-200/60 shadow-inner"
                 title={`View profile for ${item?.name || "Player"}`}
               >
                 <Image
@@ -132,7 +132,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                   alt={item?.name || "Player"}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 310px, 330px"
-                  className="object-contain object-top group-hover/photo:scale-[1.03] transition-transform duration-500 ease-out"
+                  className="object-cover object-top group-hover/photo:scale-[1.03] transition-transform duration-500 ease-out"
                   onError={() => setPlayerImgSrc(defaultPlayer)}
                 />
 

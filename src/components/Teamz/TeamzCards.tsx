@@ -95,7 +95,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
               {/* Left Column: Media Preview Pane with Perfect Continuous Curves */}
               <div
                 onClick={openDetails}
-                className="group/photo relative w-full md:w-[280px] lg:w-[310px] xl:w-[330px] h-[220px] md:h-[270px] self-stretch shrink-0 rounded-[20px] sm:rounded-[24px] overflow-hidden cursor-pointer border border-slate-200/60 shadow-inner"
+                className="group/photo relative w-full md:w-[250px] lg:w-[310px] xl:w-[270px] h-[220px] md:h-[270px] self-stretch shrink-0 rounded-[20px] sm:rounded-[24px] overflow-hidden cursor-pointer border border-slate-200/60 shadow-inner"
                 title={`View profile for ${item?.name || "Player"}`}
               >
                 {/* Team Hero Image */}
@@ -104,7 +104,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                   alt={item?.name || "Team"}
                   fill
                   sizes="(max-width: 768px) 100vw, 330px"
-                  className="object-contain object-center p-3 group-hover/photo:scale-[1.02] transition-transform duration-500 ease-out"
+                  className="object-cover object-center p-3 group-hover/photo:scale-[1.02] transition-transform duration-500 ease-out"
                   onError={() => setImgSrc(ptLogo)}
                 />
 

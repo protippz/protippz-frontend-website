@@ -43,7 +43,6 @@ export async function generateMetadata({
   }
 
   const player = await fetchPlayer(id);
-  console.log(JSON.stringify(player,null,2));
   if (!player) {
     return {
       title: "Player Not Found | PROTIPPZ",
