@@ -26,13 +26,12 @@ import {
   Gift,
   ShoppingBag,
   Menu,
-  Users2,
+  Users2
 } from "lucide-react";
 import { useContextData } from "@/provider/ContextProvider";
 import Cookies from "js-cookie";
 import { IMAGE } from "@/constant/image.index";
-import { oneSignalLogout } from "@/components/OneSignal/OneSignalHandler";
-
+import { oneSignalLogout } from "@/components/OneSignal/OneSignalHandler"; 
 const isRouteActive = (
   pathname: string | null,
   href: string,
@@ -102,7 +101,7 @@ const Navbar: React.FC = () => {
   const userDropdownContent = (
     <div className="w-64 bg-white rounded-2xl border border-slate-100 p-2.5 text-slate-800 animate-in fade-in zoom-in-95 duration-150">
       {/* Header Profile Info */}
-      <div className="p-3 bg-emerald-50/60 rounded-xl mb-2 border border-emerald-100/60">
+      <div className="p-3 bg-emerald-50/60 rounded-sm mb-2 border border-emerald-100/60">
         <div className="flex items-center gap-2">
           {data?.userData?.profile_image ? (
             <Image
@@ -388,9 +387,12 @@ const Navbar: React.FC = () => {
             ) : (
               <Link
                 href="/sign-in"
-                className="bg-[#2FC191] hover:bg-[#2FC191]/90 text-white font-semibold text-sm px-5 py-2 rounded-xl transition-all duration-200 whitespace-nowrap active:scale-95"
+                className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-[#2FC191] to-[#27a87d] text-white font-bold text-sm px-6 py-2.5 rounded-full transition-all duration-300 whitespace-nowrap active:scale-[0.97] overflow-hidden border border-white/20"
               >
-                Sign In
+                {/* Subtle animated shimmer sweep */}
+                <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+                <UserPlus className="w-4 h-4 text-white shrink-0 group-hover:scale-110 transition-transform duration-300" />
+                <span className="relative tracking-wide">Join ProTippz</span>
               </Link>
             )}
           </div>
@@ -440,7 +442,7 @@ const Navbar: React.FC = () => {
               <Link
                 key={href}
                 href={href}
-                className={`flex flex-col items-center justify-center gap-0.5 flex-1 py-2 px-1 rounded-xl transition-colors active:scale-[0.96] ${active ? "text-[#2FC191]" : "text-slate-400 hover:text-[#053697]"
+                className={`flex flex-col items-center justify-center gap-0.5 flex-1 py-2 px-1 rounded-sm transition-colors active:scale-[0.96] ${active ? "text-[#2FC191]" : "text-slate-400 hover:text-[#053697]"
                   }`}
               >
                 <Icon
@@ -456,7 +458,7 @@ const Navbar: React.FC = () => {
           {/* Hamburger — opens slide-up panel */}
           <button
             onClick={() => setMoreOpen(true)}
-            className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2 px-1 rounded-xl transition-colors text-slate-400 hover:text-[#053697] active:scale-[0.96] cursor-pointer"
+            className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2 px-1 rounded-sm transition-colors text-slate-400 hover:text-[#053697] active:scale-[0.96] cursor-pointer"
             aria-label="More menu"
           >
             <Menu className="w-5 h-5" strokeWidth={1.8} />
@@ -542,7 +544,7 @@ const Navbar: React.FC = () => {
                     <Link
                       href={profileHref}
                       onClick={() => setMoreOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-sm text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
                     >
                       <User className="w-4 h-4 text-[#2FC191]" />
                       <span className="text-sm font-semibold">My Profile</span>
@@ -551,7 +553,7 @@ const Navbar: React.FC = () => {
                       <Link
                         href="/deposit"
                         onClick={() => setMoreOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
+                        className="flex items-center gap-2 px-3 py-2.5 rounded-sm text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
                       >
                         <Wallet className="w-4 h-4 text-[#2FC191]" />
                         <span className="text-sm font-semibold">Deposit Funds</span>
@@ -560,7 +562,7 @@ const Navbar: React.FC = () => {
                     <Link
                       href="/my-tip-history"
                       onClick={() => setMoreOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-sm text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
                     >
                       <Wallet className="w-4 h-4 text-[#2FC191]" />
                       <span className="text-sm font-semibold">Tipz History</span>
@@ -568,14 +570,14 @@ const Navbar: React.FC = () => {
                     <Link
                       href="/notification"
                       onClick={() => setMoreOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-sm text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
                     >
                       <Bell className="w-4 h-4 text-[#2FC191]" />
                       <span className="text-sm font-semibold">Notifications</span>
                     </Link>
                     <button
                       onClick={() => { setMoreOpen(false); handleSignOut(); }}
-                      className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                      className="w-full flex items-center gap-2 px-3 py-2.5 rounded-sm text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                     >
                       <LogOut className="w-4 h-4 text-rose-500" />
                       <span className="text-sm font-semibold">Sign Out</span>
@@ -587,7 +589,7 @@ const Navbar: React.FC = () => {
                     onClick={() => setMoreOpen(false)}
                     className="block text-center w-full py-3 px-4 bg-[#2FC191] text-white font-semibold rounded-2xl text-sm transition-all active:scale-[0.98]"
                   >
-                    Sign In
+                    Create Account
                   </Link>
                 )}
               </div>

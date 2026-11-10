@@ -26,23 +26,18 @@ const SignInPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // If user is already logged in with a valid token, navigate directly to /community
+  // Clean up any expired / dead tokens on mount so the form works cleanly
   useEffect(() => {
     const cookieToken = Cookies.get("token");
     const localToken =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
     const token = cookieToken || localToken;
 
-    if (token) {
-      if (isTokenValid(token)) {
-        window.location.href = "/community";
-      } else {
-        // Clear dead / expired token so user can sign in cleanly
-        Cookies.remove("token");
-        Cookies.remove("token", { path: "/" });
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("token");
-        }
+    if (token && !isTokenValid(token)) {
+      Cookies.remove("token");
+      Cookies.remove("token", { path: "/" });
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("token");
       }
     }
   }, []);
