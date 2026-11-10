@@ -1,4 +1,4 @@
-export const base = "https://qg114d4c-5000.asse.devtunnels.ms";
+export const base = "https://api.protippz.com";
 // export const base = "http://192.168.0.108:5000";
 
 export const baseUrl = (url: string) => {
@@ -14,7 +14,7 @@ export const imageUrl = (url: string) => {
   return `${base}/${url}`;
 };
 
-const defaultServer = "https://qg114d4c-5000.asse.devtunnels.ms";
+const defaultServer = "https://api.protippz.com";
 // const defaultServer = "http://18.218.23.153:5000";
 
 const request = async (
