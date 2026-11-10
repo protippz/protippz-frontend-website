@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     }
 
     const res = await fetch(
-      `http://192.168.0.108:5000/community-post/get-single/${encodeURIComponent(idOrSlug)}`,
+      `https://api.protippz.com/community-post/get-single/${encodeURIComponent(idOrSlug)}`,
       { next: { revalidate: 60 } },
     );
 
