@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa6";
 import { Mail, Lock, Loader2, ArrowLeft } from "lucide-react";
@@ -12,6 +12,11 @@ import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import { post } from "@/ApisRequests/server";
 import sfemalePlayer from "@/../public/new/female-player.webp";
+import {
+  getOneSignalPushSubscriptionId,
+  getPlatform,
+  syncOneSignalUser,
+} from "@/components/OneSignal/OneSignalHandler";
 
 const SignInPage: React.FC = () => {
   const [userNameOrEmail, setUserNameOrEmail] = useState("");
@@ -20,15 +25,30 @@ const SignInPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // If user is already logged in, navigate directly to /community
+  useEffect(() => {
+    const token =
+      Cookies.get("token") ||
+      (typeof window !== "undefined" ? localStorage.getItem("token") : null);
+    if (token && token !== "undefined" && token !== "null") {
+      window.location.href = "/community";
+    }
+  }, []);
+
+  // Pre-warm OneSignal when the sign-in page opens
+  useEffect(() => {
+    getOneSignalPushSubscriptionId().catch(() => { });
+  }, []);
+
   const getRedirectTarget = (role?: string) => {
     if (typeof window !== "undefined") {
       const searchParams = new URLSearchParams(window.location.search);
       const redirectUrl = searchParams.get("redirect");
-      if (redirectUrl) {
+      if (redirectUrl && redirectUrl !== "/" && redirectUrl !== "/sign-in") {
         return redirectUrl;
       }
     }
-    return role === "user" ? "/" : "/home";
+    return role === "user" ? "/community" : "/home";
   };
 
   const login = useGoogleLogin({
@@ -55,13 +75,20 @@ const SignInPage: React.FC = () => {
           userDetails?.phoneNumber ||
           userDetails?.phone_number ||
           "";
+
+        // Only send genuine OneSignal push subscription ID (empty string if not opted-in)
+        const playerId = await getOneSignalPushSubscriptionId();
+        const platform = getPlatform();
+
         const data = {
           name: userDetails.name || "",
           picture: userDetails.picture || "",
           email: userDetails.email || "",
-          username: userDetails.name || "",
+          username: userDetails.name || userDetails.email?.split("@")[0] || "",
           address: userDetails?.address || "",
           phone,
+          playerId,
+          platform,
         };
 
         const res = await post("/auth/google-login", data);
@@ -70,7 +97,35 @@ const SignInPage: React.FC = () => {
           localStorage.setItem("token", res?.data?.accessToken);
           Cookies.set("token", res?.data?.accessToken);
           toast.success(res?.message || "Logged in successfully!");
-          window.location.href = getRedirectTarget(res?.data?.role);
+
+          // Resolve authenticated MongoDB user _id (never use username/email)
+          const dbUserId =
+            res?.data?.user?._id ||
+            res?.data?.userData?._id ||
+            res?.data?.userId ||
+            res?.data?._id;
+
+          if (dbUserId) {
+            const loggedUser = {
+              _id: String(dbUserId),
+              email: data.email,
+              name: data.name,
+              role: res?.data?.role,
+            };
+
+            // Await OneSignal sync with a safety timeout so it isn't aborted by navigation
+            try {
+              await Promise.race([
+                syncOneSignalUser(loggedUser),
+                new Promise((resolve) => setTimeout(resolve, 2000)),
+              ]);
+            } catch (syncErr) {
+              console.warn("[OneSignal] Google login sync error (non-fatal):", syncErr);
+            }
+          }
+
+          const target = getRedirectTarget(res?.data?.role);
+          window.location.href = target;
         } else {
           toast.error(
             res?.message || "Something went wrong. Please try again.",
@@ -101,19 +156,61 @@ const SignInPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const res = await SignInHandler({
+      const playerId = await getOneSignalPushSubscriptionId();
+      const platform = getPlatform();
+
+      const data = {
         userNameOrEmail: userNameOrEmail.trim(),
         password,
-      });
-      setLoading(false);
+        playerId,
+        platform,
+      };
+
+      console.log("[SignIn] Submitting login data:", data);
+      const res = await SignInHandler(data);
 
       if (res?.success) {
         Cookies.remove("token");
         localStorage.setItem("token", res?.data?.accessToken);
         Cookies.set("token", res?.data?.accessToken);
         toast.success(res?.message || "Logged in successfully!");
-        window.location.href = getRedirectTarget(res?.data?.role);
+
+        // Resolve authenticated MongoDB user _id (never use username/email as external ID)
+        const dbUserId =
+          res?.data?.user?._id ||
+          res?.data?.userData?._id ||
+          res?.data?.userId ||
+          res?.data?._id;
+
+        if (dbUserId) {
+          const loggedUser = {
+            _id: String(dbUserId),
+            email:
+              res?.data?.user?.email ||
+              res?.data?.userData?.email ||
+              (userNameOrEmail.includes("@") ? userNameOrEmail.trim() : ""),
+            name:
+              res?.data?.user?.name ||
+              res?.data?.userData?.name ||
+              userNameOrEmail.trim(),
+            role: res?.data?.role || res?.data?.user?.role,
+          };
+
+          // Await OneSignal sync with a safety timeout so it isn't cancelled by window.location.href
+          try {
+            await Promise.race([
+              syncOneSignalUser(loggedUser),
+              new Promise((resolve) => setTimeout(resolve, 2000)),
+            ]);
+          } catch (syncErr) {
+            console.warn("[OneSignal] Login sync error (non-fatal):", syncErr);
+          }
+        }
+
+        const target = getRedirectTarget(res?.data?.role);
+        window.location.href = target;
       } else {
+        setLoading(false);
         toast.error(res?.message || "Invalid credentials. Please try again.");
       }
     } catch (err: any) {
@@ -123,12 +220,12 @@ const SignInPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col justify-center items-center p-4 sm:p-6 md:p-8 bg-gradient-to-r from-[#fae8d2]/45 via-[#fcfbf9] to-[#d1fae5]/45 relative">
+    <div className="h-fit sm:min-h-screen w-full flex flex-col justify-center items-center p-4 sm:p-6 md:p-8 sm:bg-gradient-to-r from-[#fae8d2]/45 via-[#fcfbf9] to-[#d1fae5]/45 relative">
       {/* Top Left: Back to Home Button */}
       <div className="w-full max-w-5xl mb-3 flex items-center justify-between">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-gray-700 hover:text-[#053697] bg-white/90 hover:bg-white backdrop-blur-md px-4 py-2 rounded-full border border-gray-200/80 shadow-sm hover:shadow transition-all group cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-gray-700 hover:text-[#053697] bg-white/90 hover:bg-white backdrop-blur-md px-4 py-2 rounded-full border border-gray-200/80 transition-all group cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5 text-gray-500 group-hover:text-[#053697]" />
           <span>Back to Home</span>
@@ -136,7 +233,7 @@ const SignInPage: React.FC = () => {
       </div>
 
       {/* Centered Modal Card */}
-      <div className="w-full max-w-md md:max-w-5xl bg-white rounded-[32px] border border-gray-100 shadow-[0_12px_45px_rgba(0,0,0,0.07)] p-5 sm:p-7 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center relative">
+      <div className="w-full max-w-md md:max-w-5xl bg-white rounded-[32px] border border-gray-100  p-5 sm:p-7 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2 items-center relative">
         {/* Left Side: Athlete Montage Collage in Rounded Card (Desktop/Tablet) */}
         <div className="hidden md:flex relative w-full h-full min-h-[420px] bg-[#e6e8eb] rounded-[24px] overflow-hidden items-center justify-center">
           <Image
@@ -164,7 +261,7 @@ const SignInPage: React.FC = () => {
           <button
             type="button"
             onClick={() => login()}
-            className="mt-5 w-full h-10 rounded-full bg-[#f1f3f6] hover:bg-[#e6e9ee] transition-colors flex items-center justify-center gap-2.5 text-xs font-semibold text-gray-700 cursor-pointer border border-transparent shadow-sm active:scale-[0.99]"
+            className="mt-5 w-full h-10 rounded-full bg-[#f1f3f6] hover:bg-[#e6e9ee] transition-colors flex items-center justify-center gap-2.5 text-xs font-semibold text-gray-700 cursor-pointer border border-transparent active:scale-[0.99]"
           >
             <FaGoogle className="text-red-500 text-sm" />
             <span>Google</span>
@@ -188,7 +285,7 @@ const SignInPage: React.FC = () => {
                 value={userNameOrEmail}
                 onChange={(e) => setUserNameOrEmail(e.target.value)}
                 placeholder="Email id or username"
-                className="w-full h-10 pl-9 pr-4 rounded-full border border-gray-200 bg-[#f9fafb] text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+                className="w-full h-10 pl-9 pr-4 rounded-full border border-gray-200 bg-[#f9fafb] text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
               />
             </div>
 
@@ -200,7 +297,7 @@ const SignInPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="w-full h-10 pl-9 pr-9 rounded-full border border-gray-200 bg-[#f9fafb] text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+                className="w-full h-10 pl-9 pr-9 rounded-full border border-gray-200 bg-[#f9fafb] text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
               />
               <button
                 type="button"
@@ -241,7 +338,7 @@ const SignInPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-10 rounded-full bg-[#053697] hover:bg-[#1e40af] active:bg-[#1e3a8a] disabled:opacity-75 disabled:cursor-not-allowed text-white text-xs font-bold transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full h-10 rounded-full bg-[#053697] hover:bg-[#1e40af] active:bg-[#1e3a8a] disabled:opacity-75 disabled:cursor-not-allowed text-white text-xs font-bold transition-all  active:scale-[0.99] flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 {loading ? (
                   <>

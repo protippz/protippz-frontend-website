@@ -10,7 +10,7 @@ export default function PoweredByStripe() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 viewport={{ once: true }}
-                className="mx-auto max-w-5xl rounded-2xl border border-slate-100 bg-gradient-to-br from-white to-slate-50 p-8 sm:p-10 shadow-sm"
+                className="mx-auto max-w-5xl rounded-2xl border border-slate-100 bg-gradient-to-br from-white to-slate-50 p-8 sm:p-10 "
                 style={{
                     backgroundImage: `
         radial-gradient(125% 125% at 50% 10%, #ffffff 40%, #2FC191 100%)
@@ -36,7 +36,7 @@ export default function PoweredByStripe() {
                 </div>
 
                 {/* Features */}
-                <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <Feature
                         icon={<Zap className="h-5 w-5" />}
                         title="Fast, Frictionless Tipping"
@@ -73,7 +73,7 @@ function Feature({
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
             viewport={{ once: true }}
-            className="flex flex-col items-center rounded-xl bg-white p-6 text-center shadow-sm"
+            className="flex flex-col items-center rounded-xl bg-white p-6 text-center "
         >
             <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-600">
                 {icon}

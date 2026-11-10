@@ -33,7 +33,7 @@ function FAQItem({
     >
       <button
         onClick={onToggle}
-        className="w-full flex items-start justify-between gap-4 px-6 py-5 text-left group cursor-pointer"
+        className="w-full flex items-start justify-between gap-2 px-6 py-5 text-left group cursor-pointer"
         aria-expanded={isOpen}
       >
         <span

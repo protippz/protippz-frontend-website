@@ -50,11 +50,7 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
   return (
     <>
       <div className="max-w-355 mx-auto mt-2 sm:mt-3 px-2 sm:px-4 pb-14">
-        <GoToTop />
-
-        {/* Unified Master Container Card: Sticky shell with independent scrolling for sidebar and cards */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-slate-200 lg:sticky lg:top-[64px] h-[calc(100dvh-120px)] sm:h-[calc(100dvh-125px)] lg:h-[calc(100vh-125px)] min-h-[460px] sm:min-h-[520px] lg:min-h-[550px]">
-          {/* Left Column: Category Filter Sidebar (shrink-0 on mobile/tablet, full height scrollable on desktop) */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-slate-200 lg:sticky lg:top-[64px] h-[calc(100dvh-120px)] sm:h-[calc(100dvh-125px)] lg:h-[calc(100vh-125px)] min-h-[460px] sm:min-h-[520px] lg:min-h-[550px]">
           <aside className="w-full shrink-0 lg:w-72 xl:w-80 lg:shrink-0 bg-white lg:h-full flex flex-col overflow-hidden">
             <Suspense
               fallback={
@@ -65,9 +61,7 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
             </Suspense>
           </aside>
 
-          {/* Right Column: Scrollable Rewards Area */}
           <main className="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-[#fafbfb]">
-            {/* Cards Content Area: Independently Scrollable */}
             <div className="flex-1 overflow-y-auto custom-sidebar-scrollbar p-2.5 sm:p-4 min-h-0">
               <InfiniteRewardList
                 initialData={rewardData}
@@ -83,7 +77,6 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
         </div>
       </div>
 
-      {/* Promotional Banner */}
       <div
         style={{
           backgroundImage: `url(${rewardbg.src})`,
@@ -135,7 +128,7 @@ export default RewardzPage;
 
 const getReward = async (
   params: { [key: string]: string | undefined },
-  token?: string
+  token?: string,
 ) => {
   const paramsUrl = Object.entries(params)
     .filter(([key, value]) => value !== undefined && value !== "")

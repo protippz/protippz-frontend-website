@@ -193,7 +193,7 @@ export default function SportsNewsPage() {
               if (matched) setActiveModalItem(matched);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     }
   }, [headlines, loading]);
@@ -303,8 +303,8 @@ export default function SportsNewsPage() {
       {/* Main Content Area */}
       <main className="max-w-355 mx-auto w-full px-4 sm:px-6 py-8 space-y-6 min-h-[75vh]">
         {/* Search & Category Filter Navigation Bar */}
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/90 shadow-2xs space-y-4">
-          <div className="flex flex-col sm:flex-row items-center gap-3">
+        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/90 space-y-4">
+          <div className="flex flex-col sm:flex-row items-center gap-2">
             {/* Live Search Input */}
             <div className="relative flex-1 w-full">
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -340,11 +340,10 @@ export default function SportsNewsPage() {
                   key={badge}
                   type="button"
                   onClick={() => setSelectedBadge(badge)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-                    isActive
-                      ? "bg-[#2FC191] text-white shadow-2xs"
-                      : "bg-slate-100 text-[#053697] hover:bg-slate-200"
-                  }`}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap shrink-0 ${isActive
+                    ? "bg-[#2FC191] text-white"
+                    : "bg-slate-100 text-[#053697] hover:bg-slate-200"
+                    }`}
                 >
                   {badge === "All" ? "All Sports" : badge}
                 </button>
@@ -355,7 +354,7 @@ export default function SportsNewsPage() {
 
         {/* Headlines Card Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 min-h-[60vh] justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 min-h-[60vh] justify-items-center">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
               <div
                 key={i}
@@ -369,7 +368,7 @@ export default function SportsNewsPage() {
             ))}
           </div>
         ) : filteredHeadlines.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 justify-items-center">
             {filteredHeadlines.map((item) => {
               const badgeStyle =
                 BADGE_CONFIGS[item.badge] || BADGE_CONFIGS.DEFAULT;
@@ -396,7 +395,7 @@ export default function SportsNewsPage() {
                         />
                         <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5">
                           <span
-                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase shadow-2xs backdrop-blur-md ${badgeStyle.bg} ${badgeStyle.text} bg-white/90 border ${badgeStyle.border}`}
+                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase backdrop-blur-md ${badgeStyle.bg} ${badgeStyle.text} bg-white/90 border ${badgeStyle.border}`}
                           >
                             {item.emoji} {item.badge}
                           </span>
@@ -484,7 +483,7 @@ export default function SportsNewsPage() {
             })}
           </div>
         ) : (
-          <div className="p-12 text-center rounded-2xl bg-white border border-gray-200 shadow-2xs space-y-3 max-w-md mx-auto">
+          <div className="p-12 text-center rounded-2xl bg-white border border-gray-200 space-y-3 max-w-md mx-auto">
             <BookOpen className="w-10 h-10 text-slate-300 mx-auto" />
             <h3 className="text-base font-bold text-[#053697]">
               No Sports Headlines Found
@@ -498,7 +497,7 @@ export default function SportsNewsPage() {
                 setSearchQuery("");
                 setSelectedBadge("All");
               }}
-              className="px-4 py-2 rounded-xl bg-[#2FC191] text-white font-bold text-xs shadow-xs active:scale-95 cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#2FC191] text-white font-bold text-xs active:scale-95 cursor-pointer"
             >
               Reset Filters
             </button>
@@ -511,7 +510,7 @@ export default function SportsNewsPage() {
           className="py-6 text-center flex flex-col items-center justify-center min-h-[60px]"
         >
           {loadingMore && (
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 text-xs font-bold text-[#053697] shadow-xs animate-pulse">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 text-xs font-bold text-[#053697] animate-pulse">
               <Loader2 className="w-4 h-4 text-[#2FC191] animate-spin" />
               <span>Fetching more sports news...</span>
             </div>
@@ -530,7 +529,7 @@ export default function SportsNewsPage() {
         <button
           type="button"
           onClick={scrollToTop}
-          className="fixed bottom-16 right-6 z-50 p-3 rounded-full bg-[#053697] hover:bg-[#2FC191] text-white shadow-xl transition-all duration-300 active:scale-90 cursor-pointer border border-white/20"
+          className="fixed bottom-16 right-6 z-50 p-3 rounded-full bg-[#053697] hover:bg-[#2FC191] text-white transition-all duration-300 active:scale-90 cursor-pointer border border-white/20"
           title="Back to Top"
           aria-label="Back to top"
         >
@@ -540,7 +539,7 @@ export default function SportsNewsPage() {
 
       {/* Copied Link Toast Notification */}
       {copiedToast && (
-        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 z-[100000] bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 shadow-2xl animate-in fade-in slide-in-from-bottom-3 duration-200 border border-slate-700">
+        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 z-[100000] bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200 border border-slate-700">
           <Check className="w-4 h-4 text-[#2FC191]" />
           <span>Story link copied to clipboard!</span>
         </div>
@@ -553,7 +552,7 @@ export default function SportsNewsPage() {
           onClick={closeStoryModal}
         >
           <div
-            className="relative bg-white w-full max-w-2xl max-h-[90vh] rounded-2xl flex flex-col shadow-2xl overflow-hidden border border-gray-200 animate-in zoom-in-95 duration-150"
+            className="relative bg-white w-full max-w-2xl max-h-[90vh] rounded-2xl flex flex-col overflow-hidden border border-gray-200 animate-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
@@ -580,7 +579,7 @@ export default function SportsNewsPage() {
             {/* Modal Body */}
             <div className="p-5 overflow-y-auto space-y-4 flex-1">
               {activeModalItem.imageUrl && (
-                <div className="rounded-xl overflow-hidden shadow-xs border border-gray-200">
+                <div className="rounded-xl overflow-hidden border border-gray-200">
                   <OptimizedPostImage
                     src={activeModalItem.imageUrl}
                     alt={activeModalItem.text}
@@ -608,7 +607,7 @@ export default function SportsNewsPage() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between gap-3">
+            <div className="p-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between gap-2">
               <button
                 type="button"
                 onClick={(e) => handleShareItem(activeModalItem, e)}
@@ -623,7 +622,7 @@ export default function SportsNewsPage() {
                   href={activeModalItem.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#053697]/90 text-white font-extrabold text-xs shadow-md transition-all active:scale-95 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#053697] hover:bg-[#053697]/90 text-white font-extrabold text-xs  transition-all active:scale-95 cursor-pointer"
                 >
                   <span>Read Full Article on ESPN</span>
                   <ExternalLink className="w-4 h-4" />

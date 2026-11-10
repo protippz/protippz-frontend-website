@@ -21,6 +21,7 @@ import {
   Loader2,
   ShieldCheck,
 } from "lucide-react";
+import { useCreatTippsMutation } from "@/Redux/Apis/paymentApis";
 
 interface SendTipsButtonProps {
   item: Player;
@@ -28,11 +29,11 @@ interface SendTipsButtonProps {
   className?: string;
   buttonText?: React.ReactNode;
   children?:
-    | React.ReactNode
-    | ((actions: {
-        openTip: () => void;
-        openDetails: () => void;
-      }) => React.ReactNode);
+  | React.ReactNode
+  | ((actions: {
+    openTip: () => void;
+    openDetails: () => void;
+  }) => React.ReactNode);
 }
 
 const PRESET_AMOUNTS = [5, 10, 25, 50, 100];
@@ -55,7 +56,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
     "deposit"
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [createTippz, { isLoading: isCreatiing }] = useCreatTippsMutation()
   const data = useContextData();
   const router = useRouter();
 
@@ -136,52 +137,33 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
     setIsPaymentModalOpen(true);
   };
 
-  const handlePaymentSubmit = async () => {
-    if (paymentMethod === "deposit") {
-      setIsSubmitting(true);
-      try {
-        const storedToken =
-          typeof localStorage !== "undefined"
-            ? localStorage.getItem("token")
-            : "";
-
-        const res = await post(
-          "/tip/create",
-          {
-            entityId: item?._id,
-            entityType: "Player",
-            amount: Number(amount),
-            tipBy: "Profile balance",
-          },
-          {
-            headers: {
-              Authorization: `${storedToken || token || ""}`,
-            },
-          }
-        );
-
-        if (res?.success) {
-          toast.success(res?.message || "Tip sent successfully!");
-          setIsPaymentModalOpen(false);
-          router.refresh();
-        } else {
-          toast.error(res?.message || "Failed to process tip");
-          setIsPaymentModalOpen(false);
-          setIsOopsModalOpen(true);
-        }
-      } catch (error) {
-        toast.error("An error occurred while processing your tip");
-      } finally {
-        setIsSubmitting(false);
+  const handlePaymentSubmit = async (event: React.FormEvent) => {
+    try {
+      event.preventDefault();
+      if (amount && Number(amount) > 999999) {
+        return toast.error("amount cant be more then 999999");
       }
-    } else {
-      setIsPaymentModalOpen(false);
-      router.push(
-        `/send-tip?amount=${amount}&entityType=Player&entityId=${item?._id}`
-      );
+
+      const data = {
+        amount: Number(amount),
+        entityId: item?._id,
+        entityType: "Player",
+        tipBy: paymentMethod === "credit" ? "Credit card" : "Profile balance",
+      }
+
+      const response = await createTippz(data).unwrap()
+      if (response?.success && response?.data?.checkoutUrl) {
+        toast.success(response?.message || "", { position: "top-right" });
+        router.push(response?.data?.checkoutUrl || "")
+      } else if (response?.success) {
+        toast.success(response?.message)
+        setIsPaymentModalOpen(false)
+        setIsModalOpen(false)
+      }
+    } catch (error) {
+      // toast.error()
     }
   };
-
   const teamName =
     typeof item?.team === "object"
       ? item?.team?.name
@@ -206,7 +188,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
             onClick={openTip}
             className={
               className ||
-              "bg-[#053697] hover:bg-[#042873] text-white font-bold py-2 px-4 rounded-xl shadow-xs transition-colors cursor-pointer"
+              "bg-[#053697] hover:bg-[#042873] text-white font-bold py-2 px-4 rounded-xl transition-colors cursor-pointer"
             }
           >
             {buttonText || "Send Tippz"}
@@ -216,14 +198,14 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
 
       {/* ─── MODAL 1: SELECT TIP AMOUNT (Pure Tailwind, NO antd) ─── */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-999 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
           <div
             className="fixed inset-0"
             onClick={handleCancel}
             aria-hidden="true"
           />
 
-          <div className="relative w-full max-w-md bg-white rounded-3xl border border-slate-200/90 shadow-2xl overflow-hidden z-10 animate-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-md bg-white rounded-3xl border border-slate-200/90 overflow-hidden z-10 animate-in zoom-in-95 duration-200">
             {/* Top Close Button */}
             <button
               type="button"
@@ -250,7 +232,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
 
             {/* Overlapping Player Avatar */}
             <div className="relative flex justify-center -mt-9 mb-2 z-10">
-              <div className="relative w-18 h-18 rounded-full border-4 border-white shadow-lg overflow-hidden bg-slate-900">
+              <div className="relative w-18 h-18 rounded-full border-4 border-white overflow-hidden bg-slate-900">
                 <Image
                   src={playerImageSrc}
                   alt={item?.name || "Player"}
@@ -276,11 +258,10 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
                         key={val}
                         type="button"
                         onClick={() => handlePresetSelect(val)}
-                        className={`h-11 rounded-xl text-sm font-black transition-all cursor-pointer flex items-center justify-center ${
-                          isSelected
-                            ? "bg-[#053697] text-white shadow-md scale-[1.02] ring-2 ring-[#053697]/20"
-                            : "bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800"
-                        }`}
+                        className={`h-11 rounded-xl text-sm font-black transition-all cursor-pointer flex items-center justify-center ${isSelected
+                          ? "bg-[#053697] text-white  scale-[1.02] ring-2 ring-[#053697]/20"
+                          : "bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800"
+                          }`}
                       >
                         ${val}
                       </button>
@@ -321,10 +302,10 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
               <button
                 type="submit"
                 disabled={!Number(amount) || Number(amount) <= 0}
-                className="w-full h-12 rounded-xl bg-[#2FC191] hover:bg-[#28b887] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-[#053697] font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow cursor-pointer"
+                className="w-full h-12 rounded-xl bg-[#2FC191] hover:bg-[#28b887] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-[#053697] font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all  cursor-pointer"
               >
-                <span>Continue to Payment (${amount || "0"})</span>
-                <ArrowRight className="w-4 h-4" />
+                <span className="text-white">Continue to Payment (${amount || "0"})</span>
+                <ArrowRight className="w-4 h-4 text-white" />
               </button>
             </form>
           </div>
@@ -340,7 +321,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
             aria-hidden="true"
           />
 
-          <div className="relative w-full max-w-md bg-white rounded-3xl border border-slate-200/90 shadow-2xl overflow-hidden z-10 animate-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-md bg-white rounded-3xl border border-slate-200/90 overflow-hidden z-10 animate-in zoom-in-95 duration-200">
             {/* Modal Header */}
             <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between">
               <div>
@@ -375,18 +356,16 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
               {/* Option 1: Profile Balance */}
               <div
                 onClick={() => setPaymentMethod("deposit")}
-                className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-3.5 ${
-                  paymentMethod === "deposit"
-                    ? "border-[#053697] bg-blue-50/30 shadow-xs"
-                    : "border-slate-200 hover:border-slate-300 bg-white"
-                }`}
+                className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-2.5 ${paymentMethod === "deposit"
+                  ? "border-[#053697] bg-blue-50/30"
+                  : "border-slate-200 hover:border-slate-300 bg-white"
+                  }`}
               >
                 <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                    paymentMethod === "deposit"
-                      ? "bg-[#053697] text-white"
-                      : "bg-slate-100 text-slate-600"
-                  }`}
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${paymentMethod === "deposit"
+                    ? "bg-[#053697] text-white"
+                    : "bg-slate-100 text-slate-600"
+                    }`}
                 >
                   <Wallet className="w-5 h-5" />
                 </div>
@@ -411,25 +390,23 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
               {/* Option 2: Credit Card / Paypal */}
               <div
                 onClick={() => setPaymentMethod("credit")}
-                className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-3.5 ${
-                  paymentMethod === "credit"
-                    ? "border-[#053697] bg-blue-50/30 shadow-xs"
-                    : "border-slate-200 hover:border-slate-300 bg-white"
-                }`}
+                className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-2.5 ${paymentMethod === "credit"
+                  ? "border-[#053697] bg-blue-50/30"
+                  : "border-slate-200 hover:border-slate-300 bg-white"
+                  }`}
               >
                 <div
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                    paymentMethod === "credit"
-                      ? "bg-[#053697] text-white"
-                      : "bg-slate-100 text-slate-600"
-                  }`}
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${paymentMethod === "credit"
+                    ? "bg-[#053697] text-white"
+                    : "bg-slate-100 text-slate-600"
+                    }`}
                 >
                   <CreditCard className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-bold text-slate-900">
-                      Credit / Debit Card or PayPal
+                      Credit Card
                     </h4>
                     {paymentMethod === "credit" && (
                       <Check className="w-4 h-4 text-[#053697]" />
@@ -461,10 +438,10 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
                 <button
                   type="button"
                   onClick={handlePaymentSubmit}
-                  disabled={isSubmitting}
-                  className="flex-1 h-11 rounded-xl bg-[#053697] hover:bg-[#042873] active:scale-[0.99] disabled:opacity-60 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
+                  disabled={isSubmitting || isCreatiing}
+                  className="flex-1 h-11 rounded-xl bg-[#053697] hover:bg-[#042873] active:scale-[0.99] disabled:opacity-60 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
-                  {isSubmitting ? (
+                  {isSubmitting || isCreatiing ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin text-white" />
                       <span>Processing...</span>
@@ -491,9 +468,9 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
             aria-hidden="true"
           />
 
-          <div className="relative w-full max-w-sm bg-white rounded-3xl border border-slate-200/90 shadow-2xl overflow-hidden p-6 text-center z-10 animate-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-sm bg-white rounded-3xl border border-slate-200/90 overflow-hidden p-6 text-center z-10 animate-in zoom-in-95 duration-200">
             {/* Warning Icon Container */}
-            <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-500 border border-amber-200/80 flex items-center justify-center mx-auto mb-4 shadow-xs">
+            <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-500 border border-amber-200/80 flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-8 h-8" />
             </div>
 
@@ -515,7 +492,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
                   handleCancel();
                   router.push("/deposit");
                 }}
-                className="w-full h-11 rounded-xl bg-[#053697] hover:bg-[#042873] text-white font-black text-xs uppercase tracking-wider transition-colors shadow-xs cursor-pointer flex items-center justify-center gap-1.5"
+                className="w-full h-11 rounded-xl bg-[#053697] hover:bg-[#042873] text-white font-black text-xs uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <Wallet className="w-3.5 h-3.5" />
                 <span>Deposit Funds to Wallet</span>

@@ -48,10 +48,9 @@ const TeamPage = async ({ searchParams }: ParamsProps) => {
 
   return (
     <div className="max-w-355 mx-auto mt-2 sm:mt-3 px-2 sm:px-4 pb-14">
-      <GoToTop />
-
+      {/* // <GoToTop /> */}
       {/* Unified Master Container Card: Sticky shell with independent scrolling for sidebar and cards */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-slate-200 lg:sticky lg:top-[64px] h-[calc(100dvh-120px)] sm:h-[calc(100dvh-125px)] lg:h-[calc(100vh-125px)] min-h-[460px] sm:min-h-[520px] lg:min-h-[550px]">
+      <div className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-slate-200 lg:sticky lg:top-[64px] h-[calc(100dvh-120px)] sm:h-[calc(100dvh-125px)] lg:h-[calc(100vh-125px)] min-h-[460px] sm:min-h-[520px] lg:min-h-[550px]">
         {/* Left Column: League Filter Sidebar (shrink-0 on mobile, full height scrollable on desktop) */}
         <aside className="w-full shrink-0 lg:w-72 xl:w-80 lg:shrink-0 bg-white lg:h-full flex flex-col overflow-hidden">
           <Suspense

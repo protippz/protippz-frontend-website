@@ -61,7 +61,7 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
     {/* Profile with Name Letter Avatar */}
     <div className="card-profile">
       <div className="avatar-wrap">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#2FC191] to-[#053697] text-white flex items-center justify-center font-extrabold text-xs shadow-xs border-2 border-white shrink-0">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#2FC191] to-[#053697] text-white flex items-center justify-center font-extrabold text-xs border-2 border-white shrink-0">
           {getInitials(testimonial.name)}
         </div>
         <span className="online-dot" />

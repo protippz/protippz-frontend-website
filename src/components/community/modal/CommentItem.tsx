@@ -107,16 +107,15 @@ export const CommentItem: React.FC<CommentItemProps> = ({
             </p>
           </div>
 
-          <div className="flex items-center gap-3 text-[10px] text-[#05369770] font-semibold px-2 mt-0.5">
+          <div className="flex items-center gap-2 text-[10px] text-[#05369770] font-semibold px-2 mt-0.5">
             <button
               type="button"
               disabled={isLiking}
               onClick={() => onLikeCommentClick(comment.id)}
-              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
-                comment.isLiked
-                  ? "bg-[#2FC19118] text-[#2FC191] font-bold"
-                  : "text-[#05369770] hover:text-[#2FC191] hover:bg-gray-100"
-              }`}
+              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${comment.isLiked
+                ? "bg-[#2FC19118] text-[#2FC191] font-bold"
+                : "text-[#05369770] hover:text-[#2FC191] hover:bg-gray-100"
+                }`}
             >
               {isLiking ? (
                 <Loader2 className="w-3 h-3 animate-spin text-[#2FC191] shrink-0" />
@@ -207,7 +206,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
 
             {/* Floating Reaction Pill */}
             {comment.reactions && comment.reactions.length > 0 && (
-              <div className="absolute -bottom-2 right-2 bg-white shadow-2xs border border-gray-200 px-1.5 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-0.5 cursor-pointer">
+              <div className="absolute -bottom-2 right-2 bg-white border border-gray-200 px-1.5 py-0.5 rounded-full text-[10px] font-semibold flex items-center gap-0.5 cursor-pointer">
                 {comment.reactions.map((r, idx) => (
                   <span key={idx}>{r.emoji}</span>
                 ))}
@@ -219,16 +218,15 @@ export const CommentItem: React.FC<CommentItemProps> = ({
           </div>
 
           {/* Comment Actions */}
-          <div className="flex items-center gap-3 text-[11px] text-[#05369770] font-semibold px-2 mt-1">
+          <div className="flex items-center gap-2 text-[11px] text-[#05369770] font-semibold px-2 mt-1">
             <button
               type="button"
               disabled={isLiking}
               onClick={() => onLikeCommentClick(comment.id)}
-              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
-                comment.isLiked
-                  ? "bg-[#2FC19118] text-[#2FC191] font-bold"
-                  : "text-[#05369770] hover:text-[#2FC191] hover:bg-gray-100"
-              }`}
+              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${comment.isLiked
+                ? "bg-[#2FC19118] text-[#2FC191] font-bold"
+                : "text-[#05369770] hover:text-[#2FC191] hover:bg-gray-100"
+                }`}
             >
               {isLiking ? (
                 <Loader2 className="w-3 h-3 animate-spin text-[#2FC191] shrink-0" />
@@ -293,7 +291,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
               </button>
 
               {isQuickReactionOpen && (
-                <div className="absolute bottom-full right-0 mb-1 z-30 bg-white shadow-xl rounded-full px-2 py-1 border border-gray-200 flex items-center gap-1 animate-in fade-in duration-150">
+                <div className="absolute bottom-full right-0 mb-1 z-30 bg-white rounded-full px-2 py-1 border border-gray-200 flex items-center gap-1 animate-in fade-in duration-150">
                   {QUICK_REACTION_EMOJIS.map((emoji) => (
                     <button
                       key={emoji}

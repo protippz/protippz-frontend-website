@@ -86,9 +86,8 @@ export const OptimizedPostImage: React.FC<OptimizedPostImageProps> = ({
     <>
       <div
         onClick={handleContainerClick}
-        className={`relative w-full overflow-hidden bg-slate-100 rounded-xl group ${
-          enableLightbox || onClick ? "cursor-pointer" : ""
-        } ${containerClassName}`}
+        className={`relative w-full overflow-hidden bg-slate-100 rounded-xl group ${enableLightbox || onClick ? "cursor-pointer" : ""
+          } ${containerClassName}`}
         style={aspectRatio ? { aspectRatio } : undefined}
       >
         {/* Shimmer Skeleton Placeholder when loading */}
@@ -114,20 +113,18 @@ export const OptimizedPostImage: React.FC<OptimizedPostImageProps> = ({
             setIsLoading(false);
             setHasError(true);
           }}
-          className={`w-full ${
-            objectFit === "cover"
-              ? "h-full object-cover"
-              : objectFit === "fill"
+          className={`w-full ${objectFit === "cover"
+            ? "h-full object-cover"
+            : objectFit === "fill"
               ? "h-full object-fill"
               : "h-auto object-contain"
-          } transition-all duration-500 ease-out ${maxHeightClass} ${
-            isLoading ? "opacity-0 scale-[0.98]" : "opacity-100 scale-100"
-          } ${enableLightbox ? "group-hover:scale-[1.01]" : ""} ${className}`}
+            } transition-all duration-500 ease-out ${maxHeightClass} ${isLoading ? "opacity-0 scale-[0.98]" : "opacity-100 scale-100"
+            } ${enableLightbox ? "group-hover:scale-[1.01]" : ""} ${className}`}
         />
 
         {/* Hover Lightbox Indicator Badge */}
         {enableLightbox && !isLoading && !hasError && (
-          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/60 backdrop-blur-xs text-white p-1.5 rounded-lg shadow-md pointer-events-none">
+          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/60 backdrop-blur-xs text-white p-1.5 rounded-lg  pointer-events-none">
             <Maximize2 className="w-4 h-4" />
           </div>
         )}
@@ -157,7 +154,7 @@ export const OptimizedPostImage: React.FC<OptimizedPostImageProps> = ({
               alt={alt}
               width={1600}
               height={1000}
-              className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-xl shadow-2xl"
+              className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-xl"
               priority
             />
           </div>

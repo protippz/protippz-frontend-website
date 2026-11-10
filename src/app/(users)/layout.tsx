@@ -104,7 +104,7 @@ export default function RootLayout({
       <NextTopLoader />
       <AuthProvider>
         <Navbar />
-        <div className="min-h-[72vh] flex flex-col justify-center items-center">
+        <div className="min-h-[72vh] flex flex-col justify-center items-center pb-16 lg:pb-0">
           {children}
         </div>
         <Footer />

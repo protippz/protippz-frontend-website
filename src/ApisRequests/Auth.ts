@@ -1,18 +1,24 @@
 "use server";
 
 import { baseUrl } from "./server";
+
 interface SignUp {
   password: string;
   confirmPassword: string;
   userData: {
     name: string;
     username: string;
-    phone: string;
+    phone?: string;
     email: string;
-    address: string;
+    address?: string;
+    role?: string;
+    accountType?: string;
+    inviteToken?: string;
   };
+  playerId?: string;
+  platform?: "ios" | "android" | "web" | string;
 }
-//-----
+
 export const signUpHandler = async (value: SignUp) => {
   const url = await baseUrl("user/register-user");
   const response = await fetch(url, {
@@ -29,6 +35,7 @@ interface verifyCode {
   verifyCode: number;
   email: string;
 }
+
 export const OtpVerify = async (value: verifyCode) => {
   const url = await baseUrl("user/verify-code");
   const response = await fetch(url, {
@@ -44,6 +51,8 @@ export const OtpVerify = async (value: verifyCode) => {
 interface SignIn {
   userNameOrEmail: string;
   password: string;
+  playerId?: string;
+  platform?: "ios" | "android" | "web" | string;
 }
 
 export const SignInHandler = async (value: SignIn) => {

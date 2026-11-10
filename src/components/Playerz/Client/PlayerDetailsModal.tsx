@@ -30,6 +30,7 @@ interface PlayerData {
   dueAmount: number;
   jerceyNumber: number;
   isStripeConnected: boolean;
+  isStripeReady?: boolean;
   address?: IAddress;
   team: {
     _id: string;

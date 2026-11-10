@@ -106,7 +106,7 @@ export const CommentFormFooter: React.FC<CommentFormFooterProps> = ({
 
       <form
         onSubmit={onSubmit}
-        className="p-3 sm:p-4 pb-safe flex items-center gap-2 sm:gap-3"
+        className="p-3 sm:p-4 pb-safe flex items-center gap-2 sm:gap-2"
       >
         <Avatar className="w-8 h-8 shrink-0">
           <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
@@ -157,11 +157,10 @@ export const CommentFormFooter: React.FC<CommentFormFooterProps> = ({
             <button
               type="button"
               onClick={() => setIsEmojiPickerOpen((prev) => !prev)}
-              className={`p-1 rounded-lg transition-colors cursor-pointer ${
-                isEmojiPickerOpen
+              className={`p-1 rounded-lg transition-colors cursor-pointer ${isEmojiPickerOpen
                   ? "text-[#2FC191]"
                   : "text-gray-400 hover:text-gray-600"
-              }`}
+                }`}
               title="Choose an emoji"
             >
               <Smile className="w-4 h-4" />

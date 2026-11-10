@@ -1,363 +1,7 @@
-// "use client";
-// import React, { useEffect, useState } from "react";
-// import { Button, Drawer, Dropdown, Menu } from "antd";
-// import { IoIosNotificationsOutline, IoMdMenu } from "react-icons/io";
-// import logo from "@/Assets/logo.png";
-// import Image from "next/image";
-// import Link from "next/link";
-// import { FaDollarSign, FaRegUserCircle, FaStar } from "react-icons/fa";
-// import { useContextData } from "@/provider/ContextProvider";
-// import Cookies from "js-cookie";
-// import { motion } from "framer-motion";
-// import { useRouter } from "next/navigation";
-// const Navbar: React.FC = () => {
-//   const [drawerVisible, setDrawerVisible] = useState(false);
-//   const [activeMenu, setActiveMenu] = useState("");
-//   const data = useContextData();
-//   const router = useRouter();
-//   const showDrawer = () => {
-//     setDrawerVisible(true);
-//   };
-
-//   const handleChnagePassword = () => {
-//     router.push("/change-password");
-//   };
-//   const closeDrawer = () => {
-//     setDrawerVisible(false);
-//   };
-//   const navItems = [
-//     { href: "/tippz", text: "TIPPZ" },
-//     { href: "/playerz", text: "PLAYERZ" },
-//     { href: "/teamz", text: "TEAMZ" },
-//     { href: "/community", text: "MEDIA & COMMUNITY" },
-//     { href: "/rewardz", text: "REWARDZ" },
-//     { href: "https://protippz.store", text: "STORE" },
-//   ];
-//   const handleMenuClick = (href: string) => {
-//     setActiveMenu(href);
-//     closeDrawer();
-//   };
-//   // Dropdown menu for user options
-//   const [userMenu, setUserMenu] = useState(
-//     <Menu>
-//       <Menu.Item key="1">
-//         <Link
-//           href={
-//             data?.userData?.user?.role == "player" ||
-//             data?.userData?.user?.role == "team"
-//               ? `home`
-//               : "/profile"
-//           }
-//         >
-//           My Profile
-//         </Link>
-//       </Menu.Item>
-//       <Menu.Item key="11">
-//         <button
-//           onClick={() => {
-//             Cookies.remove("token");
-//             localStorage.removeItem("token");
-//             window.location.href = "/sign-in";
-//           }}
-//         >
-//           Sign out
-//         </button>
-//       </Menu.Item>
-//     </Menu>,
-//   );
-
-//   useEffect(() => {
-//     if (
-//       data?.userData?.user?.role != "player" &&
-//       data?.userData?.user?.role != "team"
-//     ) {
-//       setUserMenu(
-//         <Menu>
-//           <Menu.Item key="1">
-//             <Link
-//               href={
-//                 data?.userData?.user?.role == "player" ||
-//                 data?.userData?.user?.role == "team"
-//                   ? `home`
-//                   : "/profile"
-//               }
-//             >
-//               My Profile
-//             </Link>
-//           </Menu.Item>
-
-//           <Menu.Item key="2">
-//             <Link href="/deposit">Deposit Funds</Link>
-//           </Menu.Item>
-//           {/* <Menu.Item key="3">
-//             <Link href="/withdraw">Withdraw Funds</Link>
-//           </Menu.Item> */}
-//           <Menu.Item key="4">
-//             <Link href="/tippz-history">Tippz History</Link>
-//           </Menu.Item>
-//           <Menu.Item key="5">
-//             <Link href="/transaction-log">Transaction Log</Link>
-//           </Menu.Item>
-//           <Menu.Item key="6">
-//             <Link href="/favorites">Favorites</Link>
-//           </Menu.Item>
-//           <Menu.Item key="7">
-//             <Link href="/faqs">FAQs</Link>
-//           </Menu.Item>
-//           {/* <Menu.Item key="8">
-//                 <Link href="/settings">Settings</Link>
-//             </Menu.Item> */}
-//           <Menu.Item key="9">
-//             <Link href="/invite-friends">Invite Friends</Link>
-//           </Menu.Item>
-//           <Menu.Item key="10">
-//             <Link href="/contact">Contact Us</Link>
-//           </Menu.Item>
-//           <Menu.Item key="11">
-//             <h1 onClick={() => handleChnagePassword()}>Change Password</h1>
-//           </Menu.Item>
-//           <Menu.Item key="12">
-//             <button
-//               onClick={() => {
-//                 Cookies.remove("token");
-//                 localStorage.removeItem("token");
-//                 window.location.href = "sign-in";
-//               }}
-//             >
-//               Sign Out
-//             </button>
-//           </Menu.Item>
-//         </Menu>,
-//       );
-//     } else {
-//       setUserMenu(
-//         <Menu>
-//           <Menu.Item key="1">
-//             <Link
-//               href={
-//                 data?.userData?.user?.role == "player" ||
-//                 data?.userData?.user?.role == "team"
-//                   ? `home`
-//                   : "/profile"
-//               }
-//             >
-//               My Profile
-//             </Link>
-//           </Menu.Item>
-//           <Menu.Item key="11">
-//             <h1 onClick={() => handleChnagePassword()}>Change Password</h1>
-//           </Menu.Item>
-//           <Menu.Item key="12">
-//             <button
-//               onClick={() => {
-//                 Cookies.remove("token");
-//                 localStorage.removeItem("token");
-//                 window.location.href = "sign-in";
-//               }}
-//             >
-//               Sign Out
-//             </button>
-//           </Menu.Item>
-//         </Menu>,
-//       );
-//     }
-//   }, [data?.userData]);
-//   return (
-//     <div className="p-4 bg-white shadow-md z-999">
-//       <nav className="flex items-center justify-between max-w-355 mx-auto">
-//         <Link href={`/`}>
-//           <Image
-//             src={logo}
-//             height={900}
-//             width={900}
-//             alt="logo"
-//             className="w-fit h-14"
-//           />
-//         </Link>
-
-//         {/* Desktop Navigation Links */}
-//         <ul className="hidden md:flex space-x-6 text-[#06389F]">
-//           {navItems.map((item) => (
-//             <motion.li
-//               key={item.href}
-//               className={`cursor-pointer hover:text-[#053697] transition-all ${
-//                 activeMenu === item.href
-//                   ? "text-[#053697] font-semibold px-2"
-//                   : ""
-//               } relative`}
-//               onClick={() => handleMenuClick(item.href)}
-//               // whileHover={{ scale: 1.1 }}
-//               whileTap={{ scale: 0.9 }}
-//             >
-//               {activeMenu === item.href && (
-//                 <div className="w-full h-[2px] bg-[#053697] absolute bottom-0 left-0"></div>
-//               )}
-//               <Link
-//                 target={
-//                   item?.href === "https://protippz.store" ? "_blank" : "_self"
-//                 }
-//                 href={item.href}
-//               >
-//                 {item.text}
-//               </Link>
-//             </motion.li>
-//           ))}
-//         </ul>
-
-//         {/* Action Buttons for Desktop */}
-//         <div className="hidden md:flex items-center space-x-4">
-//           {data?.userData?._id ? (
-//             <>
-//               <div className="flex flex-col space-y-2">
-//                 {data?.userData?.user?.role != "player" &&
-//                   data?.userData?.user?.role != "team" && (
-//                     <>
-//                       <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-green-100">
-//                         <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white border border-green-500">
-//                           <FaDollarSign className="text-green-500" />
-//                         </span>
-//                         <span className="text-green-800 font-semibold">
-//                           {data?.userData?.totalAmount?.toFixed(2)}
-//                         </span>
-//                       </div>
-//                       <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-green-100">
-//                         <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white border border-green-500">
-//                           <FaStar className="text-green-500" />
-//                         </span>
-//                         <span className="text-green-800 font-semibold">
-//                           {data?.userData?.totalPoint?.toFixed(2)}
-//                         </span>
-//                       </div>
-//                     </>
-//                   )}
-//               </div>
-//               <div className="flex space-x-2">
-//                 <Link
-//                   href={`/notification`}
-//                   className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100"
-//                 >
-//                   <IoIosNotificationsOutline
-//                     className="text-green-500"
-//                     style={{ fontSize: "18px" }}
-//                   />
-//                 </Link>
-//                 <Dropdown overlay={userMenu} trigger={["click"]}>
-//                   <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 cursor-pointer">
-//                     <FaRegUserCircle
-//                       className="text-green-500"
-//                       style={{ fontSize: "18px" }}
-//                     />
-//                   </div>
-//                 </Dropdown>
-//               </div>
-//             </>
-//           ) : (
-//             <Link
-//               href={`/sign-in`}
-//               className="bg-[#2FC191] hover:bg-[#55ddb0] p-[6px] px-4 rounded-md text-white transition-all whitespace-nowrap"
-//             >
-//               Sign In
-//             </Link>
-//           )}
-//         </div>
-
-//         {/* Drawer for Mobile */}
-//         <div className="md:hidden flex items-center">
-//           <Button icon={<IoMdMenu />} onClick={showDrawer} />
-//         </div>
-//         <Drawer
-//           title={
-//             <Image
-//               src={logo}
-//               height={900}
-//               width={900}
-//               alt="logo"
-//               className="w-fit h-14"
-//             />
-//           }
-//           placement="right"
-//           onClose={closeDrawer}
-//           open={drawerVisible}
-//           className="text-[#053697]"
-//         >
-//           <ul className="space-y-4">
-//             {navItems.map((item) => (
-//               <li key={item.href}>
-//                 <Link
-//                   target={
-//                     item?.href === "https://protippz.store" ? "_blank" : "_self"
-//                   }
-//                   href={item.href}
-//                   onClick={closeDrawer}
-//                   className="hover:text-[#053697] cursor-pointer font-semibold"
-//                 >
-//                   {item.text}
-//                 </Link>
-//               </li>
-//             ))}
-//           </ul>
-
-//           {data?.userData?._id ? (
-//             <>
-//               <div className="flex flex-col space-y-2 my-2">
-//                 <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-green-100">
-//                   <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white border border-green-500">
-//                     <FaDollarSign className="text-green-500" />
-//                   </span>
-//                   <span className="text-green-800 font-semibold">
-//                     {data?.userData?.totalAmount}
-//                   </span>
-//                 </div>
-//                 <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-green-100">
-//                   <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white border border-green-500">
-//                     <FaStar className="text-green-500" />
-//                   </span>
-//                   <span className="text-green-800 font-semibold">
-//                     {data?.userData?.totalPoint}
-//                   </span>
-//                 </div>
-//               </div>
-//               <div className="flex items-center space-x-4 mt-4">
-//                 <Link
-//                   href={`/notification`}
-//                   className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100"
-//                 >
-//                   <IoIosNotificationsOutline
-//                     className="text-green-500"
-//                     style={{ fontSize: "18px" }}
-//                   />
-//                 </Link>
-//                 <Dropdown overlay={userMenu} trigger={["click"]}>
-//                   <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 cursor-pointer">
-//                     <FaRegUserCircle
-//                       className="text-green-500"
-//                       style={{ fontSize: "18px" }}
-//                     />
-//                   </div>
-//                 </Dropdown>
-//               </div>
-//             </>
-//           ) : (
-//             <Link
-//               href={`/sign-in`}
-//               onClick={closeDrawer}
-//               className="block w-full mt-3 bg-[#2FC191] hover:bg-[#55ddb0] p-[6px] px-4 rounded-md text-white transition-all"
-//             >
-//               Sign In
-//             </Link>
-//           )}
-//         </Drawer>
-//       </nav>
-//     </div>
-//   );
-// };
-
-// export default Navbar;
-
 "use client";
 
 import React, { useState } from "react";
-import { Drawer, Dropdown } from "antd";
+import { Dropdown } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -375,12 +19,19 @@ import {
   DollarSign,
   Star,
   Bell,
-  Menu as MenuIcon,
-  X as CloseIcon,
+  Home,
+  Zap,
+  Users,
+  Shield,
+  Gift,
+  ShoppingBag,
+  Menu,
+  Users2,
 } from "lucide-react";
 import { useContextData } from "@/provider/ContextProvider";
 import Cookies from "js-cookie";
 import { IMAGE } from "@/constant/image.index";
+import { oneSignalLogout } from "@/components/OneSignal/OneSignalHandler";
 
 const isRouteActive = (
   pathname: string | null,
@@ -402,36 +53,11 @@ const isRouteActive = (
 };
 
 const Navbar: React.FC = () => {
-  const [drawerVisible, setDrawerVisible] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const data = useContextData();
   const router = useRouter();
   const pathname = usePathname();
-
-  const showDrawer = () => setDrawerVisible(true);
-  const closeDrawer = () => setDrawerVisible(false);
-
-  const navItems = [
-    { href: "/tippz", text: "TIPPZ" },
-    { href: "/playerz", text: "PLAYERZ" },
-    { href: "/teamz", text: "TEAMZ" },
-    { href: "/community", text: "MEDIA & COMMUNITY" },
-    { href: "/rewardz", text: "REWARDZ" },
-    { href: "https://protippz.store", text: "STORE", external: true },
-  ];
-
-  const mobileNavItems = [{ href: "/", text: "HOME" }, ...navItems];
-
-  const handleSignOut = () => {
-    Cookies.remove("token");
-    localStorage.removeItem("token");
-    window.location.href = "/sign-in";
-  };
-
-  const handlePasswordChange = () => {
-    setDropdownOpen(false);
-    router.push("/change-password");
-  };
 
   const isPlayerOrTeam =
     data?.userData?.user?.role === "player" ||
@@ -439,22 +65,54 @@ const Navbar: React.FC = () => {
 
   const profileHref = isPlayerOrTeam ? "/home" : "/profile";
 
+  const navItems = [
+    ...(data?.userData ? [] : [{ href: "/tippz", text: "TIPPZ" }]),
+    ...(!isPlayerOrTeam
+      ? [
+        { href: "/playerz", text: "PLAYERZ" },
+        { href: "/teamz", text: "TEAMZ" },
+      ]
+      : []),
+    { href: "/community", text: "MEDIA & COMMUNITY" },
+    { href: "/rewardz", text: "REWARDZ" },
+    { href: "https://protippz.store", text: "STORE", external: true },
+  ];
+
+  const mobileNavItems = [{ href: data?.userData ? "/community" : "/", text: "HOME" }, ...navItems];
+
+  const handleSignOut = async () => {
+    try {
+      await oneSignalLogout();
+    } catch (err) {
+      console.warn("[OneSignal] Logout error:", err);
+    } finally {
+      Cookies.remove("token");
+      localStorage.removeItem("token");
+      window.location.href = "/sign-in";
+    }
+  };
+
+  const handlePasswordChange = () => {
+    setDropdownOpen(false);
+    router.push("/change-password");
+  };
+
   // Single-color unified User Dropdown Popover Card
   const userDropdownContent = (
-    <div className="w-64 bg-white rounded-2xl shadow-xl border border-slate-100 p-2.5 text-slate-800 animate-in fade-in zoom-in-95 duration-150">
+    <div className="w-64 bg-white rounded-2xl border border-slate-100 p-2.5 text-slate-800 animate-in fade-in zoom-in-95 duration-150">
       {/* Header Profile Info */}
       <div className="p-3 bg-emerald-50/60 rounded-xl mb-2 border border-emerald-100/60">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {data?.userData?.profile_image ? (
             <Image
               src={data.userData.profile_image}
               alt="Profile"
               width={38}
               height={38}
-              className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-xs"
+              className="w-9 h-9 rounded-full object-cover border-2 border-white"
             />
           ) : (
-            <div className="w-9 h-9 rounded-full bg-[#2FC191] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            <div className="w-9 h-9 rounded-full bg-[#2FC191] text-white flex items-center justify-center font-bold text-sm">
               {data?.userData?.name ? data.userData.name[0].toUpperCase() : "U"}
             </div>
           )}
@@ -500,7 +158,14 @@ const Navbar: React.FC = () => {
           <User className="w-4 h-4 text-[#2FC191]" />
           <span>My Profile</span>
         </Link>
-
+        {isPlayerOrTeam && <Link
+          href={"/my-tip-history"}
+          onClick={() => setDropdownOpen(false)}
+          className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#2FC191] transition-colors group"
+        >
+          <Wallet className="w-4 h-4 text-[#2FC191]" />
+          <span>Tipz History</span>
+        </Link>}
         {!isPlayerOrTeam && (
           <>
             <Link
@@ -593,277 +258,343 @@ const Navbar: React.FC = () => {
   );
 
   return (
-    <header className="sticky top-0 z-999 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs transition-all duration-200">
-      <nav className="flex items-center justify-between max-w-355 mx-auto px-4 py-3">
-        {/* Brand Logo */}
-        <Link
-          href="/"
-          className="flex items-center group transition-transform duration-200 hover:scale-[1.02]"
-        >
-          <Image
-            src={IMAGE.logo}
-            height={42}
-            width={140}
-            alt="PROTIPPZ Logo"
-            className="w-auto h-8 object-contain"
-            priority
-          />
-        </Link>
-
-        {/* Desktop Navigation Links */}
-        <ul className="hidden lg:flex items-center space-x-7 text-sm font-semibold tracking-wide">
-          {navItems.map((item) => {
-            const isActive = isRouteActive(pathname, item.href, item.external);
-
-            return (
-              <li key={item.href} className="relative py-1">
-                <Link
-                  target={item.external ? "_blank" : "_self"}
-                  href={item.href}
-                  className={`transition-colors duration-200 flex items-center ${
-                    isActive
-                      ? "text-[#2FC191] font-bold"
-                      : "text-[#053697] hover:text-[#2FC191]"
-                  }`}
-                >
-                  {item.text}
-                </Link>
-                {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#2FC191] rounded-full" />
-                )}
-              </li>
-            );
-          })}
-        </ul>
-
-        {/* Action Buttons for Desktop */}
-        <div className="hidden lg:flex items-center space-x-4">
-          {data?.loading ? (
-            <div className="flex items-center space-x-2.5">
-              <div className="w-24 h-8 rounded-full bg-slate-200/80 animate-pulse" />
-              <div className="w-20 h-8 rounded-full bg-slate-200/80 animate-pulse" />
-              <div className="w-9 h-9 rounded-full bg-slate-200/80 animate-pulse" />
-              <div className="w-9 h-9 rounded-full bg-slate-200/80 animate-pulse" />
-            </div>
-          ) : data?.userData?._id ? (
-            <div className="flex items-center space-x-3">
-              {/* User Balance Badges */}
-              {!isPlayerOrTeam && (
-                <div className="flex items-center space-x-2">
-                  <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#2FC191]/10 border border-[#2FC191]/20 text-[#2FC191] text-xs font-bold shadow-xs">
-                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#2FC191] text-white">
-                      <DollarSign className="w-3 h-3" />
-                    </span>
-                    <span>
-                      $
-                      {data?.userData?.totalAmount
-                        ? data.userData.totalAmount.toFixed(2)
-                        : "0.00"}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#2FC191]/10 border border-[#2FC191]/20 text-[#2FC191] text-xs font-bold shadow-xs">
-                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#2FC191] text-white">
-                      <Star className="w-3 h-3 fill-white text-white" />
-                    </span>
-                    <span>
-                      {data?.userData?.totalPoint
-                        ? data.userData.totalPoint.toFixed(0)
-                        : "0"}{" "}
-                      Pts
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Notification Icon */}
-              <Link
-                href="/notification"
-                className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-[#2FC191]/15 hover:text-[#2FC191] text-slate-700 transition-all duration-200"
-                title="Notifications"
-              >
-                <Bell className="w-4 h-4 text-slate-700" />
-              </Link>
-
-              {/* User Profile Dropdown */}
-              <div className="relative">
-                <Dropdown
-                  dropdownRender={() => userDropdownContent}
-                  trigger={["click"]}
-                  placement="bottomRight"
-                  open={dropdownOpen}
-                  onOpenChange={setDropdownOpen}
-                  getPopupContainer={(triggerNode) =>
-                    triggerNode.parentElement || document.body
-                  }
-                >
-                  <button className="flex items-center justify-center w-9 h-9 rounded-full bg-[#2FC191] text-white hover:opacity-90 transition-all duration-200 cursor-pointer shadow-xs">
-                    {data?.userData?.profile_image ? (
-                      <Image
-                        src={data.userData.profile_image}
-                        alt="Profile"
-                        width={36}
-                        height={36}
-                        className="w-9 h-9 rounded-full object-cover"
-                      />
-                    ) : (
-                      <span className="font-bold text-sm">
-                        {data?.userData?.name
-                          ? data.userData.name[0].toUpperCase()
-                          : "U"}
-                      </span>
-                    )}
-                  </button>
-                </Dropdown>
-              </div>
-            </div>
-          ) : (
-            <Link
-              href="/sign-in"
-              className="bg-[#053697] hover:bg-[#053697]/90 text-white font-semibold text-sm px-5 py-2 rounded-xl shadow-xs hover:shadow-md transition-all duration-200 whitespace-nowrap active:scale-95"
-            >
-              Sign In
-            </Link>
-          )}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="lg:hidden flex items-center">
-          <button
-            onClick={showDrawer}
-            className="p-2 rounded-lg bg-slate-100 text-[#053697] hover:bg-[#2FC191]/10 hover:text-[#2FC191] transition-all cursor-pointer"
-            aria-label="Toggle mobile menu"
+    <>
+      <header className="sticky top-0 z-999 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-200">
+        <nav className="flex items-center justify-between max-w-355 mx-auto px-4 py-3">
+          {/* Brand Logo */}
+          <Link
+            href={data?.userData ? "/community" : "/"}
+            className="flex items-center group transition-transform duration-200 hover:scale-[1.02]"
           >
-            <MenuIcon className="w-5 h-5 text-[#053697]" />
-          </button>
-        </div>
-      </nav>
-
-      {/* Slide-over Drawer for Mobile */}
-      <Drawer
-        title={
-          <div className="flex items-center justify-between py-1">
             <Image
               src={IMAGE.logo}
-              height={36}
-              width={130}
-              alt="PROTIPPZ"
+              height={42}
+              width={140}
+              alt="PROTIPPZ Logo"
               className="w-auto h-8 object-contain"
+              priority
             />
-          </div>
-        }
-        placement="right"
-        onClose={closeDrawer}
-        open={drawerVisible}
-        closeIcon={<CloseIcon className="w-5 h-5 text-[#053697]" />}
-        className="mobile-nav-drawer"
-        width={300}
-      >
-        <div className="flex flex-col h-full justify-between pb-6">
-          <div className="space-y-6">
-            {/* User Stats Card on Mobile */}
-            {data?.loading ? (
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
-                <div className="h-7 rounded-lg bg-slate-200/80 animate-pulse" />
-                <div className="h-7 rounded-lg bg-slate-200/80 animate-pulse" />
-              </div>
-            ) : data?.userData?._id && !isPlayerOrTeam ? (
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
-                <div className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-emerald-50 text-[#2FC191] text-xs font-bold">
-                  <span className="flex items-center gap-1.5">
-                    <DollarSign className="w-3.5 h-3.5" /> Balance
-                  </span>
-                  <span>
-                    $
-                    {data?.userData?.totalAmount
-                      ? data.userData.totalAmount.toFixed(2)
-                      : "0.00"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-emerald-50 text-[#2FC191] text-xs font-bold">
-                  <span className="flex items-center gap-1.5">
-                    <Star className="w-3.5 h-3.5 fill-[#2FC191]" /> Points
-                  </span>
-                  <span>
-                    {data?.userData?.totalPoint
-                      ? data.userData.totalPoint.toFixed(0)
-                      : "0"}{" "}
-                    Pts
-                  </span>
-                </div>
-              </div>
-            ) : null}
+          </Link>
 
-            {/* Mobile Nav Links */}
-            <ul className="space-y-2 font-semibold text-base">
-              {mobileNavItems.map((item) => {
-                const isActive = isRouteActive(
-                  pathname,
-                  item.href,
-                  item.external,
-                );
+          {/* Desktop Navigation Links */}
+          <ul className="hidden lg:flex items-center space-x-7 text-sm font-semibold tracking-wide">
+            {navItems.map((item) => {
+              const isActive = isRouteActive(pathname, item.href, item.external);
 
-                return (
-                  <li key={item.href}>
-                    <Link
-                      target={item.external ? "_blank" : "_self"}
-                      href={item.href}
-                      onClick={closeDrawer}
-                      style={
-                        isActive
-                          ? { backgroundColor: "#2FC191", color: "#ffffff" }
-                          : undefined
-                      }
-                      className={`block px-4 py-3 rounded-xl transition-all duration-200 font-bold ${
-                        isActive
-                          ? "shadow-md text-white"
-                          : "text-[#053697] hover:bg-slate-100 hover:text-[#2FC191]"
+              return (
+                <li key={item.href} className="relative py-1">
+                  <Link
+                    target={item.external ? "_blank" : "_self"}
+                    href={item.href}
+                    className={`transition-colors duration-200 flex items-center ${isActive
+                      ? "text-[#2FC191] font-bold"
+                      : "text-[#053697] hover:text-[#2FC191]"
                       }`}
-                    >
-                      {item.text}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+                  >
+                    {item.text}
+                  </Link>
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#2FC191] rounded-full" />
+                  )}
+                </li>
+              );
+            })}
+          </ul>
 
-          {/* Bottom Actions on Mobile */}
-          <div className="pt-6 border-t border-slate-100 space-y-3">
+          {/* Action Buttons for Desktop */}
+          <div className="hidden lg:flex items-center space-x-4">
             {data?.loading ? (
-              <div className="w-full h-11 rounded-xl bg-slate-200/80 animate-pulse" />
+              <div className="flex items-center space-x-2.5">
+                <div className="w-24 h-8 rounded-full bg-slate-200/80 animate-pulse" />
+                <div className="w-20 h-8 rounded-full bg-slate-200/80 animate-pulse" />
+                <div className="w-9 h-9 rounded-full bg-slate-200/80 animate-pulse" />
+                <div className="w-9 h-9 rounded-full bg-slate-200/80 animate-pulse" />
+              </div>
             ) : data?.userData?._id ? (
-              <div className="space-y-2">
+              <div className="flex items-center space-x-3">
+                {/* User Balance Badges */}
+                {!isPlayerOrTeam && (
+                  <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#2FC191]/10 border border-[#2FC191]/20 text-[#2FC191] text-xs font-bold">
+                      <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#2FC191] text-white">
+                        <DollarSign className="w-3 h-3" />
+                      </span>
+                      <span>
+                        $
+                        {data?.userData?.totalAmount
+                          ? data.userData.totalAmount.toFixed(2)
+                          : "0.00"}
+                      </span>
+                    </div>
+
+                    <Link href={"/rewardz"}>
+                      <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#2FC191]/10 border border-[#2FC191]/20 text-[#2FC191] text-xs font-bold">
+                        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#2FC191] text-white">
+                          <Star className="w-3 h-3 fill-white text-white" />
+                        </span>
+                        <span>
+                          {data?.userData?.totalPoint
+                            ? data?.userData.totalPoint.toFixed(0)
+                            : "0"}{" "}
+                          Pts
+                        </span>
+                      </div>
+                    </Link>
+                  </div>
+                )}
+
+                {/* Notification Icon */}
                 <Link
-                  href={profileHref}
-                  onClick={closeDrawer}
-                  className="block text-center w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-[#053697] font-semibold rounded-xl text-sm transition-all"
+                  href="/notification"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-[#2FC191]/15 hover:text-[#2FC191] text-slate-700 transition-all duration-200"
+                  title="Notifications"
                 >
-                  My Profile
+                  <Bell className="w-4 h-4 text-slate-700" />
                 </Link>
-                <button
-                  onClick={() => {
-                    closeDrawer();
-                    handleSignOut();
-                  }}
-                  className="block text-center w-full py-2.5 px-4 bg-rose-50 hover:bg-rose-100 text-rose-600 font-semibold rounded-xl text-sm transition-all"
-                >
-                  Sign Out
-                </button>
+
+                {/* User Profile Dropdown */}
+                <div className="relative">
+                  <Dropdown
+                    dropdownRender={() => userDropdownContent}
+                    trigger={["click"]}
+                    placement="bottomRight"
+                    open={dropdownOpen}
+                    onOpenChange={setDropdownOpen}
+                    getPopupContainer={(triggerNode) =>
+                      triggerNode.parentElement || document.body
+                    }
+                  >
+                    <button className="flex items-center justify-center w-9 h-9 rounded-full bg-[#2FC191] text-white hover:opacity-90 transition-all duration-200 cursor-pointer">
+                      {data?.userData?.profile_image ? (
+                        <Image
+                          src={data.userData.profile_image}
+                          alt="Profile"
+                          width={36}
+                          height={36}
+                          className="w-9 h-9 rounded-full object-cover"
+                        />
+                      ) : (
+                        <span className="font-bold text-sm">
+                          {data?.userData?.name
+                            ? data.userData.name[0].toUpperCase()
+                            : "U"}
+                        </span>
+                      )}
+                    </button>
+                  </Dropdown>
+                </div>
               </div>
             ) : (
               <Link
                 href="/sign-in"
-                onClick={closeDrawer}
-                className="block text-center w-full py-3 px-4 bg-[#053697] hover:bg-[#053697]/90 text-white font-semibold rounded-xl shadow-xs text-sm transition-all"
+                className="bg-[#053697] hover:bg-[#053697]/90 text-white font-semibold text-sm px-5 py-2 rounded-xl transition-all duration-200 whitespace-nowrap active:scale-95"
               >
                 Sign In
               </Link>
             )}
           </div>
+
+        </nav>
+
+      </header>
+
+      {/* Mobile Bottom Tab Bar */}
+      <nav className="fixed bottom-0 left-0 right-0 z-[999] lg:hidden bg-white/95 backdrop-blur-xl border-t border-slate-200/80 h-14">
+        <div className="flex items-center justify-around px-1 h-full">
+          {/* Bottom tabs */}
+          {[
+            ...(isPlayerOrTeam
+              ? [
+                {
+                  href: "/home",
+                  icon: Home,
+                  label: "Dashboard",
+                },
+                {
+                  href: "/community",
+                  icon: Users2,
+                  label: "Community",
+                },
+                {
+                  href: "/rewardz",
+                  icon: Gift,
+                  label: "Rewardz",
+                },
+              ]
+              : [
+                {
+                  href: data?.userData ? "/community" : "/",
+                  icon: Home,
+                  label: data?.userData ? "Community" : "Home",
+                },
+                ...(data?.userData
+                  ? [{ href: "/rewardz", icon: Gift, label: "Rewardz" }]
+                  : [{ href: "/tippz", icon: Zap, label: "Tippz" }]),
+                { href: "/playerz", icon: Users, label: "Playerz" },
+                { href: "/teamz", icon: Shield, label: "Teamz" },
+              ]),
+          ].map(({ href, icon: Icon, label }) => {
+            const active = isRouteActive(pathname, href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex flex-col items-center justify-center gap-0.5 flex-1 py-2 px-1 rounded-xl transition-colors active:scale-[0.96] ${active ? "text-[#2FC191]" : "text-slate-400 hover:text-[#053697]"
+                  }`}
+              >
+                <Icon
+                  className={`w-5 h-5 transition-transform ${active ? "scale-110" : ""}`}
+                  strokeWidth={active ? 2.5 : 1.8}
+                />
+                <span className={`text-[9px] uppercase tracking-wider ${active ? "font-extrabold" : "font-semibold"}`}>
+                  {label}
+                </span>
+              </Link>
+            );
+          })}
+          {/* Hamburger — opens slide-up panel */}
+          <button
+            onClick={() => setMoreOpen(true)}
+            className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2 px-1 rounded-xl transition-colors text-slate-400 hover:text-[#053697] active:scale-[0.96] cursor-pointer"
+            aria-label="More menu"
+          >
+            <Menu className="w-5 h-5" strokeWidth={1.8} />
+            <span className="text-[9px] font-semibold uppercase tracking-wider">More</span>
+          </button>
         </div>
-      </Drawer>
-    </header>
+      </nav>
+
+      {/* Slide-up More Panel */}
+      {moreOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-[1000] bg-black/40 backdrop-blur-[2px] lg:hidden"
+            onClick={() => setMoreOpen(false)}
+          />
+          {/* Panel */}
+          <div className="fixed bottom-0 left-0 right-0 z-[1001] lg:hidden bg-white rounded-t-[28px] border-t border-slate-200/80 pb-safe">
+            {/* Drag handle */}
+            <div className="flex justify-center pt-3 pb-1">
+              <div className="w-10 h-1 rounded-full bg-slate-200" />
+            </div>
+            <div className="px-5 pt-2 pb-5">
+              {/* User info strip (if logged in) */}
+              {data?.userData?._id && (
+                <div className="flex items-center gap-2 p-3 mb-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  {data?.userData?.profile_image ? (
+                    <Image
+                      src={data.userData.profile_image}
+                      alt="Profile"
+                      width={36}
+                      height={36}
+                      className="w-9 h-9 rounded-full object-cover border border-slate-200"
+                    />
+                  ) : (
+                    <div className="w-9 h-9 rounded-full bg-[#2FC191] text-white flex items-center justify-center font-bold text-sm">
+                      {data?.userData?.name ? data.userData.name[0].toUpperCase() : "U"}
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-bold text-[#053697] truncate">{data?.userData?.name || "My Account"}</p>
+                    <p className="text-[11px] text-slate-400 truncate">{data?.userData?.email || ""}</p>
+                  </div>
+                  {!isPlayerOrTeam && (
+                    <div className="text-right shrink-0">
+                      <p className="text-xs font-bold text-[#2FC191]">${data?.userData?.totalAmount ? data.userData.totalAmount.toFixed(2) : "0.00"}</p>
+                      <p className="text-[10px] text-slate-400">{data?.userData?.totalPoint ?? 0} Pts</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* More nav links */}
+              <div className="grid grid-cols-3 gap-2 mb-4">
+                {[
+                  { href: "/rewardz", icon: Gift, label: "Rewardz" },
+                  { href: "/community", icon: Users2, label: "Community" },
+                  { href: "https://protippz.store", icon: ShoppingBag, label: "Store", external: true },
+                ].map(({ href, icon: Icon, label, external }) => {
+                  const active = isRouteActive(pathname, href, external);
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      target={external ? "_blank" : "_self"}
+                      onClick={() => setMoreOpen(false)}
+                      className={`flex flex-col items-center gap-1.5 py-3 px-2 rounded-2xl border transition-colors active:scale-[0.97] ${active
+                        ? "bg-[#2FC191]/10 border-[#2FC191]/30 text-[#2FC191]"
+                        : "bg-slate-50 border-slate-100 text-slate-500 hover:border-slate-200 hover:text-[#053697]"
+                        }`}
+                    >
+                      <Icon className="w-5 h-5" strokeWidth={active ? 2.5 : 1.8} />
+                      <span className="text-[10px] font-bold uppercase tracking-wide">{label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {/* Account actions */}
+              <div className="border-t border-slate-100 pt-4 space-y-1">
+                {data?.userData?._id ? (
+                  <>
+                    <Link
+                      href={profileHref}
+                      onClick={() => setMoreOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
+                    >
+                      <User className="w-4 h-4 text-[#2FC191]" />
+                      <span className="text-sm font-semibold">My Profile</span>
+                    </Link>
+                    {!isPlayerOrTeam && (
+                      <Link
+                        href="/deposit"
+                        onClick={() => setMoreOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
+                      >
+                        <Wallet className="w-4 h-4 text-[#2FC191]" />
+                        <span className="text-sm font-semibold">Deposit Funds</span>
+                      </Link>
+                    )}
+                    <Link
+                      href="/my-tip-history"
+                      onClick={() => setMoreOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
+                    >
+                      <Wallet className="w-4 h-4 text-[#2FC191]" />
+                      <span className="text-sm font-semibold">Tipz History</span>
+                    </Link>
+                    <Link
+                      href="/notification"
+                      onClick={() => setMoreOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-[#2FC191] transition-colors"
+                    >
+                      <Bell className="w-4 h-4 text-[#2FC191]" />
+                      <span className="text-sm font-semibold">Notifications</span>
+                    </Link>
+                    <button
+                      onClick={() => { setMoreOpen(false); handleSignOut(); }}
+                      className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                    >
+                      <LogOut className="w-4 h-4 text-rose-500" />
+                      <span className="text-sm font-semibold">Sign Out</span>
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/sign-in"
+                    onClick={() => setMoreOpen(false)}
+                    className="block text-center w-full py-3 px-4 bg-[#053697] text-white font-semibold rounded-2xl text-sm transition-all active:scale-[0.98]"
+                  >
+                    Sign In
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </>
   );
 };
 

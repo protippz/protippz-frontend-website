@@ -41,17 +41,41 @@ export function proxy(request: NextRequest) {
     });
   }
 
+  // Authentication check
+  const rawToken = request.cookies.get("token")?.value;
+  const isLoggedIn =
+    !!rawToken &&
+    rawToken !== "undefined" &&
+    rawToken !== "null" &&
+    rawToken.trim() !== "";
+
+  const pathname = request.nextUrl.pathname;
+  const normalizedPath = pathname.replace(/\/+$/, "") || "/";
+
+  // When user is successfully logged in:
+  // If user tries to visit "/", "/sign-in", or "/tippz", navigate to "/community"
+  if (isLoggedIn) {
+    if (
+      normalizedPath === "/" ||
+      normalizedPath === "/sign-in" ||
+      normalizedPath === "/tippz"
+    ) {
+      return NextResponse.redirect(new URL("/community", request.url));
+    }
+  }
+
   // Existing route protection
-  const token = request.cookies.get("token")?.value || "";
   const protectedRoutes = ["/rewardz"];
-  if (protectedRoutes.includes(request.nextUrl.pathname)) {
-    if (!token) {
+  if (protectedRoutes.includes(pathname)) {
+    if (!isLoggedIn) {
       return NextResponse.redirect(new URL("/prottiz-special", request.url));
     }
   }
 
   return NextResponse.next();
 }
+
+export const middleware = proxy;
 
 export const config = {
   matcher: [

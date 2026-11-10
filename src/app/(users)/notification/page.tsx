@@ -65,7 +65,8 @@ function formatRelativeTime(dateString: string): string {
 }
 
 function getNotificationMeta(notification: NotificationsType) {
-  const content = `${notification.title || ""} ${notification.message || ""}`.toLowerCase();
+  const content =
+    `${notification.title || ""} ${notification.message || ""}`.toLowerCase();
 
   if (
     content.includes("tip") ||
@@ -80,7 +81,8 @@ function getNotificationMeta(notification: NotificationsType) {
       type: "tip",
       badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
       icon: DollarSign,
-      iconContainer: "bg-emerald-50 text-emerald-600 border border-emerald-200/60",
+      iconContainer:
+        "bg-emerald-50 text-emerald-600 border border-emerald-200/60",
       tag: "Tippz Activity",
     };
   }
@@ -167,7 +169,7 @@ const NotificationPage = () => {
             headers: {
               Authorization: `${token || ""}`,
             },
-          }
+          },
         );
 
         if (res?.data?.result) {
@@ -183,7 +185,7 @@ const NotificationPage = () => {
         setIsRefreshing(false);
       }
     },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -198,15 +200,17 @@ const NotificationPage = () => {
   const markAsRead = (id: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     setNotifications((prev) =>
-      prev.map((n) => (n._id === id ? { ...n, seen: true } : n))
+      prev.map((n) => (n._id === id ? { ...n, seen: true } : n)),
     );
     const token =
-      typeof localStorage !== "undefined"
-        ? localStorage.getItem("token")
-        : "";
-    patch(`/notification/see/${id}`, {}, {
-      headers: { Authorization: token || "" },
-    }).catch(() => {});
+      typeof localStorage !== "undefined" ? localStorage.getItem("token") : "";
+    patch(
+      `/notification/see/${id}`,
+      {},
+      {
+        headers: { Authorization: token || "" },
+      },
+    ).catch(() => { });
   };
 
   const markAllAsRead = () => {
@@ -220,22 +224,24 @@ const NotificationPage = () => {
     toast.success("All notifications marked as read");
 
     const token =
-      typeof localStorage !== "undefined"
-        ? localStorage.getItem("token")
-        : "";
-    patch("/notification/see-all", {}, {
-      headers: { Authorization: token || "" },
-    }).catch(() => {});
+      typeof localStorage !== "undefined" ? localStorage.getItem("token") : "";
+    patch(
+      "/notification/see-all",
+      {},
+      {
+        headers: { Authorization: token || "" },
+      },
+    ).catch(() => { });
   };
 
   const unreadCount = useMemo(
     () => notifications.filter((n) => !n.seen).length,
-    [notifications]
+    [notifications],
   );
 
   const readCount = useMemo(
     () => notifications.filter((n) => n.seen).length,
-    [notifications]
+    [notifications],
   );
 
   const filteredNotifications = useMemo(() => {
@@ -252,7 +258,7 @@ const NotificationPage = () => {
       list = list.filter(
         (n) =>
           n.title?.toLowerCase().includes(q) ||
-          n.message?.toLowerCase().includes(q)
+          n.message?.toLowerCase().includes(q),
       );
     }
 
@@ -261,10 +267,9 @@ const NotificationPage = () => {
 
   return (
     <div className="w-full max-w-355 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-16">
-      <GoToTop />
-
+      {/* // <GoToTop /> */}
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6 sm:mb-8">
         <div>
           <div className="flex items-center gap-2 mb-1.5 font-mono text-xs font-bold text-[#053697]">
             <Bell className="w-3.5 h-3.5 text-[#2FC191]" />
@@ -274,7 +279,8 @@ const NotificationPage = () => {
             Notifications
           </h1>
           <p className="text-slate-500 text-xs sm:text-sm mt-1 max-w-xl">
-            Stay updated on your sent tips, earned rewards, favorited athletes, and official collegiate athletic news.
+            Stay updated on your sent tips, earned rewards, favorited athletes,
+            and official collegiate athletic news.
           </p>
         </div>
 
@@ -283,7 +289,7 @@ const NotificationPage = () => {
           <button
             type="button"
             onClick={markAllAsRead}
-            className="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-[#053697] text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-2xs cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-[#053697] text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors cursor-pointer"
           >
             <CheckCheck className="w-4 h-4 text-[#2FC191]" />
             <span>Mark All as Read</span>
@@ -291,7 +297,7 @@ const NotificationPage = () => {
 
           <Link
             href="/playerz"
-            className="inline-flex items-center justify-center gap-1.5 bg-[#053697] hover:bg-[#053697]/90 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-xs"
+            className="inline-flex items-center justify-center gap-1.5 bg-[#053697] hover:bg-[#053697]/90 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
           >
             <User className="w-3.5 h-3.5" />
             <span>Explore Athletes</span>
@@ -299,17 +305,15 @@ const NotificationPage = () => {
           </Link>
         </div>
       </div>
-
       {/* Metric Cards: Matching Brand Design System */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-6 sm:mb-8 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-6 sm:mb-8 items-stretch">
         {/* Big Primary Card (Left Side) */}
-        <div className="md:col-span-6 lg:col-span-7 bg-[#053697] text-white rounded-2xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border border-[#053697] shadow-xs min-h-[160px]">
+        <div className="md:col-span-6 lg:col-span-7 bg-[#053697] text-white rounded-2xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border border-[#053697] min-h-[160px]">
           <div className="absolute -right-8 -bottom-8 w-44 h-44 rounded-full bg-white/5 pointer-events-none" />
           <div className="absolute right-10 top-2 w-32 h-32 rounded-full bg-[#2FC191]/15 blur-2xl pointer-events-none" />
 
           <div className="relative z-10">
             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-blue-200 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#2FC191]" />
               Total Recorded Notifications
             </span>
             <div className="mt-2 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white">
@@ -327,9 +331,9 @@ const NotificationPage = () => {
         </div>
 
         {/* Right Stacked Metric Cards */}
-        <div className="md:col-span-6 lg:col-span-5 grid grid-cols-2 gap-3">
+        <div className="md:col-span-6 lg:col-span-5 grid grid-cols-2 gap-2">
           {/* Unread Alerts Card */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-5 flex flex-col justify-between shadow-2xs">
+          <div className="bg-white border border-slate-200/90 rounded-2xl p-5 flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                 Unread Alerts
@@ -352,7 +356,7 @@ const NotificationPage = () => {
           </div>
 
           {/* Read & Archived Card */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-5 flex flex-col justify-between shadow-2xs">
+          <div className="bg-white border border-slate-200/90 rounded-2xl p-5 flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                 Read History
@@ -370,27 +374,24 @@ const NotificationPage = () => {
           </div>
         </div>
       </div>
-
       {/* Controls Bar: Segmented Tabs + Search Filter + Refresh Button */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl p-2.5 sm:p-3 mb-6 shadow-2xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-2.5 sm:p-3 mb-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
         {/* Segmented Filter Tabs */}
         <div className="inline-flex p-1 bg-slate-100 rounded-xl gap-1 shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab("all")}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-              activeTab === "all"
-                ? "bg-[#053697] text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
-            }`}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer ${activeTab === "all"
+              ? "bg-[#053697] text-white"
+              : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
+              }`}
           >
             <span>All</span>
             <span
-              className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${
-                activeTab === "all"
-                  ? "bg-white/20 text-white"
-                  : "bg-slate-200 text-slate-700"
-              }`}
+              className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${activeTab === "all"
+                ? "bg-white/20 text-white"
+                : "bg-slate-200 text-slate-700"
+                }`}
             >
               {notifications.length}
             </span>
@@ -399,19 +400,17 @@ const NotificationPage = () => {
           <button
             type="button"
             onClick={() => setActiveTab("unread")}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-              activeTab === "unread"
-                ? "bg-[#053697] text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
-            }`}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer ${activeTab === "unread"
+              ? "bg-[#053697] text-white"
+              : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
+              }`}
           >
             <span>Unread</span>
             <span
-              className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${
-                activeTab === "unread"
-                  ? "bg-white/20 text-white"
-                  : "bg-slate-200 text-slate-700"
-              }`}
+              className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${activeTab === "unread"
+                ? "bg-white/20 text-white"
+                : "bg-slate-200 text-slate-700"
+                }`}
             >
               {unreadCount}
             </span>
@@ -420,19 +419,17 @@ const NotificationPage = () => {
           <button
             type="button"
             onClick={() => setActiveTab("read")}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-              activeTab === "read"
-                ? "bg-[#053697] text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
-            }`}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer ${activeTab === "read"
+              ? "bg-[#053697] text-white"
+              : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
+              }`}
           >
             <span>Read</span>
             <span
-              className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${
-                activeTab === "read"
-                  ? "bg-white/20 text-white"
-                  : "bg-slate-200 text-slate-700"
-              }`}
+              className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${activeTab === "read"
+                ? "bg-white/20 text-white"
+                : "bg-slate-200 text-slate-700"
+                }`}
             >
               {readCount}
             </span>
@@ -470,23 +467,21 @@ const NotificationPage = () => {
             title="Refresh notifications"
           >
             <RotateCw
-              className={`w-4 h-4 ${
-                isRefreshing ? "animate-spin text-[#053697]" : ""
-              }`}
+              className={`w-4 h-4 ${isRefreshing ? "animate-spin text-[#053697]" : ""
+                }`}
             />
           </button>
         </div>
       </div>
-
       {/* Main Notifications Container */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl shadow-2xs overflow-hidden">
+      <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl overflow-hidden">
         {isLoading ? (
           /* Shimmering Skeleton Loader */
           <div className="divide-y divide-slate-100">
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
-                className="p-4 sm:p-5 flex items-start gap-3.5 sm:gap-4 animate-pulse"
+                className="p-4 sm:p-5 flex items-start gap-2.5 sm:gap-2 animate-pulse"
               >
                 <div className="w-10 h-10 rounded-xl bg-slate-200 shrink-0" />
                 <div className="flex-1 space-y-2">
@@ -511,7 +506,8 @@ const NotificationPage = () => {
                 No Notifications Found
               </h3>
               <p className="text-xs text-slate-500 max-w-sm mt-1">
-                No notifications match &ldquo;{searchTerm}&rdquo;. Try another keyword or clear your search filter.
+                No notifications match &ldquo;{searchTerm}&rdquo;. Try another
+                keyword or clear your search filter.
               </p>
               <button
                 type="button"
@@ -531,7 +527,8 @@ const NotificationPage = () => {
                 No {activeTab === "unread" ? "Unread" : "Read"} Notifications
               </h3>
               <p className="text-xs text-slate-500 max-w-sm mt-1">
-                You have caught up with all {activeTab === "unread" ? "new" : "archived"} alerts.
+                You have caught up with all{" "}
+                {activeTab === "unread" ? "new" : "archived"} alerts.
               </p>
               <button
                 type="button"
@@ -544,18 +541,20 @@ const NotificationPage = () => {
           ) : (
             /* General Empty State */
             <div className="py-16 px-4 flex flex-col items-center justify-center text-center">
-              <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#053697] mb-3.5 shadow-2xs">
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#053697] mb-3.5">
                 <BellOff className="w-8 h-8" />
               </div>
               <h3 className="text-lg font-black text-slate-900 tracking-tight">
                 No Notifications Yet
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 max-w-md mt-1 leading-relaxed">
-                When you send tips, bookmark collegiate athletes, earn rewards, or receive program updates, all your notifications will appear right here.
+                When you send tips, bookmark collegiate athletes, earn rewards,
+                or receive program updates, all your notifications will appear
+                right here.
               </p>
               <Link
                 href="/playerz"
-                className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-[#053697] hover:bg-[#053697]/90 text-white transition-colors shadow-xs"
+                className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-[#053697] hover:bg-[#053697]/90 text-white transition-colors"
               >
                 <User className="w-4 h-4" />
                 <span>Discover Athletes</span>
@@ -577,11 +576,10 @@ const NotificationPage = () => {
                   onClick={() => {
                     if (isUnread) markAsRead(notification._id);
                   }}
-                  className={`relative p-4 sm:p-5 flex items-start gap-3.5 sm:gap-4 transition-colors cursor-pointer group ${
-                    isUnread
-                      ? "bg-blue-50/20 hover:bg-blue-50/40"
-                      : "bg-white hover:bg-slate-50/80"
-                  }`}
+                  className={`relative p-4 sm:p-5 flex items-start gap-2.5 sm:gap-2 transition-colors cursor-pointer group ${isUnread
+                    ? "bg-blue-50/20 hover:bg-blue-50/40"
+                    : "bg-white hover:bg-slate-50/80"
+                    }`}
                 >
                   {/* Left Unread Accent Indicator */}
                   {isUnread && (
@@ -590,14 +588,14 @@ const NotificationPage = () => {
 
                   {/* Icon Avatar */}
                   <div
-                    className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl shrink-0 flex items-center justify-center shadow-2xs ${meta.iconContainer}`}
+                    className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl shrink-0 flex items-center justify-center ${meta.iconContainer}`}
                   >
                     <IconComponent className="w-5 h-5" />
                   </div>
 
                   {/* Notification Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2">
                       <div className="flex items-center gap-2 flex-wrap min-w-0">
                         <span
                           className={`px-2 py-0.5 rounded-[4px] border text-[10px] font-black uppercase tracking-wider ${meta.badgeColor}`}
@@ -620,7 +618,11 @@ const NotificationPage = () => {
                       {/* Timestamp with Clock */}
                       <div className="flex items-center gap-1.5 text-xs text-slate-400 shrink-0">
                         <Clock className="w-3.5 h-3.5" />
-                        <span title={new Date(notification.createdAt).toLocaleString()}>
+                        <span
+                          title={new Date(
+                            notification.createdAt,
+                          ).toLocaleString()}
+                        >
                           {formatRelativeTime(notification.createdAt)}
                         </span>
                       </div>
@@ -641,7 +643,7 @@ const NotificationPage = () => {
                             year: "numeric",
                             month: "short",
                             day: "numeric",
-                          }
+                          },
                         )}
                       </div>
 
@@ -670,7 +672,7 @@ const NotificationPage = () => {
 
         {/* Custom Pure-Tailwind Pagination Controls (NO ANTD) */}
         {pagination && pagination.totalPage > 1 && (
-          <div className="p-4 sm:p-5 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="p-4 sm:p-5 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-2">
             <p className="text-xs text-slate-500 font-medium">
               Showing{" "}
               <span className="font-semibold text-slate-900">

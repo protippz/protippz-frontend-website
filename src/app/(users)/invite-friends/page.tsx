@@ -20,7 +20,6 @@ import {
   CheckCircle2,
   Loader2,
   X,
-  HelpCircle,
   Award,
 } from "lucide-react";
 import {
@@ -72,7 +71,7 @@ const InviteFriendsPage: React.FC = () => {
           headers: {
             Authorization: `${token}`,
           },
-        }
+        },
       );
 
       if (res?.success && res?.data?.link) {
@@ -102,15 +101,15 @@ const InviteFriendsPage: React.FC = () => {
       });
   };
 
-  const shareText = "Join me on PROTIPPZ! Tip college athletes, earn reward points, and win exclusive fan perks:";
+  const shareText =
+    "Join me on PROTIPPZ! Tip college athletes, earn reward points, and win exclusive fan perks:";
 
   return (
     <div className="w-full min-h-[calc(100vh-80px)] bg-gradient-to-b from-[#fcfbf9] via-white to-[#f5f8fa] py-8 sm:py-12 pb-20">
-      <GoToTop />
-
+      {/* // <GoToTop /> */}
       <div className="max-w-355 mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 sm:mb-8">
           <div>
             <div className="flex items-center gap-2 mb-1.5 font-mono text-xs font-bold text-[#053697]">
               <span className="w-2 h-2 rounded-full bg-[#2FC191]" />
@@ -120,13 +119,14 @@ const InviteFriendsPage: React.FC = () => {
               Invite Friends
             </h1>
             <p className="text-slate-500 text-xs sm:text-sm mt-1 max-w-xl">
-              Share the thrill of collegiate sports tipping. For every friend who registers with your link, you&apos;ll earn 10 reward points.
+              Share the thrill of collegiate sports tipping. For every friend
+              who registers with your link, you&apos;ll earn 10 reward points.
             </p>
           </div>
 
           <Link
             href="/rewardz"
-            className="inline-flex items-center gap-2 self-start sm:self-auto text-xs font-bold text-[#053697] bg-blue-50/80 hover:bg-blue-100/80 px-4 py-2.5 rounded-xl border border-blue-100 transition-colors shadow-2xs"
+            className="inline-flex items-center gap-2 self-start sm:self-auto text-xs font-bold text-[#053697] bg-blue-50/80 hover:bg-blue-100/80 px-4 py-2.5 rounded-xl border border-blue-100 transition-colors"
           >
             <Trophy className="w-4 h-4 text-[#2FC191]" />
             <span>Visit Rewardz Store</span>
@@ -135,15 +135,14 @@ const InviteFriendsPage: React.FC = () => {
         </div>
 
         {/* Metric Cards Row */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 mb-8 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-8 items-stretch">
           {/* Big Primary Card (Left Side) */}
-          <div className="md:col-span-6 lg:col-span-7 bg-[#053697] text-white rounded-3xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border border-[#053697] shadow-xs min-h-[160px]">
+          <div className="md:col-span-6 lg:col-span-7 bg-[#053697] text-white rounded-3xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border border-[#053697] min-h-[160px]">
             <div className="absolute -right-8 -bottom-8 w-44 h-44 rounded-full bg-white/5 pointer-events-none" />
             <div className="absolute right-10 top-2 w-32 h-32 rounded-full bg-[#2FC191]/15 blur-2xl pointer-events-none" />
 
             <div className="relative z-10">
               <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-blue-200 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-[#2FC191]" />
                 Referral Reward Bonus
               </span>
               <div className="mt-2 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white flex items-baseline gap-2">
@@ -164,9 +163,9 @@ const InviteFriendsPage: React.FC = () => {
           </div>
 
           {/* Right Stacked Metric Cards */}
-          <div className="md:col-span-6 lg:col-span-5 grid grid-cols-2 gap-3">
+          <div className="md:col-span-6 lg:col-span-5 grid grid-cols-2 gap-2">
             {/* User Points Card */}
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-5 flex flex-col justify-between shadow-2xs">
+            <div className="bg-white border border-slate-200/90 rounded-3xl p-5 flex flex-col justify-between">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                   Your Balance
@@ -191,7 +190,7 @@ const InviteFriendsPage: React.FC = () => {
             </div>
 
             {/* Referrals Card */}
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-5 flex flex-col justify-between shadow-2xs">
+            <div className="bg-white border border-slate-200/90 rounded-3xl p-5 flex flex-col justify-between">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                   Invitations
@@ -211,7 +210,7 @@ const InviteFriendsPage: React.FC = () => {
         </div>
 
         {/* ─── MAIN LINK GENERATOR & SHARE CARD ─── */}
-        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm relative overflow-hidden mb-10">
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 md:p-10  relative overflow-hidden mb-10">
           <div className="max-w-2xl">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#053697] flex items-center gap-1.5 mb-1.5">
               <Share2 className="w-3.5 h-3.5 text-[#2FC191]" />
@@ -221,7 +220,8 @@ const InviteFriendsPage: React.FC = () => {
               Share Your Personal Invite Link
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
-              Generate your unique referral URL and share it across your network, chat groups, and social channels.
+              Generate your unique referral URL and share it across your
+              network, chat groups, and social channels.
             </p>
 
             {/* Link Box or Generate Action */}
@@ -242,7 +242,7 @@ const InviteFriendsPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={handleCopy}
-                      className="h-12 px-6 rounded-xl bg-[#053697] hover:bg-[#042873] active:scale-[0.99] text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer shrink-0"
+                      className="h-12 px-6 rounded-xl bg-[#053697] hover:bg-[#042873] active:scale-[0.99] text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shrink-0"
                     >
                       {copied ? (
                         <>
@@ -267,7 +267,7 @@ const InviteFriendsPage: React.FC = () => {
                       {/* WhatsApp */}
                       <a
                         href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                          `${shareText} ${inviteLink}`
+                          `${shareText} ${inviteLink}`,
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -280,7 +280,7 @@ const InviteFriendsPage: React.FC = () => {
                       {/* X / Twitter */}
                       <a
                         href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                          shareText
+                          shareText,
                         )}&url=${encodeURIComponent(inviteLink)}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -293,9 +293,9 @@ const InviteFriendsPage: React.FC = () => {
                       {/* Email */}
                       <a
                         href={`https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(
-                          "Join me on PROTIPPZ!"
+                          "Join me on PROTIPPZ!",
                         )}&body=${encodeURIComponent(
-                          `Hey,\n\nJoin me on PROTIPPZ to support collegiate athletes and earn rewards!\n\nUse my invite link: ${inviteLink}\n\nCheers!`
+                          `Hey,\n\nJoin me on PROTIPPZ to support collegiate athletes and earn rewards!\n\nUse my invite link: ${inviteLink}\n\nCheers!`,
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -308,7 +308,7 @@ const InviteFriendsPage: React.FC = () => {
                       {/* Facebook */}
                       <a
                         href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                          inviteLink
+                          inviteLink,
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -321,7 +321,7 @@ const InviteFriendsPage: React.FC = () => {
                       {/* Telegram */}
                       <a
                         href={`https://t.me/share/url?url=${encodeURIComponent(
-                          inviteLink
+                          inviteLink,
                         )}&text=${encodeURIComponent(shareText)}`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -338,7 +338,7 @@ const InviteFriendsPage: React.FC = () => {
                   type="button"
                   onClick={inviteHandler}
                   disabled={loading}
-                  className="h-12 px-8 rounded-xl bg-[#053697] hover:bg-[#042873] active:scale-[0.99] disabled:opacity-60 text-white font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
+                  className="h-12 px-8 rounded-xl bg-[#053697] hover:bg-[#042873] active:scale-[0.99] disabled:opacity-60 text-white font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
                   {loading ? (
                     <>
@@ -368,18 +368,19 @@ const InviteFriendsPage: React.FC = () => {
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             {/* Step 1 */}
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-2xs space-y-3.5 flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 space-y-3.5 flex flex-col justify-between">
               <div className="space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#053697] flex items-center justify-center font-black text-base border border-blue-100 shadow-2xs">
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#053697] flex items-center justify-center font-black text-base border border-blue-100">
                   01
                 </div>
                 <h4 className="text-base font-black text-slate-900 uppercase tracking-tight">
                   1. Share Your Link
                 </h4>
                 <p className="text-xs text-slate-500 leading-relaxed font-normal">
-                  Generate your unique invitation URL and share it via WhatsApp, SMS, email, or social media with fellow fans.
+                  Generate your unique invitation URL and share it via WhatsApp,
+                  SMS, email, or social media with fellow fans.
                 </p>
               </div>
               <div className="pt-2 border-t border-slate-100 flex items-center gap-1.5 text-[11px] font-bold text-[#053697]">
@@ -389,16 +390,17 @@ const InviteFriendsPage: React.FC = () => {
             </div>
 
             {/* Step 2 */}
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-2xs space-y-3.5 flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 space-y-3.5 flex flex-col justify-between">
               <div className="space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-base border border-emerald-100 shadow-2xs">
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#053697] flex items-center justify-center font-black text-base border border-blue-100">
                   02
                 </div>
                 <h4 className="text-base font-black text-slate-900 uppercase tracking-tight">
                   2. Friends Sign Up
                 </h4>
                 <p className="text-xs text-slate-500 leading-relaxed font-normal">
-                  When your friends create their ProTippz account using your link, they join our passionate collegiate sports community.
+                  When your friends create their ProTippz account using your
+                  link, they join our passionate collegiate sports community.
                 </p>
               </div>
               <div className="pt-2 border-t border-slate-100 flex items-center gap-1.5 text-[11px] font-bold text-emerald-700">
@@ -408,16 +410,17 @@ const InviteFriendsPage: React.FC = () => {
             </div>
 
             {/* Step 3 */}
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-2xs space-y-3.5 flex flex-col justify-between">
+            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 space-y-3.5 flex flex-col justify-between">
               <div className="space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-black text-base border border-amber-100 shadow-2xs">
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#053697] flex items-center justify-center font-black text-base border border-blue-100">
                   03
                 </div>
                 <h4 className="text-base font-black text-slate-900 uppercase tracking-tight">
                   3. Earn & Redeem Points
                 </h4>
                 <p className="text-xs text-slate-500 leading-relaxed font-normal">
-                  Receive +10 reward points per referral automatically credited to your vault. Redeem them in the Rewardz store for prizes.
+                  Receive +10 reward points per referral automatically credited
+                  to your vault. Redeem them in the Rewardz store for prizes.
                 </p>
               </div>
               <div className="pt-2 border-t border-slate-100 flex items-center gap-1.5 text-[11px] font-bold text-amber-600">
@@ -428,7 +431,6 @@ const InviteFriendsPage: React.FC = () => {
           </div>
         </div>
       </div>
-
       {/* ─── PURE TAILWIND POPUP MODAL (NO antd) ─── */}
       {openModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
@@ -438,7 +440,7 @@ const InviteFriendsPage: React.FC = () => {
             aria-hidden="true"
           />
 
-          <div className="relative w-full max-w-md bg-white rounded-3xl border border-slate-200/90 shadow-2xl overflow-hidden z-10 p-6 sm:p-7 text-center animate-in zoom-in-95 duration-200">
+          <div className="relative w-full max-w-md bg-white rounded-3xl border border-slate-200/90 overflow-hidden z-10 p-6 sm:p-7 text-center animate-in zoom-in-95 duration-200">
             {/* Close Button */}
             <button
               type="button"
@@ -449,7 +451,7 @@ const InviteFriendsPage: React.FC = () => {
             </button>
 
             {/* Success Icon */}
-            <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto mb-4 shadow-xs">
+            <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
@@ -457,7 +459,8 @@ const InviteFriendsPage: React.FC = () => {
               Referral Link Ready!
             </h3>
             <p className="text-xs text-slate-500 mt-1 mb-5">
-              Copy your unique link or share it directly to earn 10 points per friend.
+              Copy your unique link or share it directly to earn 10 points per
+              friend.
             </p>
 
             {/* Link Box */}
@@ -492,7 +495,7 @@ const InviteFriendsPage: React.FC = () => {
               <div className="flex items-center justify-center gap-2.5">
                 <a
                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                    `${shareText} ${inviteLink}`
+                    `${shareText} ${inviteLink}`,
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -504,7 +507,7 @@ const InviteFriendsPage: React.FC = () => {
 
                 <a
                   href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                    shareText
+                    shareText,
                   )}&url=${encodeURIComponent(inviteLink)}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -516,9 +519,9 @@ const InviteFriendsPage: React.FC = () => {
 
                 <a
                   href={`https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(
-                    "Join me on PROTIPPZ!"
+                    "Join me on PROTIPPZ!",
                   )}&body=${encodeURIComponent(
-                    `Hi,\n\nJoin me on PROTIPPZ: ${inviteLink}\n\nCheers!`
+                    `Hi,\n\nJoin me on PROTIPPZ: ${inviteLink}\n\nCheers!`,
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -530,7 +533,7 @@ const InviteFriendsPage: React.FC = () => {
 
                 <a
                   href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                    inviteLink
+                    inviteLink,
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -542,7 +545,7 @@ const InviteFriendsPage: React.FC = () => {
 
                 <a
                   href={`https://t.me/share/url?url=${encodeURIComponent(
-                    inviteLink
+                    inviteLink,
                   )}&text=${encodeURIComponent(shareText)}`}
                   target="_blank"
                   rel="noopener noreferrer"

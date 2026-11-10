@@ -48,10 +48,9 @@ const UpdateProfileForm: React.FC = () => {
         typeof user.address === "string"
           ? user.address
           : user.address?.streetAddress
-          ? `${user.address.streetAddress}${
-              user.address.city ? `, ${user.address.city}` : ""
+            ? `${user.address.streetAddress}${user.address.city ? `, ${user.address.city}` : ""
             }${user.address.state ? `, ${user.address.state}` : ""}`
-          : "";
+            : "";
       setAddress(userAddr || "");
     }
   }, [user]);
@@ -169,8 +168,8 @@ const UpdateProfileForm: React.FC = () => {
       console.error("Profile update error:", error);
       toast.error(
         error?.response?.data?.message ||
-          error?.message ||
-          "An error occurred while updating profile"
+        error?.message ||
+        "An error occurred while updating profile"
       );
     } finally {
       setIsSaving(false);
@@ -183,10 +182,10 @@ const UpdateProfileForm: React.FC = () => {
     "https://i.ibb.co.com/f4tzYw2/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg";
 
   return (
-    <div className="w-full max-w-355 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+    <div className="w-full max-w-355  mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       {/* Unified Container matching ProfilePage with Cover and Divide X/Y Grid */}
       <div className="w-full bg-white border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-200">
-        
+
         {/* TOP SECTION: Cover Header & Identity Bar */}
         <div>
           {/* Cover Header */}
@@ -197,7 +196,7 @@ const UpdateProfileForm: React.FC = () => {
 
           {/* Profile Identity Row */}
           <div className="px-6 sm:px-8 pb-6 pt-0">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-12 sm:-mt-14 mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 -mt-12 sm:-mt-14 mb-4">
               {/* Avatar with Camera Badge Overlay */}
               <div className="relative w-24 h-24 sm:w-26 sm:h-26 rounded-full border-4 border-white bg-slate-100 shrink-0 group">
                 <div className="relative w-full h-full rounded-full overflow-hidden">
@@ -274,7 +273,7 @@ const UpdateProfileForm: React.FC = () => {
             {/* Input Fields */}
             <div className="px-6 sm:px-8 py-6 space-y-5">
               {/* Full Name & Phone Number Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {/* Full Name */}
                 <div>
                   <label
@@ -314,7 +313,7 @@ const UpdateProfileForm: React.FC = () => {
               </div>
 
               {/* Email & Username Grid (Read-Only) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {/* Email Address */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
@@ -403,7 +402,7 @@ const UpdateProfileForm: React.FC = () => {
             </div>
 
             {/* Action Submit Bar */}
-            <div className="px-6 sm:px-8 py-4 bg-slate-50/50 flex items-center justify-between gap-4">
+            <div className="px-6 sm:px-8 py-4 bg-slate-50/50 flex items-center justify-between gap-2">
               <span className="text-xs text-slate-500">
                 Ensure all fields are accurate before saving
               </span>

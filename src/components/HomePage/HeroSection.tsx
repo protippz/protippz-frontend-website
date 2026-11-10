@@ -54,10 +54,10 @@ function HeroSection() {
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3 mb-10">
+            <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-2 mb-10">
               <Button
                 size="lg"
-                className="w-full sm:w-auto bg-[#053697] hover:bg-[#053697]/90 cursor-pointer text-white font-semibold px-7 py-3 rounded-xl shadow-lg shadow-[#2FC191]/20 transition-all duration-200 gap-2 group"
+                className="w-full sm:w-auto bg-[#053697] hover:bg-[#053697]/90 cursor-pointer text-white font-semibold px-7 py-3 rounded-xl shadow-[#2FC191]/20 transition-all duration-200 gap-2 group"
               >
                 Start Tipping
                 <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -75,7 +75,7 @@ function HeroSection() {
             </div>
 
             {/* Social proof */}
-            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-4">
+            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-2">
               <AvatarGroup className="**:grayscale **:hover:grayscale-0 transition-all">
                 <Avatar className="w-9 h-9 border-2 border-white ring-1 ring-[#2FC191]/30">
                   <AvatarImage src="" alt="@shadcn" />
@@ -165,7 +165,7 @@ function HeroSection() {
                 {/* Video iframe */}
                 <iframe
                   src={embedUrl}
-                  className="w-full h-full rounded-xl shadow-2xl"
+                  className="w-full h-full rounded-xl"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   title="How PROTOIPPZ works"

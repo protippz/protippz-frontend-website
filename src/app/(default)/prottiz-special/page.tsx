@@ -19,7 +19,7 @@ export default function ProtippzSpecialPage() {
     <div className="w-full bg-slate-50 min-h-[78vh] flex items-center justify-center py-12 md:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-355 w-full mx-auto">
         <div className="relative rounded-3xl bg-white border border-slate-200 p-8 sm:p-12 lg:p-16 overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-14 items-center relative z-10">
             {/* Left Content Side */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#053697] leading-tight tracking-tight">
@@ -40,7 +40,7 @@ export default function ProtippzSpecialPage() {
                 {items.map((item, index) => (
                   <li
                     key={index}
-                    className="flex items-center justify-center lg:justify-start gap-3 text-slate-700 font-semibold text-sm sm:text-base"
+                    className="flex items-center justify-center lg:justify-start gap-2 text-slate-700 font-semibold text-sm sm:text-base"
                   >
                     <span className="w-2 h-2 rounded-full bg-[#2FC191] shrink-0" />
                     <span>{item}</span>
@@ -49,7 +49,7 @@ export default function ProtippzSpecialPage() {
               </ul>
 
               {/* Action Links & Buttons */}
-              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2">
                 <Link
                   href="/sign-in"
                   className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#053697] hover:bg-[#042a78] text-white font-bold text-sm sm:text-base transition-colors text-center"

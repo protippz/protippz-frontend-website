@@ -625,7 +625,7 @@ export default function CommunityPage({
 
       {/* Main Content Layout */}
       <div className="max-w-355 mx-auto px-3 sm:px-4 py-4 sm:py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
           {/* Main Feed Column */}
           <div className="lg:col-span-2 space-y-4">
             {/* Error State Banner */}
@@ -637,7 +637,7 @@ export default function CommunityPage({
                 </div>
                 <button
                   onClick={refetch}
-                  className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer text-xs"
+                  className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition-all flex items-center gap-1.5 cursor-pointer text-xs"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   Retry
@@ -663,7 +663,7 @@ export default function CommunityPage({
                   />
                 ))
               ) : !isLoading && !isFetching ? (
-                <div className="p-10 text-center rounded-2xl bg-white border border-[#0536971A] shadow-sm">
+                <div className="p-10 text-center rounded-2xl bg-white border border-[#0536971A] ">
                   <p className="text-base font-bold text-[#053697]">
                     No content found
                   </p>
@@ -673,7 +673,7 @@ export default function CommunityPage({
                   </p>
                   <button
                     onClick={handleResetFilters}
-                    className="mt-4 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all active:scale-95 shadow-sm cursor-pointer"
+                    className="mt-4 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all active:scale-95  cursor-pointer"
                     style={{ backgroundColor: "#2FC191" }}
                   >
                     Reset Filters

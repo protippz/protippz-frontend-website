@@ -19,7 +19,7 @@ function PlayerCard({ player }: { player: Player }) {
     setIsHovered(true);
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => { });
     }
   };
 
@@ -219,7 +219,7 @@ function TopHero() {
         {/* Cards row   scrollable only */}
         <div
           ref={mobileScrollRef}
-          className={`flex gap-3 px-6 pb-8 overflow-x-auto [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+          className={`flex gap-2 px-6 pb-8 overflow-x-auto [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           onMouseDown={(e) => onMouseDown(e, mobileScrollRef)}
           onMouseMove={(e) => onMouseMove(e, mobileScrollRef)}
@@ -235,7 +235,7 @@ function TopHero() {
       {/* ─── DESKTOP: side-by-side layout (visible from md up) ─── */}
       <div className="hidden md:flex  bg-[#2FC191]/20 rounded-3xl items-stretch py-8 w-full overflow-hidden max-w-355 mx-auto">
         {/* Left panel   fixed width, never scrolls */}
-        <div className="shrink-0 w-80 lg:w-96 flex flex-col justify-center px-8 pb-2 gap-4">
+        <div className="shrink-0 w-80 lg:w-96 flex flex-col justify-center px-8 pb-2 gap-2">
           <div>
             <h1 className="text-[#2FC191]  text-4xl font-black tracking-tight leading-tight">
               The Faces of
@@ -286,7 +286,7 @@ function TopHero() {
         {/* Right panel   only this area scrolls */}
         <div
           ref={desktopScrollRef}
-          className={`flex-1 min-w-0 flex gap-4 pr-8 overflow-x-auto items-end [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+          className={`flex-1 min-w-0 flex gap-2 pr-8 overflow-x-auto items-end [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           onMouseDown={(e) => onMouseDown(e, desktopScrollRef)}
           onMouseMove={(e) => onMouseMove(e, desktopScrollRef)}

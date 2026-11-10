@@ -35,8 +35,8 @@ export async function GET(req: NextRequest) {
     }
 
     const res = await fetch(
-      `https://api.protippz.com/community-post/get-single/${encodeURIComponent(idOrSlug)}`,
-      { next: { revalidate: 60 } }
+      `http://192.168.0.108:5000/community-post/get-single/${encodeURIComponent(idOrSlug)}`,
+      { next: { revalidate: 60 } },
     );
 
     if (!res.ok) {
@@ -63,7 +63,11 @@ export async function GET(req: NextRequest) {
       (post?.images && post.images.length > 0 ? post.images[0] : null) ||
       DEFAULT_OG_IMAGE;
 
-    if (ogImageUrl && !ogImageUrl.startsWith("http://") && !ogImageUrl.startsWith("https://")) {
+    if (
+      ogImageUrl &&
+      !ogImageUrl.startsWith("http://") &&
+      !ogImageUrl.startsWith("https://")
+    ) {
       ogImageUrl = `${BASE_SITE_URL}${ogImageUrl.startsWith("/") ? "" : "/"}${ogImageUrl}`;
     }
 

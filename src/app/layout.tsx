@@ -1,11 +1,11 @@
 import GoogleAnalytics from "@/components/GoogleAnalytics/GoogleAnalytics";
 import ClickjackingFixed from "@/components/ethical_process/ClickjackingFixed";
-import OneSignalHandler from "@/components/OneSignal/OneSignalHandler";
 import { AuthProvider } from "@/provider/ContextProvider";
 import type { Metadata } from "next";
 import Script from "next/script";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
+import ReduxProvider from "@/provider/ReduxProvider";
 
 export const metadata: Metadata = {
   title: "PROTIPPZ",
@@ -46,13 +46,14 @@ export default function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <body>
-        <Script
-          src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
-          strategy="afterInteractive"
-        />
-        <NextTopLoader />
-        <AuthProvider>
-          <OneSignalHandler />
+        <ReduxProvider>
+          <Script
+            id="onesignal-sdk-script"
+            src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+            strategy="afterInteractive"
+          />
+          <NextTopLoader />
+          <AuthProvider>{/*
           <Script
             id="chatbot-script"
             strategy="afterInteractive"
@@ -65,10 +66,11 @@ export default function RootLayout({
               (d.getElementsByTagName("head")[0] || d.documentElement).appendChild(s);
             })();`,
             }}
-          />
-          <ClickjackingFixed>{children}</ClickjackingFixed>
-        </AuthProvider>
-        <GoogleAnalytics />
+          />*/}
+            <ClickjackingFixed>{children}</ClickjackingFixed>
+          </AuthProvider>
+          <GoogleAnalytics />
+        </ReduxProvider>
       </body>
     </html>
   );

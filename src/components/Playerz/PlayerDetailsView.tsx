@@ -24,7 +24,20 @@ export interface PlayerDetailsData {
   dueAmount?: number;
   isBookmark?: boolean;
   isStripeConnected?: boolean;
+  isStripeReady?: boolean;
   email?: string;
+  bio?: string;
+  school?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  classYear?: string;
+  instagram?: string;
+  intagram?: string;
+  twitter?: string;
+  tiktok?: string;
+  isProfileClaimed?: boolean;
+  followersCount?: number;
   team?: {
     _id: string;
     name: string;
@@ -143,13 +156,14 @@ const PlayerDetailsView: React.FC<PlayerDetailsViewProps> = ({
       <div className="max-w-355 mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-12 space-y-6">
         {/* Last 5 Games Box Score Table */}
         <PlayerLastGamesTable
+          playerId={player._id}
           teamName={teamName}
           position={player.position}
           accentColor={theme.primary}
         />
 
         {/* 2-Column Info & Tipping Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
           {/* Left: Athlete Story & Affiliations */}
           <div className="lg:col-span-2 space-y-6">
             <PlayerAboutCard player={player} teamName={teamName} />

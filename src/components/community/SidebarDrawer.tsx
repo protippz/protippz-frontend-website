@@ -48,7 +48,7 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
       {/* Drawer panel */}
       <div
         data-lenis-prevent
-        className="relative w-full max-w-lg bg-[#FAFBFB] rounded-t-[2rem] shadow-2xl z-10 flex flex-col max-h-[85vh] overflow-hidden animate-in slide-in-from-bottom duration-300 border-t border-[#0536971A]"
+        className="relative w-full max-w-lg bg-[#FAFBFB] rounded-t-[2rem] z-10 flex flex-col max-h-[85vh] overflow-hidden animate-in slide-in-from-bottom duration-300 border-t border-[#0536971A]"
       >
         {/* Pull indicator */}
         <div className="w-12 h-1.5 bg-gray-300/80 rounded-full mx-auto mt-3 mb-2 shrink-0" />
@@ -69,7 +69,7 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
         </div>
 
         {/* Drawer Scrollable Content */}
-        <div 
+        <div
           className="flex-1 overflow-y-auto p-5 custom-sidebar-scrollbar"
           onTouchMove={(e) => e.stopPropagation()}
         >

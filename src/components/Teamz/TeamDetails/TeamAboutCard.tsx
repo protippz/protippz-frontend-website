@@ -10,7 +10,7 @@ interface TeamAboutCardProps {
 
 const TeamAboutCard: React.FC<TeamAboutCardProps> = ({ team }) => {
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-2xs space-y-5">
+    <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-5 sm:p-7 space-y-5">
       <div className="flex items-center gap-2">
         <Building2 className="w-5 h-5 text-[#053697]" />
         <h3 className="text-lg sm:text-xl font-black uppercase text-slate-900 tracking-tight">
@@ -24,7 +24,7 @@ const TeamAboutCard: React.FC<TeamAboutCardProps> = ({ team }) => {
       </div>
 
       {/* Key Highlights Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
         <div className="p-3.5 rounded-xl border border-slate-100 bg-slate-50 flex items-start gap-2.5">
           <CheckCircle2 className="w-4 h-4 text-[#2FC191] shrink-0 mt-0.5" />
           <div>

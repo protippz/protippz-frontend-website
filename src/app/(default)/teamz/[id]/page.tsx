@@ -16,7 +16,7 @@ interface PageProps {
 
 async function fetchTeam(
   id: string,
-  token?: string | null
+  token?: string | null,
 ): Promise<TeamDetailsData | null> {
   try {
     const res = await get(`/team/get-single/${id}`, {
@@ -34,7 +34,7 @@ async function fetchTeam(
 
 async function fetchTeamRoster(
   teamId: string,
-  token?: string | null
+  token?: string | null,
 ): Promise<Player[]> {
   try {
     const res = await get(`/player/get-all?team=${teamId}&limit=50`, {
@@ -57,7 +57,8 @@ export async function generateMetadata({
   if (!id) {
     return {
       title: "Team Profile | PROTIPPZ",
-      description: "Support collegiate teams and send digital tips with ProTippz.",
+      description:
+        "Support collegiate teams and send digital tips with ProTippz.",
     };
   }
 
@@ -75,8 +76,8 @@ export async function generateMetadata({
   const logoUrl = team.team_logo
     ? imageUrl(team.team_logo)
     : team.team_bg_image
-    ? imageUrl(team.team_bg_image)
-    : undefined;
+      ? imageUrl(team.team_bg_image)
+      : undefined;
 
   return {
     title,
@@ -115,12 +116,12 @@ export default async function TeamDetailsPage({ params }: PageProps) {
           Team Profile Not Found
         </h1>
         <p className="text-slate-600 text-sm sm:text-base max-w-md mx-auto mb-6">
-          We couldn&apos;t locate the athletic program you requested. It may have
-          been removed or the link is incorrect.
+          We couldn&apos;t locate the athletic program you requested. It may
+          have been removed or the link is incorrect.
         </p>
         <Link
           href="/teamz"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#053697] hover:bg-[#042873] text-white font-bold text-sm transition-colors shadow-md"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#053697] hover:bg-[#042873] text-white font-bold text-sm transition-colors "
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Return to Teamz Directory</span>
@@ -130,12 +131,13 @@ export default async function TeamDetailsPage({ params }: PageProps) {
   }
 
   // Extract primary vibrant brand color from team logo or league image
-  const logoUrl = team.team_logo || team.team_bg_image || team.league?.league_image;
+  const logoUrl =
+    team.team_logo || team.team_bg_image || team.league?.league_image;
   const colorTheme = await extractLogoColor(logoUrl);
 
   return (
     <div className="min-h-screen bg-[#fafbfb] pb-16">
-      <GoToTop />
+      {/* // <GoToTop /> */}
       <TeamDetailsView
         team={team}
         roster={roster}

@@ -65,7 +65,7 @@ function ForAthletes() {
               <div className="absolute inset-0 bg-linear-to-t from-[#f0faf6]/90 via-transparent to-transparent lg:bg-linear-to-r lg:from-transparent lg:to-[#f0faf6]/80" />
 
               {/* Floating stat pill */}
-              {/* <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 flex items-center gap-2.5 bg-white/90 backdrop-blur-sm border border-white rounded-2xl px-4 py-3 shadow-sm">
+              {/* <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 flex items-center gap-2.5 bg-white/90 backdrop-blur-sm border border-white rounded-2xl px-4 py-3 ">
                 <div className="w-8 h-8 rounded-full bg-[#2FC191]/10 flex items-center justify-center">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                     <path
@@ -90,7 +90,7 @@ function ForAthletes() {
             {/* Content Side */}
             <div className="flex flex-col justify-center px-6 py-10 sm:px-10 sm:py-12 lg:px-12 lg:py-14">
               {/* Stats row */}
-              {/* <div className="flex flex-wrap gap-6 mb-8">
+              {/* <div className="flex flex-wrap gap-2 mb-8">
                 {stats.map((s) => (
                   <div key={s.label}>
                     <p className="text-2xl sm:text-3xl font-black text-[#2FC191] leading-none mb-0.5">
@@ -143,7 +143,7 @@ function ForAthletes() {
               </ul>
 
               {/* CTAs */}
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Link href="/sign-up?role=athlete">
                   <Button className="w-full sm:w-auto bg-[#053697] hover:bg-[#053697]/90 text-white rounded-full px-7 py-5 text-sm font-semibold uppercase tracking-wide cursor-pointer transition-colors">
                     Join as an Athlete

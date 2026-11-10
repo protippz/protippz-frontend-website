@@ -89,10 +89,14 @@ const ContactUsPage: React.FC = () => {
         setPhone("");
         setMessage("");
       } else {
-        toast.error(res?.message || "Failed to send message. Please try again.");
+        toast.error(
+          res?.message || "Failed to send message. Please try again.",
+        );
       }
     } catch (err: any) {
-      toast.error(err?.message || "Something went wrong. Please try again later.");
+      toast.error(
+        err?.message || "Something went wrong. Please try again later.",
+      );
     } finally {
       setLoading(false);
     }
@@ -100,11 +104,10 @@ const ContactUsPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-[calc(100vh-80px)] bg-gradient-to-b from-[#fcfbf9] via-white to-[#f5f8fa] py-8 sm:py-12 pb-20">
-      <GoToTop />
-
+      {/* // <GoToTop /> */}
       <div className="max-w-355 mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Breadcrumb & Tag */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 sm:mb-8">
           <div>
             <div className="flex items-center gap-2 mb-1.5 font-mono text-xs font-bold text-[#053697]">
               <span className="w-2 h-2 rounded-full bg-[#2FC191]" />
@@ -114,13 +117,14 @@ const ContactUsPage: React.FC = () => {
               Contact Us
             </h1>
             <p className="text-slate-500 text-xs sm:text-sm mt-1 max-w-xl">
-              Have questions about tipping student-athletes, NIL partnerships, or your ProTippz wallet? We&apos;re here to help.
+              Have questions about tipping student-athletes, NIL partnerships,
+              or your ProTippz wallet? We&apos;re here to help.
             </p>
           </div>
 
           <Link
             href="/faqs"
-            className="inline-flex items-center gap-1.5 self-start sm:self-auto text-xs font-bold text-[#053697] bg-blue-50/80 hover:bg-blue-100/80 px-4 py-2.5 rounded-xl border border-blue-100 transition-colors shadow-2xs"
+            className="inline-flex items-center gap-1.5 self-start sm:self-auto text-xs font-bold text-[#053697] bg-blue-50/80 hover:bg-blue-100/80 px-4 py-2.5 rounded-xl border border-blue-100 transition-colors"
           >
             <HelpCircle className="w-4 h-4 text-[#2FC191]" />
             <span>Browse FAQs</span>
@@ -129,45 +133,49 @@ const ContactUsPage: React.FC = () => {
         </div>
 
         {/* 2-Column Responsive Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-2 items-start">
           {/* ─── LEFT COLUMN: Direct Support Information (5 of 12 cols) ─── */}
           <div className="lg:col-span-5 space-y-6">
             {/* Primary Support Card */}
-            <div className="bg-[#053697] text-white rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-sm border border-[#053697]">
+            <div className="bg-[#053697] text-white rounded-3xl p-6 sm:p-8 relative overflow-hidden  border border-[#053697]">
               <div className="absolute -right-8 -bottom-8 w-44 h-44 rounded-full bg-white/5 pointer-events-none" />
               <div className="absolute right-10 top-2 w-32 h-32 rounded-full bg-[#2FC191]/15 blur-2xl pointer-events-none" />
 
               <div className="relative z-10 space-y-4">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-blue-200 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-[#2FC191]" />
                   Dedicated Customer Care
                 </span>
 
                 <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white leading-tight">
-                  We&apos;re committed to supporting fans and collegiate athletes.
+                  We&apos;re committed to supporting fans and collegiate
+                  athletes.
                 </h2>
 
                 <p className="text-xs sm:text-sm text-blue-100 leading-relaxed font-normal">
-                  Our direct support desk handles inquiries regarding transactions, athlete roster onboarding, and collegiate athletic compliance.
+                  Our direct support desk handles inquiries regarding
+                  transactions, athlete roster onboarding, and collegiate
+                  athletic compliance.
                 </p>
 
                 <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs text-blue-200">
                   <span>Average Response Time</span>
-                  <span className="font-bold text-[#2FC191]">Under 24 Hours</span>
+                  <span className="font-bold text-[#2FC191]">
+                    Under 24 Hours
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Direct Contact Channels Card */}
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-2xs space-y-5">
+            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 space-y-5">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
                 Contact Details
               </h3>
 
               <div className="space-y-4">
                 {/* Email Support */}
-                <div className="flex items-start gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#053697] flex items-center justify-center shrink-0 border border-blue-100/60 shadow-2xs">
+                {/* <div className="flex items-start gap-2.5">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#053697] flex items-center justify-center shrink-0 border border-blue-100/60">
                     <Mail className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -181,11 +189,11 @@ const ContactUsPage: React.FC = () => {
                       support@protippz.com
                     </a>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Partnerships */}
-                <div className="flex items-start gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100/60 shadow-2xs">
+                <div className="flex items-start gap-2.5">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100/60">
                     <Building2 className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -202,8 +210,8 @@ const ContactUsPage: React.FC = () => {
                 </div>
 
                 {/* Operating Hours */}
-                <div className="flex items-start gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-slate-50 text-slate-600 flex items-center justify-center shrink-0 border border-slate-100 shadow-2xs">
+                <div className="flex items-start gap-2.5">
+                  <div className="w-10 h-10 rounded-xl bg-slate-50 text-slate-600 flex items-center justify-center shrink-0 border border-slate-100">
                     <Clock className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -217,8 +225,8 @@ const ContactUsPage: React.FC = () => {
                 </div>
 
                 {/* Headquarters Location */}
-                <div className="flex items-start gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-slate-50 text-slate-600 flex items-center justify-center shrink-0 border border-slate-100 shadow-2xs">
+                <div className="flex items-start gap-2.5">
+                  <div className="w-10 h-10 rounded-xl bg-slate-50 text-slate-600 flex items-center justify-center shrink-0 border border-slate-100">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -242,7 +250,7 @@ const ContactUsPage: React.FC = () => {
                     href="https://x.com/protippz"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-9 h-9 rounded-xl border border-slate-200 hover:border-[#053697] hover:bg-blue-50 text-slate-600 hover:text-[#053697] flex items-center justify-center transition-colors shadow-2xs"
+                    className="w-9 h-9 rounded-xl border border-slate-200 hover:border-[#053697] hover:bg-blue-50 text-slate-600 hover:text-[#053697] flex items-center justify-center transition-colors"
                     aria-label="X Twitter"
                   >
                     <FaTwitter className="w-3.5 h-3.5" />
@@ -251,7 +259,7 @@ const ContactUsPage: React.FC = () => {
                     href="https://www.instagram.com/protippz/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-9 h-9 rounded-xl border border-slate-200 hover:border-[#053697] hover:bg-blue-50 text-slate-600 hover:text-[#053697] flex items-center justify-center transition-colors shadow-2xs"
+                    className="w-9 h-9 rounded-xl border border-slate-200 hover:border-[#053697] hover:bg-blue-50 text-slate-600 hover:text-[#053697] flex items-center justify-center transition-colors"
                     aria-label="Instagram"
                   >
                     <FaInstagram className="w-3.5 h-3.5" />
@@ -260,7 +268,7 @@ const ContactUsPage: React.FC = () => {
                     href="https://www.youtube.com/@PROTIPPZ"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-9 h-9 rounded-xl border border-slate-200 hover:border-[#053697] hover:bg-blue-50 text-slate-600 hover:text-[#053697] flex items-center justify-center transition-colors shadow-2xs"
+                    className="w-9 h-9 rounded-xl border border-slate-200 hover:border-[#053697] hover:bg-blue-50 text-slate-600 hover:text-[#053697] flex items-center justify-center transition-colors"
                     aria-label="YouTube"
                   >
                     <FaYoutube className="w-3.5 h-3.5" />
@@ -269,7 +277,7 @@ const ContactUsPage: React.FC = () => {
                     href="https://www.facebook.com/profile.php?id=61566917812469"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-9 h-9 rounded-xl border border-slate-200 hover:border-[#053697] hover:bg-blue-50 text-slate-600 hover:text-[#053697] flex items-center justify-center transition-colors shadow-2xs"
+                    className="w-9 h-9 rounded-xl border border-slate-200 hover:border-[#053697] hover:bg-blue-50 text-slate-600 hover:text-[#053697] flex items-center justify-center transition-colors"
                     aria-label="Facebook"
                   >
                     <FaFacebookF className="w-3.5 h-3.5" />
@@ -285,20 +293,21 @@ const ContactUsPage: React.FC = () => {
               {isSuccess ? (
                 /* Success Confirmation State */
                 <div className="py-12 px-4 text-center space-y-4">
-                  <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto shadow-xs">
+                  <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <h3 className="text-2xl font-black text-slate-900 tracking-tight">
                     Message Sent Successfully!
                   </h3>
                   <p className="text-slate-500 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
-                    Thank you for reaching out to PROTIPPZ. Our support team has received your message and will review it promptly.
+                    Thank you for reaching out to PROTIPPZ. Our support team has
+                    received your message and will review it promptly.
                   </p>
                   <div className="pt-4">
                     <button
                       type="button"
                       onClick={() => setIsSuccess(false)}
-                      className="px-6 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042873] text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-xs cursor-pointer"
+                      className="px-6 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042873] text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
                     >
                       Send Another Message
                     </button>
@@ -312,7 +321,8 @@ const ContactUsPage: React.FC = () => {
                       Send Us a Message
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                      Complete the form below and we will get back to you as soon as possible.
+                      Complete the form below and we will get back to you as
+                      soon as possible.
                     </p>
                   </div>
 
@@ -329,11 +339,10 @@ const ContactUsPage: React.FC = () => {
                             key={item}
                             type="button"
                             onClick={() => setTopic(item)}
-                            className={`h-10 px-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer truncate ${
-                              isSelected
-                                ? "bg-[#053697] text-white shadow-xs"
-                                : "bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700"
-                            }`}
+                            className={`h-10 px-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer truncate ${isSelected
+                              ? "bg-[#053697] text-white"
+                              : "bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700"
+                              }`}
                           >
                             {item}
                           </button>
@@ -363,7 +372,7 @@ const ContactUsPage: React.FC = () => {
                   </div>
 
                   {/* Email & Phone Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {/* Email Field */}
                     <div>
                       <label className="block text-[11px] font-black uppercase tracking-wider text-slate-700 mb-1.5">
@@ -387,7 +396,10 @@ const ContactUsPage: React.FC = () => {
                     {/* Phone Field */}
                     <div>
                       <label className="block text-[11px] font-black uppercase tracking-wider text-slate-700 mb-1.5">
-                        Phone Number <span className="text-slate-400 font-normal lowercase">(optional)</span>
+                        Phone Number{" "}
+                        <span className="text-slate-400 font-normal lowercase">
+                          (optional)
+                        </span>
                       </label>
                       <div className="relative">
                         <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
@@ -426,10 +438,14 @@ const ContactUsPage: React.FC = () => {
                     <ShieldCheck className="w-4 h-4 text-[#2FC191] shrink-0 mt-0.5" />
                     <span className="leading-snug">
                       Your information is protected under our{" "}
-                      <Link href="/privacy" className="text-[#053697] underline font-medium">
+                      <Link
+                        href="/privacy"
+                        className="text-[#053697] underline font-medium"
+                      >
                         Privacy Policy
                       </Link>
-                      . We never sell or share contact details with unauthorized third parties.
+                      . We never sell or share contact details with unauthorized
+                      third parties.
                     </span>
                   </div>
 
@@ -437,7 +453,7 @@ const ContactUsPage: React.FC = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full h-12 rounded-xl bg-[#053697] hover:bg-[#042873] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-white font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
+                    className="w-full h-12 rounded-xl bg-[#053697] hover:bg-[#042873] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-white font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer"
                   >
                     {loading ? (
                       <>

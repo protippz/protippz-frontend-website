@@ -165,7 +165,7 @@ const InfiniteRewardList: React.FC<InfiniteRewardListProps> = ({
 
   return (
     <div className="w-full">
-      <div className="w-full grid grid-cols-1 gap-4 sm:gap-6">
+      <div className="w-full grid grid-cols-1 gap-2 sm:gap-2">
         {rewards.map((item: RewardInterface) => (
           <RewardzCards item={item} key={item?._id} />
         ))}

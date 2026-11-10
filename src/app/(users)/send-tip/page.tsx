@@ -10,11 +10,12 @@ import {
 } from "@stripe/react-stripe-js";
 import { Form, Radio, Input, Button } from "antd";
 import Image from "next/image";
-import cards from "@/Assets/cards.png";
+import cards from "@/../public/card.png";
 import paypal from "@/Assets/paypal.png";
 import { patch, post } from "@/ApisRequests/server";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useCreatTippsMutation } from "@/Redux/Apis/paymentApis.js"
 
 const stripePromise: Promise<Stripe | null> = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "",
@@ -31,65 +32,76 @@ const DepositFundForm = () => {
   const [amount, setAmount] = useState(currentParams.get("amount"));
   const [entityType, setEntityType] = useState(currentParams.get("entityType"));
   const [entityId, setEntityId] = useState(currentParams.get("entityId"));
+  const [createTippz, { isLoading: isCreatiing }] = useCreatTippsMutation()
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (amount && Number(amount) > 999999) {
       return toast.error("amount cant be more then 999999");
     }
-    try {
-      const clientSecret = await post(
-        "/tip/create",
-        {
-          amount: Number(amount),
-          entityId: entityId,
-          entityType: entityType,
-          tipBy: paymentMethod === "credit" ? "Credit card" : "Paypal",
-        },
-        {
-          headers: {
-            Authorization: `${localStorage.getItem("token")}`,
-          },
-        },
-      );
-      if (paymentMethod === "credit" && stripe && elements) {
-        const cardElement = elements.getElement(CardElement);
-        const { error, paymentIntent } = await stripe.confirmCardPayment(
-          clientSecret?.data?.clientSecret,
-          {
-            payment_method: {
-              card: cardElement!,
-              billing_details: {
-                name: "Customer Name",
-              },
-            },
-          },
-        );
-        if (error) {
-          console.error(error);
-        } else {
-          const executePayment = await patch(
-            "/tip/execute-stipe-payment",
-            {
-              transactionId: paymentIntent?.id,
-            },
-            {
-              headers: {
-                Authorization: `${localStorage.getItem("token")}`,
-              },
-            },
-          );
-          if (executePayment?.success) {
-            toast.success(executePayment?.message);
-            router.push("/playerz");
-          } else {
-            toast.error(executePayment?.message);
-          }
-        }
-      } else if (paymentMethod === "paypal") {
-        router.push(clientSecret?.data?.approvalUrl);
-      }
-    } catch (error) {}
+
+    const data = {
+      amount: Number(amount),
+      entityId: entityId,
+      entityType: entityType,
+      tipBy: "Credit card",
+    }
+
+    const response = await createTippz(data).unwrap()
+    console.log(JSON.stringify(response, null, 2))
+    // try {
+    //   const clientSecret = await post(
+    //     "/tip/create",
+    //     {
+    //       amount: Number(amount),
+    //       entityId: entityId,
+    //       entityType: entityType,
+    //       tipBy: paymentMethod === "credit" ? "Credit card" : "Paypal",
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `${localStorage.getItem("token")}`,
+    //       },
+    //     },
+    //   );
+    //   if (paymentMethod === "credit" && stripe && elements) {
+    //     const cardElement = elements.getElement(CardElement);
+    //     const { error, paymentIntent } = await stripe.confirmCardPayment(
+    //       clientSecret?.data?.clientSecret,
+    //       {
+    //         payment_method: {
+    //           card: cardElement!,
+    //           billing_details: {
+    //             name: "Customer Name",
+    //           },
+    //         },
+    //       },
+    //     );
+    //     if (error) {
+    //       console.error(error);
+    //     } else {
+    //       const executePayment = await patch(
+    //         "/tip/execute-stipe-payment",
+    //         {
+    //           transactionId: paymentIntent?.id,
+    //         },
+    //         {
+    //           headers: {
+    //             Authorization: `${localStorage.getItem("token")}`,
+    //           },
+    //         },
+    //       );
+    //       if (executePayment?.success) {
+    //         toast.success(executePayment?.message);
+    //         router.push("/playerz");
+    //       } else {
+    //         toast.error(executePayment?.message);
+    //       }
+    //     }
+    //   } else if (paymentMethod === "paypal") {
+    //     router.push(clientSecret?.data?.approvalUrl);
+    //   }
+    // } catch (error) { }
   };
   useEffect(() => {
     setAmount(currentParams.get("amount"));
@@ -110,13 +122,13 @@ const DepositFundForm = () => {
       <Form
         onSubmitCapture={handleSubmit}
         layout="vertical"
-        className="w-full p-8 bg-white shadow-lg rounded-lg max-w-4xl mx-auto"
+        className="w-full p-8 bg-white rounded-lg max-w-4xl mx-auto"
       >
         <h2 className="text-2xl font-semibold text-center mb-6">
           Select Tip Option
         </h2>
 
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-2">
           <div className="w-full md:w-2/5 p-4 border rounded-lg ">
             <Form.Item>
               <Radio.Group
@@ -126,7 +138,7 @@ const DepositFundForm = () => {
               >
                 <div className="flex items-center mb-4 p-3 border rounded-lg border-green-400">
                   <Radio value="credit" className="flex items-center ">
-                    <div className="flex flex-nowrap gap-3 items-center">
+                    <div className="flex flex-nowrap gap-2 items-center">
                       <p className="font-medium text-lg text-[#053697] whitespace-nowrap">
                         Credit Card
                       </p>
@@ -140,27 +152,11 @@ const DepositFundForm = () => {
                     </div>
                   </Radio>
                 </div>
-                <div className="flex items-center p-3 border rounded-lg border-green-400">
-                  <Radio value="paypal" className="flex items-center">
-                    <div className="flex flex-nowrap gap-3 items-center">
-                      <span className="font-medium text-lg text-[#053697]">
-                        PayPal
-                      </span>
-                      <Image
-                        alt="PayPal Logo"
-                        height={400}
-                        width={800}
-                        src={paypal}
-                        className="w-[100px]"
-                      />
-                    </div>
-                  </Radio>
-                </div>
               </Radio.Group>
             </Form.Item>
           </div>
 
-          {/* Card Details or PayPal Info */}
+          {/* Card Details Info */}
           <div className="w-full md:w-3/5 p-4 bg-gray-50 rounded-lg">
             {paymentMethod === "credit" ? (
               <>
@@ -198,7 +194,7 @@ const DepositFundForm = () => {
                     className="border border-green-400 rounded-lg p-2"
                   />
                 </Form.Item>
-                {/* <div className="flex gap-4">
+                {/* <div className="flex gap-2">
                                     <Form.Item label={<span className="text-lg font-medium text-[#053697]">Expire Date</span>} className="flex-1 mb-4">
                                         <Input placeholder="MM/YY" className="rounded-lg border border-green-400" />
                                     </Form.Item>

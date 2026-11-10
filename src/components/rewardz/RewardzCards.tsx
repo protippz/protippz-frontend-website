@@ -30,9 +30,8 @@ const RewardzCards: React.FC<RewardCardsProps> = ({ item }) => {
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (typeof window !== "undefined") {
-      const url = `${window.location.origin}/rewardz?category=${
-        item?.category?._id || ""
-      }`;
+      const url = `${window.location.origin}/rewardz?category=${item?.category?._id || ""
+        }`;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(url);
         toast.success("Reward link copied to clipboard!");
@@ -46,7 +45,7 @@ const RewardzCards: React.FC<RewardCardsProps> = ({ item }) => {
     <div className="relative bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl hover:border-slate-300 transition-colors overflow-hidden mb-4 sm:mb-6">
       <div className="flex flex-col md:flex-row items-stretch">
         {/* Left Column: Reward Image Hero with Bottom Overlay Badges */}
-        <div className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[260px] md:h-auto min-h-[220px] md:min-h-[280px] bg-slate-900 shrink-0 overflow-hidden flex items-center justify-center p-6">
+        <div className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[260px] md:h-auto min-h-[220px] md:min-h-[280px]  shrink-0 overflow-hidden flex items-center justify-center p-6">
           <Image
             src={item?.reward_image ? imageUrl(item.reward_image) : defaultPrize}
             alt={item?.name || "Reward"}
@@ -87,7 +86,7 @@ const RewardzCards: React.FC<RewardCardsProps> = ({ item }) => {
         <div className="flex-1 min-w-0 p-4 sm:p-6 lg:p-7 flex flex-col justify-between">
           <div>
             {/* Top Line: Archive Tag and Share Action */}
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 min-w-0 font-mono text-xs sm:text-[13px] truncate">
                 <span className="font-bold text-[#053697]">
                   [REWARD ARCHIVE: {archiveId}]
@@ -162,13 +161,12 @@ const RewardzCards: React.FC<RewardCardsProps> = ({ item }) => {
           </div>
 
           {/* Action Row */}
-          <div className="flex items-center gap-2.5 sm:gap-3 mt-4 sm:mt-5 pt-1">
+          <div className="flex items-center gap-2.5 sm:gap-2 mt-4 sm:mt-5 pt-1">
             <RedeemButton
               item={item}
               className="flex-1 min-w-0 h-11 sm:h-12 px-4 sm:px-6 rounded-xl bg-[#053697] hover:bg-[#042870] text-white font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-colors cursor-pointer"
               buttonText={
                 <>
-                  <Sparkles className="w-4 h-4 text-[#2FC191]" />
                   <span>REDEEM REWARD</span>
                   <ArrowRight className="w-4 h-4 text-white ml-0.5" />
                 </>

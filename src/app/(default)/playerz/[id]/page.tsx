@@ -13,7 +13,10 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-async function fetchPlayer(id: string, token?: string | null): Promise<PlayerDetailsData | null> {
+async function fetchPlayer(
+  id: string,
+  token?: string | null,
+): Promise<PlayerDetailsData | null> {
   try {
     const res = await get(`/player/get-single/${id}`, {
       headers: token ? { Authorization: token } : {},
@@ -28,7 +31,9 @@ async function fetchPlayer(id: string, token?: string | null): Promise<PlayerDet
   }
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { id } = await params;
   if (!id) {
     return {
@@ -38,6 +43,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const player = await fetchPlayer(id);
+  console.log(JSON.stringify(player,null,2));
   if (!player) {
     return {
       title: "Player Not Found | PROTIPPZ",
@@ -84,12 +90,12 @@ export default async function PlayerDetailsPage({ params }: PageProps) {
           Player Profile Not Found
         </h1>
         <p className="text-slate-600 text-sm sm:text-base max-w-md mx-auto mb-6">
-          We couldn&apos;t locate the athlete profile you requested. It may have been
-          removed or the ID is incorrect.
+          We couldn&apos;t locate the athlete profile you requested. It may have
+          been removed or the ID is incorrect.
         </p>
         <Link
           href="/playerz"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#053697] hover:bg-[#042873] text-white font-bold text-sm transition-colors shadow-md"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#053697] hover:bg-[#042873] text-white font-bold text-sm transition-colors "
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Return to Playerz Directory</span>
@@ -107,8 +113,12 @@ export default async function PlayerDetailsPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-[#fafbfb] pb-16">
-      <GoToTop />
-      <PlayerDetailsView player={player} token={token} colorTheme={colorTheme} />
+      {/* // <GoToTop /> */}
+      <PlayerDetailsView
+        player={player}
+        token={token}
+        colorTheme={colorTheme}
+      />
     </div>
   );
 }

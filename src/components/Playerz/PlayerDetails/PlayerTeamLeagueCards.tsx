@@ -20,14 +20,14 @@ const PlayerTeamLeagueCards: React.FC<PlayerTeamLeagueCardsProps> = ({
   teamLogoUrl,
 }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
       {/* Team Card */}
       <div className="bg-white border p-5 flex flex-col justify-between">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-3">
             Team Information
           </span>
-          <div className="flex items-center gap-3.5 mb-3">
+          <div className="flex items-center gap-2.5 mb-3">
             {teamLogoUrl ? (
               <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0 p-1">
                 <Image
@@ -70,7 +70,7 @@ const PlayerTeamLeagueCards: React.FC<PlayerTeamLeagueCardsProps> = ({
           <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-3">
             League & Conference
           </span>
-          <div className="flex items-center gap-3.5 mb-3">
+          <div className="flex items-center gap-2.5 mb-3">
             {player?.league?.league_image ? (
               <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0 p-1">
                 <Image

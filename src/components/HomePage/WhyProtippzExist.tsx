@@ -125,7 +125,7 @@ function WhyProtippzExist() {
         </div>
 
         {/* Main content grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start lg:items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 items-start lg:items-center">
           {/* Image   full width on mobile/tablet, spans 2 rows on desktop */}
           <div
             className="relative rounded-2xl overflow-hidden border bg-white col-span-1 lg:row-span-2"
@@ -144,12 +144,12 @@ function WhyProtippzExist() {
           </div>
 
           {/* Steps   2-col on tablet, individual cols on desktop */}
-          <div className="col-span-1 lg:contents grid sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-0">
+          <div className="col-span-1 lg:contents grid sm:grid-cols-2 gap-2 sm:gap-2 lg:gap-0">
             {steps.map((step, i) => (
               <div
                 key={step.number}
                 className={cn(
-                  "group relative h-full bg-[#2FC191] rounded-xl border px-5 py-5 flex items-start gap-4 transition-all duration-200",
+                  "group relative h-full bg-[#2FC191] rounded-xl border px-5 py-5 flex items-start gap-2 transition-all duration-200",
                   // On desktop only: step 3 spans 2 columns
                   i === 2 ? "sm:col-span-2 lg:col-span-2" : "col-span-1",
                 )}
@@ -204,7 +204,7 @@ function WhyProtippzExist() {
             ))}
           </div>
         </div>
-        {/* <div className="grid grid-cols-1 lg:grid-cols-2 h-full gap-8 items-center">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-2 h-full gap-2 items-center">
 
           
           <div
@@ -227,11 +227,11 @@ function WhyProtippzExist() {
           </div>
 
           
-          <div className="flex flex-col h-full gap-3">
+          <div className="flex flex-col h-full gap-2">
             {steps.map((step, i) => (
               <div
                 key={step.number}
-                className="group relative h-full bg-[#2FC191] rounded-xl border px-5 py-5 flex items-start gap-4 transition-all duration-200"
+                className="group relative h-full bg-[#2FC191] rounded-xl border px-5 py-5 flex items-start gap-2 transition-all duration-200"
               >
                 
                 {i < steps.length - 1 && (

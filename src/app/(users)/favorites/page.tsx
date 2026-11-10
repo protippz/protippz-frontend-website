@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const FavoritePage: React.FC = () => {
   return (
     <div className="w-full max-w-355 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-16">
-      <GoToTop />
+      {/* // <GoToTop /> */}
       <TabsComponent />
     </div>
   );

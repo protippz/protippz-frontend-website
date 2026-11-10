@@ -26,7 +26,7 @@ const Page = async ({
   if (res?.success) {
     return (
       <div className="flex justify-center items-center">
-        <div className="text-center p-6 bg-white rounded-lg shadow-lg">
+        <div className="text-center p-6 bg-white rounded-lg">
           <h2 className="text-2xl font-semibold text-green-600">
             Deposit Successful!
           </h2>
@@ -46,7 +46,7 @@ const Page = async ({
 
   return (
     <div className="flex justify-center items-center">
-      <div className="text-center p-6 bg-white rounded-lg shadow-lg">
+      <div className="text-center p-6 bg-white rounded-lg">
         <h2 className="text-2xl font-semibold text-red-600">Payment Failed</h2>
         <p className="mt-2 text-gray-700 my-4">
           Oops! Something went wrong with your payment. Please try again.

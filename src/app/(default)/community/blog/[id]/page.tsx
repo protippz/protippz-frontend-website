@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { CommunityPostBackendItem, mapBackendItemToPost } from "@/types/community";
+import {
+  CommunityPostBackendItem,
+  mapBackendItemToPost,
+} from "@/types/community";
 import BlogArticleView from "@/components/community/BlogArticleView";
 
 interface PageProps {
@@ -14,13 +17,15 @@ const DEFAULT_SEO_DESCRIPTION =
 const DEFAULT_OG_IMAGE = "https://protippz.com/assets/seo-banner.jpg";
 const BASE_SITE_URL = "https://protippz.com";
 
-async function getPostData(idOrSlug: string): Promise<CommunityPostBackendItem | null> {
+async function getPostData(
+  idOrSlug: string,
+): Promise<CommunityPostBackendItem | null> {
   try {
     const res = await fetch(
-      `https://api.protippz.com/community-post/get-single/${encodeURIComponent(idOrSlug)}`,
+      `http://192.168.0.108:5000/community-post/get-single/${encodeURIComponent(idOrSlug)}`,
       {
         next: { revalidate: 60 },
-      }
+      },
     );
 
     if (!res.ok) return null;
@@ -34,7 +39,9 @@ async function getPostData(idOrSlug: string): Promise<CommunityPostBackendItem |
   }
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const id = resolvedParams?.id;
 
@@ -70,7 +77,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     (post.images && post.images.length > 0 ? post.images[0] : null) ||
     DEFAULT_OG_IMAGE;
 
-  if (ogImageUrl && !ogImageUrl.startsWith("http://") && !ogImageUrl.startsWith("https://")) {
+  if (
+    ogImageUrl &&
+    !ogImageUrl.startsWith("http://") &&
+    !ogImageUrl.startsWith("https://")
+  ) {
     ogImageUrl = `${BASE_SITE_URL}${ogImageUrl.startsWith("/") ? "" : "/"}${ogImageUrl}`;
   }
 
@@ -153,11 +164,12 @@ export default async function BlogPage({ params }: PageProps) {
       <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center space-y-4">
         <h2 className="text-2xl font-bold text-slate-800">Article Not Found</h2>
         <p className="text-slate-500 text-sm max-w-md">
-          The sports article you are looking for might have been moved or is currently unavailable.
+          The sports article you are looking for might have been moved or is
+          currently unavailable.
         </p>
         <Link
           href="/community"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#2FC191] text-[#053697] font-bold text-sm shadow-sm hover:bg-[#28ad81] transition-all"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#2FC191] text-[#053697] font-bold text-sm  hover:bg-[#28ad81] transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Explore ProTippz Community</span>
@@ -177,10 +189,13 @@ export default async function BlogPage({ params }: PageProps) {
     (rawDescription.length > 0
       ? rawDescription.slice(0, 160)
       : DEFAULT_SEO_DESCRIPTION);
-  let ogImageUrl =
-    mappedPost.ogImage || mappedPost.image || DEFAULT_OG_IMAGE;
+  let ogImageUrl = mappedPost.ogImage || mappedPost.image || DEFAULT_OG_IMAGE;
 
-  if (ogImageUrl && !ogImageUrl.startsWith("http://") && !ogImageUrl.startsWith("https://")) {
+  if (
+    ogImageUrl &&
+    !ogImageUrl.startsWith("http://") &&
+    !ogImageUrl.startsWith("https://")
+  ) {
     ogImageUrl = `${BASE_SITE_URL}${ogImageUrl.startsWith("/") ? "" : "/"}${ogImageUrl}`;
   }
 

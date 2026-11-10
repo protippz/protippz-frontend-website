@@ -1,5 +1,7 @@
 import React from "react";
 import Image from "next/image";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import Cards, { TippzStepItem } from "@/components/Tippz/Cards";
 import PhoneMockup from "@/components/Tippz/PhoneMockup";
 import Money from "@/Assets/Money.png";
@@ -60,7 +62,13 @@ const cardData: TippzStepItem[] = [
   },
 ];
 
-const TipsPage = () => {
+const TipsPage = async () => {
+  const cookieStore = await cookies();
+  const rawToken = cookieStore.get("token")?.value;
+  if (rawToken && rawToken !== "undefined" && rawToken !== "null" && rawToken.trim() !== "") {
+    redirect("/community");
+  }
+
   const seoMetadata = getSEOMetadata("sportsTipping");
 
   return (
@@ -89,7 +97,7 @@ const TipsPage = () => {
 
           {/* ================= DOWNLOAD APP BANNER (LIGHT BORDERED) ================= */}
           <div className="bg-white border border-stone-200/90 rounded-2xl p-6 sm:p-8 md:p-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-2 items-center">
               {/* Left Details */}
               <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[#1f8763] text-[11px] font-semibold">
@@ -121,7 +129,7 @@ const TipsPage = () => {
                 </ul> */}
 
                 {/* QR Code and Store Badge */}
-                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+                <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2.5 pt-2">
                   {/* <div className="flex items-center gap-2.5 bg-stone-50 border border-stone-200/90 px-3 py-2 rounded-xl">
                     <div className="bg-white p-1 rounded-lg border border-stone-200/60 shrink-0">
                       <Image

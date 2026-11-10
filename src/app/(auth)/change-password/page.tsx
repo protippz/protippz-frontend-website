@@ -112,7 +112,7 @@ const ChangePasswordPage: React.FC = () => {
           headers: {
             Authorization: `${token}`,
           },
-        }
+        },
       );
 
       if (res?.success) {
@@ -127,7 +127,9 @@ const ChangePasswordPage: React.FC = () => {
         toast.error(res?.message || "Something went wrong. Please try again.");
       }
     } catch (err: any) {
-      toast.error(err?.message || "Failed to update password. Please try again.");
+      toast.error(
+        err?.message || "Failed to update password. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -139,7 +141,7 @@ const ChangePasswordPage: React.FC = () => {
       <div className="w-full max-w-xl mb-4 flex items-center justify-between">
         <Link
           href="/settings"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-[#053697] bg-white/90 hover:bg-white backdrop-blur-md px-4 py-2 rounded-full border border-slate-200/80 shadow-2xs hover:shadow transition-all group cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-[#053697] bg-white/90 hover:bg-white backdrop-blur-md px-4 py-2 rounded-full border border-slate-200/80  transition-all group cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5 text-slate-500 group-hover:text-[#053697]" />
           <span>Back to Settings</span>
@@ -147,7 +149,7 @@ const ChangePasswordPage: React.FC = () => {
       </div>
 
       {/* Main Container Card */}
-      <div className="w-full max-w-xl bg-white rounded-3xl border border-slate-200/90 shadow-[0_12px_45px_rgba(0,0,0,0.06)] overflow-hidden">
+      <div className="w-full max-w-xl bg-white rounded-3xl border border-slate-200/90  overflow-hidden">
         {/* Top Header Banner */}
         <div className="relative bg-gradient-to-r from-[#053697] via-[#0845bc] to-[#053697] text-white p-6 sm:p-8">
           <div className="absolute -right-8 -bottom-8 w-36 h-36 rounded-full bg-white/5 pointer-events-none" />
@@ -158,7 +160,8 @@ const ChangePasswordPage: React.FC = () => {
               Change Password
             </h1>
             <p className="text-xs sm:text-sm text-blue-100 mt-1.5 max-w-md leading-relaxed">
-              Update your account password to keep your ProTippz profile, wallet balance, and fan activity safe.
+              Update your account password to keep your ProTippz profile, wallet
+              balance, and fan activity safe.
             </p>
           </div>
         </div>
@@ -212,13 +215,12 @@ const ChangePasswordPage: React.FC = () => {
               </label>
               {strengthLabel && (
                 <span
-                  className={`text-[11px] font-black uppercase tracking-wider ${
-                    strengthScore <= 1
-                      ? "text-rose-600"
-                      : strengthScore === 2
+                  className={`text-[11px] font-black uppercase tracking-wider ${strengthScore <= 1
+                    ? "text-rose-600"
+                    : strengthScore === 2
                       ? "text-amber-600"
                       : "text-emerald-600"
-                  }`}
+                    }`}
                 >
                   Strength: {strengthLabel}
                 </span>
@@ -253,19 +255,22 @@ const ChangePasswordPage: React.FC = () => {
             {newPassword.length > 0 && (
               <div className="mt-2 flex items-center gap-1.5">
                 <div
-                  className={`h-1.5 flex-1 rounded-full transition-all ${
-                    strengthScore >= 1 ? strengthColor.split(" ")[0] : "bg-slate-200"
-                  }`}
+                  className={`h-1.5 flex-1 rounded-full transition-all ${strengthScore >= 1
+                    ? strengthColor.split(" ")[0]
+                    : "bg-slate-200"
+                    }`}
                 />
                 <div
-                  className={`h-1.5 flex-1 rounded-full transition-all ${
-                    strengthScore >= 2 ? strengthColor.split(" ")[0] : "bg-slate-200"
-                  }`}
+                  className={`h-1.5 flex-1 rounded-full transition-all ${strengthScore >= 2
+                    ? strengthColor.split(" ")[0]
+                    : "bg-slate-200"
+                    }`}
                 />
                 <div
-                  className={`h-1.5 flex-1 rounded-full transition-all ${
-                    strengthScore >= 3 ? strengthColor.split(" ")[0] : "bg-slate-200"
-                  }`}
+                  className={`h-1.5 flex-1 rounded-full transition-all ${strengthScore >= 3
+                    ? strengthColor.split(" ")[0]
+                    : "bg-slate-200"
+                    }`}
                 />
               </div>
             )}
@@ -285,13 +290,12 @@ const ChangePasswordPage: React.FC = () => {
                 value={confirmNewPassword}
                 onChange={(e) => setConfirmNewPassword(e.target.value)}
                 placeholder="Retype your new password"
-                className={`w-full h-11 pl-10 pr-10 rounded-xl border bg-slate-50 hover:bg-white focus:bg-white focus:ring-2 outline-none text-slate-900 text-sm transition-all ${
-                  confirmNewPassword.length > 0
-                    ? passwordsMatch
-                      ? "border-emerald-400 focus:border-emerald-500 focus:ring-emerald-500/15"
-                      : "border-rose-400 focus:border-rose-500 focus:ring-rose-500/15"
-                    : "border-slate-200 focus:border-[#053697] focus:ring-[#053697]/15"
-                }`}
+                className={`w-full h-11 pl-10 pr-10 rounded-xl border bg-slate-50 hover:bg-white focus:bg-white focus:ring-2 outline-none text-slate-900 text-sm transition-all ${confirmNewPassword.length > 0
+                  ? passwordsMatch
+                    ? "border-emerald-400 focus:border-emerald-500 focus:ring-emerald-500/15"
+                    : "border-rose-400 focus:border-rose-500 focus:ring-rose-500/15"
+                  : "border-slate-200 focus:border-[#053697] focus:ring-[#053697]/15"
+                  }`}
               />
               <button
                 type="button"
@@ -321,16 +325,14 @@ const ChangePasswordPage: React.FC = () => {
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
               <div
-                className={`flex items-center gap-1.5 font-medium ${
-                  hasMinLength ? "text-emerald-600" : "text-slate-500"
-                }`}
+                className={`flex items-center gap-1.5 font-medium ${hasMinLength ? "text-emerald-600" : "text-slate-500"
+                  }`}
               >
                 <div
-                  className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
-                    hasMinLength
-                      ? "bg-emerald-100 text-emerald-700 font-bold"
-                      : "bg-slate-200 text-slate-400"
-                  }`}
+                  className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${hasMinLength
+                    ? "bg-emerald-100 text-emerald-700 font-bold"
+                    : "bg-slate-200 text-slate-400"
+                    }`}
                 >
                   ✓
                 </div>
@@ -338,16 +340,14 @@ const ChangePasswordPage: React.FC = () => {
               </div>
 
               <div
-                className={`flex items-center gap-1.5 font-medium ${
-                  hasLetter && hasNumber ? "text-emerald-600" : "text-slate-500"
-                }`}
+                className={`flex items-center gap-1.5 font-medium ${hasLetter && hasNumber ? "text-emerald-600" : "text-slate-500"
+                  }`}
               >
                 <div
-                  className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
-                    hasLetter && hasNumber
-                      ? "bg-emerald-100 text-emerald-700 font-bold"
-                      : "bg-slate-200 text-slate-400"
-                  }`}
+                  className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${hasLetter && hasNumber
+                    ? "bg-emerald-100 text-emerald-700 font-bold"
+                    : "bg-slate-200 text-slate-400"
+                    }`}
                 >
                   ✓
                 </div>
@@ -355,16 +355,14 @@ const ChangePasswordPage: React.FC = () => {
               </div>
 
               <div
-                className={`flex items-center gap-1.5 font-medium sm:col-span-2 ${
-                  passwordsMatch ? "text-emerald-600" : "text-slate-500"
-                }`}
+                className={`flex items-center gap-1.5 font-medium sm:col-span-2 ${passwordsMatch ? "text-emerald-600" : "text-slate-500"
+                  }`}
               >
                 <div
-                  className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
-                    passwordsMatch
-                      ? "bg-emerald-100 text-emerald-700 font-bold"
-                      : "bg-slate-200 text-slate-400"
-                  }`}
+                  className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${passwordsMatch
+                    ? "bg-emerald-100 text-emerald-700 font-bold"
+                    : "bg-slate-200 text-slate-400"
+                    }`}
                 >
                   ✓
                 </div>
@@ -374,7 +372,7 @@ const ChangePasswordPage: React.FC = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+          <div className="pt-2 flex flex-col sm:flex-row items-center gap-2">
             <Link
               href="/settings"
               className="w-full sm:w-auto px-6 h-12 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs uppercase tracking-wider flex items-center justify-center transition-colors cursor-pointer"
@@ -384,8 +382,10 @@ const ChangePasswordPage: React.FC = () => {
 
             <button
               type="submit"
-              disabled={loading || !hasMinLength || !passwordsMatch || !oldPassword}
-              className="w-full sm:flex-1 h-12 rounded-xl bg-[#053697] hover:bg-[#042873] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
+              disabled={
+                loading || !hasMinLength || !passwordsMatch || !oldPassword
+              }
+              className="w-full sm:flex-1 h-12 rounded-xl bg-[#053697] hover:bg-[#042873] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               {loading ? (
                 <>

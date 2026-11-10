@@ -20,13 +20,13 @@ const TeamLeagueCard: React.FC<TeamLeagueCardProps> = ({ team }) => {
 
   const memberSince = team?.createdAt
     ? new Date(team.createdAt).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-      })
+      year: "numeric",
+      month: "short",
+    })
     : "Charter Member";
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-2xs space-y-4">
+    <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-5 sm:p-7 space-y-4">
       <div className="flex items-center gap-2">
         <Trophy className="w-5 h-5 text-amber-500" />
         <h3 className="text-lg sm:text-xl font-black uppercase text-slate-900 tracking-tight">
@@ -34,7 +34,7 @@ const TeamLeagueCard: React.FC<TeamLeagueCardProps> = ({ team }) => {
         </h3>
       </div>
 
-      <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+      <div className="flex items-center gap-2 p-4 rounded-2xl bg-slate-50 border border-slate-100">
         {leagueImg ? (
           <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-white border border-slate-200 shrink-0 p-1">
             <Image

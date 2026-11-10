@@ -52,9 +52,9 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
   }, [roster, searchTerm]);
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-7 shadow-2xs space-y-5">
+    <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-5">
       {/* Header, Search & View Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200">
         <div>
           <div className="flex items-center gap-2">
             <span
@@ -100,11 +100,10 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
             <button
               type="button"
               onClick={() => setViewMode("list")}
-              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                viewMode === "list"
-                  ? "bg-white text-slate-900 shadow-2xs"
-                  : "text-slate-500 hover:text-slate-900"
-              }`}
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${viewMode === "list"
+                ? "bg-white text-slate-900"
+                : "text-slate-500 hover:text-slate-900"
+                }`}
               title="Official Roster Table View"
             >
               <List className="w-4 h-4" />
@@ -113,11 +112,10 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
             <button
               type="button"
               onClick={() => setViewMode("grid")}
-              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                viewMode === "grid"
-                  ? "bg-white text-slate-900 shadow-2xs"
-                  : "text-slate-500 hover:text-slate-900"
-              }`}
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${viewMode === "grid"
+                ? "bg-white text-slate-900"
+                : "text-slate-500 hover:text-slate-900"
+                }`}
               title="Grid Card View"
             >
               <LayoutGrid className="w-4 h-4" />
@@ -164,7 +162,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
         /* =========================================================
            OFFICIAL NCAA ROSTER TABLE LIST VIEW (MATCHING USER SCREENSHOT)
            ========================================================= */
-        <div className="border border-slate-200 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xs divide-y divide-slate-200">
+        <div className="border border-slate-200 rounded-xl sm:rounded-2xl overflow-hidden divide-y divide-slate-200">
           {filteredRoster.map((player, index) => {
             const playerImg = player.player_image
               ? imageUrl(player.player_image)
@@ -182,16 +180,15 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
             return (
               <div
                 key={player._id}
-                className={`relative group transition-colors duration-150 p-3 sm:p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
-                  isEven ? "bg-white hover:bg-slate-50/80" : "bg-[#f4f5f7] hover:bg-[#eaecee]"
-                }`}
+                className={`relative group transition-colors duration-150 p-3 sm:p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 ${isEven ? "bg-white hover:bg-slate-50/80" : "bg-[#f4f5f7] hover:bg-[#eaecee]"
+                  }`}
               >
                 {/* Left Side: Headshot Photo + Position/Jersey/Name */}
-                <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1">
+                <div className="flex items-center gap-2.5 sm:gap-2 min-w-0 flex-1">
                   {/* Athlete Headshot Box */}
                   <Link
                     href={`/playerz/${player._id}`}
-                    className="relative w-18 h-18 sm:w-22 sm:h-22 rounded-md overflow-hidden bg-slate-900 shrink-0 border border-slate-200/80 shadow-2xs group-hover:border-[#053697]/40 transition-colors"
+                    className="relative w-18 h-18 sm:w-22 sm:h-22 rounded-md overflow-hidden bg-slate-900 shrink-0 border border-slate-200/80 group-hover:border-[#053697]/40 transition-colors"
                   >
                     <Image
                       src={playerImg}
@@ -216,7 +213,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
                     {/* Bottom Line: Jersey Number Box + Large Bold Athlete Name */}
                     <div className="flex items-center gap-2 flex-wrap">
                       {/* Jersey Badge Box */}
-                      <span className="inline-flex items-center justify-center min-w-[24px] sm:min-w-[26px] h-6 px-1.5 rounded-[3px] bg-black text-[#F5B335] font-black text-xs sm:text-sm tracking-tight shadow-2xs select-none">
+                      <span className="inline-flex items-center justify-center min-w-[24px] sm:min-w-[26px] h-6 px-1.5 rounded-[3px] bg-black text-[#F5B335] font-black text-xs sm:text-sm tracking-tight select-none">
                         {jerseyDisplay}
                       </span>
 
@@ -233,7 +230,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
                 </div>
 
                 {/* Right Side: Academic / Hometown Bio & Full Bio / Direct Tip Actions */}
-                <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-start sm:items-center md:items-start lg:items-center justify-between md:justify-end gap-3 sm:gap-6 w-full md:w-auto shrink-0 pl-21 md:pl-0">
+                <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-start sm:items-center md:items-start lg:items-center justify-between md:justify-end gap-2 sm:gap-2 w-full md:w-auto shrink-0 pl-21 md:pl-0">
                   {/* Bio Line */}
                   <div className="space-y-1 text-left md:text-right">
                     <div className="text-xs sm:text-[13px] text-slate-600 truncate max-w-xs sm:max-w-md">
@@ -245,7 +242,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
                     </div>
 
                     {/* Links & Tip CTA */}
-                    <div className="flex items-center justify-start md:justify-end gap-3 pt-0.5">
+                    <div className="flex items-center justify-start md:justify-end gap-2 pt-0.5">
                       <Link
                         href={`/playerz/${player._id}`}
                         className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 hover:text-[#053697] transition-colors group/bio"
@@ -265,7 +262,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
                           <button
                             type="button"
                             onClick={openTip}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#2FC191] hover:bg-[#28b887] text-[#053697] text-xs font-black uppercase tracking-wider transition-colors shadow-2xs cursor-pointer active:scale-95"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#2FC191] hover:bg-[#28b887] text-[#053697] text-xs font-black uppercase tracking-wider transition-colors cursor-pointer active:scale-95"
                           >
                             <DollarSign className="w-3 h-3" />
                             <span>Direct Tip</span>
@@ -297,7 +294,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
         /* =========================================================
            GRID CARDS VIEW
            ========================================================= */
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
           {filteredRoster.map((player) => {
             const playerImg = player.player_image
               ? imageUrl(player.player_image)
@@ -312,7 +309,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
             return (
               <div
                 key={player._id}
-                className="group relative bg-[#fafbfb] hover:bg-white border border-slate-200/90 hover:border-[#053697]/40 rounded-2xl overflow-hidden shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-[#fafbfb] hover:bg-white border border-slate-200/90 hover:border-[#053697]/40 rounded-2xl overflow-hidden transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <Link

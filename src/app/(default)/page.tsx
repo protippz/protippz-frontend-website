@@ -70,6 +70,9 @@
 // }
 
 "use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 import PoweredByStripe from "@/components/ad/PoweredByStripe";
 import Banner from "@/components/HomePage/Banner";
 import BrandShowcase from "@/components/HomePage/BrandShowcase";
@@ -92,6 +95,18 @@ import dynamic from "next/dynamic";
 // });
 
 export default function Home() {
+  const router = useRouter();
+
+  // If user is successfully logged in, redirect to /community
+  useEffect(() => {
+    const token =
+      Cookies.get("token") ||
+      (typeof window !== "undefined" ? localStorage.getItem("token") : null);
+    if (token && token !== "undefined" && token !== "null") {
+      router.replace("/community");
+    }
+  }, [router]);
+
   const seoMetadata = getSEOMetadata("home");
   return (
     <>

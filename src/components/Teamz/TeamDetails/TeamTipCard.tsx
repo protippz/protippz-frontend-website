@@ -32,12 +32,12 @@ const TeamTipCard: React.FC<TeamTipCardProps> = ({
   const communityRaised = team?.paidAmount
     ? `$${team.paidAmount.toLocaleString()}`
     : team?.totalTips
-    ? `$${(team.totalTips * 15).toLocaleString()}`
-    : "$2,650";
+      ? `$${(team.totalTips * 15).toLocaleString()}`
+      : "$2,650";
 
   return (
-    <div className="bg-white border border-[#053697]/20 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-xs space-y-5 sticky top-20">
-    
+    <div className="bg-white border border-[#053697]/20 rounded-2xl sm:rounded-3xl p-5 sm:p-7 space-y-5 sticky top-20">
+
 
       {/* Raised Stats Box */}
       <div className="p-4 bg-slate-50 border border-slate-200/90 rounded-2xl space-y-2">
@@ -68,7 +68,7 @@ const TeamTipCard: React.FC<TeamTipCardProps> = ({
           <button
             type="button"
             onClick={openTip}
-            className="w-full py-4 px-5 rounded-2xl text-white font-black text-sm uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-[0.99]"
+            className="w-full py-4 px-5 rounded-2xl text-white font-black text-sm uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2  active:scale-[0.99]"
             style={{ backgroundColor: theme.primary }}
           >
             <DollarSign className="w-4 h-4" />

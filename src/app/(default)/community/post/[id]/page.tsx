@@ -16,13 +16,15 @@ const BASE_SITE_URL = "https://protippz.com";
  * Fetch post details on the server to populate Open Graph, Twitter Card, and oEmbed tags
  * for social media bots across all platforms (Facebook, X/Twitter, LinkedIn, WhatsApp, Telegram, Discord, Slack, iMessage, Pinterest).
  */
-async function getPostData(idOrSlug: string): Promise<CommunityPostBackendItem | null> {
+async function getPostData(
+  idOrSlug: string,
+): Promise<CommunityPostBackendItem | null> {
   try {
     const res = await fetch(
-      `https://api.protippz.com/community-post/get-single/${encodeURIComponent(idOrSlug)}`,
+      `http://192.168.0.108:5000/community-post/get-single/${encodeURIComponent(idOrSlug)}`,
       {
         next: { revalidate: 60 },
-      }
+      },
     );
 
     if (!res.ok) return null;
@@ -36,7 +38,9 @@ async function getPostData(idOrSlug: string): Promise<CommunityPostBackendItem |
   }
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const id = resolvedParams?.id;
 
@@ -75,7 +79,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     (post.images && post.images.length > 0 ? post.images[0] : null) ||
     DEFAULT_OG_IMAGE;
 
-  if (ogImageUrl && !ogImageUrl.startsWith("http://") && !ogImageUrl.startsWith("https://")) {
+  if (
+    ogImageUrl &&
+    !ogImageUrl.startsWith("http://") &&
+    !ogImageUrl.startsWith("https://")
+  ) {
     ogImageUrl = `${BASE_SITE_URL}${ogImageUrl.startsWith("/") ? "" : "/"}${ogImageUrl}`;
   }
 
@@ -133,8 +141,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: [ogImageUrl],
     },
     other: {
-      "image": ogImageUrl,
-      "thumbnail": ogImageUrl,
+      image: ogImageUrl,
+      thumbnail: ogImageUrl,
       "twitter:image:src": ogImageUrl,
       "twitter:domain": "protippz.com",
       "article:published_time": post.createdAt || "",
@@ -163,7 +171,11 @@ export default async function PostPage({ params }: PageProps) {
     (post?.images && post.images.length > 0 ? post.images[0] : null) ||
     DEFAULT_OG_IMAGE;
 
-  if (ogImageUrl && !ogImageUrl.startsWith("http://") && !ogImageUrl.startsWith("https://")) {
+  if (
+    ogImageUrl &&
+    !ogImageUrl.startsWith("http://") &&
+    !ogImageUrl.startsWith("https://")
+  ) {
     ogImageUrl = `${BASE_SITE_URL}${ogImageUrl.startsWith("/") ? "" : "/"}${ogImageUrl}`;
   }
 
@@ -173,25 +185,25 @@ export default async function PostPage({ params }: PageProps) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SocialMediaPosting",
-    "headline": title,
-    "description": metaDescription,
-    "image": [ogImageUrl],
-    "datePublished": post?.createdAt,
-    "dateModified": post?.updatedAt,
-    "author": {
+    headline: title,
+    description: metaDescription,
+    image: [ogImageUrl],
+    datePublished: post?.createdAt,
+    dateModified: post?.updatedAt,
+    author: {
       "@type": "Person",
-      "name": authorName,
+      name: authorName,
     },
-    "publisher": {
+    publisher: {
       "@type": "Organization",
-      "name": "ProTippz",
-      "url": BASE_SITE_URL,
-      "logo": {
+      name: "ProTippz",
+      url: BASE_SITE_URL,
+      logo: {
         "@type": "ImageObject",
-        "url": `${BASE_SITE_URL}/favicon.png`,
+        url: `${BASE_SITE_URL}/favicon.png`,
       },
     },
-    "mainEntityOfPage": {
+    mainEntityOfPage: {
       "@type": "WebPage",
       "@id": postUrl,
     },

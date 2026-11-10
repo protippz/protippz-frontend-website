@@ -16,7 +16,7 @@ function RewardCardSkeleton() {
         </div>
         <div className="flex-1 min-w-0 p-4 sm:p-6 lg:p-7 flex flex-col justify-between space-y-4">
           <div className="space-y-3.5">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-2">
               <div className="w-44 h-4 bg-slate-200 rounded" />
               <div className="w-8 h-8 rounded-full bg-slate-200" />
             </div>
@@ -90,7 +90,7 @@ export default function LoadingRewardzPage() {
   return (
     <div className="max-w-355 mx-auto mt-2 sm:mt-3 px-2 sm:px-4 pb-14">
       {/* Unified Master Container Card */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-slate-200 lg:sticky lg:top-[64px] h-[calc(100dvh-120px)] sm:h-[calc(100dvh-125px)] lg:h-[calc(100vh-125px)] min-h-[460px] sm:min-h-[520px] lg:min-h-[550px]">
+      <div className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-slate-200 lg:sticky lg:top-[64px] h-[calc(100dvh-120px)] sm:h-[calc(100dvh-125px)] lg:h-[calc(100vh-125px)] min-h-[460px] sm:min-h-[520px] lg:min-h-[550px]">
         {/* Left Column: Sidebar */}
         <aside className="w-full shrink-0 lg:w-72 xl:w-80 lg:shrink-0 bg-white lg:h-full flex flex-col overflow-hidden">
           <SidebarSkeleton />
@@ -99,7 +99,7 @@ export default function LoadingRewardzPage() {
         {/* Right Column: Cards in 1 Grid */}
         <main className="flex-1 min-w-0 flex flex-col h-full min-h-0 overflow-hidden bg-[#fafbfb]">
           <div className="flex-1 overflow-y-auto custom-sidebar-scrollbar p-2.5 sm:p-4 min-h-0">
-            <div className="w-full grid grid-cols-1 gap-4 sm:gap-6">
+            <div className="w-full grid grid-cols-1 gap-2 sm:gap-2">
               {Array.from({ length: 4 }).map((_, i) => (
                 <RewardCardSkeleton key={i} />
               ))}

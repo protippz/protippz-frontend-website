@@ -22,7 +22,7 @@ export const ModalStatsBar: React.FC<ModalStatsBarProps> = ({
         </span>
         <span className="font-semibold text-[#053697]">{likes}</span>
       </div>
-      <div className="flex items-center gap-3 font-medium">
+      <div className="flex items-center gap-2 font-medium">
         <span>{commentsCount} comments</span>
       </div>
     </div>

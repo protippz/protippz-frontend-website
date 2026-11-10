@@ -59,25 +59,25 @@ const CategoryLogoImage: React.FC<{
   height = 32,
   className = "object-contain max-h-full max-w-full",
 }) => {
-  const [imgSrc, setImgSrc] = useState<any>(
-    src ? imageUrl(src) : defaultCategory
-  );
+    const [imgSrc, setImgSrc] = useState<any>(
+      src ? imageUrl(src) : defaultCategory
+    );
 
-  useEffect(() => {
-    setImgSrc(src ? imageUrl(src) : defaultCategory);
-  }, [src]);
+    useEffect(() => {
+      setImgSrc(src ? imageUrl(src) : defaultCategory);
+    }, [src]);
 
-  return (
-    <Image
-      src={imgSrc}
-      alt={alt}
-      width={width}
-      height={height}
-      className={className}
-      onError={() => setImgSrc(defaultCategory)}
-    />
-  );
-};
+    return (
+      <Image
+        src={imgSrc}
+        alt={alt}
+        width={width}
+        height={height}
+        className={className}
+        onError={() => setImgSrc(defaultCategory)}
+      />
+    );
+  };
 
 const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
   initialCategories = [],
@@ -352,7 +352,7 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
       {/* ========================================================= */}
       <div className="hidden lg:flex flex-col bg-white h-full overflow-hidden">
         {/* Sidebar Header */}
-        <div className="shrink-0 p-4 sm:p-4.5 border-b border-slate-100 flex items-center justify-between gap-3 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/40">
+        <div className="shrink-0 p-4 sm:p-4.5 border-b border-slate-100 flex items-center justify-between gap-2 bg-gradient-to-r from-slate-50/80 via-white to-slate-50/40">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#053697] flex items-center justify-center shrink-0">
               <Gift className="w-4 h-4 text-[#053697]" />
@@ -412,19 +412,17 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
             type="button"
             onClick={handleClearCategoryFilter}
             disabled={isPending}
-            className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
-              !activeCategoryId
-                ? "bg-[#053697] text-white border-[#053697] shadow-xs"
-                : "bg-white hover:bg-slate-50 text-slate-800 border-slate-200/80 hover:border-slate-300"
-            }`}
+            className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${!activeCategoryId
+              ? "bg-[#053697] text-white border-[#053697]"
+              : "bg-white hover:bg-slate-50 text-slate-800 border-slate-200/80 hover:border-slate-300"
+              }`}
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <div
-                className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
-                  !activeCategoryId
-                    ? "bg-white/20 text-white"
-                    : "bg-slate-100 text-slate-600"
-                }`}
+                className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${!activeCategoryId
+                  ? "bg-white/20 text-white"
+                  : "bg-slate-100 text-slate-600"
+                  }`}
               >
                 <Layers className="w-3.5 h-3.5" />
               </div>
@@ -433,9 +431,8 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
                   All Categories
                 </p>
                 <p
-                  className={`text-[10px] truncate leading-tight mt-0.5 ${
-                    !activeCategoryId ? "text-white/80" : "text-slate-400"
-                  }`}
+                  className={`text-[10px] truncate leading-tight mt-0.5 ${!activeCategoryId ? "text-white/80" : "text-slate-400"
+                    }`}
                 >
                   View all rewards
                 </p>
@@ -459,19 +456,17 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
                 type="button"
                 onClick={() => handleSelectCategory(catItem._id)}
                 disabled={isPending}
-                className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer group ${
-                  isSelected
-                    ? "bg-[#053697] text-white border-[#053697] shadow-xs"
-                    : "bg-white hover:bg-slate-50 text-slate-800 border-slate-200/80 hover:border-slate-300"
-                }`}
+                className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer group ${isSelected
+                  ? "bg-[#053697] text-white border-[#053697]"
+                  : "bg-white hover:bg-slate-50 text-slate-800 border-slate-200/80 hover:border-slate-300"
+                  }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0 flex-1">
                   <div
-                    className={`relative w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 p-1 ${
-                      isSelected
-                        ? "bg-white border-white/30"
-                        : "bg-slate-50 border-slate-200 group-hover:bg-white"
-                    }`}
+                    className={`relative w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 p-1 ${isSelected
+                      ? "bg-white border-white/30"
+                      : "bg-slate-50 border-slate-200 group-hover:bg-white"
+                      }`}
                   >
                     <CategoryLogoImage
                       src={catItem.image}
@@ -482,19 +477,17 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
                   </div>
                   <div className="min-w-0 flex-1">
                     <p
-                      className={`text-xs font-bold truncate leading-tight ${
-                        isSelected
-                          ? "text-white"
-                          : "text-slate-800 group-hover:text-[#053697]"
-                      }`}
+                      className={`text-xs font-bold truncate leading-tight ${isSelected
+                        ? "text-white"
+                        : "text-slate-800 group-hover:text-[#053697]"
+                        }`}
                     >
                       {catItem.name}
                     </p>
                     {catItem.deliveryOption && (
                       <p
-                        className={`text-[10px] uppercase tracking-wider truncate leading-tight mt-0.5 ${
-                          isSelected ? "text-white/80" : "text-slate-400"
-                        }`}
+                        className={`text-[10px] uppercase tracking-wider truncate leading-tight mt-0.5 ${isSelected ? "text-white/80" : "text-slate-400"
+                          }`}
                       >
                         {catItem.deliveryOption}
                       </p>
@@ -505,9 +498,8 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
                 <div className="ml-2 shrink-0 flex items-center">
                   {isThisCatLoading ? (
                     <Loader2
-                      className={`w-3.5 h-3.5 animate-spin ${
-                        isSelected ? "text-white" : "text-[#053697]"
-                      }`}
+                      className={`w-3.5 h-3.5 animate-spin ${isSelected ? "text-white" : "text-[#053697]"
+                        }`}
                     />
                   ) : isSelected ? (
                     <Check className="w-3.5 h-3.5 text-white" />
@@ -552,7 +544,7 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-2 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-2xs hover:shadow-xs shrink-0"
+            className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-2 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0"
           >
             {isPending ? (
               <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin text-white" />
@@ -611,7 +603,7 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
             />
 
             {/* Side Drawer Panel */}
-            <div className="relative w-full max-w-md sm:max-w-lg bg-white h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-300 divide-y divide-slate-200">
+            <div className="relative w-full max-w-md sm:max-w-lg bg-white h-full flex flex-col z-10 animate-in slide-in-from-right duration-300 divide-y divide-slate-200">
               {/* Modal Header */}
               <div className="p-5 flex items-center justify-between bg-white">
                 <div className="flex items-center gap-2.5">
@@ -647,13 +639,12 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
                 <button
                   type="button"
                   onClick={handleClearCategoryFilter}
-                  className={`w-full p-3 mb-2 rounded-xl border flex items-center justify-between transition-all cursor-pointer ${
-                    !activeCategoryId
-                      ? "border-2 border-[#053697] bg-blue-50/60 text-[#053697]"
-                      : "border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-800"
-                  }`}
+                  className={`w-full p-3 mb-2 rounded-xl border flex items-center justify-between transition-all cursor-pointer ${!activeCategoryId
+                    ? "border-2 border-[#053697] bg-blue-50/60 text-[#053697]"
+                    : "border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-800"
+                    }`}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center">
                       <Layers className="w-4.5 h-4.5 text-slate-600" />
                     </div>
@@ -684,11 +675,10 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
                         key={catItem._id}
                         type="button"
                         onClick={() => handleSelectCategory(catItem._id)}
-                        className={`p-3 rounded-xl border flex items-center justify-between text-left transition-all cursor-pointer group ${
-                          isSelected
-                            ? "border-2 border-[#053697] bg-blue-50/60 text-[#053697]"
-                            : "border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-800"
-                        }`}
+                        className={`p-3 rounded-xl border flex items-center justify-between text-left transition-all cursor-pointer group ${isSelected
+                          ? "border-2 border-[#053697] bg-blue-50/60 text-[#053697]"
+                          : "border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-800"
+                          }`}
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
                           <div className="relative w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 p-1">
@@ -748,7 +738,7 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2 rounded-xl bg-[#053697] hover:bg-[#042870] text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
+                  className="px-5 py-2 rounded-xl bg-[#053697] hover:bg-[#042870] text-white text-xs font-bold transition-colors cursor-pointer"
                 >
                   Done
                 </button>

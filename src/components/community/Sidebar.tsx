@@ -47,7 +47,7 @@ function Sidebar({
       >
         {/* Top Community Posts */}
         <div
-          className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md"
+          className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 "
           style={{ backgroundColor: "#FAFBFB", border: "1px solid #05369712" }}
         >
           <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#0536970F]">
@@ -83,7 +83,7 @@ function Sidebar({
                 >
                   <div className="flex items-start gap-2.5">
                     <div
-                      className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full text-[10px] sm:text-xs font-extrabold mt-0.5 shrink-0 shadow-xs"
+                      className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full text-[10px] sm:text-xs font-extrabold mt-0.5 shrink-0"
                       style={{
                         backgroundColor:
                           index === 0
@@ -150,7 +150,7 @@ function Sidebar({
 
         {/* Top Fans This Week */}
         <div
-          className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md"
+          className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 "
           style={{ backgroundColor: "#FAFBFB", border: "1px solid #05369712" }}
         >
           <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#0536970F]">
@@ -184,7 +184,7 @@ function Sidebar({
                 return (
                   <div
                     key={fan.id}
-                    className="flex items-center gap-2.5 sm:gap-3 p-2 -mx-2 rounded-xl transition-all duration-150 hover:bg-[#05369708] cursor-pointer group"
+                    className="flex items-center gap-2.5 sm:gap-2 p-2 -mx-2 rounded-xl transition-all duration-150 hover:bg-[#05369708] cursor-pointer group"
                   >
                     <div className="relative shrink-0">
                       <Avatar className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 border border-[#05369715]">
@@ -195,7 +195,7 @@ function Sidebar({
                       </Avatar>
                       {index === 0 && (
                         <div
-                          className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center shadow-xs"
+                          className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center"
                           style={{ backgroundColor: "#F6E05E" }}
                         >
                           <CrownIcon className="w-2.5 h-2.5 text-white" />
@@ -224,7 +224,6 @@ function Sidebar({
                         className="text-[10px] sm:text-xs font-medium flex items-center gap-1 mt-0.5"
                         style={{ color: "#2FC191" }}
                       >
-                        <Sparkles className="w-3 h-3" />
                         {fan.xp.toLocaleString()} XP
                       </p>
                     </div>
@@ -244,7 +243,7 @@ function Sidebar({
 
         {/* Rewards Preview */}
         <div
-          className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 shadow-sm hover:shadow-md"
+          className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 "
           style={{
             backgroundColor: "#2FC19110",
             border: "1px solid #2FC19130",
@@ -332,7 +331,7 @@ function Sidebar({
           </div>
 
           <button
-            className="w-full mt-4 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-white transition-all hover:bg-[#2FC191]/90 active:scale-[0.98] shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
+            className="w-full mt-4 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-white transition-all hover:bg-[#2FC191]/90 active:scale-[0.98]  flex items-center justify-center gap-1.5 cursor-pointer"
             style={{ backgroundColor: "#2FC191" }}
           >
             View All Rewards

@@ -34,7 +34,7 @@
 
 // function TickerItem({ item }: { item: TickerHeadline }) {
 //   const inner = (
-//     <span className="flex items-center gap-3 px-8 border-r border-border cursor-default group-hover:text-foreground transition-colors duration-200">
+//     <span className="flex items-center gap-2 px-8 border-r border-border cursor-default group-hover:text-foreground transition-colors duration-200">
 //       <span className="text-lg leading-none select-none" aria-hidden="true">{item?.emoji}</span>
 //       <span
 //         className={`shrink-0 text-xs font-semibold tracking-wide uppercase px-2 py-1 rounded-full ${badgeStyles[item?.badgeType] ?? badgeStyles.default}`}
@@ -128,7 +128,7 @@
 //         {/* Scrolling content */}
 //         <div className="overflow-hidden flex-1">
 //           {loading ? (
-//             <div className="flex items-center gap-3 px-6">
+//             <div className="flex items-center gap-2 px-6">
 //               {[...Array(4)].map((_, i) => (
 //                 <div key={i} className="h-3 rounded-full bg-muted animate-pulse"
 //                   style={{ width: `${120 + i * 40}px` }} />
@@ -193,7 +193,7 @@ function relativeTime(iso: string): string {
 
 function TickerItem({ item }: { item: TickerHeadline }) {
   const inner = (
-    <span className="flex items-center gap-3 px-8 border-r border-border cursor-default group-hover:text-foreground transition-colors duration-200">
+    <span className="flex items-center gap-2 px-8 border-r border-border cursor-default group-hover:text-foreground transition-colors duration-200">
       <span className="text-lg leading-none select-none" aria-hidden="true">
         {item?.emoji}
       </span>
@@ -241,7 +241,7 @@ export default function SportsTicker() {
       const res = await fetch("/api/sports-news-ticker");
 
       const data = await res.json();
-      console.log(JSON.stringify(data, null, 2));
+      // console.log(JSON.stringify(data, null, 2));
       if (data.success && data.headlines?.length) {
         setHeadlines(data.headlines);
         setError(false);
@@ -268,7 +268,7 @@ export default function SportsTicker() {
   return (
     <>
       <div
-        className="fixed bottom-0 left-0 right-0 z-99 h-12 flex items-center overflow-hidden border-t border-border bg-white"
+        className="fixed bottom-14 lg:bottom-0 left-0 right-0 z-40 h-10 sm:h-12 flex items-center overflow-hidden border-t border-slate-200 bg-white"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         role="marquee"
@@ -277,8 +277,7 @@ export default function SportsTicker() {
       >
         {/* Left label */}
         <div
-          className="relative z-10 shrink-0 flex items-center gap-2 h-full px-4 border-r border-border bg-(--brand)"
-          style={{ minWidth: "120px" }}
+          className="relative z-10 shrink-0 flex items-center gap-1.5 sm:gap-2 h-full px-2.5 sm:px-4 border-r border-slate-200 bg-[#2FC191] min-w-[75px] sm:min-w-[120px]"
         >
           {/* Pulse dot */}
           <span className="relative flex h-2 w-2 shrink-0">
@@ -293,7 +292,7 @@ export default function SportsTicker() {
         {/* Scrolling content */}
         <div className="overflow-hidden flex-1">
           {loading ? (
-            <div className="flex items-center gap-3 px-6">
+            <div className="flex items-center gap-2 px-6">
               {[...Array(4)].map((_, i) => (
                 <div
                   key={i}

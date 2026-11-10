@@ -28,35 +28,35 @@ const CATEGORY_ITEMS: {
   name: ContentCategory;
   icon: React.ReactNode;
 }[] = [
-  {
-    name: "All",
-    icon: <Globe className="w-4 h-4 text-teal-600" />,
-  },
-  {
-    name: "Blog Article",
-    icon: <BookOpen className="w-4 h-4 text-emerald-600" />,
-  },
-  {
-    name: "Press Release",
-    icon: <Newspaper className="w-4 h-4 text-blue-600" />,
-  },
-  {
-    name: "Company News",
-    icon: <Building className="w-4 h-4 text-amber-600" />,
-  },
-  {
-    name: "Promotional Content",
-    icon: <Sparkles className="w-4 h-4 text-rose-600" />,
-  },
-  {
-    name: "Community Update",
-    icon: <Radio className="w-4 h-4 text-purple-600" />,
-  },
-  {
-    name: "Product Announcement",
-    icon: <Megaphone className="w-4 h-4 text-sky-600" />,
-  },
-];
+    {
+      name: "All",
+      icon: <Globe className="w-4 h-4 text-teal-600" />,
+    },
+    {
+      name: "Blog Article",
+      icon: <BookOpen className="w-4 h-4 text-emerald-600" />,
+    },
+    {
+      name: "Press Release",
+      icon: <Newspaper className="w-4 h-4 text-blue-600" />,
+    },
+    {
+      name: "Company News",
+      icon: <Building className="w-4 h-4 text-amber-600" />,
+    },
+    {
+      name: "Promotional Content",
+      icon: <Sparkles className="w-4 h-4 text-rose-600" />,
+    },
+    {
+      name: "Community Update",
+      icon: <Radio className="w-4 h-4 text-purple-600" />,
+    },
+    {
+      name: "Product Announcement",
+      icon: <Megaphone className="w-4 h-4 text-sky-600" />,
+    },
+  ];
 
 const CommunitySearchBar = memo(function CommunitySearchBar({
   searchQuery,
@@ -68,7 +68,7 @@ const CommunitySearchBar = memo(function CommunitySearchBar({
 
   return (
     <div className="sticky top-14 z-30 py-2 sm:py-3 backdrop-blur-md transition-all w-full border-b border-border/50">
-      <div className="max-w-355 mx-auto px-3 sm:px-4 flex items-center justify-between gap-2 sm:gap-3 w-full min-w-0">
+      <div className="max-w-355 mx-auto px-3 sm:px-4 flex items-center justify-between gap-2 sm:gap-2 w-full min-w-0">
         {/* Search Bar Input */}
         <div className="relative flex-1 md:max-w-xs min-w-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#05369760] pointer-events-none" />
@@ -77,7 +77,7 @@ const CommunitySearchBar = memo(function CommunitySearchBar({
             placeholder="Search news, articles, releases..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 sm:pl-10 pr-8 sm:pr-10 py-1.5 sm:py-2 text-xs sm:text-sm rounded-xl outline-none bg-white border border-[#05369715] text-[#053697] focus:ring-2 focus:ring-[#2FC191] transition-all shadow-2xs box-border cursor-text"
+            className="w-full pl-9 sm:pl-10 pr-8 sm:pr-10 py-1.5 sm:py-2 text-xs sm:text-sm rounded-xl outline-none bg-white border border-[#05369715] text-[#053697] focus:ring-2 focus:ring-[#2FC191] transition-all box-border cursor-text"
           />
           {searchQuery && (
             <button
@@ -95,7 +95,7 @@ const CommunitySearchBar = memo(function CommunitySearchBar({
           <button
             type="button"
             onClick={() => setIsDrawerOpen(true)}
-            className="lg:hidden flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[#05369715] text-[#053697] text-xs font-semibold hover:bg-slate-50 transition-all shadow-2xs shrink-0 cursor-pointer active:scale-95"
+            className="lg:hidden flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[#05369715] text-[#053697] text-xs font-semibold hover:bg-slate-50 transition-all shrink-0 cursor-pointer active:scale-95"
           >
             <SlidersHorizontal className="w-4 h-4 text-[#2FC191]" />
             <span className="hidden sm:inline">Filter</span>
@@ -147,11 +147,10 @@ const CommunitySearchBar = memo(function CommunitySearchBar({
                           ? { backgroundColor: "#2FC191", color: "#ffffff" }
                           : undefined
                       }
-                      className={`w-full flex items-center justify-between p-3 rounded-xl transition-all text-left text-xs font-semibold cursor-pointer ${
-                        isActive
-                          ? "shadow-xs text-white font-bold"
-                          : "bg-slate-50 text-[#053697] hover:bg-slate-100"
-                      }`}
+                      className={`w-full flex items-center justify-between p-3 rounded-xl transition-all text-left text-xs font-semibold cursor-pointer ${isActive
+                        ? "shadow-xs text-white font-bold"
+                        : "bg-slate-50 text-[#053697] hover:bg-slate-100"
+                        }`}
                     >
                       <div className="flex items-center gap-2.5">
                         <span className={isActive ? "text-white" : ""}>

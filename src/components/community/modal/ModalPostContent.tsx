@@ -61,7 +61,7 @@ export const ModalPostContent: React.FC<ModalPostContentProps> = ({
 
       {/* Media Attachment */}
       {videoEmbedSrc ? (
-        <div className="rounded-xl overflow-hidden bg-black aspect-video relative border border-border shadow-2xs">
+        <div className="rounded-xl overflow-hidden bg-black aspect-video relative border border-border">
           <iframe
             src={videoEmbedSrc}
             title={title || "Embedded Video"}

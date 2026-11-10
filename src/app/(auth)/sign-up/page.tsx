@@ -14,6 +14,10 @@ import Cookies from "js-cookie";
 import { post } from "@/ApisRequests/server";
 import fanBanner from "@/../public/new/fanbase.png";
 import athleteBanner from "@/../public/new/female-player.webp";
+import {
+  getOneSignalPushSubscriptionId,
+  getPlatform,
+} from "@/components/OneSignal/OneSignalHandler";
 
 type AccountType = "fan" | "athlete";
 
@@ -57,9 +61,15 @@ const SignUpFormContent: React.FC = () => {
     }
   }, [searchParams]);
 
+  // Pre-warm OneSignal when the sign-up page opens
+  useEffect(() => {
+    getOneSignalPushSubscriptionId().catch(() => { });
+  }, []);
+
   // Google 1-Click Login / Signup
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
+      console.log(tokenResponse)
       try {
         const response = await fetch(
           "https://www.googleapis.com/oauth2/v3/userinfo",
@@ -77,6 +87,9 @@ const SignUpFormContent: React.FC = () => {
         }
 
         const userDetails = await response.json();
+        const playerId = await getOneSignalPushSubscriptionId();
+        const platform = getPlatform();
+
         const data = {
           name: userDetails.name || "",
           picture: userDetails.picture || "",
@@ -93,6 +106,8 @@ const SignUpFormContent: React.FC = () => {
             "",
           role: accountType === "athlete" ? "player" : "user",
           accountType,
+          playerId,
+          platform,
         };
 
         const res = await post("/auth/google-login", data);
@@ -166,22 +181,27 @@ const SignUpFormContent: React.FC = () => {
 
     const targetRole = accountType === "athlete" ? "player" : "user";
 
-    const data = {
-      password,
-      confirmPassword: password,
-      userData: {
-        name: fullName.trim(),
-        username: derivedUsername,
-        phone: "",
-        email: email.trim(),
-        address: "",
-        role: targetRole,
-        accountType,
-        inviteToken: invite || "",
-      },
-    };
-
     try {
+      const playerId = await getOneSignalPushSubscriptionId();
+      const platform = getPlatform();
+
+      const data = {
+        password,
+        confirmPassword: password,
+        userData: {
+          name: fullName.trim(),
+          username: derivedUsername,
+          phone: "",
+          email: email.trim(),
+          address: "",
+          role: targetRole,
+          accountType,
+          inviteToken: invite || "",
+        },
+        playerId,
+        platform,
+      };
+
       const res = await signUpHandler(data);
       setFormLoading(false);
 
@@ -214,7 +234,7 @@ const SignUpFormContent: React.FC = () => {
       <div className="w-full max-w-5xl mb-3 flex items-center justify-between">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-gray-700 hover:text-[#053697] bg-white/90 hover:bg-white backdrop-blur-md px-4 py-2 rounded-full border border-gray-200/80 shadow-sm hover:shadow transition-all group cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-gray-700 hover:text-[#053697] bg-white/90 hover:bg-white backdrop-blur-md px-4 py-2 rounded-full border border-gray-200/80   transition-all group cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5 text-gray-500 group-hover:text-[#053697]" />
           <span>Back to Home</span>
@@ -222,7 +242,7 @@ const SignUpFormContent: React.FC = () => {
       </div>
 
       {/* Centered Modal Card */}
-      <div className="w-full max-w-md md:max-w-5xl bg-white rounded-[32px] border border-gray-100 shadow-[0_12px_45px_rgba(0,0,0,0.07)] p-5 sm:p-7 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center relative">
+      <div className="w-full max-w-md md:max-w-5xl bg-white rounded-[32px] border border-gray-100  p-5 sm:p-7 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2 items-center relative">
         {/* Left Side: Dynamic Athlete/Fan Collage in Rounded Card (Desktop/Tablet) */}
         <div className="hidden md:flex relative w-full h-full min-h-[440px] bg-[#111827] rounded-[24px] overflow-hidden items-center justify-center">
           <Image
@@ -241,26 +261,24 @@ const SignUpFormContent: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-black/10 pointer-events-none" />
 
           {/* Switch Account Pill (Desktop) */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-[350px] p-1 bg-white/95 backdrop-blur-md border border-white/60 shadow-xl rounded-full flex items-center justify-between z-10">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-[350px] p-1 bg-white/95 backdrop-blur-md border border-white/60 rounded-full flex items-center justify-between z-10">
             <button
               type="button"
               onClick={() => setAccountType("fan")}
-              className={`flex-1 py-2 px-2.5 text-xs sm:text-[13px] font-semibold rounded-full transition-all duration-300 cursor-pointer text-center ${
-                accountType === "fan"
-                  ? "bg-[#053697] text-white shadow-sm"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-black/5"
-              }`}
+              className={`flex-1 py-2 px-2.5 text-xs sm:text-[13px] font-semibold rounded-full transition-all duration-300 cursor-pointer text-center ${accountType === "fan"
+                ? "bg-[#053697] text-white "
+                : "text-gray-600 hover:text-gray-900 hover:bg-black/5"
+                }`}
             >
               Join as a Fan
             </button>
             <button
               type="button"
               onClick={() => setAccountType("athlete")}
-              className={`flex-1 py-2 px-2.5 text-xs sm:text-[13px] font-semibold rounded-full transition-all duration-300 cursor-pointer text-center ${
-                accountType === "athlete"
-                  ? "bg-[#053697] text-white shadow-sm"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-black/5"
-              }`}
+              className={`flex-1 py-2 px-2.5 text-xs sm:text-[13px] font-semibold rounded-full transition-all duration-300 cursor-pointer text-center ${accountType === "athlete"
+                ? "bg-[#053697] text-white "
+                : "text-gray-600 hover:text-gray-900 hover:bg-black/5"
+                }`}
             >
               Join as an Athlete
             </button>
@@ -274,172 +292,197 @@ const SignUpFormContent: React.FC = () => {
             <button
               type="button"
               onClick={() => setAccountType("fan")}
-              className={`flex-1 py-1.5 px-2 text-xs font-semibold rounded-full transition-all duration-200 cursor-pointer text-center ${
-                accountType === "fan"
-                  ? "bg-[#053697] text-white shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`flex-1 py-1.5 px-2 text-xs font-semibold rounded-full transition-all duration-200 cursor-pointer text-center ${accountType === "fan"
+                ? "bg-[#053697] text-white "
+                : "text-gray-600 hover:text-gray-900"
+                }`}
             >
               Join as a Fan
             </button>
             <button
               type="button"
               onClick={() => setAccountType("athlete")}
-              className={`flex-1 py-1.5 px-2 text-xs font-semibold rounded-full transition-all duration-200 cursor-pointer text-center ${
-                accountType === "athlete"
-                  ? "bg-[#053697] text-white shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
+              className={`flex-1 py-1.5 px-2 text-xs font-semibold rounded-full transition-all duration-200 cursor-pointer text-center ${accountType === "athlete"
+                ? "bg-[#053697] text-white "
+                : "text-gray-600 hover:text-gray-900"
+                }`}
             >
               Join as an Athlete
             </button>
           </div>
 
           {/* Header */}
-          <div className="text-center">
-            <h1 className="text-2xl sm:text-3xl font-black italic tracking-wide text-[#053697] uppercase">
-              {accountType === "athlete" ? "ATHLETE SIGN UP" : "FAN SIGN UP"}
-            </h1>
-            <p className="text-xs text-gray-500 mt-1">
-              {accountType === "athlete"
-                ? "Connect with fans, receive Tippz, and grow your career"
-                : "Welcome! Support your favorite athletes and win rewards"}
-            </p>
-          </div>
+          {accountType === "fan" && (
+            <div className="text-center">
+              <h1 className="text-2xl sm:text-3xl font-black italic tracking-wide text-[#053697] uppercase">
+                {/* {accountType === "athlete" ? "ATHLETE SIGN UP" : "FAN SIGN UP"} */}
+                FAN SIGN UP
+              </h1>
+              <p className="text-xs text-gray-500 mt-1">
+                {/* {accountType === "athlete"
+                  ? "Connect with fans, receive Tippz, and grow your career"
+                  : "Welcome! Support your favorite athletes and win rewards"} */}
+                Welcome! Support your favorite athletes and win rewards
+              </p>
+            </div>
+          )}
+          {accountType === "athlete" && (
+            <div className="text-center">
+              <h1 className="text-2xl sm:text-3xl font-black italic tracking-wide text-[#053697] uppercase">
+                COMING SOON
+              </h1>
+              <p className="text-xs text-gray-500 mt-1">
+                We are working hard to bring you the best experience possible.
+                Stay tuned for more updates!
+              </p>
+            </div>
+          )}
 
           {/* Google Button */}
-          <button
-            type="button"
-            onClick={() => login()}
-            className="mt-5 w-full h-10 rounded-full bg-[#f1f3f6] hover:bg-[#e6e9ee] transition-colors flex items-center justify-center gap-2.5 text-xs font-semibold text-gray-700 cursor-pointer border border-transparent shadow-sm active:scale-[0.99]"
-          >
-            <FaGoogle className="text-red-500 text-sm" />
-            <span>Continue with Google</span>
-          </button>
+          {accountType === "fan" && (
+            <button
+              type="button"
+              onClick={() => login()}
+              className="mt-5 w-full h-10 rounded-full bg-[#f1f3f6] hover:bg-[#e6e9ee] transition-colors flex items-center justify-center gap-2.5 text-xs font-semibold text-gray-700 cursor-pointer border border-transparent  active:scale-[0.99]"
+            >
+              <FaGoogle className="text-red-500 text-sm" />
+              <span>Continue with Google</span>
+            </button>
+          )}
 
           {/* Divider */}
-          <div className="relative my-4 flex items-center justify-center">
-            <div className="border-t border-gray-200 w-full" />
-            <span className="bg-white px-3 text-[11px] text-gray-400 absolute">
-              or sign up with email
-            </span>
-          </div>
+          {accountType === "fan" && (
+            <div className="relative my-4 flex items-center justify-center">
+              <div className="border-t border-gray-200 w-full" />
+              <span className="bg-white px-3 text-[11px] text-gray-400 absolute">
+                or sign up with email
+              </span>
+            </div>
+          )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="w-full space-y-3">
-            {/* Full Name */}
-            <div className="relative flex items-center">
-              <User className="w-4 h-4 text-gray-400 absolute left-3.5 pointer-events-none" />
-              <input
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder={
-                  accountType === "athlete"
-                    ? "Athlete / Sportsperson name"
-                    : "Full name"
-                }
-                className="w-full h-10 pl-9 pr-4 rounded-full border border-gray-200 bg-[#f9fafb] text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
-              />
-            </div>
-
-            {/* Email Id */}
-            <div className="relative flex items-center">
-              <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 pointer-events-none" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email id"
-                className="w-full h-10 pl-9 pr-4 rounded-full border border-gray-200 bg-[#f9fafb] text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
-              />
-            </div>
-
-            {/* Password */}
-            <div className="relative flex items-center">
-              <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 pointer-events-none" />
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password (min 6 characters)"
-                className="w-full h-10 pl-9 pr-9 rounded-full border border-gray-200 bg-[#f9fafb] text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? (
-                  <FaEyeSlash className="w-3.5 h-3.5" />
-                ) : (
-                  <FaEye className="w-3.5 h-3.5" />
-                )}
-              </button>
-            </div>
-
-            {/* Terms Checkbox */}
-            <div className="flex items-center justify-between text-[11px] text-gray-500 px-1 pt-0.5">
-              <label className="flex items-center gap-1.5 cursor-pointer select-none">
+          {accountType !== "athlete" ? (
+            <form onSubmit={handleSubmit} className="w-full space-y-3">
+              {/* Full Name */}
+              <div className="relative flex items-center">
+                <User className="w-4 h-4 text-gray-400 absolute left-3.5 pointer-events-none" />
                 <input
-                  type="checkbox"
-                  checked={termsAccepted}
-                  onChange={(e) => setTermsAccepted(e.target.checked)}
-                  className="w-3.5 h-3.5 rounded border-gray-300 text-[#053697] focus:ring-[#053697] accent-[#053697] cursor-pointer"
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  // placeholder={
+                  //   accountType === "athlete"
+                  //     ? "Athlete / Sportsperson name"
+                  //     : "Full name"
+                  // }
+                  placeholder="Full name"
+                  className="w-full h-10 pl-9 pr-4 rounded-full border border-gray-200 bg-[#f9fafb] text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
                 />
-                <span>
-                  I agree to the{" "}
-                  <Link
-                    href="/terms"
-                    className="text-[#053697] hover:underline"
-                  >
-                    Terms
-                  </Link>{" "}
-                  &{" "}
-                  <Link
-                    href="/privacy"
-                    className="text-[#053697] hover:underline"
-                  >
-                    Privacy Policy
-                  </Link>
-                </span>
-              </label>
-            </div>
+              </div>
 
-            {/* Submit Button */}
-            <div className="pt-2">
-              <button
-                type="submit"
-                disabled={formLoading}
-                className="w-full h-10 rounded-full bg-[#053697] hover:bg-[#1e40af] active:bg-[#1e3a8a] disabled:opacity-75 disabled:cursor-not-allowed text-white text-xs font-bold transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                {formLoading ? (
-                  <>
-                    <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
-                    <span>Creating account...</span>
-                  </>
-                ) : (
+              {/* Email Id */}
+              <div className="relative flex items-center">
+                <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 pointer-events-none" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email id"
+                  className="w-full h-10 pl-9 pr-4 rounded-full border border-gray-200 bg-[#f9fafb] text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
+                />
+              </div>
+
+              {/* Password */}
+              <div className="relative flex items-center">
+                <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 pointer-events-none" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password (min 6 characters)"
+                  className="w-full h-10 pl-9 pr-9 rounded-full border border-gray-200 bg-[#f9fafb] text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="w-3.5 h-3.5" />
+                  ) : (
+                    <FaEye className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              </div>
+
+              {/* Terms Checkbox */}
+              <div className="flex items-center justify-between text-[11px] text-gray-500 px-1 pt-0.5">
+                <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded border-gray-300 text-[#053697] focus:ring-[#053697] accent-[#053697] cursor-pointer"
+                  />
                   <span>
-                    {accountType === "athlete"
-                      ? "Join as an Athlete"
-                      : "Join as a Fan"}
+                    I agree to the{" "}
+                    <Link
+                      href="/terms"
+                      className="text-[#053697] hover:underline"
+                    >
+                      Terms
+                    </Link>{" "}
+                    &{" "}
+                    <Link
+                      href="/privacy"
+                      className="text-[#053697] hover:underline"
+                    >
+                      Privacy Policy
+                    </Link>
                   </span>
-                )}
-              </button>
-            </div>
-          </form>
+                </label>
+              </div>
+
+              {/* Submit Button */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={formLoading}
+                  className="w-full h-10 rounded-full bg-[#053697] hover:bg-[#1e40af] active:bg-[#1e3a8a] disabled:opacity-75 disabled:cursor-not-allowed text-white text-xs font-bold transition-all  active:scale-[0.99] flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  {formLoading ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+                      <span>Creating account...</span>
+                    </>
+                  ) : (
+                    // <span>
+                    //   {accountType === "athlete"
+                    //     ? "Join as an Athlete"
+                    //     : "Join as a Fan"}
+                    // </span>
+                    <span>Join as a Fan</span>
+                  )}
+                </button>
+              </div>
+            </form>
+          ) : (
+            ""
+          )}
 
           {/* Bottom Switcher */}
-          <p className="text-[11px] text-gray-500 text-center mt-4">
-            Already have an account?{" "}
-            <Link
-              href="/sign-in"
-              className="text-[#053697] font-bold hover:underline"
-            >
-              Sign in
-            </Link>
-          </p>
+          {accountType === "fan" && (
+            <p className="text-[11px] text-gray-500 text-center mt-4">
+              Already have an account?{" "}
+              <Link
+                href="/sign-in"
+                className="text-[#053697] font-bold hover:underline"
+              >
+                Sign in
+              </Link>
+            </p>
+          )}
         </div>
       </div>
     </div>

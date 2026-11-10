@@ -1,20 +1,34 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const baseApi = createApi({
-  reducerPath: 'baseApi',
+  reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.protippz.com',
+    baseUrl: "https://qg114d4c-5000.asse.devtunnels.ms",
     prepareHeaders: (headers) => {
-      if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('token') || localStorage.getItem('accessToken');
+      if (typeof window !== "undefined") {
+        const token =
+          localStorage.getItem("token") || localStorage.getItem("accessToken");
         if (token) {
-          headers.set('authorization', token.startsWith('Bearer ') ? token : `Bearer ${token}`);
+          headers.set(
+            "authorization",
+            token.startsWith("Bearer ") ? token : `Bearer ${token}`,
+          );
         }
       }
       return headers;
     },
   }),
 
-  tagTypes: ['player', 'team', 'communityPost', 'comment', 'user'],
+  tagTypes: [
+    "player",
+    "team",
+    "communityPost",
+    "comment",
+    "user",
+    "tipps",
+    "playerGameStats",
+    "teamGameStats",
+    "profile"
+  ],
   endpoints: () => ({}),
 });

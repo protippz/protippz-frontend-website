@@ -8,31 +8,60 @@ import React, {
 } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from 'react-hot-toast';
-import { get } from '@/ApisRequests/server';
-import ReduxProvider from './ReduxProvider';
+import OneSignalHandler from '@/components/OneSignal/OneSignalHandler';
+import { useMyProfileQuery } from "@/Redux/Apis/profileApis"
 
-interface User {
-  address: any;
-  taxInfo: any;
-  email: string;
-  name: string;
-  phone: string;
-  profile_image: string;
-  totalAmount: number;
-  totalPoint: number;
-  dueAmount: number;
-  isStripeConnected: boolean;
-  totalTips: number;
-  user: {
-    role: string;
-    email: string | undefined | null;
+export interface User {
+  address?: any;
+  taxInfo?: any;
+  email?: string;
+  name?: string;
+  phone?: string;
+  profile_image?: string;
+  totalAmount?: number;
+  totalPoint?: number;
+  dueAmount?: number;
+  paidAmount?: number;
+  isStripeConnected?: boolean;
+  isStripeReady?: boolean;
+  isProfileClaimed?: boolean;
+  totalTips?: number;
+  position?: string;
+  jerceyNumber?: string;
+  experience?: string;
+  school?: string;
+  classYear?: string;
+  bio?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  player_image?: string;
+  player_bg_image?: string;
+  followersCount?: number;
+  instagram?: string;
+  twitter?: string;
+  tiktok?: string;
+  league?: any;
+  team?: {
+    _id?: string;
+    name?: string;
+    team_logo?: string;
+  } | any;
+  user?: {
+    role?: string;
+    email?: string | undefined | null;
+    id?: string | null;
   };
-  username: string;
-  _id: string;
+  username?: string;
+  _id?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  invitedPassword?: string;
 }
 interface AuthContextProps {
   userData: User | null;
   loading: boolean;
+  hardLoad?: () => void
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -42,51 +71,29 @@ interface Props {
 }
 export const useContextData = () => useContext(AuthContext);
 
-// Replace with your Google Client ID
 const AuthProvider = ({ children }: Props) => {
   const GOOGLE_CLIENT_ID = `${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`;
-  
+
   const [userData, setUserData] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading, refetch } = useMyProfileQuery({})
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      if (token) {
-        try {
-          const res = await get('/user/get-my-profile', {
-            headers: {
-              Authorization: `${token}`,
-            },
-          });
-          if (res?.success) {
-            setUserData(res?.data);
-          }
-        } catch (error) {
-          console.error('Failed to fetch user profile:', error);
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        setLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
+    if (data?.success) {
+      setUserData(data?.data);
+    }
+  }, [data]);
 
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <AuthContext.Provider value={{ userData, loading }}>
-        <ReduxProvider>
-          {children}
-          <Toaster position="top-center" reverseOrder={false} />
-        </ReduxProvider>
+      <AuthContext.Provider value={{ userData, loading: isLoading, hardLoad: () => refetch() }}>
+        <OneSignalHandler />
+        {children}
+        <Toaster position="top-center" reverseOrder={false} />
       </AuthContext.Provider>
     </GoogleOAuthProvider>
   );
 };
 
-// Hook to use Auth Context
 const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

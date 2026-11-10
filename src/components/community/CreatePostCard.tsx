@@ -67,7 +67,7 @@ export const CreatePostCard: React.FC<CreatePostCardProps> = ({
       }}
     >
       {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-2 mb-4">
         <Avatar className="w-10 h-10 border border-[#05369715]">
           <AvatarImage src={currentUserAvatar} alt={currentUserName} />
           <AvatarFallback>
@@ -203,7 +203,7 @@ export const CreatePostCard: React.FC<CreatePostCardProps> = ({
             <button
               onClick={handlePost}
               disabled={!content.trim()}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-xs font-semibold text-white transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 shadow-sm"
+              className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-xs font-semibold text-white transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 "
               style={{ backgroundColor: '#2FC191' }}
             >
               <Send className="w-3.5 h-3.5" />

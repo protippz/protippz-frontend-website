@@ -193,7 +193,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
         </div>
 
         {/* Popular Sports Blog Card Main Layout */}
-        <div className="flex flex-col md:flex-row gap-3.5 sm:gap-5 md:gap-6 items-start justify-between mb-3">
+        <div className="flex flex-col md:flex-row gap-2.5 sm:gap-2 md:gap-2 items-start justify-between mb-3">
           {/* Left Column: Title, Excerpt, Date/Meta */}
           <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
             <div>
@@ -235,18 +235,17 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
           {/* Right Column: Thumbnail with Adaptive Aspect Ratio */}
           {hasMedia && (
             <div
-              className={`shrink-0 relative rounded-sm sm:rounded-sm overflow-hidden bg-slate-100 border border-slate-100 ${
-                isVerticalImage
-                  ? "h-28 xs:h-32 sm:h-40 md:h-44 max-w-[130px] sm:max-w-[170px] md:max-w-[190px]"
-                  : "w-28 xs:w-36 sm:w-48 md:w-56 lg:w-60 aspect-[16/10]"
-              }`}
+              className={`shrink-0 relative rounded-sm sm:rounded-sm overflow-hidden bg-slate-100 border border-slate-100 ${isVerticalImage
+                ? "h-28 xs:h-32 sm:h-40 md:h-44 max-w-[130px] sm:max-w-[170px] md:max-w-[190px]"
+                : "w-28 xs:w-36 sm:w-48 md:w-56 lg:w-60 aspect-[16/10]"
+                }`}
               style={
                 imageRatio
                   ? {
-                      aspectRatio: isVerticalImage
-                        ? `${Math.max(imageRatio, 0.5)}`
-                        : `${Math.min(imageRatio, 2.2)}`,
-                    }
+                    aspectRatio: isVerticalImage
+                      ? `${Math.max(imageRatio, 0.5)}`
+                      : `${Math.min(imageRatio, 2.2)}`,
+                  }
                   : undefined
               }
             >
@@ -285,11 +284,10 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
               e.stopPropagation();
               if (post?.id) onLike(post?.id);
             }}
-            className={`flex items-center gap-1.5 py-1.5 px-3 rounded-full transition-colors cursor-pointer ${
-              post?.isLiked
-                ? "bg-[#2FC191] text-white"
-                : "bg-gray-100/80 text-[#053697] hover:bg-gray-200"
-            }`}
+            className={`flex items-center gap-1.5 py-1.5 px-3 rounded-full transition-colors cursor-pointer ${post?.isLiked
+              ? "bg-[#2FC191] text-white"
+              : "bg-gray-100/80 text-[#053697] hover:bg-gray-200"
+              }`}
           >
             <Heart
               className="w-4 h-4"
@@ -488,11 +486,10 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
             e.stopPropagation();
             if (post?.id) onLike(post?.id);
           }}
-          className={`flex items-center gap-1.5 py-1 px-2.5 rounded-full transition-colors cursor-pointer ${
-            post?.isLiked
-              ? "bg-[#2FC191] text-white"
-              : "bg-gray-100/80 text-[#053697] hover:bg-gray-200"
-          }`}
+          className={`flex items-center gap-1.5 py-1 px-2.5 rounded-full transition-colors cursor-pointer ${post?.isLiked
+            ? "bg-[#2FC191] text-white"
+            : "bg-gray-100/80 text-[#053697] hover:bg-gray-200"
+            }`}
         >
           <Heart
             className="w-3.5 h-3.5"

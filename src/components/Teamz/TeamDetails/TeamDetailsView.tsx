@@ -109,7 +109,7 @@ const TeamDetailsView: React.FC<TeamDetailsViewProps> = ({
 
       {/* 3. Main Details, Roster & Tipping Section */}
       <div className="max-w-355 mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-16 space-y-6">
-        <div className="grid grid-cols-1 gap-6 items-start">
+        <div className="grid grid-cols-1 gap-2 items-start">
           {/* Left Column (2 Cols): Roster, About & League Info */}
           <div className="space-y-6">
             {/* Team Roster with Search */}
@@ -121,10 +121,10 @@ const TeamDetailsView: React.FC<TeamDetailsViewProps> = ({
             />
 
             {/* About and League Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <TeamAboutCard team={team} />
               <TeamLeagueCard team={team} />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

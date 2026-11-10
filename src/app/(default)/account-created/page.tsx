@@ -4,7 +4,7 @@ import React from "react";
 const Page = async () => {
   return (
     <div className="flex justify-center items-center min-h-screen ">
-      <div className="text-center p-6 bg-white rounded-lg shadow-lg">
+      <div className="text-center p-6 bg-white rounded-lg">
         <h2 className="text-2xl font-semibold text-green-600">
           account added Successful!
         </h2>

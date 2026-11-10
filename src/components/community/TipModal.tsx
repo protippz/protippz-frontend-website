@@ -84,7 +84,7 @@ export const TipModal: React.FC<TipModalProps> = ({
     >
       {/* Modal Container: Clean UI with smooth border */}
       <div
-        className="relative bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden border border-[#0536971A] z-10 animate-in fade-in duration-200"
+        className="relative bg-white rounded-2xl w-full max-w-md overflow-hidden border border-[#0536971A] z-10 animate-in fade-in duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Close Button */}
@@ -107,7 +107,7 @@ export const TipModal: React.FC<TipModalProps> = ({
                   <AvatarFallback>{post.user.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div
-                  className="absolute -bottom-1 -right-1 p-1 rounded-full text-white shadow-sm"
+                  className="absolute -bottom-1 -right-1 p-1 rounded-full text-white "
                   style={{ backgroundColor: '#2FC191' }}
                 >
                   <DollarSign className="w-3.5 h-3.5" />
@@ -146,11 +146,10 @@ export const TipModal: React.FC<TipModalProps> = ({
                       key={amt}
                       type="button"
                       onClick={() => handleSelectPreset(amt)}
-                      className={`py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-colors border ${
-                        isSelected
-                          ? 'bg-[#2FC191] text-white border-[#2FC191]'
-                          : 'bg-[#F8FAFC] text-[#053697] border-[#05369712] hover:bg-gray-100 hover:border-[#05369720]'
-                      }`}
+                      className={`py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-colors border ${isSelected
+                        ? 'bg-[#2FC191] text-white border-[#2FC191]'
+                        : 'bg-[#F8FAFC] text-[#053697] border-[#05369712] hover:bg-gray-100 hover:border-[#05369720]'
+                        }`}
                     >
                       ${amt}
                     </button>
@@ -196,7 +195,7 @@ export const TipModal: React.FC<TipModalProps> = ({
             <button
               type="submit"
               disabled={!isValidAmount}
-              className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
+              className="w-full py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 "
               style={{ backgroundColor: '#2FC191' }}
             >
               <Send className="w-4 h-4" />
@@ -229,7 +228,7 @@ export const TipModal: React.FC<TipModalProps> = ({
 
             <button
               onClick={onClose}
-              className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 shadow-sm"
+              className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90 "
               style={{ backgroundColor: '#2FC191' }}
             >
               Done

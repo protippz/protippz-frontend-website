@@ -23,7 +23,7 @@ const SearchAndSortComponent: React.FC = () => {
   const [search, setSearch] = useState("");
   const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [keyboardOffset, setKeyboardOffset] = useState(0);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [maxPanelHeight, setMaxPanelHeight] = useState<string>("85vh");
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -74,34 +74,28 @@ const SearchAndSortComponent: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isMobileSheetOpen]);
 
-  // Keyboard avoider: Track visualViewport height and offset for mobile virtual keyboards
+  // Track visualViewport height so the bottom sheet never overflows off the top of the screen
   useEffect(() => {
     if (!isMobileSheetOpen) {
-      setKeyboardOffset(0);
-      setMaxPanelHeight("85vh");
+      setIsKeyboardOpen(false);
+      setMaxPanelHeight("85dvh");
       return;
     }
 
     const handleViewportChange = () => {
       if (typeof window === "undefined") return;
       const vv = window.visualViewport;
-      if (!vv) return;
+      if (!vv) {
+        setMaxPanelHeight("85dvh");
+        return;
+      }
 
-      const offsetFromBottom = Math.max(
-        0,
-        Math.round(window.innerHeight - (vv.height + vv.offsetTop))
-      );
-      const simpleOffset = Math.max(
-        0,
-        Math.round(window.innerHeight - vv.height)
-      );
-      const effectiveOffset = Math.max(offsetFromBottom, simpleOffset);
+      // Detect if virtual keyboard is active (viewport significantly smaller than full window)
+      const isKb = vv.height < window.innerHeight - 80;
+      setIsKeyboardOpen(isKb);
 
-      const activeKeyboard = effectiveOffset > 50 ? effectiveOffset : 0;
-      setKeyboardOffset(activeKeyboard);
-
-      const visibleHeight = vv.height;
-      const safeMaxHeight = Math.max(260, Math.floor(visibleHeight - 20));
+      // Constrain panel height dynamically so the sheet stays fully visible
+      const safeMaxHeight = Math.max(240, Math.floor(vv.height - 16));
       setMaxPanelHeight(`${safeMaxHeight}px`);
     };
 
@@ -239,7 +233,7 @@ const SearchAndSortComponent: React.FC = () => {
 
           <button
             type="submit"
-            className="h-9 px-3 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white font-bold text-xs tracking-wide transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer shadow-2xs"
+            className="h-9 px-3 rounded-xl bg-[#053697] hover:bg-[#042870] active:scale-[0.98] text-white font-bold text-xs tracking-wide transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
           >
             <Search className="w-3.5 h-3.5" />
             <span className="hidden sm:inline lg:hidden xl:inline">Search</span>
@@ -301,8 +295,8 @@ const SearchAndSortComponent: React.FC = () => {
       {/* ========================================================= */}
       {/* 2. MOBILE BOTTOM FLOATING TRIGGER (Visible below lg screens) */}
       {/* ========================================================= */}
-      <div className="lg:hidden fixed bottom-[66px] sm:bottom-18 left-1/2 -translate-x-1/2 z-[100]">
-        <div className="flex items-center gap-1.5 p-1 rounded-full bg-[#053697]/95 backdrop-blur-md border border-white/20 shadow-xl shadow-blue-950/30">
+      <div className="lg:hidden fixed bottom-[108px] sm:bottom-[118px] left-1/2 -translate-x-1/2 z-[100]">
+        <div className="flex items-center gap-1.5 p-1 rounded-full bg-[#053697]/95 backdrop-blur-md border border-white/20 shadow-blue-950/30">
           <button
             type="button"
             onClick={() => setIsMobileSheetOpen(true)}
@@ -343,17 +337,11 @@ const SearchAndSortComponent: React.FC = () => {
               onClick={handleCloseModal}
             />
 
-            {/* Keyboard-avoiding container anchored at bottom */}
-            <div
-              className="fixed inset-x-0 bottom-0 z-10 flex flex-col justify-end pointer-events-none"
-              style={{
-                bottom: `${keyboardOffset}px`,
-                transition: "bottom 0.15s cubic-bezier(0.2, 0, 0, 1)",
-              }}
-            >
+            {/* Bottom sheet container anchored cleanly at bottom without gap */}
+            <div className="fixed inset-x-0 bottom-0 z-10 flex flex-col justify-end pointer-events-none pb-safe">
               {/* Bottom Sheet Panel */}
               <div
-                className="relative w-full bg-white rounded-t-3xl shadow-2xl p-5 animate-in slide-in-from-bottom duration-300 space-y-4 overflow-y-auto overscroll-contain pointer-events-auto"
+                className="relative w-full bg-white rounded-t-3xl p-5 animate-in slide-in-from-bottom duration-300 space-y-4 overflow-y-auto overscroll-contain pointer-events-auto"
                 style={{
                   maxHeight: maxPanelHeight,
                 }}
@@ -395,7 +383,7 @@ const SearchAndSortComponent: React.FC = () => {
                     <label className="text-xs font-bold text-slate-700 block">
                       Reward Name
                     </label>
-                    {keyboardOffset > 50 && (
+                    {isKeyboardOpen && (
                       <button
                         type="button"
                         onClick={() => {
@@ -422,7 +410,6 @@ const SearchAndSortComponent: React.FC = () => {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search reward name..."
-                        autoFocus
                         onFocus={(e) => {
                           setTimeout(() => {
                             e.target.scrollIntoView({
@@ -476,11 +463,10 @@ const SearchAndSortComponent: React.FC = () => {
                             setOrder(newOrder);
                             updateUrlParams(opt.value, newOrder);
                           }}
-                          className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
-                            isSelected
-                              ? "bg-[#053697] text-white border-[#053697] shadow-xs"
-                              : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-                          }`}
+                          className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${isSelected
+                            ? "bg-[#053697] text-white border-[#053697]"
+                            : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                            }`}
                         >
                           <span>{opt.label}</span>
                           {isSelected && <Check className="w-3.5 h-3.5" />}
@@ -498,13 +484,13 @@ const SearchAndSortComponent: React.FC = () => {
                   <div className="grid grid-cols-2 gap-2">
                     {(sortBy === "pointRequired"
                       ? [
-                          { label: "Lowest First", value: "Low to High" },
-                          { label: "Highest First", value: "High to Low" },
-                        ]
+                        { label: "Lowest First", value: "Low to High" },
+                        { label: "Highest First", value: "High to Low" },
+                      ]
                       : [
-                          { label: "A to Z (Ascending)", value: "A to Z" },
-                          { label: "Z to A (Descending)", value: "Z to A" },
-                        ]
+                        { label: "A to Z (Ascending)", value: "A to Z" },
+                        { label: "Z to A (Descending)", value: "Z to A" },
+                      ]
                     ).map((ord) => {
                       const isSelected = order === ord.value;
                       return (
@@ -515,11 +501,10 @@ const SearchAndSortComponent: React.FC = () => {
                             setOrder(ord.value);
                             updateUrlParams(sortBy, ord.value);
                           }}
-                          className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
-                            isSelected
-                              ? "bg-[#053697] text-white border-[#053697] shadow-xs"
-                              : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
-                          }`}
+                          className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${isSelected
+                            ? "bg-[#053697] text-white border-[#053697]"
+                            : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                            }`}
                         >
                           <span>{ord.label}</span>
                           {isSelected && <Check className="w-3.5 h-3.5" />}
@@ -560,7 +545,7 @@ const SearchAndSortComponent: React.FC = () => {
                       handleSearchSubmit();
                       handleCloseModal();
                     }}
-                    className="flex-1 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] text-xs font-bold text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                    className="flex-1 py-2.5 rounded-xl bg-[#053697] hover:bg-[#042870] text-xs font-bold text-white transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <span>Apply Filter</span>
                   </button>

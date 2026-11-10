@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
 
   // Public platform routes accessible without login
   const platformLinks = [
-    { name: "TIPPZ", href: "/tippz" },
+    ...(isLoggedIn ? [] : [{ name: "TIPPZ", href: "/tippz" }]),
     { name: "PLAYERZ", href: "/playerz" },
     { name: "TEAMZ", href: "/teamz" },
     { name: "MEDIA & COMMUNITY", href: "/community" },
@@ -72,22 +72,22 @@ const Footer: React.FC = () => {
   // Protected routes only displayed when user is logged in
   const userHubLinks = isPlayerOrTeam
     ? [
-        { name: "Athlete Dashboard", href: "/home" },
-        { name: "My Tip History", href: "/my-tip-history" },
-        { name: "Withdraw Earnings", href: "/player-withdraw" },
-        { name: "Address Info", href: "/address" },
-        { name: "Tax Information", href: "/tax-information" },
-        { name: "Help & FAQs", href: "/faqs" },
-      ]
+      { name: "Athlete Dashboard", href: "/home" },
+      { name: "My Tip History", href: "/my-tip-history" },
+      { name: "Withdraw Earnings", href: "/home" },
+      { name: "Address Info", href: "/address" },
+      { name: "Tax Information", href: "/tax-information" },
+      { name: "Help & FAQs", href: "/faqs" },
+    ]
     : [
-        { name: "My Profile", href: "/profile" },
-        { name: "Deposit Funds", href: "/deposit" },
-        { name: "Tippz History", href: "/tippz-history" },
-        { name: "Transaction Log", href: "/transaction-log" },
-        { name: "My Favorites", href: "/favorites" },
-        { name: "Invite Friends", href: "/invite-friends" },
-        { name: "Help & FAQs", href: "/faqs" },
-      ];
+      { name: "My Profile", href: "/profile" },
+      { name: "Deposit Funds", href: "/deposit" },
+      { name: "Tippz History", href: "/tippz-history" },
+      { name: "Transaction Log", href: "/transaction-log" },
+      { name: "My Favorites", href: "/favorites" },
+      { name: "Invite Friends", href: "/invite-friends" },
+      { name: "Help & FAQs", href: "/faqs" },
+    ];
 
   const hubTitle = isPlayerOrTeam ? "Athlete Hub" : "Fan Hub";
 
@@ -98,9 +98,9 @@ const Footer: React.FC = () => {
     { name: "Contact Support", href: "/contact" },
     ...(isLoggedIn
       ? [
-          { name: "Change Password", href: "/change-password" },
-          { name: "Delete Account", href: "/delete-account" },
-        ]
+        { name: "Change Password", href: "/change-password" },
+        { name: "Delete Account", href: "/delete-account" },
+      ]
       : []),
   ];
 
@@ -135,11 +135,11 @@ const Footer: React.FC = () => {
 
       <div className="relative max-w-355 mx-auto px-4 sm:px-6 lg:px-8">
         {/* ================= MAIN NAVIGATION GRID (LIGHT MODE) ================= */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-14 border-b border-slate-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-2 lg:gap-2 pb-14 border-b border-slate-200">
           {/* Col 1: Brand & Bio */}
           <div className="lg:col-span-4 space-y-5">
             <Link href="/" className="inline-block group">
-              <div className="p-2 bg-white rounded-xl inline-block border border-slate-200/80 shadow-xs transition-all duration-200">
+              <div className="p-2 bg-white rounded-xl inline-block border border-slate-200/80 transition-all duration-200">
                 <Image
                   src={IMAGE.logo}
                   alt="PROTIPPZ"
@@ -169,7 +169,7 @@ const Footer: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={item.name}
-                    className="w-9 h-9 rounded-xl bg-white hover:bg-[#2FC191] hover:text-white text-slate-600 flex items-center justify-center transition-all duration-200 border border-slate-200/90 hover:border-[#2FC191] hover:scale-110 active:scale-95 shadow-xs"
+                    className="w-9 h-9 rounded-xl bg-white hover:bg-[#2FC191] hover:text-white text-slate-600 flex items-center justify-center transition-all duration-200 border border-slate-200/90 hover:border-[#2FC191] hover:scale-110 active:scale-95"
                     title={item.name}
                   >
                     {item.icon}
@@ -258,7 +258,7 @@ const Footer: React.FC = () => {
             <div className="pt-2">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white hover:bg-[#2FC191]/10 border border-slate-200 hover:border-[#2FC191] text-xs font-semibold text-slate-700 hover:text-[#053697] transition-all shadow-xs"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white hover:bg-[#2FC191]/10 border border-slate-200 hover:border-[#2FC191] text-xs font-semibold text-slate-700 hover:text-[#053697] transition-all"
               >
                 <Mail className="w-3.5 h-3.5 text-[#2FC191]" />
                 <span>Contact Support</span>
@@ -280,7 +280,7 @@ const Footer: React.FC = () => {
               Scan or tap below to download PROTIPPZ on Google Play.
             </p>
 
-            <div className="flex items-center gap-3 bg-white border border-slate-200 p-2.5 rounded-2xl shadow-xs">
+            <div className="flex items-center gap-2 bg-white border border-slate-200 p-2.5 rounded-2xl">
               <div className="bg-slate-50 p-1 rounded-xl shrink-0 border border-slate-100">
                 <Image
                   src={qrCode}
@@ -315,8 +315,8 @@ const Footer: React.FC = () => {
         </div>
 
         {/* ================= BOTTOM BAR (LIGHT MODE) ================= */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-2 text-center sm:text-left">
             <p>© {currentYear} PROTIPPZ. All rights reserved.</p>
             <span className="hidden sm:inline-block text-slate-300">•</span>
             <p className="text-slate-500">
@@ -324,8 +324,8 @@ const Footer: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-4 text-slate-600">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-slate-600">
               <Link
                 href="/privacy"
                 className="hover:text-[#053697] transition-colors"
@@ -355,7 +355,7 @@ const Footer: React.FC = () => {
             {/* Back to Top Button */}
             <button
               onClick={scrollToTop}
-              className="p-2.5 rounded-xl bg-white hover:bg-[#2FC191] hover:text-white text-slate-600 transition-all duration-200 border border-slate-200 hover:border-[#2FC191] cursor-pointer active:scale-95 shadow-xs"
+              className="p-2.5 rounded-xl bg-white hover:bg-[#2FC191] hover:text-white text-slate-600 transition-all duration-200 border border-slate-200 hover:border-[#2FC191] cursor-pointer active:scale-95"
               title="Back to Top"
               aria-label="Scroll back to top"
             >

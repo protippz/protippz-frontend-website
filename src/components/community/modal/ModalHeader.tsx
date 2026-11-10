@@ -28,7 +28,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
       className="flex items-center justify-between px-4 sm:px-6 py-3 border-b shrink-0 bg-white"
       style={{ borderColor: "#0536970B" }}
     >
-      <div className="flex items-center gap-3 min-w-0">
+      <div className="flex items-center gap-2 min-w-0">
         <Avatar className="w-9 h-9 sm:w-10 sm:h-10 border border-[#05369715] shrink-0 cursor-pointer">
           <AvatarImage src={user?.avatar} alt={user?.name} />
           <AvatarFallback>

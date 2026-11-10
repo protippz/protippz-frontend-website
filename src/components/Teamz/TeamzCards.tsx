@@ -1,14 +1,22 @@
 "use client";
 
-import React, { memo } from "react";
+import React, { memo, useState, useEffect } from "react";
 import Image from "next/image";
 import { imageUrl } from "@/ApisRequests/server";
 import BookmarkButton from "../Shared/Client/BookmarkButton";
 import ptLogo from "@/Assets/PT Logo.png";
+import defaultTeamLogo from "@/Assets/team.webp";
 import { TeamInterface } from "@/app/(default)/teamz/page";
 import SendTipsButton from "./Client/SendTipsButton";
-import { Share2, Star, ArrowRight } from "lucide-react";
-import toast from "react-hot-toast";
+import {
+  Share2,
+  Star,
+  ArrowRight,
+  DollarSign,
+  TrendingUp,
+  ShieldCheck,
+  Trophy,
+} from "lucide-react";
 import { shareUrl } from "@/lib/share";
 
 interface TeamzCardsProps {
@@ -37,25 +45,29 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
   const communityRaisedDisplay = item?.paidAmount
     ? `$${item.paidAmount.toLocaleString()}`
     : item?.totalTips
-    ? `$${(item.totalTips * 15).toLocaleString()}`
-    : "$2,650";
+      ? `$${(item.totalTips * 15).toLocaleString()}`
+      : "$2,650";
 
   const teamImage = item?.team_bg_image
     ? imageUrl(item.team_bg_image)
     : item?.team_logo
-    ? imageUrl(item.team_logo)
-    : ptLogo;
+      ? imageUrl(item.team_logo)
+      : ptLogo;
 
-  const [imgSrc, setImgSrc] = React.useState<any>(teamImage);
+  const [imgSrc, setImgSrc] = useState<any>(teamImage);
+  const [logoSrc, setLogoSrc] = useState<any>(
+    item?.team_logo ? imageUrl(item.team_logo) : defaultTeamLogo
+  );
 
-  React.useEffect(() => {
+  useEffect(() => {
     setImgSrc(
       item?.team_bg_image
         ? imageUrl(item.team_bg_image)
         : item?.team_logo
-        ? imageUrl(item.team_logo)
-        : ptLogo
+          ? imageUrl(item.team_logo)
+          : ptLogo
     );
+    setLogoSrc(item?.team_logo ? imageUrl(item.team_logo) : defaultTeamLogo);
   }, [item?.team_bg_image, item?.team_logo]);
 
   const handleShare = async (e: React.MouseEvent) => {
@@ -78,67 +90,93 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
     <SendTipsButton item={item} token={token}>
       {({ openTip, openDetails }) => {
         return (
-          <div className="relative bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl shadow-sm overflow-hidden mb-4 sm:mb-6">
-            <div className="flex flex-col md:flex-row items-stretch">
-              {/* Left Column: Team Image with Bottom Overlay Badges */}
+          <div className="relative bg-white/95 backdrop-blur-xl border border-slate-200/90 hover:border-slate-300 rounded-[24px] sm:rounded-[28px]  transition-colors duration-300 overflow-hidden group">
+            <div className="flex flex-col md:flex-row items-stretch p-3.5 sm:p-5 md:p-6 gap-2 sm:gap-2">
+              {/* Left Column: Media Preview Pane with Perfect Continuous Curves */}
               <div
                 onClick={openDetails}
-                className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[340px] md:h-auto min-h-[300px] md:min-h-[360px] bg-slate-900 shrink-0 overflow-hidden cursor-pointer"
-                title={`View profile for ${item?.name || "Team"}`}
+                className="group/photo relative w-full md:w-[280px] lg:w-[310px] xl:w-[330px] h-[220px] md:h-[270px] self-stretch shrink-0 rounded-[20px] sm:rounded-[24px] overflow-hidden cursor-pointer border border-slate-200/60 shadow-inner"
+                title={`View profile for ${item?.name || "Player"}`}
               >
+                {/* Team Hero Image */}
                 <Image
                   src={imgSrc}
                   alt={item?.name || "Team"}
                   fill
-                  sizes="(max-width: 768px) 100vw, 340px"
-                  className="object-contain object-center"
+                  sizes="(max-width: 768px) 100vw, 330px"
+                  className="object-contain object-center p-3 group-hover/photo:scale-[1.02] transition-transform duration-500 ease-out"
                   onError={() => setImgSrc(ptLogo)}
                 />
 
-                {/* Subtle gradient vignette at bottom of photo to ensure badges pop */}
-                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
+                {/* Top-Right Quick Badge (League) with Mac Frosted Glass Style */}
+                <div className="absolute top-3.5 right-3.5 z-10">
+                  <div className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white font-mono text-[11px] font-black tracking-wider">
+                    {leagueDisplay}
+                  </div>
+                </div>
 
-                {/* Badges Overlay at bottom of hero */}
+                {/* Subtle vignette gradient at bottom */}
+                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/95 via-black/50 to-transparent pointer-events-none" />
+
+                {/* Badges Overlay at bottom of hero in Smooth Capsule style */}
                 <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-center gap-1.5 flex-wrap z-10">
-                  {/* Sport Badge */}
-                  <span className="px-2.5 py-1 rounded-[4px] bg-[#053697] text-white text-[10px] sm:text-[11px] font-black uppercase tracking-wider shadow-xs">
+                  {/* Sport Capsule */}
+                  <span className="px-2.5 py-1 rounded-xl bg-[#053697]/90 backdrop-blur-md text-white border border-white/20 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider">
                     {sportDisplay}
                   </span>
 
-                  {/* League Badge */}
-                  <span className="px-2.5 py-1 rounded-[4px] bg-white text-[#053697] border border-slate-200 text-[10px] sm:text-[11px] font-black uppercase tracking-wider shadow-xs">
+                  {/* League Capsule */}
+                  <span className="px-2.5 py-1 rounded-xl bg-white/95 backdrop-blur-md text-[#053697] border border-white/40 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider">
                     {leagueDisplay}
                   </span>
 
-                  {/* Verification Badge */}
-                  <span className="px-2.5 py-1 rounded-[4px] bg-[#2FC191] text-[#053697] text-[10px] sm:text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-xs">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#053697]" />
-                    <span>OFFICIAL TEAM</span>
+                  {/* Official Team Verification Capsule */}
+                  <span className="px-2.5 py-1 rounded-xl bg-[#2FC191]/95 backdrop-blur-md text-slate-900 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-900 animate-ping" />
+                    <span>OFFICIAL PROGRAM</span>
                   </span>
                 </div>
               </div>
 
-              {/* Right Column: Entity Overview & Actions */}
-              <div className="flex-1 min-w-0 p-4 sm:p-6 lg:p-7 flex flex-col justify-between">
+              {/* Right Column: Mac-Style Clean Content & Dashboard Details */}
+              <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                 <div>
-                  {/* Top Line: Archive Tag, Handle, and Action Icons */}
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-1.5 min-w-0 font-mono text-xs sm:text-[13px] truncate">
-                      <span className="font-bold text-[#053697]">
-                        [NIL ARCHIVE: {archiveId}]
-                      </span>
-                      <span className="text-slate-300">/</span>
-                      <span className="text-slate-500 font-medium truncate">
-                        @{handle}
-                      </span>
+                  {/* Top Bar: League Micro-Pill, Archive ID, and Action Icons */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 flex-wrap min-w-0">
+                      {/* Organization / Sport Micro-Pill */}
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-100 border border-slate-200/80 text-slate-800 transition-colors">
+                        <div className="relative w-4 h-4 rounded-full overflow-hidden bg-white shrink-0 border border-slate-200">
+                          <Image
+                            src={logoSrc}
+                            alt={item?.name || "Team"}
+                            fill
+                            sizes="16px"
+                            className="object-contain p-0.5"
+                            onError={() => setLogoSrc(defaultTeamLogo)}
+                          />
+                        </div>
+                        <span className="text-[11px] sm:text-xs font-bold uppercase tracking-tight truncate max-w-[130px] sm:max-w-[180px]">
+                          {sportDisplay} ATHLETICS
+                        </span>
+                      </div>
+
+                      {/* Archive & Handle */}
+                      <div className="hidden sm:inline-flex items-center gap-1.5 font-mono text-xs text-slate-500">
+                        <span className="font-bold text-[#053697]">
+                          [ARCHIVE: {archiveId}]
+                        </span>
+                        <span className="text-slate-300">/</span>
+                        <span className="truncate">@{handle}</span>
+                      </div>
                     </div>
 
-                    {/* Action Icon Buttons: Share & Favorite */}
+                    {/* Smooth Rounded Action Buttons: Share & Bookmark */}
                     <div className="flex items-center gap-2 shrink-0">
                       <button
                         type="button"
                         onClick={handleShare}
-                        className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:text-[#053697] hover:border-[#053697] hover:bg-slate-50 transition-colors cursor-pointer"
+                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-100/80 hover:bg-slate-200/70 border border-slate-200/80 flex items-center justify-center text-slate-600 hover:text-[#053697] active:scale-95 transition-all cursor-pointer"
                         title="Share team profile"
                         aria-label="Share team profile"
                       >
@@ -150,83 +188,66 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                         className="flex items-center justify-center"
                       >
                         <BookmarkButton
-                          isBookmark={item?.isBookmark}
+                          isBookmark={Boolean(item?.isBookmark)}
                           type="team"
                           _id={item?._id}
-                          className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:text-amber-500 hover:border-amber-400 hover:bg-amber-50/40 transition-colors cursor-pointer"
+                          className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-100/80 hover:bg-slate-200/70 border border-slate-200/80 flex items-center justify-center text-slate-600 hover:text-amber-500 active:scale-95 transition-all cursor-pointer"
                         >
-                          <Star
-                            className={`w-3.5 h-3.5 ${
-                              item?.isBookmark
+                          {(bookmarked) => (
+                            <Star
+                              className={`w-3.5 h-3.5 transition-colors ${bookmarked
                                 ? "fill-amber-400 text-amber-400"
-                                : "text-slate-500"
-                            }`}
-                          />
+                                : "text-slate-600 hover:text-amber-500"
+                                }`}
+                            />
+                          )}
                         </BookmarkButton>
                       </div>
                     </div>
                   </div>
 
                   {/* Team Name */}
-                  <h3
-                    onClick={openDetails}
-                    className="text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#053697] tracking-tight leading-none mt-2.5 sm:mt-3 hover:text-[#042870] transition-colors cursor-pointer"
-                    title={item?.name || "Team"}
-                  >
-                    {item?.name || "OFFICIAL TEAM"}
-                  </h3>
+                  <div className="mt-3 sm:mt-3.5">
+                    <h3
+                      onClick={openDetails}
+                      className="text-2xl sm:text-3xl line-clamp-1 lg:text-[34px] font-black uppercase text-[#053697] tracking-tight leading-tight hover:text-[#042870] transition-colors cursor-pointer"
+                      title={item?.name || "Team"}
+                    >
+                      {item?.name || "OFFICIAL TEAM"}
+                    </h3>
 
-                  {/* Stats Box */}
-                  {/* <div className="border border-slate-200/90 rounded-2xl p-4 sm:p-5 mt-3 sm:mt-4 grid grid-cols-2 divide-x divide-slate-200 relative overflow-hidden bg-white">
-                    <span className="absolute right-3 -bottom-2 text-6xl sm:text-7xl font-black text-slate-100 select-none pointer-events-none opacity-60 tracking-tighter leading-none">
-                      NIL
-                    </span>
-
-                    
-                    <div className="pr-3 sm:pr-4">
-                      <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 tracking-wider uppercase">
-                        TOTAL DIRECT TIPS
-                      </p>
-                      <div className="flex items-baseline gap-1.5 mt-1 sm:mt-1.5">
-                        <span className="text-2xl sm:text-3xl font-black text-[#053697] leading-none">
-                          {totalTipsDisplay}
-                        </span>
-                        <span className="text-xs sm:text-[13px] font-bold text-slate-400 uppercase">
-                          TIPS
-                        </span>
-                      </div>
+                    {/* Subline on mobile for handle */}
+                    <div className="flex sm:hidden items-center gap-1.5 font-mono text-xs text-slate-500 mt-1">
+                      <span className="font-bold text-[#053697]">
+                        [NIL ARCHIVE: {archiveId}]
+                      </span>
+                      <span>•</span>
+                      <span>@{handle}</span>
                     </div>
-
-                    
-                    <div className="pl-4 sm:pl-6 relative z-10">
-                      <p className="text-[10px] sm:text-[11px] font-bold text-slate-400 tracking-wider uppercase">
-                        COMMUNITY RAISED
-                      </p>
-                      <div className="mt-1 sm:mt-1.5">
-                        <span className="text-2xl sm:text-3xl font-black text-[#00684a] leading-none">
-                          {communityRaisedDisplay}
-                        </span>
-                      </div>
-                    </div>
-                  </div> */}
+                  </div>
                 </div>
 
-                
-                <div className="flex items-center gap-2.5 sm:gap-3 mt-4 sm:mt-5 pt-1">
-                  
+                {/* Bottom Action Push Buttons with Smooth Curvature and No Hover Shadow */}
+                <div className="flex items-center gap-2.5 sm:gap-2 mt-4 sm:mt-5 pt-2">
+                  <button
+                    type="button"
+                    onClick={openTip}
+                    className="h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-[#2FC191] hover:bg-[#28b887] text-[#053697] font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer shrink-0"
+                    title={`Send direct tip to ${item?.name || "Team"}`}
+                  >
+                    <DollarSign className="w-4 h-4 stroke-[2.5]" />
+                    <span>SEND TIP</span>
+                  </button>
+
                   <button
                     type="button"
                     onClick={openDetails}
-                    className="flex-1 min-w-0 h-11 sm:h-12 px-4 sm:px-6 rounded-xl bg-[#053697] hover:bg-[#053697] active:scale-[0.99] text-[#fff] font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs hover:shadow"
+                    className="flex-1 min-w-0 h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-[#053697] hover:bg-[#042870] text-white font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer"
+                    title={`View profile for ${item?.name || "Team"}`}
                   >
-                    <span>VIEW TEAM PROFILE</span>
-                    <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#053697]" />
+                    <span className="truncate">VIEW TEAM PROFILE</span>
+                    <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-white shrink-0" />
                   </button>
-
-                  
-                  {/* <div className="h-11 sm:h-12 px-3.5 sm:px-5 rounded-xl bg-white border border-slate-200 text-slate-700 font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center shrink-0">
-                    MIN $5.00
-                  </div> */}
                 </div>
               </div>
             </div>

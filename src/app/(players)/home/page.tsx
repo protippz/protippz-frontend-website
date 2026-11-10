@@ -1,22 +1,147 @@
-'use client';
-import BackButton from '@/components/ui/BackButton';
-import EmailVerfiyModal from '@/components/UserEmail/EmailVerifyModal';
-import SuccessModal from '@/components/UserEmail/SuccessModal';
-import UserVerifyOtp from '@/components/UserEmail/UserVerifyOtp';
-import { useContextData } from '@/provider/ContextProvider';
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { IoChevronForwardSharp } from 'react-icons/io5';
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useContextData } from "@/provider/ContextProvider";
+import { imageUrl, post } from "@/ApisRequests/server";
+import toast from "react-hot-toast";
+import BackButton from "@/components/ui/BackButton";
+import EmailVerifyModal from "@/components/UserEmail/EmailVerifyModal";
+import UserVerifyOtp from "@/components/UserEmail/UserVerifyOtp";
+import defaultPlayer from "@/Assets/playerDefult.jpg";
+import {
+  Wallet,
+  TrendingUp,
+  Award,
+  ShieldCheck,
+  ShieldAlert,
+  MapPin,
+  ExternalLink,
+  Edit3,
+  User as UserIcon,
+  Mail,
+  Calendar,
+  ChevronRight,
+  GraduationCap,
+  Sparkles,
+  Clock,
+  History,
+  FileText,
+  Home as HomeIcon,
+  CheckCircle2,
+  AlertTriangle,
+  Instagram,
+  Twitter,
+  ArrowUpRight,
+  Loader2,
+} from "lucide-react";
+import { FaArrowLeftLong, FaTiktok } from "react-icons/fa6";
+import { FinancialSnapshot } from "@/components/player-profile/FinancialSnapshot";
+import QuickActionRibbon from "@/components/player-profile/QuickActionRibbon";
+import MainBalancedDossier from "@/components/player-profile/MainBalancedDossier";
+import {
+  StripeConnectModal,
+  WithdrawFundsModal,
+} from "@/components/player-profile/WithdrawModals";
+import { useRouter } from "next/navigation";
 
 const PlayerHomePage = () => {
-  const data = useContextData();
-  const verifyEmail =
-    !data?.userData?.user?.email &&
-    (data?.userData?.user?.role == 'player' ||
-      data?.userData?.user?.role == 'team');
+  const context = useContextData();
+  const player = context?.userData;
+  const loading = context?.loading;
+
+  // Withdraw & Stripe Connect modals state
+  const [showStripeModal, setShowStripeModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [updatingStripe, setUpdatingStripe] = useState(false);
+
+  const handleUpdateStripeAccount = async () => {
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!token) {
+      toast.error("Please sign in to update your Stripe account");
+      return;
+    }
+
+    setUpdatingStripe(true);
+    try {
+      const res = await post(
+        "/stripe/update-connected-account",
+        {},
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+      setUpdatingStripe(false);
+      const link = typeof res?.data === "string" ? res.data : res?.data?.link;
+      if (res?.success && link) {
+        toast.success("Opening Stripe portal to update your profile...");
+        window.open(link, "_blank");
+        return;
+      }
+
+      // Fallback: If update-connected-account didn't return a link, try connect-stripe
+      const connectRes = await post(
+        "/stripe/connect-stripe",
+        { test: "" },
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+      if (connectRes?.success && connectRes?.data) {
+        toast.success("Opening Stripe portal to complete onboarding...");
+        window.open(connectRes.data, "_blank");
+      } else {
+        toast.error(
+          res?.message ||
+          connectRes?.message ||
+          "Unable to open Stripe update link. Please try again."
+        );
+      }
+    } catch (err: any) {
+      setUpdatingStripe(false);
+      toast.error(
+        err?.message || "Failed to connect to Stripe. Please try again."
+      );
+    }
+  };
+
+  const handleOpenWithdraw = () => {
+    if (!player?.isStripeConnected) {
+      setShowStripeModal(true);
+    } else {
+      setShowWithdrawModal(true);
+    }
+  };
+
+  // Image fallback states
+  const [avatarSrc, setAvatarSrc] = useState<string>("");
+  const [bgSrc, setBgSrc] = useState<string>("");
+
+  useEffect(() => {
+    if (player?.player_image) {
+      setAvatarSrc(imageUrl(player?.player_image));
+    }
+    if (player?.player_bg_image) {
+      setBgSrc(imageUrl(player?.player_bg_image));
+    }
+  }, [player?.player_image, player?.player_bg_image]);
+
+  // Email verification logic
+  const userEmail = player?.email || player?.user?.email;
+  const isPlayerOrTeam =
+    player?.user?.role === "player" || player?.user?.role === "team";
+  const verifyEmail = !userEmail && isPlayerOrTeam;
+
   const [showModal, setShowModal] = useState(false);
-  const [showModaOtp, setShowModalOtp] = useState(false);
-  const [addEmail, setAddEmail] = useState('');
+  const [showModalOtp, setShowModalOtp] = useState(false);
+  const [addEmail, setAddEmail] = useState("");
+  const router = useRouter()
 
   useEffect(() => {
     if (verifyEmail) {
@@ -24,113 +149,294 @@ const PlayerHomePage = () => {
     }
   }, [verifyEmail]);
 
+  // Team name resolution
+  const teamName =
+    typeof player?.team === "object" && player?.team?.name
+      ? player?.team.name
+      : typeof player?.team === "string"
+        ? player?.team
+        : "Independent Athlete";
+
+
+
+  if (loading && !player) {
+    return (
+      <div className="max-w-355 mx-auto px-3.5 sm:px-6 py-6 sm:py-8">
+        <div className="animate-pulse space-y-5">
+          <div className="h-6 w-24 bg-slate-200 rounded-2xl" />
+          <div className="h-20 bg-white border border-slate-200/90 rounded-[24px] w-full" />
+          <div className="h-72 bg-white border border-slate-200/90 rounded-[28px] w-full" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="h-32 bg-white border border-slate-200/90 rounded-[24px]" />
+            <div className="h-32 bg-white border border-slate-200/90 rounded-[24px]" />
+            <div className="h-32 bg-white border border-slate-200/90 rounded-[24px]" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <>
-      <div className="justify-start w-full max-w-screen-sm">
-        <BackButton />
-      </div>
-      <div className="flex flex-col items-center justify-center">
-        {/* Modal */}
-        {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <EmailVerfiyModal
-              setAddEmail={setAddEmail}
-              showModal={showModal}
-              setShowModalOtp={setShowModalOtp}
-              setShowModal={setShowModal}
-              showModaOtp={showModaOtp}
-            />
-          </div>
-        )}
-        {showModaOtp && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <UserVerifyOtp
-              setShowModalOtp={setShowModalOtp}
-              addEmail={addEmail}
-            />
-          </div>
-        )}
+    <div className="max-w-355 mx-auto px-3.5 sm:px-6 py-5 sm:py-8 space-y-5 sm:space-y-6">
+      {/* Email Verification Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <EmailVerifyModal
+            setAddEmail={setAddEmail}
+            showModal={showModal}
+            setShowModalOtp={setShowModalOtp}
+            setShowModal={setShowModal}
+            showModaOtp={showModalOtp}
+          />
+        </div>
+      )}
 
-        {/* Main Content */}
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center gap-4">
-            <div className="px-12 py-4 flex flex-col items-center justify-center rounded-md bg-slate-200 ">
-              <h1 className="text-lg font-medium text-[#2FC191]">
-                Amount of Tippz
-              </h1>
-              <span className="text-[#053697] text-2xl">
-                $ {data?.userData?.totalTips?.toFixed(2) || 0}
-              </span>
+      {showModalOtp && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <UserVerifyOtp
+            setShowModalOtp={setShowModalOtp}
+            addEmail={addEmail}
+          />
+        </div>
+      )}
+
+      {/* Top Header Card: Apple Toolbar Style with Continuous Squircles */}
+      <div className="relative bg-white/95 backdrop-blur-xl border border-slate-200/90 hover:border-slate-300 rounded-[12px] p-2  transition-colors duration-300 flex flex-col sm:flex-row sm:items-center justify-between">
+        <button className="flex gap-2 items-center" onClick={() => {
+          router.back()
+        }}>
+          <FaArrowLeftLong />
+          Back
+        </button>
+      </div>
+
+      {/* Payout Setup Alert (if not connected) with Apple-Style Soft Amber Banner */}
+      {!player?.isStripeConnected && (
+        <div className="relative bg-amber-50/90 backdrop-blur-md border border-amber-200/80 rounded-[22px] sm:rounded-[24px] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className="p-2.5 bg-amber-100/90 text-amber-800 rounded-2xl shrink-0 border border-amber-200/60">
+              <AlertTriangle className="w-4 h-4" />
             </div>
-            <div className="px-12 py-4 flex flex-col items-center justify-center rounded-md bg-slate-200 ">
-              <h1 className="text-lg font-medium  text-[#2FC191]">
-                Current Balance
-              </h1>
-              <span className="text-[#053697] text-2xl">
-                $ {data?.userData?.dueAmount?.toFixed(2) || 0}
-              </span>
+            <div>
+              <h4 className="text-xs sm:text-sm font-bold text-amber-950">
+                Payout Method Setup Required
+              </h4>
+              <p className="text-xs text-amber-800/90 mt-0.5">
+                Set up your payout information to enable fast direct deposits when withdrawing your tips.
+              </p>
             </div>
           </div>
-          <Link
-            href={`/player-withdraw`}
-            className="mt-4 block px-6 py-2 bg-[#053697] text-white font-medium rounded-lg hover:bg-[#053697]/90 transition"
+          <button
+            type="button"
+            onClick={() => setShowStripeModal(true)}
+            className="px-4 py-2 bg-[#053697] hover:bg-[#042870] text-white text-xs font-bold rounded-xl whitespace-nowrap self-end sm:self-auto active:scale-[0.98] transition-all cursor-pointer"
           >
-            Withdraw Now
-          </Link>
+            Setup Payouts
+          </button>
+        </div>
+      )}
+
+      {/* Stripe Verification / Update Warning Card (Connected, but isStripeReady is false) */}
+      {player?.isStripeConnected && !player?.isStripeReady && (
+        <div className="relative bg-gradient-to-r from-amber-50/95 via-amber-50/85 to-orange-50/90 backdrop-blur-xl border border-amber-200/90 rounded-[22px] sm:rounded-[26px] p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 shadow-[0_4px_20px_-4px_rgba(245,158,11,0.08)]">
+          <div className="flex items-start gap-2.5">
+            <div className="p-2.5 bg-amber-500/15 text-amber-700 rounded-2xl shrink-0 border border-amber-300/60 mt-0.5">
+              <AlertTriangle className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h4 className="text-sm font-bold text-amber-950">
+                  Stripe Account Requires Attention
+                </h4>
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-200/80 text-amber-900 text-[10px] font-bold uppercase tracking-wider font-mono">
+                  <Clock className="w-3 h-3 text-amber-800" />
+                  Action Required
+                </span>
+              </div>
+              <p className="text-xs text-amber-900/85 leading-relaxed max-w-2xl">
+                Your Stripe account is connected, but requires additional verification or bank profile details before you can withdraw your funds and receive payouts. Please complete your profile in Stripe to enable direct ACH transfers.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 self-stretch sm:self-end md:self-center shrink-0">
+            <button
+              type="button"
+              onClick={handleUpdateStripeAccount}
+              disabled={updatingStripe}
+              className="w-full sm:w-auto px-4 py-2.5 bg-[#053697] hover:bg-[#042870] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-bold rounded-xl whitespace-nowrap transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {updatingStripe ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+                  <span>Connecting to Stripe...</span>
+                </>
+              ) : (
+                <>
+                  <span>Update Stripe Profile</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Athlete Hero Profile Card with Continuous Squircle Curvature */}
+      <div className="relative bg-white/95 backdrop-blur-xl border border-slate-200/90 hover:border-slate-300 rounded-[26px] sm:rounded-[30px] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.05)] transition-colors duration-300 overflow-hidden">
+        {/* Banner Graphic Background with Subtle Grid Texture */}
+        <div
+          className="relative h-40 sm:h-52 w-full bg-gradient-to-r from-[#053697] via-[#042874] to-[#021744] overflow-hidden"
+          style={
+            bgSrc
+              ? {
+                backgroundImage: `url(${bgSrc})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+              : undefined
+          }
+        >
+          {/* Subtle Apple gradient vignette */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px] opacity-10 pointer-events-none" />
+
+          {/* Top-Right Floating Badges */}
+          <div className="absolute top-3.5 right-3.5 flex flex-wrap items-center gap-2 z-10">
+            {player?.isProfileClaimed ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#2FC191]/95 backdrop-blur-md text-[#053697] text-xs font-black uppercase tracking-wider rounded-full">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Verified Athlete</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-semibold rounded-full">
+                <ShieldAlert className="w-3.5 h-3.5 text-amber-300" />
+                <span>Claim Pending</span>
+              </span>
+            )}
+          </div>
         </div>
 
-        <div className="w-full max-w-xl bg-white  rounded-lg p-6">
-          <div className="mb-4 flex justify-between items-center border  p-2 py-0 rounded-md border-[#2FC191]">
-            <p className="block text-sm font-medium text-[#053697]">
-              Player Name:
-            </p>
-            <p className=" rounded-md px-3 py-2 text-[#2FC191]">
-              {data?.userData?.name || 'N/A'}
-            </p>
-          </div>
-          <div className="mb-4 flex justify-between items-center border  p-2 py-0 rounded-md border-[#2FC191]">
-            <p className="block text-sm font-medium text-[#053697]">Email:</p>
-            <p className=" rounded-md px-3 py-2 text-[#2FC191]">
-              {data?.userData?.user?.email || 'N/A'}
-            </p>
-          </div>
-          <div className="mb-4 flex justify-between items-center border  p-2 py-0 rounded-md border-[#2FC191]">
-            <p className="block text-sm font-medium text-[#053697]">Address:</p>
-            <p className=" rounded-md px-3 py-2 text-[#2FC191]">
-              {data?.userData?.address?.streetAddress}{' '}
-              {data?.userData?.address?.city}, {data?.userData?.address?.state}{' '}
-              {data?.userData?.address?.zipCode}{' '}
-              <Link
-                href={`/address`}
-                className="text-[#053697] hover:underline text-sm ml-5"
+        {/* Profile Content Details */}
+        <div className="p-4 sm:p-6 lg:p-7">
+          <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-2 -mt-16 sm:-mt-22 mb-4">
+            {/* Avatar & Identity with Mac Curvature */}
+            <div className="flex flex-col sm:flex-row items-center sm:items-end gap-2 text-center sm:text-left w-full sm:w-auto">
+              <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-[22px] sm:rounded-[26px] ring-4 ring-white border border-slate-200/90 bg-slate-900 overflow-hidden shrink-0 ">
+                <Image
+                  src={avatarSrc || defaultPlayer}
+                  alt={player?.name || "Player Avatar"}
+                  fill
+                  sizes="128px"
+                  className="object-cover object-top"
+                  onError={() => setAvatarSrc(defaultPlayer?.src)}
+                  priority
+                />
+                {player?.jerceyNumber && (
+                  <div className="absolute bottom-1.5 right-1.5 bg-[#053697] text-white text-[10px] sm:text-[11px] font-mono font-black px-2 py-0.5 rounded-lg border border-white/30">
+                    #{player?.jerceyNumber}
+                  </div>
+                )}
+              </div>
+
+              {/* Player Identity Metadata */}
+              <div className="space-y-1">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight uppercase">
+                    {player?.name || "STEPHEN CURRY"}
+                  </h2>
+                  {player?.username && (
+                    <span className="text-xs font-mono text-slate-600 bg-slate-100/90 border border-slate-200/80 px-2.5 py-0.5 rounded-full">
+                      @{player?.username}
+                    </span>
+                  )}
+                </div>
+
+                <p className="text-xs sm:text-sm font-bold text-[#053697] flex flex-wrap items-center justify-center sm:justify-start gap-1.5 uppercase tracking-wide">
+                  <span>{teamName}</span>
+                  {player?.position && (
+                    <>
+                      <span className="text-slate-300">•</span>
+                      <span className="text-slate-700">{player?.position}</span>
+                    </>
+                  )}
+                </p>
+
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs text-slate-600 pt-1">
+                  {player?.school && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200/70 font-medium">
+                      <GraduationCap className="w-3.5 h-3.5 text-[#053697]" />
+                      <span>{player?.school}</span>
+                    </span>
+                  )}
+                  {player?.experience && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200/70 font-medium">
+                      <Clock className="w-3.5 h-3.5 text-slate-500" />
+                      <span>{player?.experience} Exp</span>
+                    </span>
+                  )}
+                  {player?.classYear && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200/70 font-medium">
+                      <span>{player?.classYear}</span>
+                    </span>
+                  )}
+                  {(player?.city || player?.state) && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200/70 font-medium">
+                      <MapPin className="w-3.5 h-3.5 text-slate-500" />
+                      <span>{[player?.city, player?.state].filter(Boolean).join(", ")}</span>
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Action Button with Apple Pill Styling */}
+            <div className="w-full sm:w-auto flex justify-center sm:justify-end shrink-0">
+              <button
+                type="button"
+                onClick={handleOpenWithdraw}
+                className="w-full sm:w-auto px-5 py-2.5 bg-[#053697] hover:bg-[#042870] text-white font-bold text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer"
               >
-                ✏️
-              </Link>
-            </p>
+                <Wallet className="w-4 h-4 text-[#2FC191]" />
+                <span>Withdraw Funds</span>
+              </button>
+            </div>
           </div>
 
-          {/* Tippz History */}
-          <div className="mb-4 p-2  rounded-md border border-[#2FC191]">
-            <Link
-              href={`/my-tip-history`}
-              className="w-full text-left text-[#053697] font-medium hover:underline flex justify-between items-center"
-            >
-              Tippz History <IoChevronForwardSharp />
-            </Link>
-          </div>
-
-          {/* Tax Information */}
-          <div className=" p-2  rounded-md border border-[#2FC191]">
-            <Link
-              href={`/tax-information`}
-              className="w-full text-left text-[#053697] font-medium hover:underline flex justify-between items-center"
-            >
-              Tax Information <IoChevronForwardSharp />
-            </Link>
-          </div>
+          {/* Bio Quote - Apple Notes Card Style */}
+          {player?.bio && (
+            <div className="mt-4 p-4 rounded-2xl bg-slate-50/90 border border-slate-200/70 text-slate-700 text-xs sm:text-[13px] leading-relaxed">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                <span>NIL Statement</span>
+              </div>
+              <p className="italic font-medium">
+                &ldquo;{player?.bio}&rdquo;
+              </p>
+            </div>
+          )}
         </div>
       </div>
-    </>
+      <FinancialSnapshot onOpenWithdraw={handleOpenWithdraw} />
+      <QuickActionRibbon onOpenWithdraw={handleOpenWithdraw} />
+
+      {/* Main Balanced Dossier Grid: 2 Apple Inspector Columns */}
+      <MainBalancedDossier />
+
+      {/* Payout & Withdraw Modals */}
+      <StripeConnectModal
+        isOpen={showStripeModal}
+        onClose={() => setShowStripeModal(false)}
+        onSuccess={() => window.location.reload()}
+      />
+
+      <WithdrawFundsModal
+        isOpen={showWithdrawModal}
+        onClose={() => setShowWithdrawModal(false)}
+        dueAmount={player?.dueAmount || 0}
+        onWithdrawSuccess={() => window.location.reload()}
+        isStripeReady={player?.isStripeReady}
+      />
+    </div>
   );
 };
 

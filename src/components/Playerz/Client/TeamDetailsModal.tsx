@@ -88,7 +88,7 @@ const TeamDetailsModal: React.FC<ITeamDetailsProps> = ({ id, token, detailsModal
                 <img
                   src={teamData?.team_logo || '/default-team-logo.png'}
                   alt={`${teamData?.name} logo`}
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white dark:border-gray-800 shadow-lg"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white dark:border-gray-800"
                 />
               </div>
               <div>
@@ -106,17 +106,17 @@ const TeamDetailsModal: React.FC<ITeamDetailsProps> = ({ id, token, detailsModal
           </div>
 
           {/* Team Details - Responsive */}
-          <div className="grid grid-cols-1 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 gap-2 sm:gap-2">
             <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6">
               <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
                 League Information
               </h3>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
                 <div className="flex justify-center sm:justify-start">
                   <img
                     src={teamData?.league?.league_image || '/default-team-logo.png'}
                     alt={`${teamData?.name} logo`}
-                    className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 min-w-[64px] min-h-[64px] rounded-md border-4 border-white dark:border-gray-800 shadow-lg"
+                    className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 min-w-[64px] min-h-[64px] rounded-md border-4 border-white dark:border-gray-800"
                   />
                 </div>
                 <div className="w-full space-y-2 sm:space-y-3">

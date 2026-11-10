@@ -24,7 +24,7 @@ const DownloadSection = () => {
   const translateY = useTransform(mouseY, [-200, 200], [-20, 20]);
 
   return (
-    <section className="flex relative justify-center items-center pt-12 px-4 mt-20 md:mt-0  flex-col gap-10">
+    <section className="flex relative justify-center items-center pt-12 px-4 mt-20 md:mt-0  flex-col gap-2">
       <Head>
         {/* ✅ Primary Meta Tags */}
         <title>Download PROTIPPZ App - Best Sports Tipping Platform</title>

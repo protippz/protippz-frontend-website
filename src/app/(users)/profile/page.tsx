@@ -19,24 +19,23 @@ const ProfilePage = () => {
     typeof user?.address === "string"
       ? user?.address
       : user?.address?.streetAddress
-      ? `${user.address.streetAddress}${
-          user.address.city ? `, ${user.address.city}` : ""
+        ? `${user.address.streetAddress}${user.address.city ? `, ${user.address.city}` : ""
         }${user.address.state ? `, ${user.address.state}` : ""}`
-      : null;
+        : null;
 
   return (
     <div className="w-full max-w-355 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       {/* Unified Professional Container */}
       <div className="w-full bg-white border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-200">
-        
+
         {/* TOP SECTION: Professional Header Banner & Identity */}
         <div>
           {/* Subtle Tone Header */}
-          <div className="h-28 sm:h-32 bg-gradient-to-r from-[#0d2e73] via-[#123F9C] to-[#1D4ED8]" />
+          <div className="h-28 sm:h-52 bg-gradient-to-r from-[#0d2e73] via-[#123F9C] to-[#1D4ED8]" />
 
           {/* Profile Identity Row */}
           <div className="px-6 sm:px-8 pb-6 pt-0">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-12 sm:-mt-14 mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 -mt-12 sm:-mt-14 mb-4">
               {/* Avatar (clean 96px, 50% boundary overlap) */}
               <div className="relative w-24 h-24 sm:w-26 sm:h-26 rounded-full border-4 border-white bg-slate-100 overflow-hidden shrink-0">
                 <Image
@@ -77,7 +76,7 @@ const ProfilePage = () => {
 
         {/* BOTTOM SECTION: Connected Divide-X / Divide-Y Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-          
+
           {/* LEFT COLUMN: Personal Information & Account Overview (7 of 12 cols) */}
           <div className="lg:col-span-7 flex flex-col justify-between divide-y divide-slate-200">
             <div>
@@ -94,7 +93,7 @@ const ProfilePage = () => {
               {/* Information Rows */}
               <div className="divide-y divide-slate-100 text-xs sm:text-sm">
                 {/* Full Name */}
-                <div className="px-6 py-4 flex items-center justify-between gap-4">
+                <div className="px-6 py-4 flex items-center justify-between gap-2">
                   <span className="font-medium text-slate-500">Full Name</span>
                   <span className="font-semibold text-slate-900 text-right">
                     {user?.name || "Not provided"}
@@ -102,7 +101,7 @@ const ProfilePage = () => {
                 </div>
 
                 {/* Username */}
-                <div className="px-6 py-4 flex items-center justify-between gap-4">
+                <div className="px-6 py-4 flex items-center justify-between gap-2">
                   <span className="font-medium text-slate-500">Username</span>
                   <span className="font-semibold text-slate-900 text-right">
                     {user?.username ? `@${user.username}` : "Not set"}
@@ -110,7 +109,7 @@ const ProfilePage = () => {
                 </div>
 
                 {/* Email Address */}
-                <div className="px-6 py-4 flex items-center justify-between gap-4">
+                <div className="px-6 py-4 flex items-center justify-between gap-2">
                   <span className="font-medium text-slate-500">Email Address</span>
                   <span className="font-semibold text-slate-900 text-right truncate max-w-[200px] sm:max-w-xs">
                     {user?.email || "Not provided"}
@@ -118,7 +117,7 @@ const ProfilePage = () => {
                 </div>
 
                 {/* Phone Number */}
-                <div className="px-6 py-4 flex items-center justify-between gap-4">
+                <div className="px-6 py-4 flex items-center justify-between gap-2">
                   <span className="font-medium text-slate-500">Phone Number</span>
                   <span className="font-semibold text-slate-900 text-right">
                     {user?.phone || "Not provided"}
@@ -126,7 +125,7 @@ const ProfilePage = () => {
                 </div>
 
                 {/* Location */}
-                <div className="px-6 py-4 flex items-center justify-between gap-4">
+                <div className="px-6 py-4 flex items-center justify-between gap-2">
                   <span className="font-medium text-slate-500">Location</span>
                   <span className="font-semibold text-slate-900 text-right truncate max-w-[200px] sm:max-w-xs">
                     {formattedAddress || "Not provided"}
@@ -188,7 +187,7 @@ const ProfilePage = () => {
               </Link>
 
               {/* Withdraw Funds */}
-              <Link
+              {/* <Link
                 href="/withdraw"
                 className="group px-6 py-3.5 hover:bg-slate-50 transition-colors flex items-center justify-between"
               >
@@ -201,7 +200,7 @@ const ProfilePage = () => {
                   </p>
                 </div>
                 <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-[#053697] group-hover:translate-x-0.5 transition-all shrink-0" />
-              </Link>
+              </Link> */}
 
               {/* Tippz History */}
               <Link

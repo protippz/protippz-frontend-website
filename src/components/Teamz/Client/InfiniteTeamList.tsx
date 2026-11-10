@@ -194,7 +194,7 @@ const InfiniteTeamList: React.FC<InfiniteTeamListProps> = ({
 
   return (
     <div className="w-full">
-      <div className="w-full grid grid-cols-1 gap-4">
+      <div className="w-full grid grid-cols-1 gap-2">
         {teams.map((item: TeamInterface) => (
           <TeamzCards token={token} item={item} key={item?._id} />
         ))}

@@ -9,6 +9,7 @@ import defaultPlayer from "@/Assets/playerDefult.jpg";
 import { DollarSign } from "lucide-react";
 import { ExtractedColorTheme } from "@/lib/extractLogoColor";
 import { PlayerDetailsData } from "../PlayerDetailsView";
+import PlayerSocialButtons from "./PlayerSocialButtons";
 
 interface PlayerHeroBannerProps {
   player: PlayerDetailsData;
@@ -55,11 +56,11 @@ const PlayerHeroBanner: React.FC<PlayerHeroBannerProps> = ({
         )}
 
         {/* MAIN HERO HEADER ROW */}
-        <div className="relative max-w-355 mx-auto px-2 py-10 flex flex-col md:flex-row items-center md:items-end justify-between gap-6 min-h-[300px] sm:min-h-[360px]">
+        <div className="relative max-w-355 mx-auto px-2 py-10 flex flex-col md:flex-row items-center md:items-end justify-between gap-2 min-h-[300px] sm:min-h-[360px]">
           {/* Left Top: Team Logo Badge */}
           {teamLogoUrl && (
             <div className="absolute top-4 sm:top-6 left-4 sm:left-8 z-10">
-              <div className="relative w-14 h-14 sm:w-20 sm:h-20 drop-shadow-md">
+              <div className="relative w-14 h-14 sm:w-20 sm:h-20 drop-">
                 <Image
                   src={teamLogoUrl}
                   alt={teamName}
@@ -91,7 +92,7 @@ const PlayerHeroBanner: React.FC<PlayerHeroBannerProps> = ({
           </div>
 
           {/* Middle & Right: Player Details & Follow Action */}
-          <div className="relative z-10 flex-1 w-full flex flex-col md:flex-row items-center md:items-end justify-between pb-6 sm:pb-8 gap-6 text-center md:text-left">
+          <div className="relative z-10 flex-1 w-full flex flex-col md:flex-row items-center md:items-end justify-between pb-6 sm:pb-8 gap-2 text-center md:text-left">
             <div className="space-y-1 sm:space-y-1.5">
               {/* Team | #Jersey | Position Line */}
               <p className="text-xs sm:text-sm font-semibold tracking-wide text-white/90">
@@ -115,22 +116,39 @@ const PlayerHeroBanner: React.FC<PlayerHeroBannerProps> = ({
                 <span className="block">{firstName}</span>
                 {lastName && <span className="block">{lastName}</span>}
               </h1>
+
+              {/* Social Media Connect Buttons */}
+              <div className="pt-2">
+                <PlayerSocialButtons
+                  playerName={player.name}
+                  instagram={player.instagram}
+                  intagram={player.intagram}
+                  twitter={player.twitter}
+                  tiktok={player.tiktok}
+                  variant="hero"
+                  className="justify-center md:justify-start"
+                />
+              </div>
             </div>
 
             {/* Right Side: Follow & Tip Actions */}
-            <div className="shrink-0 flex flex-wrap md:flex-col lg:flex-row items-center gap-3">
+            <div className="shrink-0 flex flex-wrap md:flex-col lg:flex-row items-center gap-2">
               <BookmarkButton
                 isBookmark={!!player.isBookmark}
                 type="player"
                 _id={player._id}
                 className="rounded-full bg-amber-400 text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider px-5 sm:px-6 py-2.5 transition-all cursor-pointer flex items-center gap-1.5"
               >
-                <span className="text-base">
-                  {player.isBookmark ? "★" : "☆"}
-                </span>
-                <span className="text-base">
-                  {player.isBookmark ? "FOLLOWING" : "FOLLOW"}
-                </span>
+                {(bookmarked) => (
+                  <>
+                    <span className="text-base">
+                      {bookmarked ? "★" : "☆"}
+                    </span>
+                    <span className="text-base">
+                      {bookmarked ? "FOLLOWING" : "FOLLOW"}
+                    </span>
+                  </>
+                )}
               </BookmarkButton>
 
               <SendTipsButton item={playerItemForTipping} token={token}>

@@ -88,7 +88,7 @@ const FavoritePlayerz: React.FC<FavoritePlayerzProps> = ({
         </p>
         <Link
           href="/playerz"
-          className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-[#053697] hover:bg-[#053697]/90 text-white transition-colors shadow-xs"
+          className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-[#053697] hover:bg-[#053697]/90 text-white transition-colors"
         >
           <span>Discover Athletes</span>
           <ArrowUpRight className="w-4 h-4 text-blue-200" />

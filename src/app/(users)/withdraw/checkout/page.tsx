@@ -72,7 +72,7 @@ const WithdrawFundForm = () => {
           {data?.userData?.totalAmount}
         </h2>
         <Form.Item name="amount">
-          <div className="flex justify-center items-center gap-3 max-w-[400px] mx-auto md:flex-row flex-col">
+          <div className="flex justify-center items-center gap-2 max-w-[400px] mx-auto md:flex-row flex-col">
             <p className="text-[#053697] text-2xl whitespace-nowrap">
               Enter amount
             </p>
@@ -94,7 +94,7 @@ const WithdrawFundForm = () => {
           </div>
         </Form.Item>
 
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-2">
           <div className="w-full md:w-2/5 p-4 border rounded-lg ">
             <Form.Item>
               <Radio.Group
@@ -104,7 +104,7 @@ const WithdrawFundForm = () => {
               >
                 <div className="flex items-center p-3 border rounded-lg border-green-400">
                   <Radio value="ach" className="flex items-center">
-                    <div className="flex flex-nowrap gap-3 items-center justify-between">
+                    <div className="flex flex-nowrap gap-2 items-center justify-between">
                       <span className="font-medium text-lg text-[#053697]">
                         ACH
                       </span>
@@ -120,7 +120,7 @@ const WithdrawFundForm = () => {
                 </div>
                 <div className="flex items-center p-3 border rounded-lg border-green-400 mt-4">
                   <Radio value="check" className="flex items-center">
-                    <div className="flex flex-nowrap gap-3 items-center justify-between">
+                    <div className="flex flex-nowrap gap-2 items-center justify-between">
                       <span className="font-medium text-lg text-[#053697]">
                         Check
                       </span>
