@@ -388,7 +388,7 @@ const Navbar: React.FC = () => {
             ) : (
               <Link
                 href="/sign-in"
-                className="bg-[#053697] hover:bg-[#053697]/90 text-white font-semibold text-sm px-5 py-2 rounded-xl transition-all duration-200 whitespace-nowrap active:scale-95"
+                className="bg-[#2FC191] hover:bg-[#2FC191]/90 text-white font-semibold text-sm px-5 py-2 rounded-xl transition-all duration-200 whitespace-nowrap active:scale-95"
               >
                 Sign In
               </Link>
@@ -585,7 +585,7 @@ const Navbar: React.FC = () => {
                   <Link
                     href="/sign-in"
                     onClick={() => setMoreOpen(false)}
-                    className="block text-center w-full py-3 px-4 bg-[#053697] text-white font-semibold rounded-2xl text-sm transition-all active:scale-[0.98]"
+                    className="block text-center w-full py-3 px-4 bg-[#2FC191] text-white font-semibold rounded-2xl text-sm transition-all active:scale-[0.98]"
                   >
                     Sign In
                   </Link>

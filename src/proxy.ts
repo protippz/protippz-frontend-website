@@ -51,11 +51,10 @@ export function proxy(request: NextRequest) {
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
 
   // When user is successfully logged in:
-  // If user tries to visit "/", "/sign-in", or "/tippz", navigate to "/community"
+  // If user tries to visit "/", or "/tippz", navigate to "/community"
   if (isLoggedIn) {
     if (
       normalizedPath === "/" ||
-      normalizedPath === "/sign-in" ||
       normalizedPath === "/tippz"
     ) {
       return NextResponse.redirect(new URL("/community", request.url));
