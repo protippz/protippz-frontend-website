@@ -46,8 +46,8 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
 
   // Viewport container dimensions
   const [containerDim, setContainerDim] = useState<{ width: number; height: number }>({
-    width: 400,
-    height: 400,
+    width: 380,
+    height: 380,
   });
 
   // Crop / Transform state
@@ -63,16 +63,18 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
   const [brightness, setBrightness] = useState<number>(100); // 50 to 150
   const [contrast, setContrast] = useState<number>(100); // 50 to 150
 
-  // Dragging state
+  // Dragging / Touch state
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const dragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const panStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const touchDistanceRef = useRef<number | null>(null);
+  const initialZoomRef = useRef<number>(1);
 
   // DOM references
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
-  // Measure container dimensions
+  // Measure container dimensions responsively
   useEffect(() => {
     if (!containerRef.current) return;
     const updateSize = () => {
@@ -87,7 +89,11 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
     updateSize();
     const observer = new ResizeObserver(updateSize);
     observer.observe(containerRef.current);
-    return () => observer.disconnect();
+    window.addEventListener("resize", updateSize);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateSize);
+    };
   }, [isOpen]);
 
   // Load image from File
@@ -153,7 +159,7 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  // Handle Touch Pan on Mobile
+  // Handle Touch Pan and Pinch-to-Zoom on Mobile
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 1) {
       setIsDragging(true);
@@ -162,21 +168,53 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
         y: e.touches[0].clientY,
       };
       panStartRef.current = { ...pan };
+      touchDistanceRef.current = null;
+    } else if (e.touches.length === 2) {
+      setIsDragging(false);
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      touchDistanceRef.current = dist;
+      initialZoomRef.current = zoom;
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging || e.touches.length !== 1) return;
-    const dx = e.touches[0].clientX - dragStartRef.current.x;
-    const dy = e.touches[0].clientY - dragStartRef.current.y;
-    setPan({
-      x: panStartRef.current.x + dx,
-      y: panStartRef.current.y + dy,
-    });
+    if (e.touches.length === 1 && isDragging) {
+      const dx = e.touches[0].clientX - dragStartRef.current.x;
+      const dy = e.touches[0].clientY - dragStartRef.current.y;
+      setPan({
+        x: panStartRef.current.x + dx,
+        y: panStartRef.current.y + dy,
+      });
+    } else if (e.touches.length === 2 && touchDistanceRef.current !== null) {
+      const newDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const scaleChange = newDist / touchDistanceRef.current;
+      const nextZoom = Math.min(
+        3,
+        Math.max(1, +(initialZoomRef.current * scaleChange).toFixed(2))
+      );
+      setZoom(nextZoom);
+    }
   };
 
-  const handleTouchEnd = () => {
-    setIsDragging(false);
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (e.touches.length === 0) {
+      setIsDragging(false);
+      touchDistanceRef.current = null;
+    } else if (e.touches.length === 1) {
+      setIsDragging(true);
+      dragStartRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
+      panStartRef.current = { ...pan };
+      touchDistanceRef.current = null;
+    }
   };
 
   // Mouse wheel zoom
@@ -224,8 +262,8 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
 
   // Calculate Rectangular Crop Box based on aspect ratio
   const getCropBoxDimensions = () => {
-    const maxW = containerDim.width * 0.82;
-    const maxH = containerDim.height * 0.82;
+    const maxW = containerDim.width * 0.84;
+    const maxH = containerDim.height * 0.84;
 
     let width = Math.min(maxW, maxH, 290);
     let height = width;
@@ -233,13 +271,21 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
     if (aspectRatio === "4:5") {
       height = Math.min(maxH, 320);
       width = height * (4 / 5);
+      if (width > maxW) {
+        width = maxW;
+        height = width * (5 / 4);
+      }
     } else if (aspectRatio === "16:9") {
       width = Math.min(maxW, 340);
       height = width * (9 / 16);
+      if (height > maxH) {
+        height = maxH;
+        width = height * (16 / 9);
+      }
     }
 
-    const x = (containerDim.width - width) / 2;
-    const y = (containerDim.height - height) / 2;
+    const x = Math.max(0, (containerDim.width - width) / 2);
+    const y = Math.max(0, (containerDim.height - height) / 2);
 
     return { width, height, x, y };
   };
@@ -287,15 +333,20 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
     // Apply horizontal & vertical flip
     ctx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
 
-    // Base scale of image inside container
-    const baseWidth = Math.min(rect.width, rect.height) * 0.85;
-    const imgAspect = img.naturalWidth / img.naturalHeight;
-    let renderW = baseWidth;
-    let renderH = baseWidth / imgAspect;
+    // Rendered dimensions inside container
+    let renderW = img.clientWidth;
+    let renderH = img.clientHeight;
 
-    if (imgAspect < 1) {
-      renderH = baseWidth;
-      renderW = baseWidth * imgAspect;
+    if (!renderW || !renderH) {
+      const baseWidth = Math.min(rect.width, rect.height) * 0.85;
+      const imgAspect = img.naturalWidth / img.naturalHeight;
+      renderW = baseWidth;
+      renderH = baseWidth / imgAspect;
+
+      if (imgAspect < 1) {
+        renderH = baseWidth;
+        renderW = baseWidth * imgAspect;
+      }
     }
 
     // Apply user pan offset scaled to high-res canvas
@@ -331,17 +382,21 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
   if (!isOpen || !imageSrc) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
-      {/* Modal Dialog Card */}
-      <div className="relative w-full max-w-4xl bg-white rounded-md sm:rounded-3xl border border-slate-200/90 overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+      {/* Modal Dialog Card with Continuous Curvature */}
+      <div className="relative w-full max-w-4xl bg-white rounded-[22px] sm:rounded-[30px] border border-slate-200/90 overflow-hidden flex flex-col max-h-[96vh] sm:max-h-[92vh]">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-slate-100 bg-white z-10 shrink-0">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-100 bg-white z-10 shrink-0">
           <div className="flex items-center gap-2">
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
-              Edit image
+            <h2 className="text-base sm:text-xl font-bold text-slate-900 tracking-tight">
+              Edit Photo
             </h2>
-            <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full">
-              Rectangle Fit
+            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 sm:px-2.5 py-0.5 rounded-full font-mono">
+              {aspectRatio === "1:1"
+                ? "1:1 Square"
+                : aspectRatio === "4:5"
+                ? "4:5 Portrait"
+                : "16:9 Wide"}
             </span>
           </div>
 
@@ -355,9 +410,9 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
           </button>
         </div>
 
-        {/* Modal Body: Left Viewport (Canvas) & Right Controls Sidebar */}
-        <div className="grid grid-cols-1 md:grid-cols-12 flex-1 min-h-[380px] sm:min-h-[440px] overflow-y-auto">
-          {/* Left Side: Interactive Rectangular Crop Viewport */}
+        {/* Modal Body: Responsive Layout (Stacked on Mobile, 2-column Grid on md+) */}
+        <div className="flex-1 flex flex-col md:grid md:grid-cols-12 overflow-y-auto">
+          {/* Viewport: Interactive Crop Canvas */}
           <div
             ref={containerRef}
             onMouseDown={handleMouseDown}
@@ -365,7 +420,7 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             onWheel={handleWheel}
-            className="md:col-span-7 bg-[#1c1d1f] relative overflow-hidden flex items-center justify-center select-none cursor-grab active:cursor-grabbing min-h-[320px] sm:min-h-[420px]"
+            className="h-[250px] xs:h-[280px] sm:h-[340px] md:h-auto md:min-h-[420px] md:col-span-7 bg-[#1c1d1f] relative overflow-hidden flex items-center justify-center select-none cursor-grab active:cursor-grabbing shrink-0 touch-none"
           >
             {/* The Image inside viewport */}
             <div
@@ -381,14 +436,14 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                 src={imageSrc}
                 alt="Crop preview"
                 draggable={false}
-                className="max-w-[280px] sm:max-w-[340px] max-h-[280px] sm:max-h-[340px] object-contain pointer-events-none select-none"
+                className="max-w-[240px] xs:max-w-[280px] sm:max-w-[340px] max-h-[210px] xs:max-h-[250px] sm:max-h-[340px] object-contain pointer-events-none select-none"
                 style={{
                   filter: getComputedFilterStyle(),
                 }}
               />
             </div>
 
-            {/* Rectangular Cutout Overlay (Darkened outer mask + crisp white rectangle boundary) */}
+            {/* Rectangular Cutout Overlay (Darkened outer mask + crisp boundary) */}
             <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
               <svg
                 className="w-full h-full"
@@ -470,28 +525,24 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                 />
 
                 {/* Corner Accents */}
-                {/* Top-Left */}
                 <path
                   d={`M ${cropBox.x} ${cropBox.y + 18} L ${cropBox.x} ${cropBox.y} L ${cropBox.x + 18} ${cropBox.y}`}
                   fill="none"
                   stroke="white"
                   strokeWidth="3.5"
                 />
-                {/* Top-Right */}
                 <path
                   d={`M ${cropBox.x + cropBox.width - 18} ${cropBox.y} L ${cropBox.x + cropBox.width} ${cropBox.y} L ${cropBox.x + cropBox.width} ${cropBox.y + 18}`}
                   fill="none"
                   stroke="white"
                   strokeWidth="3.5"
                 />
-                {/* Bottom-Left */}
                 <path
                   d={`M ${cropBox.x} ${cropBox.y + cropBox.height - 18} L ${cropBox.x} ${cropBox.y + cropBox.height} L ${cropBox.x + 18} ${cropBox.y + cropBox.height}`}
                   fill="none"
                   stroke="white"
                   strokeWidth="3.5"
                 />
-                {/* Bottom-Right */}
                 <path
                   d={`M ${cropBox.x + cropBox.width - 18} ${cropBox.y + cropBox.height} L ${cropBox.x + cropBox.width} ${cropBox.y + cropBox.height} L ${cropBox.x + cropBox.width} ${cropBox.y + cropBox.height - 18}`}
                   fill="none"
@@ -501,27 +552,28 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
               </svg>
             </div>
 
-            {/* Drag hint badge */}
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white text-[11px] font-medium pointer-events-none">
-              Drag image to fit in frame • Scroll to zoom
+            {/* Mobile-Friendly Hint Badge */}
+            <div className="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 px-2.5 sm:px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white text-[10px] sm:text-[11px] font-medium pointer-events-none whitespace-nowrap max-w-[92%] truncate text-center">
+              Drag to position • Pinch to zoom
             </div>
           </div>
 
-          {/* Right Side: Tabbed Tool Controls */}
-          <div className="md:col-span-5 bg-white p-5 sm:p-6 flex flex-col justify-between border-t md:border-t-0 md:border-l border-slate-200">
+          {/* Controls Column (Scrollable & Responsive) */}
+          <div className="md:col-span-5 bg-white p-4 sm:p-6 flex flex-col justify-between border-t md:border-t-0 md:border-l border-slate-200 flex-1">
             <div>
               {/* Tab Navigation: Crop / Filter / Adjust */}
-              <div className="flex items-center gap-6 border-b border-slate-200 pb-2 mb-4">
+              <div className="flex items-center justify-around sm:justify-start sm:gap-6 border-b border-slate-200 pb-2 mb-3.5 sm:mb-4">
                 <button
                   type="button"
                   onClick={() => setActiveTab("crop")}
-                  className={`pb-2 text-sm font-bold tracking-tight transition-all relative cursor-pointer ${activeTab === "crop"
+                  className={`pb-2 text-xs sm:text-sm font-bold tracking-tight transition-all relative cursor-pointer ${
+                    activeTab === "crop"
                       ? "text-[#053697]"
                       : "text-slate-500 hover:text-slate-800"
-                    }`}
+                  }`}
                 >
                   <span className="flex items-center gap-1.5">
-                    <Crop className="w-4 h-4" />
+                    <Crop className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     Crop
                   </span>
                   {activeTab === "crop" && (
@@ -532,13 +584,14 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab("filter")}
-                  className={`pb-2 text-sm font-bold tracking-tight transition-all relative cursor-pointer ${activeTab === "filter"
+                  className={`pb-2 text-xs sm:text-sm font-bold tracking-tight transition-all relative cursor-pointer ${
+                    activeTab === "filter"
                       ? "text-[#053697]"
                       : "text-slate-500 hover:text-slate-800"
-                    }`}
+                  }`}
                 >
                   <span className="flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4" />
+                    <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     Filter
                   </span>
                   {activeTab === "filter" && (
@@ -549,13 +602,14 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab("adjust")}
-                  className={`pb-2 text-sm font-bold tracking-tight transition-all relative cursor-pointer ${activeTab === "adjust"
+                  className={`pb-2 text-xs sm:text-sm font-bold tracking-tight transition-all relative cursor-pointer ${
+                    activeTab === "adjust"
                       ? "text-[#053697]"
                       : "text-slate-500 hover:text-slate-800"
-                    }`}
+                  }`}
                 >
                   <span className="flex items-center gap-1.5">
-                    <Sliders className="w-4 h-4" />
+                    <Sliders className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     Adjust
                   </span>
                   {activeTab === "adjust" && (
@@ -566,20 +620,21 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
 
               {/* TAB 1: CROP & ROTATION CONTROLS */}
               {activeTab === "crop" && (
-                <div className="space-y-4 animate-in fade-in duration-150">
+                <div className="space-y-3.5 sm:space-y-4 animate-in fade-in duration-150">
                   {/* Aspect Ratio Selector */}
                   <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    <label className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400">
                       Frame Aspect Ratio
                     </label>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                       <button
                         type="button"
                         onClick={() => setAspectRatio("1:1")}
-                        className={`py-1.5 px-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${aspectRatio === "1:1"
+                        className={`py-1.5 px-2 rounded-xl text-[11px] sm:text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${
+                          aspectRatio === "1:1"
                             ? "bg-[#053697] border-[#053697] text-white"
                             : "bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-700"
-                          }`}
+                        }`}
                       >
                         1:1 Square
                       </button>
@@ -587,10 +642,11 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setAspectRatio("4:5")}
-                        className={`py-1.5 px-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${aspectRatio === "4:5"
+                        className={`py-1.5 px-2 rounded-xl text-[11px] sm:text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${
+                          aspectRatio === "4:5"
                             ? "bg-[#053697] border-[#053697] text-white"
                             : "bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-700"
-                          }`}
+                        }`}
                       >
                         4:5 Portrait
                       </button>
@@ -598,79 +654,82 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setAspectRatio("16:9")}
-                        className={`py-1.5 px-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${aspectRatio === "16:9"
+                        className={`py-1.5 px-2 rounded-xl text-[11px] sm:text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${
+                          aspectRatio === "16:9"
                             ? "bg-[#053697] border-[#053697] text-white"
                             : "bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-700"
-                          }`}
+                        }`}
                       >
                         16:9 Wide
                       </button>
                     </div>
                   </div>
 
-                  {/* Action Toolbar: Rotate 90, Flip Horizontal, Flip Vertical */}
-                  <div className="flex items-center gap-2 pt-1">
+                  {/* Action Toolbar: Rotate, Flip, Reset */}
+                  <div className="flex items-center justify-between sm:justify-start gap-1.5 sm:gap-2 pt-1">
                     <button
                       type="button"
                       onClick={handleRotateLeft}
-                      className="w-9 h-9 rounded-full border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer active:scale-95"
+                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer active:scale-95 shrink-0"
                       title="Rotate counter-clockwise 90°"
                     >
-                      <RotateCcw className="w-4 h-4" />
+                      <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </button>
 
                     <button
                       type="button"
                       onClick={handleRotateRight}
-                      className="w-9 h-9 rounded-full border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer active:scale-95"
+                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-700 transition-colors cursor-pointer active:scale-95 shrink-0"
                       title="Rotate clockwise 90°"
                     >
-                      <RotateCw className="w-4 h-4" />
+                      <RotateCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </button>
 
                     <button
                       type="button"
                       onClick={handleFlipH}
-                      className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors cursor-pointer active:scale-95 ${flipH
+                      className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full border flex items-center justify-center transition-colors cursor-pointer active:scale-95 shrink-0 ${
+                        flipH
                           ? "bg-[#053697] border-[#053697] text-white"
                           : "border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700"
-                        }`}
+                      }`}
                       title="Flip horizontally"
                     >
-                      <FlipHorizontal className="w-4 h-4" />
+                      <FlipHorizontal className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </button>
 
                     <button
                       type="button"
                       onClick={handleFlipV}
-                      className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors cursor-pointer active:scale-95 ${flipV
+                      className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full border flex items-center justify-center transition-colors cursor-pointer active:scale-95 shrink-0 ${
+                        flipV
                           ? "bg-[#053697] border-[#053697] text-white"
                           : "border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700"
-                        }`}
+                      }`}
                       title="Flip vertically"
                     >
-                      <FlipVertical className="w-4 h-4" />
+                      <FlipVertical className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </button>
 
                     <button
                       type="button"
                       onClick={handleReset}
-                      className="ml-auto px-3 py-1.5 rounded-full border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-600 transition-colors cursor-pointer flex items-center gap-1 active:scale-95"
+                      className="ml-auto px-2.5 sm:px-3 py-1.5 rounded-full border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-[11px] sm:text-xs font-semibold text-slate-600 transition-colors cursor-pointer flex items-center gap-1 active:scale-95 shrink-0"
                       title="Reset all transformations"
                     >
-                      <Undo2 className="w-3.5 h-3.5" />
+                      <Undo2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                       <span>Reset</span>
                     </button>
                   </div>
 
                   {/* Zoom Slider */}
-                  <div className="space-y-1.5 pt-1">
+                  <div className="space-y-1 pt-1">
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                      <label className="text-[11px] sm:text-xs font-bold text-slate-700 flex items-center gap-1.5">
                         <ZoomIn className="w-3.5 h-3.5 text-slate-500" />
                         <span>Zoom</span>
                       </label>
-                      <span className="text-xs font-mono font-semibold text-slate-500">
+                      <span className="text-[11px] sm:text-xs font-mono font-semibold text-slate-500">
                         {Math.round(zoom * 100)}%
                       </span>
                     </div>
@@ -687,13 +746,13 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                   </div>
 
                   {/* Fine Straighten / Rotate Slider */}
-                  <div className="space-y-1.5 pt-1">
+                  <div className="space-y-1 pt-1">
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                      <label className="text-[11px] sm:text-xs font-bold text-slate-700 flex items-center gap-1.5">
                         <RotateCw className="w-3.5 h-3.5 text-slate-500" />
                         <span>Rotate</span>
                       </label>
-                      <span className="text-xs font-mono font-semibold text-slate-500">
+                      <span className="text-[11px] sm:text-xs font-mono font-semibold text-slate-500">
                         {fineRotation > 0 ? `+${fineRotation}°` : `${fineRotation}°`}
                       </span>
                     </div>
@@ -711,24 +770,25 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                 </div>
               )}
 
-              {/* TAB 2: FILTERS (Including B&W) */}
+              {/* TAB 2: FILTERS */}
               {activeTab === "filter" && (
-                <div className="space-y-3 animate-in fade-in duration-150">
-                  <p className="text-xs font-medium text-slate-500">
+                <div className="space-y-2.5 sm:space-y-3 animate-in fade-in duration-150">
+                  <p className="text-[11px] sm:text-xs font-medium text-slate-500">
                     Select a filter to enhance your portrait:
                   </p>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                     {FILTERS.map((f) => (
                       <button
                         key={f.id}
                         type="button"
                         onClick={() => setSelectedFilter(f.id)}
-                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer active:scale-95 ${selectedFilter === f.id
+                        className={`p-2 sm:p-2.5 rounded-xl border text-center transition-all cursor-pointer active:scale-95 ${
+                          selectedFilter === f.id
                             ? "border-[#053697] bg-blue-50/80 text-[#053697] font-bold"
                             : "border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-700 font-medium"
-                          }`}
+                        }`}
                       >
-                        <span className="block text-xs">{f.name}</span>
+                        <span className="block text-[11px] sm:text-xs">{f.name}</span>
                       </button>
                     ))}
                   </div>
@@ -737,14 +797,14 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
 
               {/* TAB 3: ADJUST (Brightness, Contrast) */}
               {activeTab === "adjust" && (
-                <div className="space-y-4 animate-in fade-in duration-150">
+                <div className="space-y-3 sm:space-y-4 animate-in fade-in duration-150">
                   {/* Brightness */}
-                  <div className="space-y-1.5">
+                  <div className="space-y-1">
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-bold text-slate-700">
+                      <label className="text-[11px] sm:text-xs font-bold text-slate-700">
                         Brightness
                       </label>
-                      <span className="text-xs font-mono font-semibold text-slate-500">
+                      <span className="text-[11px] sm:text-xs font-mono font-semibold text-slate-500">
                         {brightness}%
                       </span>
                     </div>
@@ -760,12 +820,12 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                   </div>
 
                   {/* Contrast */}
-                  <div className="space-y-1.5 pt-2">
+                  <div className="space-y-1 pt-1">
                     <div className="flex items-center justify-between">
-                      <label className="text-xs font-bold text-slate-700">
+                      <label className="text-[11px] sm:text-xs font-bold text-slate-700">
                         Contrast
                       </label>
-                      <span className="text-xs font-mono font-semibold text-slate-500">
+                      <span className="text-[11px] sm:text-xs font-mono font-semibold text-slate-500">
                         {contrast}%
                       </span>
                     </div>
@@ -784,11 +844,11 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
             </div>
 
             {/* Modal Bottom / Actions Bar */}
-            <div className="pt-5 border-t border-slate-100 flex items-center justify-between gap-3 mt-5">
+            <div className="pt-3.5 sm:pt-5 border-t border-slate-100 flex items-center justify-end sm:justify-between gap-2.5 sm:gap-3 mt-4 sm:mt-5 shrink-0">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 rounded-full border border-slate-200 hover:border-slate-300 text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer active:scale-95"
+                className="flex-1 sm:flex-initial px-4 sm:px-5 py-2 sm:py-2.5 rounded-full border border-slate-200 hover:border-slate-300 text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors cursor-pointer active:scale-95 text-center"
               >
                 Cancel
               </button>
@@ -796,7 +856,7 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
               <button
                 type="button"
                 onClick={handleSave}
-                className="px-6 py-2.5 rounded-full bg-[#053697] hover:bg-[#042870] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95"
+                className="flex-1 sm:flex-initial px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#053697] hover:bg-[#042870] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 text-center"
               >
                 Save changes
               </button>

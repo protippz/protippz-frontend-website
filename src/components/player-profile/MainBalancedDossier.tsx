@@ -3,7 +3,11 @@ import { Award, Edit3, Instagram, Twitter, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { FaTiktok } from "react-icons/fa";
 
-export default function () {
+interface MainBalancedDossierProps {
+  onEditProfile?: () => void;
+}
+
+export default function MainBalancedDossier({ onEditProfile }: MainBalancedDossierProps = {}) {
 
     const context = useContextData();
     const player = context?.userData;
@@ -33,9 +37,22 @@ export default function () {
                             Athletic Dossier
                         </h3>
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 bg-white border border-slate-200 text-slate-600 rounded-full font-mono">
-                        Roster
-                    </span>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 bg-white border border-slate-200 text-slate-600 rounded-full font-mono">
+                            Roster
+                        </span>
+                        {onEditProfile && (
+                            <button
+                                type="button"
+                                onClick={onEditProfile}
+                                className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-[#053697]/10 hover:bg-[#053697]/20 text-[#053697] rounded-full text-[10px] font-bold transition-all active:scale-[0.98] cursor-pointer"
+                                title="Edit Athletic Dossier"
+                            >
+                                <Edit3 className="w-3 h-3" />
+                                <span>Edit</span>
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 <div className="divide-y divide-slate-100 text-xs sm:text-sm">
@@ -92,9 +109,22 @@ export default function () {
                             Account & Identity
                         </h3>
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 bg-white border border-slate-200 text-slate-600 rounded-full font-mono">
-                        Verified
-                    </span>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 bg-white border border-slate-200 text-slate-600 rounded-full font-mono">
+                            Verified
+                        </span>
+                        {onEditProfile && (
+                            <button
+                                type="button"
+                                onClick={onEditProfile}
+                                className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-[#053697]/10 hover:bg-[#053697]/20 text-[#053697] rounded-full text-[10px] font-bold transition-all active:scale-[0.98] cursor-pointer"
+                                title="Edit Profile Details"
+                            >
+                                <Edit3 className="w-3 h-3" />
+                                <span>Edit</span>
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 <div className="divide-y divide-slate-100 text-xs sm:text-sm">

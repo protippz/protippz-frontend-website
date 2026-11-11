@@ -109,7 +109,7 @@ const Navbar: React.FC = () => {
               alt="Profile"
               width={38}
               height={38}
-              className="w-9 h-9 rounded-full object-cover border-2 border-white"
+              className="w-9 h-9 rounded-full object-contain border-2 border-white"
             />
           ) : (
             <div className="w-9 h-9 rounded-full bg-[#2FC191] text-white flex items-center justify-center font-bold text-sm">
@@ -379,7 +379,7 @@ const Navbar: React.FC = () => {
                           alt="Profile"
                           width={36}
                           height={36}
-                          className="w-9 h-9 rounded-full object-cover"
+                          className="w-9 h-9 rounded-full object-contain!"
                         />
                       ) : (
                         <span className="font-bold text-sm">
@@ -499,7 +499,7 @@ const Navbar: React.FC = () => {
                       alt="Profile"
                       width={36}
                       height={36}
-                      className="w-9 h-9 rounded-full object-cover border border-slate-200"
+                      className="w-9 h-9 rounded-full object-contain border border-slate-200"
                     />
                   ) : (
                     <div className="w-9 h-9 rounded-full bg-[#2FC191] text-white flex items-center justify-center font-bold text-sm">

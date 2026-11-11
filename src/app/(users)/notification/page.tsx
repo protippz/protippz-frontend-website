@@ -23,14 +23,24 @@ import {
   Sparkles,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import Cookies from "js-cookie";
 
 interface NotificationsType {
   _id: string;
   title: string;
   message: string;
-  seen: boolean;
+  seen?: boolean;
+  isRead?: boolean;
+  isSeen?: boolean;
+  readAt?: string;
+  type?: string;
   createdAt: string;
+  updatedAt?: string;
 }
+
+const isNotificationRead = (n: NotificationsType): boolean => {
+  return Boolean(n.isRead || n.isSeen || n.seen);
+};
 
 interface Pagination {
   page: number;
@@ -152,16 +162,23 @@ const NotificationPage = () => {
   const [activeTab, setActiveTab] = useState<"all" | "unread" | "read">("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  const getAuthToken = useCallback(() => {
+    if (typeof window === "undefined") return "";
+    return (
+      localStorage.getItem("token") ||
+      localStorage.getItem("accessToken") ||
+      Cookies.get("token") ||
+      ""
+    );
+  }, []);
+
   const fetchNotifications = useCallback(
     async (targetPage = 1, isManual = false) => {
       if (isManual) setIsRefreshing(true);
       else setIsLoading(true);
 
       try {
-        const token =
-          typeof localStorage !== "undefined"
-            ? localStorage.getItem("token")
-            : "";
+        const token = getAuthToken();
 
         const res = await get(
           `/notification/get-notifications?page=${targetPage}&limit=15`,
@@ -185,7 +202,7 @@ const NotificationPage = () => {
         setIsRefreshing(false);
       }
     },
-    [],
+    [getAuthToken],
   );
 
   useEffect(() => {
@@ -197,50 +214,69 @@ const NotificationPage = () => {
     toast.success("Inbox refreshed");
   };
 
-  const markAsRead = (id: string, e?: React.MouseEvent) => {
+  const markAsRead = async (id: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
+    // Optimistic UI update
     setNotifications((prev) =>
-      prev.map((n) => (n._id === id ? { ...n, seen: true } : n)),
+      prev.map((n) =>
+        n._id === id
+          ? { ...n, seen: true, isRead: true, isSeen: true }
+          : n,
+      ),
     );
-    const token =
-      typeof localStorage !== "undefined" ? localStorage.getItem("token") : "";
-    patch(
-      `/notification/see/${id}`,
-      {},
-      {
-        headers: { Authorization: token || "" },
-      },
-    ).catch(() => { });
+    const token = getAuthToken();
+    try {
+      const res = await patch(
+        `/notification/see-notification/${id}`,
+        {},
+        {
+          headers: { Authorization: token || "" },
+        },
+      );
+      if (!res?.success) {
+        console.error("Server failed to mark notification as read:", res);
+      }
+    } catch (err) {
+      console.error("Error marking notification as read:", err);
+    }
   };
 
-  const markAllAsRead = () => {
-    const hasUnread = notifications.some((n) => !n.seen);
+  const markAllAsRead = async () => {
+    const hasUnread = notifications.some((n) => !isNotificationRead(n));
     if (!hasUnread) {
       toast("All notifications are already marked as read");
       return;
     }
 
-    setNotifications((prev) => prev.map((n) => ({ ...n, seen: true })));
+    setNotifications((prev) =>
+      prev.map((n) => ({ ...n, seen: true, isRead: true, isSeen: true })),
+    );
     toast.success("All notifications marked as read");
 
-    const token =
-      typeof localStorage !== "undefined" ? localStorage.getItem("token") : "";
-    patch(
-      "/notification/see-all",
-      {},
-      {
-        headers: { Authorization: token || "" },
-      },
-    ).catch(() => { });
+    const token = getAuthToken();
+    try {
+      const res = await patch(
+        "/notification/see-notifications",
+        {},
+        {
+          headers: { Authorization: token || "" },
+        },
+      );
+      if (!res?.success) {
+        console.error("Server failed to mark all notifications as read:", res);
+      }
+    } catch (err) {
+      console.error("Error marking all notifications as read:", err);
+    }
   };
 
   const unreadCount = useMemo(
-    () => notifications.filter((n) => !n.seen).length,
+    () => notifications.filter((n) => !isNotificationRead(n)).length,
     [notifications],
   );
 
   const readCount = useMemo(
-    () => notifications.filter((n) => n.seen).length,
+    () => notifications.filter((n) => isNotificationRead(n)).length,
     [notifications],
   );
 
@@ -248,9 +284,9 @@ const NotificationPage = () => {
     let list = notifications;
 
     if (activeTab === "unread") {
-      list = list.filter((n) => !n.seen);
+      list = list.filter((n) => !isNotificationRead(n));
     } else if (activeTab === "read") {
-      list = list.filter((n) => n.seen);
+      list = list.filter((n) => isNotificationRead(n));
     }
 
     if (searchTerm.trim()) {
@@ -568,7 +604,7 @@ const NotificationPage = () => {
             {filteredNotifications.map((notification) => {
               const meta = getNotificationMeta(notification);
               const IconComponent = meta.icon;
-              const isUnread = !notification.seen;
+              const isUnread = !isNotificationRead(notification);
 
               return (
                 <div

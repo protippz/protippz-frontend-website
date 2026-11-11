@@ -45,6 +45,7 @@ import {
   StripeConnectModal,
   WithdrawFundsModal,
 } from "@/components/player-profile/WithdrawModals";
+import { PlayerUpdateProfileModal } from "@/components/player-profile/PlayerUpdateProfileModal";
 import { useRouter } from "next/navigation";
 import PlayerHeroBanner from "@/components/Playerz/PlayerDetails/PlayerHeroBanner";
 import PlayerLastGamesTable from "@/components/Playerz/PlayerLastGamesTable";
@@ -57,6 +58,7 @@ const PlayerHomePage = () => {
   // Withdraw & Stripe Connect modals state
   const [showStripeModal, setShowStripeModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [updatingStripe, setUpdatingStripe] = useState(false);
   const [activeTab, setActiveTab] = useState<"info" | "games">("info");
 
@@ -285,44 +287,7 @@ const PlayerHomePage = () => {
         </div>
       )}
 
-      {/* View Switcher Tabs (Mac/Apple Segmented Control Style) */}
-      <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-[20px] p-1.5 sm:p-2 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
-          <button
-            type="button"
-            onClick={() => setActiveTab("info")}
-            className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 rounded-[14px] text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-              activeTab === "info"
-                ? "bg-[#053697] text-white shadow-xs"
-                : "bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
-            }`}
-          >
-            <UserIcon className="w-4 h-4" />
-            <span>User Information</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("games")}
-            className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 rounded-[14px] text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-              activeTab === "games"
-                ? "bg-[#053697] text-white shadow-xs"
-                : "bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
-            }`}
-          >
-            <Activity className="w-4 h-4" />
-            <span>Player Last Games</span>
-          </button>
-        </div>
-
-        <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200/70 text-slate-500 text-[11px] font-mono font-semibold">
-          Athlete Portal
-        </span>
-      </div>
-
-      {activeTab === "info" ? (
-        <>
-          {/* Athlete Hero Profile Card with Continuous Squircle Curvature */}
+      {/* Athlete Hero Profile Card with Continuous Squircle Curvature */}
       <div className="relative bg-white/95 backdrop-blur-xl border border-slate-200/90 hover:border-slate-300 rounded-[26px] lg:rounded-[30px] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.05)] transition-colors duration-300 overflow-hidden">
         {/* Banner Graphic Background with Subtle Grid Texture */}
         <div
@@ -349,7 +314,7 @@ const PlayerHomePage = () => {
           <div className="flex flex-col lg:flex-row items-center lg:items-end justify-between gap-2 -mt-16 lg:-mt-22 mb-4">
             {/* Avatar & Identity with Mac Curvature */}
             <div className="flex flex-col lg:flex-row items-center lg:items-end gap-2 text-center lg:text-left w-full lg:w-auto">
-              <div className="relative w-24 h-24 lg:w-32 lg:h-32 rounded-[22px] lg:rounded-[26px] ring-4 ring-white border border-slate-200/90 bg-slate-900 overflow-hidden shrink-0 ">
+              <div className="relative w-24 h-24 lg:w-32 lg:h-32 rounded-[22px] lg:rounded-[26px] ring-4 ring-white border border-slate-200/90 bg-slate-900 overflow-hidden shrink-0 group">
                 <Image
                   src={avatarSrc || defaultPlayer}
                   alt={player?.name || "Player Avatar"}
@@ -364,6 +329,18 @@ const PlayerHomePage = () => {
                     #{player?.jerceyNumber}
                   </div>
                 )}
+                {/* Avatar Quick Edit Overlay */}
+                <button
+                  type="button"
+                  onClick={() => setShowEditProfileModal(true)}
+                  className="absolute inset-0 bg-black/45 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white transition-opacity duration-200 cursor-pointer"
+                  title="Update Athlete Photo"
+                >
+                  <Edit3 className="w-5 h-5 mb-1" />
+                  <span className="text-[10px] font-bold tracking-wider uppercase">
+                    Edit Photo
+                  </span>
+                </button>
               </div>
 
               {/* Player Identity Metadata */}
@@ -417,12 +394,21 @@ const PlayerHomePage = () => {
               </div>
             </div>
 
-            {/* Quick Action Button with Apple Pill Styling */}
-            <div className="w-full lg:w-auto flex justify-center lg:justify-end shrink-0">
+            {/* Quick Action Buttons with Apple Pill Styling */}
+            <div className="w-full lg:w-auto flex flex-col sm:flex-row items-center justify-center lg:justify-end gap-2.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowEditProfileModal(true)}
+                className="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 hover:border-slate-400 text-slate-800 font-bold text-xs uppercase tracking-wider rounded-md flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer"
+              >
+                <Edit3 className="w-4 h-4 text-[#053697]" />
+                <span>Edit Profile</span>
+              </button>
+
               <button
                 type="button"
                 onClick={handleOpenWithdraw}
-                className="w-full lg:w-auto px-5 py-2.5 bg-[#053697] hover:bg-[#042870] text-white font-bold text-xs uppercase tracking-wider rounded-md flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer"
+                className="w-full sm:w-auto px-5 py-2.5 bg-[#053697] hover:bg-[#042870] text-white font-bold text-xs uppercase tracking-wider rounded-md flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer"
               >
                 <Wallet className="w-4 h-4 text-[#2FC191]" />
                 <span>Withdraw Funds</span>
@@ -443,11 +429,51 @@ const PlayerHomePage = () => {
           )}
         </div>
       </div>
-      <FinancialSnapshot onOpenWithdraw={handleOpenWithdraw} />
-      <QuickActionRibbon onOpenWithdraw={handleOpenWithdraw} />
 
-      {/* Main Balanced Dossier Grid: 2 Apple Inspector Columns */}
-          <MainBalancedDossier />
+      {/* View Switcher Tabs (Mac/Apple Segmented Control Style) */}
+      <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-[20px] p-1.5 sm:p-2 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+          <button
+            type="button"
+            onClick={() => setActiveTab("info")}
+            className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 rounded-[14px] text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              activeTab === "info"
+                ? "bg-[#053697] text-white shadow-xs"
+                : "bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
+            }`}
+          >
+            <UserIcon className="w-4 h-4" />
+            <span>User Information</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("games")}
+            className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 rounded-[14px] text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              activeTab === "games"
+                ? "bg-[#053697] text-white shadow-xs"
+                : "bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
+            }`}
+          >
+            <Activity className="w-4 h-4" />
+            <span>Player Last Games</span>
+          </button>
+        </div>
+
+        <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200/70 text-slate-500 text-[11px] font-mono font-semibold">
+          Athlete Portal
+        </span>
+      </div>
+
+      {activeTab === "info" ? (
+        <>
+          <FinancialSnapshot onOpenWithdraw={handleOpenWithdraw} />
+          <QuickActionRibbon onOpenWithdraw={handleOpenWithdraw} />
+
+          {/* Main Balanced Dossier Grid: 2 Apple Inspector Columns */}
+          <MainBalancedDossier
+            onEditProfile={() => setShowEditProfileModal(true)}
+          />
         </>
       ) : (
         <PlayerLastGamesTable
@@ -471,6 +497,23 @@ const PlayerHomePage = () => {
         dueAmount={player?.dueAmount || 0}
         onWithdrawSuccess={() => window.location.reload()}
         isStripeReady={player?.isStripeReady}
+      />
+
+      <PlayerUpdateProfileModal
+        isOpen={showEditProfileModal}
+        onClose={() => setShowEditProfileModal(false)}
+        player={player}
+        onSuccess={() => {
+          if (context?.hardLoad) {
+            context.hardLoad();
+          } else {
+            window.location.reload();
+          }
+        }}
+        onEmailChange={(newEmail) => {
+          setAddEmail(newEmail);
+          setShowModalOtp(true);
+        }}
       />
     </div>
   );

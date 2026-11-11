@@ -18,6 +18,8 @@ import {
   ArrowLeft,
   AlertCircle,
   Check,
+  CheckCircle2,
+  ArrowUpRight,
   Loader2,
   ShieldCheck,
 } from "lucide-react";
@@ -52,6 +54,8 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isOopsModalOpen, setIsOopsModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [successAmount, setSuccessAmount] = useState<string>("25");
   const [paymentMethod, setPaymentMethod] = useState<"deposit" | "credit">(
     "deposit"
   );
@@ -67,13 +71,13 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
         handleCancel();
       }
     };
-    if (isModalOpen || isPaymentModalOpen || isOopsModalOpen) {
+    if (isModalOpen || isPaymentModalOpen || isOopsModalOpen || isSuccessModalOpen) {
       window.addEventListener("keydown", handleKeyDown);
     }
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isModalOpen, isPaymentModalOpen, isOopsModalOpen]);
+  }, [isModalOpen, isPaymentModalOpen, isOopsModalOpen, isSuccessModalOpen]);
 
   const navigateToLogin = () => {
     router.push("/sign-in");
@@ -111,6 +115,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
     setIsModalOpen(false);
     setIsPaymentModalOpen(false);
     setIsOopsModalOpen(false);
+    setIsSuccessModalOpen(false);
     setIsSubmitting(false);
   };
 
@@ -153,15 +158,16 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
 
       const response = await createTippz(data).unwrap()
       if (response?.success && response?.data?.checkoutUrl) {
-        toast.success(response?.message || "", { position: "top-right" });
+        toast.success(response?.message || "Redirecting to checkout...", { position: "top-right" });
         router.push(response?.data?.checkoutUrl || "")
       } else if (response?.success) {
-        toast.success(response?.message)
-        setIsPaymentModalOpen(false)
-        setIsModalOpen(false)
+        setSuccessAmount(amount);
+        setIsPaymentModalOpen(false);
+        setIsModalOpen(false);
+        setIsSuccessModalOpen(true);
       }
-    } catch (error) {
-      // toast.error()
+    } catch (error: any) {
+      toast.error(error?.data?.message || error?.message || "Failed to complete tip");
     }
   };
   const teamName =
@@ -510,6 +516,95 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
               >
                 <CreditCard className="w-3.5 h-3.5" />
                 <span>Pay with Card Instead</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── MODAL 4: TIP SUCCESS CONFIRMATION MODAL ─── */}
+      {isSuccessModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div
+            className="fixed inset-0"
+            onClick={handleCancel}
+            aria-hidden="true"
+          />
+
+          <div className="relative w-full max-w-sm bg-white rounded-3xl border border-slate-200/90 overflow-hidden z-10 animate-in zoom-in-95 duration-200 p-6 text-center">
+            {/* Top Close Button */}
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
+              title="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {/* Emerald Celebration Icon */}
+            <div className="w-24 h-24 rounded-2xl text-emerald-600 border overflow-hidden border-emerald-200/80 flex items-center justify-center mx-auto mb-4">
+              <Image src={"/success.jpg"} alt="Success" width={150} height={150} className="w-full h-full object-contain" />
+            </div>
+
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#2FC191] block mb-1">
+              TRANSFER SUCCESSFUL
+            </span>
+            <h3 className="text-xl font-black text-slate-900 tracking-tight">
+              Tippz Sent Successfully!
+            </h3>
+            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+              You sent a <strong className="text-slate-900">${Number(successAmount).toFixed(2)}</strong> tip to{" "}
+              <strong className="text-[#053697]">{item?.name || "the Athlete"}</strong>. Your direct NIL contribution has been credited.
+            </p>
+
+            {/* Receipt Summary Card */}
+            <div className="mt-5 p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-left space-y-2.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-500 font-medium">Recipient</span>
+                <span className="font-bold text-slate-900 truncate max-w-[170px]">
+                  {item?.name || "Player"}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-500 font-medium">Tip Amount</span>
+                <span className="font-black text-emerald-700 text-sm">
+                  ${Number(successAmount).toFixed(2)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-500 font-medium">Payment Source</span>
+                <span className="font-semibold text-slate-700">Profile Balance</span>
+              </div>
+              <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-200/70">
+                <span className="text-slate-500 font-medium">Status</span>
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  Completed
+                </span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mt-6 space-y-2">
+              <button
+                type="button"
+                onClick={() => {
+                  handleCancel();
+                  router.push("/transaction-log");
+                }}
+                className="w-full h-11 rounded-xl bg-[#053697] hover:bg-[#042873] active:scale-[0.98] text-white font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>View Transaction Log</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="w-full h-10 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-700 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center"
+              >
+                Close
               </button>
             </div>
           </div>
