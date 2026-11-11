@@ -105,7 +105,7 @@ export const EmojiPicker: React.FC<EmojiPickerProps> = ({
     <div
       ref={pickerRef}
       className={`absolute bottom-full mb-2 ${align === 'right' ? 'right-0' : 'left-0'
-        } z-50 w-72 sm:w-80 bg-white rounded-2xl border border-[#05369718] overflow-hidden flex flex-col animate-in fade-in duration-150`}
+        } z-50 w-72 sm:w-80 bg-white rounded-md border border-[#05369718] overflow-hidden flex flex-col animate-in fade-in duration-150`}
       style={{ maxHeight: '320px' }}
       onClick={(e) => e.stopPropagation()}
     >
@@ -140,8 +140,8 @@ export const EmojiPicker: React.FC<EmojiPickerProps> = ({
               type="button"
               onClick={() => setActiveCategory(cat.id)}
               className={`p-1.5 rounded-lg transition-colors flex items-center justify-center ${activeCategory === cat.id
-                  ? 'bg-[#2FC19115] text-[#2FC191]'
-                  : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                ? 'bg-[#2FC19115] text-[#2FC191]'
+                : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
                 }`}
               title={cat.name}
             >

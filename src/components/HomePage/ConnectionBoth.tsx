@@ -41,7 +41,7 @@ function ConnectionBoth() {
 
         {/* Main Card */}
         <div
-          className="rounded-2xl border overflow-hidden bg-[#F0F5F4]"
+          className="rounded-md border overflow-hidden bg-[#F0F5F4]"
           style={{ borderColor: "#D0D7DE" }}
         >
           <div className="grid grid-cols-1 lg:grid-cols-2">

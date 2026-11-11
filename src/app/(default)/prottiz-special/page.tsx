@@ -70,7 +70,7 @@ export default function ProtippzSpecialPage() {
 
             {/* Right Generated Artwork Side */}
             <div className="lg:col-span-5 flex justify-center items-center">
-              <div className="relative w-full max-w-md aspect-square rounded-2xl overflow-hidden border border-slate-200 bg-slate-50">
+              <div className="relative w-full max-w-md aspect-square rounded-md overflow-hidden border border-slate-200 bg-slate-50">
                 <Image
                   src={rewardsArt}
                   alt="Send Tippz, Earn Rewardz, Win Prizes"

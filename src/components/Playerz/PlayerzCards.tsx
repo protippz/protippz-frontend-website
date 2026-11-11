@@ -269,7 +269,7 @@ const PlayerzCards: React.FC<PlayerzCardsProps> = ({ token, item }) => {
                     )}
                   </div>
 
-                  <div className="relative mt-3.5 p-3.5 sm:p-4 rounded-2xl bg-slate-50/90 border border-slate-200/70 text-slate-700 text-xs sm:text-[13px] leading-relaxed">
+                  <div className="relative mt-3.5 p-3.5 sm:p-4 rounded-md bg-slate-50/90 border border-slate-200/70 text-slate-700 text-xs sm:text-[13px] leading-relaxed">
                     <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
                       <span>NIL Statement</span>
                     </div>

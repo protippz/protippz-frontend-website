@@ -64,7 +64,7 @@ const PaymentSuccessContent = () => {
             <div className="w-full border-t border-slate-100 my-6" />
 
             {/* Receipt Summary Box */}
-            <div className="w-full rounded-2xl bg-slate-50/90 border border-slate-200/80 p-4 sm:p-5 text-left mb-6">
+            <div className="w-full rounded-md bg-slate-50/90 border border-slate-200/80 p-4 sm:p-5 text-left mb-6">
               <div className="flex items-center justify-between pb-3 border-b border-slate-200/70">
                 <div className="flex items-center gap-2">
                   <Receipt className="w-4 h-4 text-[#053697]" />

@@ -82,7 +82,7 @@ const ForgetPasswordFormContent: React.FC = () => {
           />
 
           {/* Frosted Glass Floating Badge */}
-          <div className="absolute bottom-5 inset-x-5 backdrop-blur-xl bg-white/90 border border-white/40 rounded-2xl p-4 text-left">
+          <div className="absolute bottom-5 inset-x-5 backdrop-blur-xl bg-white/90 border border-white/40 rounded-md p-4 text-left">
             <div className="flex items-center gap-2">
               <div className="w-9 h-9 rounded-full bg-[#053697]/10 flex items-center justify-center text-[#053697] shrink-0">
                 <ShieldCheck className="w-5 h-5" />
@@ -103,7 +103,7 @@ const ForgetPasswordFormContent: React.FC = () => {
         <div className="w-full max-w-sm mx-auto flex flex-col justify-center px-1 sm:px-2 py-2">
           {/* Header */}
           <div className="text-center">
-            <div className="mx-auto w-12 h-12 rounded-2xl bg-[#053697]/10 flex items-center justify-center mb-3 text-[#053697]">
+            <div className="mx-auto w-12 h-12 rounded-md bg-[#053697]/10 flex items-center justify-center mb-3 text-[#053697]">
               <KeyRound className="w-6 h-6" />
             </div>
 

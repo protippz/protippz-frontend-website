@@ -207,7 +207,7 @@ const AthleteTipHistoryPage = () => {
                 className="flex items-center justify-between py-3.5 animate-pulse"
               >
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-2xl bg-slate-200" />
+                  <div className="w-10 h-10 rounded-md bg-slate-200" />
                   <div className="space-y-1.5">
                     <div className="w-32 h-3.5 bg-slate-200 rounded" />
                     <div className="w-20 h-2.5 bg-slate-100 rounded" />
@@ -222,7 +222,7 @@ const AthleteTipHistoryPage = () => {
         ) : tipHistory.length === 0 ? (
           /* Empty State */
           <div className="py-16 px-4 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mx-auto mb-3 font-bold text-lg">
+            <div className="w-12 h-12 rounded-md bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mx-auto mb-3 font-bold text-lg">
               $
             </div>
             <h3 className="text-base font-bold text-slate-900">
@@ -285,7 +285,7 @@ const AthleteTipHistoryPage = () => {
                         {/* Fan Supporter */}
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-2">
-                            <div className="relative w-10 h-10 rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-100 shrink-0">
+                            <div className="relative w-10 h-10 rounded-md overflow-hidden border border-slate-200/90 bg-slate-100 shrink-0">
                               <Image
                                 src={avatarSrc}
                                 alt={tip?.user?.name || "Fan"}
@@ -353,7 +353,7 @@ const AthleteTipHistoryPage = () => {
                   <div key={tip._id} className="p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 min-w-0">
-                        <div className="relative w-10 h-10 rounded-2xl overflow-hidden border border-slate-200/90 bg-slate-100 shrink-0">
+                        <div className="relative w-10 h-10 rounded-md overflow-hidden border border-slate-200/90 bg-slate-100 shrink-0">
                           <Image
                             src={avatarSrc}
                             alt={tip?.user?.name || "Fan"}

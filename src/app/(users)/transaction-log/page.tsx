@@ -161,7 +161,7 @@ const TransactionLogPage = () => {
       {/* Metric Cards: 1 Big Primary Card on Left + 2 Stacked Rows on Right (Equal Total Height) */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-8 items-stretch">
         {/* Big Primary Card */}
-        <div className="md:col-span-7 lg:col-span-8 bg-[#053697] text-white rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden border border-[#053697] min-h-[220px]">
+        <div className="md:col-span-7 lg:col-span-8 bg-[#053697] text-white rounded-md p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden border border-[#053697] min-h-[220px]">
           {/* Minimal Subtle Background Accent */}
           <div className="absolute -right-8 -bottom-8 w-48 h-48 rounded-full bg-white/5 pointer-events-none" />
           <div className="absolute right-12 top-2 w-36 h-36 rounded-full bg-[#2FC191]/15 blur-2xl pointer-events-none" />
@@ -187,7 +187,7 @@ const TransactionLogPage = () => {
         {/* Two Stacked Secondary Cards */}
         <div className="md:col-span-5 lg:col-span-4 flex flex-col gap-2">
           {/* Row 1: Total Transactions */}
-          <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col justify-between">
+          <div className="flex-1 bg-white border border-slate-200 rounded-md p-5 sm:p-6 flex flex-col justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
               Total Transactions
             </span>
@@ -200,7 +200,7 @@ const TransactionLogPage = () => {
           </div>
 
           {/* Row 2: Status Overview */}
-          <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col justify-between">
+          <div className="flex-1 bg-white border border-slate-200 rounded-md p-5 sm:p-6 flex flex-col justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
               Page Success Rate
             </span>
@@ -221,7 +221,7 @@ const TransactionLogPage = () => {
       </div>
 
       {/* Main Table Container (Clean Flat Border & Divide-y) */}
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+      <div className="bg-white border border-slate-200 rounded-md overflow-hidden">
         {/* Table Header Bar */}
         <div className="p-4 sm:p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-white">
           <div className="flex items-center gap-2">
@@ -261,7 +261,7 @@ const TransactionLogPage = () => {
         ) : transactions.length === 0 ? (
           /* Empty State */
           <div className="py-16 px-4 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mx-auto mb-3 font-bold text-lg">
+            <div className="w-12 h-12 rounded-md bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mx-auto mb-3 font-bold text-lg">
               $
             </div>
             <h3 className="text-base font-bold text-slate-900">

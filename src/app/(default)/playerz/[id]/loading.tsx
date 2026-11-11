@@ -10,8 +10,8 @@ export default function PlayerDetailsLoading() {
       </div>
 
       {/* Hero Banner skeleton */}
-      <div className="rounded-2xl p-6 sm:p-10 bg-slate-200 flex flex-col md:flex-row items-center md:items-start gap-2">
-        <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-2xl bg-slate-300 shrink-0"></div>
+      <div className="rounded-md p-6 sm:p-10 bg-slate-200 flex flex-col md:flex-row items-center md:items-start gap-2">
+        <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-md bg-slate-300 shrink-0"></div>
         <div className="flex-1 w-full space-y-3">
           <div className="w-28 h-5 bg-slate-300 rounded-full"></div>
           <div className="w-64 h-8 bg-slate-300 rounded-lg"></div>
@@ -38,17 +38,17 @@ export default function PlayerDetailsLoading() {
       {/* Details skeleton */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-3">
+          <div className="bg-white border border-slate-200 rounded-md p-6 space-y-3">
             <div className="w-40 h-6 bg-slate-200 rounded"></div>
             <div className="w-full h-20 bg-slate-100 rounded"></div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 h-36"></div>
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 h-36"></div>
+            <div className="bg-white border border-slate-200 rounded-md p-5 h-36"></div>
+            <div className="bg-white border border-slate-200 rounded-md p-5 h-36"></div>
           </div>
         </div>
         <div>
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 h-64"></div>
+          <div className="bg-white border border-slate-200 rounded-md p-6 h-64"></div>
         </div>
       </div>
     </div>

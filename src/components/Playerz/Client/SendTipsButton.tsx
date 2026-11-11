@@ -356,7 +356,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
               {/* Option 1: Profile Balance */}
               <div
                 onClick={() => setPaymentMethod("deposit")}
-                className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-2.5 ${paymentMethod === "deposit"
+                className={`p-4 rounded-md border-2 transition-all cursor-pointer flex items-start gap-2.5 ${paymentMethod === "deposit"
                   ? "border-[#053697] bg-blue-50/30"
                   : "border-slate-200 hover:border-slate-300 bg-white"
                   }`}
@@ -390,7 +390,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
               {/* Option 2: Credit Card / Paypal */}
               <div
                 onClick={() => setPaymentMethod("credit")}
-                className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-start gap-2.5 ${paymentMethod === "credit"
+                className={`p-4 rounded-md border-2 transition-all cursor-pointer flex items-start gap-2.5 ${paymentMethod === "credit"
                   ? "border-[#053697] bg-blue-50/30"
                   : "border-slate-200 hover:border-slate-300 bg-white"
                   }`}
@@ -470,7 +470,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
 
           <div className="relative w-full max-w-sm bg-white rounded-3xl border border-slate-200/90 overflow-hidden p-6 text-center z-10 animate-in zoom-in-95 duration-200">
             {/* Warning Icon Container */}
-            <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-500 border border-amber-200/80 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-md bg-amber-50 text-amber-500 border border-amber-200/80 flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-8 h-8" />
             </div>
 

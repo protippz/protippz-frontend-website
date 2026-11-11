@@ -174,7 +174,7 @@ const AddressPage = () => {
           {/* Card Header */}
           <div className="text-left space-y-2 border-b border-slate-100 pb-5">
             <div className="flex items-center gap-2">
-              <div className="w-12 h-12 rounded-2xl bg-[#053697]/10 flex items-center justify-center text-[#053697] shrink-0">
+              <div className="w-12 h-12 rounded-md bg-[#053697]/10 flex items-center justify-center text-[#053697] shrink-0">
                 <MapPin className="w-6 h-6" />
               </div>
               <div>
@@ -209,7 +209,7 @@ const AddressPage = () => {
                   value={formData.streetAddress}
                   onChange={handleChange}
                   placeholder="e.g. 123 Championship Way, Apt 4B"
-                  className="w-full h-12 pl-11 pr-4 rounded-2xl border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
+                  className="w-full h-12 pl-11 pr-4 rounded-md border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
                 />
               </div>
             </div>
@@ -235,7 +235,7 @@ const AddressPage = () => {
                     value={formData.city}
                     onChange={handleChange}
                     placeholder="e.g. Austin"
-                    className="w-full h-12 pl-11 pr-4 rounded-2xl border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
+                    className="w-full h-12 pl-11 pr-4 rounded-md border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
                   />
                 </div>
               </div>
@@ -259,7 +259,7 @@ const AddressPage = () => {
                     value={formData.state}
                     onChange={handleChange}
                     placeholder="e.g. TX"
-                    className="w-full h-12 pl-11 pr-4 rounded-2xl border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
+                    className="w-full h-12 pl-11 pr-4 rounded-md border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
                   />
                 </div>
               </div>
@@ -283,14 +283,14 @@ const AddressPage = () => {
                     value={formData.zipCode}
                     onChange={handleChange}
                     placeholder="e.g. 78712"
-                    className="w-full h-12 pl-11 pr-4 rounded-2xl border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
+                    className="w-full h-12 pl-11 pr-4 rounded-md border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
                   />
                 </div>
               </div>
             </div>
 
             {/* Privacy & Compliance Info Pill */}
-            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-2 text-left">
+            <div className="p-4 bg-slate-50 rounded-md border border-slate-100 flex items-start gap-2 text-left">
               <div className="w-8 h-8 rounded-xl bg-emerald-50 text-[#1f8763] flex items-center justify-center shrink-0 mt-0.5">
                 <ShieldCheck className="w-4 h-4 text-[#2FC191]" />
               </div>

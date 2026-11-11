@@ -126,7 +126,7 @@ export const StripeConnectModal: React.FC<StripeConnectModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="w-12 h-12 rounded-2xl bg-[#053697]/10 flex items-center justify-center text-[#053697] shrink-0">
+            <div className="w-12 h-12 rounded-md bg-[#053697]/10 flex items-center justify-center text-[#053697] shrink-0">
               <Landmark className="w-6 h-6" />
             </div>
             <div>
@@ -142,7 +142,7 @@ export const StripeConnectModal: React.FC<StripeConnectModalProps> = ({
 
         {/* Feature List */}
         <div className="space-y-3 mb-6 text-xs text-slate-600 leading-relaxed">
-          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-2">
+          <div className="p-3.5 bg-slate-50 rounded-md border border-slate-100 flex items-start gap-2">
             <div className="w-7 h-7 rounded-xl bg-emerald-50 text-[#1f8763] flex items-center justify-center shrink-0 mt-0.5">
               <Zap className="w-4 h-4 text-[#2FC191]" />
             </div>
@@ -154,7 +154,7 @@ export const StripeConnectModal: React.FC<StripeConnectModalProps> = ({
             </div>
           </div>
 
-          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-2">
+          <div className="p-3.5 bg-slate-50 rounded-md border border-slate-100 flex items-start gap-2">
             <div className="w-7 h-7 rounded-xl bg-blue-50 text-[#053697] flex items-center justify-center shrink-0 mt-0.5">
               <ShieldCheck className="w-4 h-4 text-[#053697]" />
             </div>
@@ -166,7 +166,7 @@ export const StripeConnectModal: React.FC<StripeConnectModalProps> = ({
             </div>
           </div>
 
-          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-2">
+          <div className="p-3.5 bg-slate-50 rounded-md border border-slate-100 flex items-start gap-2">
             <div className="w-7 h-7 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
               <Award className="w-4 h-4 text-amber-500" />
             </div>
@@ -202,7 +202,7 @@ export const StripeConnectModal: React.FC<StripeConnectModalProps> = ({
             </button>
           ) : (
             <div className="space-y-2.5">
-              <div className="p-3 bg-blue-50/80 rounded-2xl border border-blue-100 text-xs text-[#053697] text-center font-medium">
+              <div className="p-3 bg-blue-50/80 rounded-md border border-blue-100 text-xs text-[#053697] text-center font-medium">
                 Stripe opened in a new tab. Complete your information, then click below to refresh.
               </div>
 
@@ -446,7 +446,7 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
               </p>
             </div>
 
-            <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 max-w-sm mx-auto text-xs text-slate-600 space-y-1.5">
+            <div className="p-3.5 bg-slate-50 rounded-md border border-slate-100 max-w-sm mx-auto text-xs text-slate-600 space-y-1.5">
               <div className="flex justify-between">
                 <span>Withdrawal Amount:</span>
                 <span className="font-bold text-slate-900">
@@ -521,7 +521,7 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
 
             {/* Bank / Stripe Update Warning Banner */}
             {(bankUpdateRequired || isStripeReady === false) && (
-              <div className="p-4 bg-amber-50 border border-amber-200/80 rounded-2xl text-left space-y-2">
+              <div className="p-4 bg-amber-50 border border-amber-200/80 rounded-md text-left space-y-2">
                 <div className="flex items-start gap-2.5">
                   <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                   <div>
@@ -573,7 +573,7 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full h-12 pl-8 pr-4 rounded-2xl border border-slate-200 bg-slate-50/70 text-lg font-black text-slate-900 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
+                  className="w-full h-12 pl-8 pr-4 rounded-md border border-slate-200 bg-slate-50/70 text-lg font-black text-slate-900 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
                 />
               </div>
 
@@ -609,7 +609,7 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
                 Payout Method
               </label>
 
-              <div className="p-3.5 rounded-2xl border border-[#053697] bg-blue-50/60 ring-1 ring-[#053697]/20 flex items-center justify-between text-left">
+              <div className="p-3.5 rounded-md border border-[#053697] bg-blue-50/60 ring-1 ring-[#053697]/20 flex items-center justify-between text-left">
                 <div className="min-w-0 pr-2">
                   <div className="flex items-center gap-2">
                     <p className="text-xs sm:text-sm font-bold text-slate-900">
@@ -625,7 +625,7 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
 
             {/* Security note & submit button */}
             <div className="space-y-3.5 pt-1">
-              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 text-xs text-slate-600 flex items-center gap-2.5 text-left">
+              <div className="p-3.5 bg-slate-50 rounded-md border border-slate-100 text-xs text-slate-600 flex items-center gap-2.5 text-left">
                 <ShieldCheck className="w-5 h-5 text-[#2FC191] shrink-0" />
                 <span>
                   Transfers are encrypted and processed through your Stripe-connected checking account.

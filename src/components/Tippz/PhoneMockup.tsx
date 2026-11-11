@@ -39,28 +39,28 @@ export default function PhoneMockup() {
             <div className="space-y-2.5 my-auto py-2">
               {/* User Message 1 */}
               <div className="flex justify-end">
-                <div className="max-w-[85%] bg-[#053697] text-white text-[11px] sm:text-xs font-medium rounded-2xl rounded-br-xs px-3 py-2 leading-snug">
+                <div className="max-w-[85%] bg-[#053697] text-white text-[11px] sm:text-xs font-medium rounded-md rounded-br-xs px-3 py-2 leading-snug">
                   I&apos;m interested in learning more. How does PROTIPPZ work?
                 </div>
               </div>
 
               {/* Support Message 1 */}
               <div className="flex justify-start">
-                <div className="max-w-[88%] bg-white text-stone-800 text-[11px] sm:text-xs font-medium rounded-2xl rounded-bl-xs px-3 py-2 leading-snug border border-stone-100">
+                <div className="max-w-[88%] bg-white text-stone-800 text-[11px] sm:text-xs font-medium rounded-md rounded-bl-xs px-3 py-2 leading-snug border border-stone-100">
                   PROTIPPZ allows fans to tip their fave players/teams, earn rewards, and win exclusive prizes.
                 </div>
               </div>
 
               {/* User Message 2 */}
               <div className="flex justify-end">
-                <div className="max-w-[85%] bg-[#053697] text-white text-[11px] sm:text-xs font-medium rounded-2xl rounded-br-xs px-3 py-2 leading-snug">
+                <div className="max-w-[85%] bg-[#053697] text-white text-[11px] sm:text-xs font-medium rounded-md rounded-br-xs px-3 py-2 leading-snug">
                   That all sounds great. How can I sign up?
                 </div>
               </div>
 
               {/* Support Message 2 */}
               <div className="flex justify-start">
-                <div className="max-w-[88%] bg-white text-stone-800 text-[11px] sm:text-xs font-medium rounded-2xl rounded-bl-xs px-3 py-2 leading-snug border border-stone-100">
+                <div className="max-w-[88%] bg-white text-stone-800 text-[11px] sm:text-xs font-medium rounded-md rounded-bl-xs px-3 py-2 leading-snug border border-stone-100">
                   PROTIPPZ is free to download on the Google Play Store.
                 </div>
               </div>

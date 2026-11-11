@@ -31,7 +31,7 @@ import {
 import { useContextData } from "@/provider/ContextProvider";
 import Cookies from "js-cookie";
 import { IMAGE } from "@/constant/image.index";
-import { oneSignalLogout } from "@/components/OneSignal/OneSignalHandler"; 
+import { oneSignalLogout } from "@/components/OneSignal/OneSignalHandler";
 const isRouteActive = (
   pathname: string | null,
   href: string,
@@ -99,7 +99,7 @@ const Navbar: React.FC = () => {
 
   // Single-color unified User Dropdown Popover Card
   const userDropdownContent = (
-    <div className="w-64 bg-white rounded-2xl border border-slate-100 p-2.5 text-slate-800 animate-in fade-in zoom-in-95 duration-150">
+    <div className="w-64 bg-white rounded-md border border-slate-100 p-2.5 text-slate-800 animate-in fade-in zoom-in-95 duration-150">
       {/* Header Profile Info */}
       <div className="p-3 bg-emerald-50/60 rounded-sm mb-2 border border-emerald-100/60">
         <div className="flex items-center gap-2">
@@ -484,7 +484,7 @@ const Navbar: React.FC = () => {
             <div className="px-5 pt-2 pb-5">
               {/* User info strip (if logged in) */}
               {data?.userData?._id && (
-                <div className="flex items-center gap-2 p-3 mb-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <div className="flex items-center gap-2 p-3 mb-4 bg-slate-50 rounded-md border border-slate-100">
                   {data?.userData?.profile_image ? (
                     <Image
                       src={data.userData.profile_image}
@@ -525,7 +525,7 @@ const Navbar: React.FC = () => {
                       href={href}
                       target={external ? "_blank" : "_self"}
                       onClick={() => setMoreOpen(false)}
-                      className={`flex flex-col items-center gap-1.5 py-3 px-2 rounded-2xl border transition-colors active:scale-[0.97] ${active
+                      className={`flex flex-col items-center gap-1.5 py-3 px-2 rounded-md border transition-colors active:scale-[0.97] ${active
                         ? "bg-[#2FC191]/10 border-[#2FC191]/30 text-[#2FC191]"
                         : "bg-slate-50 border-slate-100 text-slate-500 hover:border-slate-200 hover:text-[#053697]"
                         }`}
@@ -587,7 +587,7 @@ const Navbar: React.FC = () => {
                   <Link
                     href="/sign-in"
                     onClick={() => setMoreOpen(false)}
-                    className="block text-center w-full py-3 px-4 bg-[#2FC191] text-white font-semibold rounded-2xl text-sm transition-all active:scale-[0.98]"
+                    className="block text-center w-full py-3 px-4 bg-[#2FC191] text-white font-semibold rounded-md text-sm transition-all active:scale-[0.98]"
                   >
                     Create Account
                   </Link>

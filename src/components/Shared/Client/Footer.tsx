@@ -280,7 +280,7 @@ const Footer: React.FC = () => {
               Scan or tap below to download PROTIPPZ on Google Play.
             </p>
 
-            <div className="flex items-center gap-2 bg-white border border-slate-200 p-2.5 rounded-2xl">
+            <div className="flex items-center gap-2 bg-white border border-slate-200 p-2.5 rounded-md">
               <div className="bg-slate-50 p-1 rounded-xl shrink-0 border border-slate-100">
                 <Image
                   src={qrCode}

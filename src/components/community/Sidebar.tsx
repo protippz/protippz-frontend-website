@@ -47,7 +47,7 @@ function Sidebar({
       >
         {/* Top Community Posts */}
         <div
-          className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 "
+          className="p-4 sm:p-5 lg:p-6 rounded-md transition-all duration-200 "
           style={{ backgroundColor: "#FAFBFB", border: "1px solid #05369712" }}
         >
           <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#0536970F]">
@@ -150,7 +150,7 @@ function Sidebar({
 
         {/* Top Fans This Week */}
         <div
-          className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 "
+          className="p-4 sm:p-5 lg:p-6 rounded-md transition-all duration-200 "
           style={{ backgroundColor: "#FAFBFB", border: "1px solid #05369712" }}
         >
           <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#0536970F]">
@@ -243,7 +243,7 @@ function Sidebar({
 
         {/* Rewards Preview */}
         <div
-          className="p-4 sm:p-5 lg:p-6 rounded-2xl transition-all duration-200 "
+          className="p-4 sm:p-5 lg:p-6 rounded-md transition-all duration-200 "
           style={{
             backgroundColor: "#2FC19110",
             border: "1px solid #2FC19130",

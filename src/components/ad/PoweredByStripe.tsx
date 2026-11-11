@@ -10,7 +10,7 @@ export default function PoweredByStripe() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 viewport={{ once: true }}
-                className="mx-auto max-w-5xl rounded-2xl border border-slate-100 bg-gradient-to-br from-white to-slate-50 p-8 sm:p-10 "
+                className="mx-auto max-w-5xl rounded-md border border-slate-100 bg-gradient-to-br from-white to-slate-50 p-8 sm:p-10 "
                 style={{
                     backgroundImage: `
         radial-gradient(125% 125% at 50% 10%, #ffffff 40%, #2FC191 100%)

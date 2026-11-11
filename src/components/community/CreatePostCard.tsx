@@ -59,7 +59,7 @@ export const CreatePostCard: React.FC<CreatePostCardProps> = ({
 
   return (
     <div
-      className="p-5 sm:p-6 rounded-2xl transition-all duration-300"
+      className="p-5 sm:p-6 rounded-md transition-all duration-300"
       style={{
         backgroundColor: '#FAFBFB',
         border: '2px solid #2FC19140',

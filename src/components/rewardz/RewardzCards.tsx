@@ -42,16 +42,16 @@ const RewardzCards: React.FC<RewardCardsProps> = ({ item }) => {
   };
 
   return (
-    <div className="relative bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl hover:border-slate-300 transition-colors overflow-hidden mb-4 sm:mb-6">
+    <div className="relative bg-white border border-slate-200/90 rounded-md sm:rounded-3xl hover:border-slate-300 transition-colors overflow-hidden mb-4 sm:mb-6">
       <div className="flex flex-col md:flex-row items-stretch">
         {/* Left Column: Reward Image Hero with Bottom Overlay Badges */}
-        <div className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[260px] md:h-auto min-h-[220px] md:min-h-[280px]  shrink-0 overflow-hidden flex items-center justify-center p-6">
+        <div className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[260px] md:h-auto min-h-[220px] md:min-h-[280px]  shrink-0 overflow-hidden flex items-center justify-center">
           <Image
             src={item?.reward_image ? imageUrl(item.reward_image) : defaultPrize}
             alt={item?.name || "Reward"}
             fill
             sizes="(max-width: 768px) 100vw, 340px"
-            className="object-contain p-4"
+            className="object-cover"
           />
 
           {/* Gradient vignette at bottom */}
@@ -124,7 +124,7 @@ const RewardzCards: React.FC<RewardCardsProps> = ({ item }) => {
             </div>
 
             {/* Stats / Details Box (2 Columns) */}
-            <div className="border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 grid grid-cols-2 divide-x divide-slate-200 bg-white mt-3.5 sm:mt-4">
+            <div className="border border-slate-200/90 rounded-md p-3.5 sm:p-4 grid grid-cols-2 divide-x divide-slate-200 bg-white mt-3.5 sm:mt-4">
               {/* Points Required */}
               <div className="pr-4 space-y-1">
                 <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">

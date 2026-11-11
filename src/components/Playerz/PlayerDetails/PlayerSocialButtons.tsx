@@ -169,7 +169,7 @@ const PlayerSocialButtons: React.FC<PlayerSocialButtonsProps> = ({
                 href={item.url!}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between p-3 rounded-2xl border border-slate-200/90 bg-slate-50/80 hover:bg-slate-100 hover:border-slate-300 transition-all active:scale-[0.98] cursor-pointer"
+                className="group flex items-center justify-between p-3 rounded-md border border-slate-200/90 bg-slate-50/80 hover:bg-slate-100 hover:border-slate-300 transition-all active:scale-[0.98] cursor-pointer"
                 title={`Visit ${playerName}'s ${item.name} profile`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -192,7 +192,7 @@ const PlayerSocialButtons: React.FC<PlayerSocialButtonsProps> = ({
                 key={item.id}
                 type="button"
                 onClick={(e) => handleClick(item, e)}
-                className="flex items-center justify-between p-3 rounded-2xl border border-dashed border-slate-200/90 bg-slate-50/40 hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.98] cursor-pointer text-left"
+                className="flex items-center justify-between p-3 rounded-md border border-dashed border-slate-200/90 bg-slate-50/40 hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.98] cursor-pointer text-left"
                 title={`${item.name} not linked yet`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">

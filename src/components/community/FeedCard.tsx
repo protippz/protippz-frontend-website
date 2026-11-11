@@ -336,7 +336,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
   return (
     <article
       onClick={() => onCommentClick(post, false)}
-      className="p-3.5 sm:p-4 md:p-5 rounded-2xl bg-white border border-border hover:border-[#2FC19135] transition-colors cursor-pointer group"
+      className="p-3.5 sm:p-4 md:p-5 rounded-md bg-white border border-border hover:border-[#2FC19135] transition-colors cursor-pointer group"
     >
       {/* Header Meta Info */}
       <div className="flex items-center justify-between gap-2 flex-wrap mb-2">
@@ -455,7 +455,7 @@ export const FeedCard: React.FC<FeedCardProps> = memo(function FeedCard({
       {/* Media Content (Video or Image) */}
       {videoEmbedSrc ? (
         <div
-          className="mb-2.5 rounded-2xl overflow-hidden bg-black aspect-video relative border border-border w-full!"
+          className="mb-2.5 rounded-md overflow-hidden bg-black aspect-video relative border border-border w-full!"
           onClick={(e) => e.stopPropagation()}
         >
           <iframe

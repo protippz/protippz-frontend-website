@@ -68,16 +68,16 @@ const FavoritePlayerz: React.FC<FavoritePlayerzProps> = ({
   if (loading) {
     return (
       <div className="w-full space-y-4 sm:space-y-6">
-        <div className="w-full h-72 bg-slate-100 rounded-2xl animate-pulse" />
-        <div className="w-full h-72 bg-slate-100 rounded-2xl animate-pulse" />
+        <div className="w-full h-72 bg-slate-100 rounded-md animate-pulse" />
+        <div className="w-full h-72 bg-slate-100 rounded-md animate-pulse" />
       </div>
     );
   }
 
   if (playersData.length === 0) {
     return (
-      <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-2xl my-4">
-        <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#053697] mb-3">
+      <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-md my-4">
+        <div className="w-14 h-14 rounded-md bg-blue-50 border border-blue-100 flex items-center justify-center text-[#053697] mb-3">
           <UserX className="w-7 h-7" />
         </div>
         <h3 className="text-base font-bold text-slate-900">

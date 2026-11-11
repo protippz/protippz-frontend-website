@@ -212,7 +212,7 @@ const TaxInformationPage = () => {
           {/* Card Header */}
           <div className="text-left space-y-2 border-b border-slate-100 pb-5">
             <div className="flex items-center gap-2">
-              <div className="w-12 h-12 rounded-2xl bg-[#053697]/10 flex items-center justify-center text-[#053697] shrink-0">
+              <div className="w-12 h-12 rounded-md bg-[#053697]/10 flex items-center justify-center text-[#053697] shrink-0">
                 <FileText className="w-6 h-6" />
               </div>
               <div>
@@ -247,7 +247,7 @@ const TaxInformationPage = () => {
                   value={formData.fullname}
                   onChange={handleChange}
                   placeholder="As shown on your official tax return"
-                  className="w-full h-12 pl-11 pr-4 rounded-2xl border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
+                  className="w-full h-12 pl-11 pr-4 rounded-md border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
                 />
               </div>
               <p className="text-[11px] text-slate-400">
@@ -283,7 +283,7 @@ const TaxInformationPage = () => {
                   value={formData.taxId}
                   onChange={handleChange}
                   placeholder="XXX-XX-XXXX or XX-XXXXXXX"
-                  className="w-full h-12 pl-11 pr-4 rounded-2xl border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
+                  className="w-full h-12 pl-11 pr-4 rounded-md border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
                 />
               </div>
             </div>
@@ -307,7 +307,7 @@ const TaxInformationPage = () => {
                   value={formData.address}
                   onChange={handleChange}
                   placeholder="Street, City, State, ZIP code"
-                  className="w-full h-12 pl-11 pr-4 rounded-2xl border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
+                  className="w-full h-12 pl-11 pr-4 rounded-md border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
                 />
               </div>
             </div>
@@ -323,7 +323,7 @@ const TaxInformationPage = () => {
                 <button
                   type="button"
                   onClick={() => handleStatusSelect("Resident")}
-                  className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-start justify-between gap-2 ${formData.residentialStatus === "Resident"
+                  className={`p-4 rounded-md border text-left transition-all cursor-pointer flex items-start justify-between gap-2 ${formData.residentialStatus === "Resident"
                     ? "bg-blue-50/70 border-[#053697] ring-1 ring-[#053697]"
                     : "bg-slate-50/80 border-slate-200 hover:border-slate-300 text-slate-700"
                     }`}
@@ -355,7 +355,7 @@ const TaxInformationPage = () => {
                 <button
                   type="button"
                   onClick={() => handleStatusSelect("Non Resident")}
-                  className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex items-start justify-between gap-2 ${formData.residentialStatus === "Non Resident"
+                  className={`p-4 rounded-md border text-left transition-all cursor-pointer flex items-start justify-between gap-2 ${formData.residentialStatus === "Non Resident"
                     ? "bg-blue-50/70 border-[#053697] ring-1 ring-[#053697]"
                     : "bg-slate-50/80 border-slate-200 hover:border-slate-300 text-slate-700"
                     }`}
@@ -386,7 +386,7 @@ const TaxInformationPage = () => {
             </div>
 
             {/* Privacy & Security Callout */}
-            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-2 text-left">
+            <div className="p-4 bg-slate-50 rounded-md border border-slate-100 flex items-start gap-2 text-left">
               <div className="w-8 h-8 rounded-xl bg-emerald-50 text-[#1f8763] flex items-center justify-center shrink-0 mt-0.5">
                 <ShieldCheck className="w-4 h-4 text-[#2FC191]" />
               </div>

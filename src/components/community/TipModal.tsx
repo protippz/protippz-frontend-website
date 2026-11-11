@@ -84,7 +84,7 @@ export const TipModal: React.FC<TipModalProps> = ({
     >
       {/* Modal Container: Clean UI with smooth border */}
       <div
-        className="relative bg-white rounded-2xl w-full max-w-md overflow-hidden border border-[#0536971A] z-10 animate-in fade-in duration-200"
+        className="relative bg-white rounded-md w-full max-w-md overflow-hidden border border-[#0536971A] z-10 animate-in fade-in duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Close Button */}

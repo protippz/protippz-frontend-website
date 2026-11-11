@@ -333,7 +333,7 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
       {/* Modal Dialog Card */}
-      <div className="relative w-full max-w-4xl bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="relative w-full max-w-4xl bg-white rounded-md sm:rounded-3xl border border-slate-200/90 overflow-hidden flex flex-col max-h-[92vh]">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-slate-100 bg-white z-10 shrink-0">
           <div className="flex items-center gap-2">
@@ -515,11 +515,10 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab("crop")}
-                  className={`pb-2 text-sm font-bold tracking-tight transition-all relative cursor-pointer ${
-                    activeTab === "crop"
+                  className={`pb-2 text-sm font-bold tracking-tight transition-all relative cursor-pointer ${activeTab === "crop"
                       ? "text-[#053697]"
                       : "text-slate-500 hover:text-slate-800"
-                  }`}
+                    }`}
                 >
                   <span className="flex items-center gap-1.5">
                     <Crop className="w-4 h-4" />
@@ -533,11 +532,10 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab("filter")}
-                  className={`pb-2 text-sm font-bold tracking-tight transition-all relative cursor-pointer ${
-                    activeTab === "filter"
+                  className={`pb-2 text-sm font-bold tracking-tight transition-all relative cursor-pointer ${activeTab === "filter"
                       ? "text-[#053697]"
                       : "text-slate-500 hover:text-slate-800"
-                  }`}
+                    }`}
                 >
                   <span className="flex items-center gap-1.5">
                     <Sparkles className="w-4 h-4" />
@@ -551,11 +549,10 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setActiveTab("adjust")}
-                  className={`pb-2 text-sm font-bold tracking-tight transition-all relative cursor-pointer ${
-                    activeTab === "adjust"
+                  className={`pb-2 text-sm font-bold tracking-tight transition-all relative cursor-pointer ${activeTab === "adjust"
                       ? "text-[#053697]"
                       : "text-slate-500 hover:text-slate-800"
-                  }`}
+                    }`}
                 >
                   <span className="flex items-center gap-1.5">
                     <Sliders className="w-4 h-4" />
@@ -579,11 +576,10 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setAspectRatio("1:1")}
-                        className={`py-1.5 px-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${
-                          aspectRatio === "1:1"
+                        className={`py-1.5 px-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${aspectRatio === "1:1"
                             ? "bg-[#053697] border-[#053697] text-white"
                             : "bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-700"
-                        }`}
+                          }`}
                       >
                         1:1 Square
                       </button>
@@ -591,11 +587,10 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setAspectRatio("4:5")}
-                        className={`py-1.5 px-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${
-                          aspectRatio === "4:5"
+                        className={`py-1.5 px-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${aspectRatio === "4:5"
                             ? "bg-[#053697] border-[#053697] text-white"
                             : "bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-700"
-                        }`}
+                          }`}
                       >
                         4:5 Portrait
                       </button>
@@ -603,11 +598,10 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setAspectRatio("16:9")}
-                        className={`py-1.5 px-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${
-                          aspectRatio === "16:9"
+                        className={`py-1.5 px-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer active:scale-95 ${aspectRatio === "16:9"
                             ? "bg-[#053697] border-[#053697] text-white"
                             : "bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-700"
-                        }`}
+                          }`}
                       >
                         16:9 Wide
                       </button>
@@ -637,11 +631,10 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                     <button
                       type="button"
                       onClick={handleFlipH}
-                      className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors cursor-pointer active:scale-95 ${
-                        flipH
+                      className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors cursor-pointer active:scale-95 ${flipH
                           ? "bg-[#053697] border-[#053697] text-white"
                           : "border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700"
-                      }`}
+                        }`}
                       title="Flip horizontally"
                     >
                       <FlipHorizontal className="w-4 h-4" />
@@ -650,11 +643,10 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                     <button
                       type="button"
                       onClick={handleFlipV}
-                      className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors cursor-pointer active:scale-95 ${
-                        flipV
+                      className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors cursor-pointer active:scale-95 ${flipV
                           ? "bg-[#053697] border-[#053697] text-white"
                           : "border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700"
-                      }`}
+                        }`}
                       title="Flip vertically"
                     >
                       <FlipVertical className="w-4 h-4" />
@@ -731,11 +723,10 @@ const LinkedInImageCropModal: React.FC<LinkedInImageCropModalProps> = ({
                         key={f.id}
                         type="button"
                         onClick={() => setSelectedFilter(f.id)}
-                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer active:scale-95 ${
-                          selectedFilter === f.id
+                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer active:scale-95 ${selectedFilter === f.id
                             ? "border-[#053697] bg-blue-50/80 text-[#053697] font-bold"
                             : "border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-700 font-medium"
-                        }`}
+                          }`}
                       >
                         <span className="block text-xs">{f.name}</span>
                       </button>

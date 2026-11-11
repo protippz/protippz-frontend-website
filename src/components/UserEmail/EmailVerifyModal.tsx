@@ -96,7 +96,7 @@ const EmailVerifyModal: React.FC<EmailVerifyModalProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="w-12 h-12 rounded-2xl bg-[#053697]/10 flex items-center justify-center text-[#053697] shrink-0">
+          <div className="w-12 h-12 rounded-md bg-[#053697]/10 flex items-center justify-center text-[#053697] shrink-0">
             <Mail className="w-6 h-6" />
           </div>
           <div>
@@ -130,13 +130,13 @@ const EmailVerifyModal: React.FC<EmailVerifyModalProps> = ({
               onChange={(e) => setEmail(e.target.value)}
               placeholder="athlete@university.edu"
               disabled={loading}
-              className="w-full h-12 pl-11 pr-4 rounded-2xl border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
+              className="w-full h-12 pl-11 pr-4 rounded-md border border-slate-200 bg-slate-50/70 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#053697] focus:bg-white transition-all "
             />
           </div>
         </div>
 
         {/* Info callout */}
-        <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-2.5">
+        <div className="p-3.5 bg-slate-50 rounded-md border border-slate-100 flex items-start gap-2.5">
           <div className="w-6 h-6 rounded-lg bg-emerald-50 text-[#1f8763] flex items-center justify-center shrink-0 mt-0.5">
             <Sparkles className="w-3.5 h-3.5 text-[#2FC191]" />
           </div>

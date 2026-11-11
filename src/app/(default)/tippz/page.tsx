@@ -96,7 +96,7 @@ const TipsPage = async () => {
           </div>
 
           {/* ================= DOWNLOAD APP BANNER (LIGHT BORDERED) ================= */}
-          <div className="bg-white border border-stone-200/90 rounded-2xl p-6 sm:p-8 md:p-10">
+          <div className="bg-white border border-stone-200/90 rounded-md p-6 sm:p-8 md:p-10">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-2 items-center">
               {/* Left Details */}
               <div className="lg:col-span-7 space-y-4 text-center lg:text-left">

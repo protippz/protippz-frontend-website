@@ -354,7 +354,7 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({
             </button>
 
             {/* Reward Summary Snippet */}
-            <div className="flex items-center gap-2 p-3 mb-5 bg-slate-50/80 rounded-2xl border border-slate-100">
+            <div className="flex items-center gap-2 p-3 mb-5 bg-slate-50/80 rounded-md border border-slate-100">
               <div className="relative w-12 h-12 rounded-xl bg-slate-900 shrink-0 overflow-hidden flex items-center justify-center">
                 {item?.reward_image ? (
                   <Image
@@ -539,7 +539,7 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({
             {step === "otp" && (
               <form onSubmit={handleOtpSubmit} className="space-y-4">
                 <div className="text-center">
-                  <div className="mx-auto w-11 h-11 rounded-2xl bg-[#053697]/10 text-[#053697] flex items-center justify-center mb-2.5">
+                  <div className="mx-auto w-11 h-11 rounded-md bg-[#053697]/10 text-[#053697] flex items-center justify-center mb-2.5">
                     <KeyRound className="w-5 h-5" />
                   </div>
                   <h3 className="text-lg sm:text-xl font-black text-[#053697] tracking-tight">
@@ -786,7 +786,7 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({
                   </p>
                 </div>
 
-                <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 text-xs text-slate-600 max-w-sm mx-auto">
+                <div className="p-3 bg-slate-50 rounded-md border border-slate-100 text-xs text-slate-600 max-w-sm mx-auto">
                   <span className="font-bold text-slate-800">Prize: </span>
                   <span>{item?.name}</span>
                 </div>

@@ -369,7 +369,7 @@ export const PostModal: React.FC<PostModalProps> = ({
       {/* Modal Container */}
       <div
         data-lenis-prevent
-        className="relative bg-[#FAFBFB] w-full max-w-2xl max-h-[92dvh] sm:max-h-[88dvh] h-[92dvh] sm:h-auto rounded-t-3xl sm:rounded-2xl flex flex-col overflow-hidden border-t sm:border border-border z-10 animate-in slide-in-from-bottom-5 sm:slide-in-from-bottom-0 duration-200"
+        className="relative bg-[#FAFBFB] w-full max-w-2xl max-h-[92dvh] sm:max-h-[88dvh] h-[92dvh] sm:h-auto rounded-t-3xl sm:rounded-md flex flex-col overflow-hidden border-t sm:border border-border z-10 animate-in slide-in-from-bottom-5 sm:slide-in-from-bottom-0 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Mobile Handle */}
@@ -434,7 +434,7 @@ export const PostModal: React.FC<PostModalProps> = ({
             />
 
             {!isLoggedIn && (
-              <div className="absolute inset-0 bg-white/80 backdrop-blur-md z-20 flex flex-col items-center justify-center p-6 text-center rounded-2xl border border-gray-200/80  animate-in fade-in duration-200">
+              <div className="absolute inset-0 bg-white/80 backdrop-blur-md z-20 flex flex-col items-center justify-center p-6 text-center rounded-md border border-gray-200/80  animate-in fade-in duration-200">
                 <div className="w-12 h-12 rounded-full bg-[#2FC191]/10 flex items-center justify-center mb-3 text-[#2FC191]">
                   <Lock className="w-6 h-6" />
                 </div>

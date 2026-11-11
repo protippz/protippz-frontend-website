@@ -293,7 +293,7 @@ const ContactUsPage: React.FC = () => {
               {isSuccess ? (
                 /* Success Confirmation State */
                 <div className="py-12 px-4 text-center space-y-4">
-                  <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <h3 className="text-2xl font-black text-slate-900 tracking-tight">

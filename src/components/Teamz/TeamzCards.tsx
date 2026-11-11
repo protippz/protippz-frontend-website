@@ -91,7 +91,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
               {/* Left Column: Media Preview Pane with Perfect Continuous Curves */}
               <div
                 onClick={openDetails}
-                className="group/photo relative w-full md:w-[250px] lg:w-[310px] xl:w-[270px] h-[220px] md:h-[270px] self-stretch shrink-0 rounded-[20px] sm:rounded-[24px] overflow-hidden cursor-pointer border border-slate-200/60 shadow-inner"
+                className="relative w-full md:w-[250px] lg:w-[310px] xl:w-[270px] h-[220px] md:h-[270px] self-stretch shrink-0 rounded-[20px] sm:rounded-[24px] overflow-hidden cursor-pointer border border-slate-200/60 shadow-inner"
                 title={`View profile for ${item?.name || "Player"}`}
               >
                 {/* Team Hero Image */}
@@ -100,7 +100,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                   alt={item?.name || "Team"}
                   fill
                   sizes="(max-width: 768px) 100vw, 330px"
-                  className="object-contain object-center p-6 bg-slate-50 group-hover/photo:scale-[1.03] transition-transform duration-500 ease-out"
+                  className="w-full h-full object-cover object-center bg-slate-50 group-hover/photo:scale-[1.03] transition-transform duration-500 ease-out"
                   onError={() => setImgSrc(ptLogo)}
                 />
 
@@ -206,7 +206,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                   <button
                     type="button"
                     onClick={openTip}
-                    className="h-11 sm:h-12 px-5 sm:px-6 rounded-2xl text-white bg-[#2FC191] hover:bg-[#28b887] text-[#053697] font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer shrink-0"
+                    className="h-11 sm:h-12 px-5 sm:px-6 rounded-md text-white bg-[#2FC191] hover:bg-[#28b887] text-[#053697] font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer shrink-0"
                     title={`Send direct tip to ${item?.name || "Team"}`}
                   >
                     <DollarSign className="w-4 h-4 stroke-[2.5]" />
@@ -216,7 +216,7 @@ const TeamzCards: React.FC<TeamzCardsProps> = ({ token, item }) => {
                   <button
                     type="button"
                     onClick={openDetails}
-                    className="flex-1 min-w-0 h-11 sm:h-12 px-5 sm:px-6 rounded-2xl bg-[#053697] hover:bg-[#042870] text-white font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer"
+                    className="flex-1 min-w-0 h-11 sm:h-12 px-5 sm:px-6 rounded-md bg-[#053697] hover:bg-[#042870] text-white font-black text-xs sm:text-sm tracking-wider uppercase flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer"
                     title={`View profile for ${item?.name || "Team"}`}
                   >
                     <span className="truncate">VIEW TEAM PROFILE</span>

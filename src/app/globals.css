@@ -423,11 +423,10 @@ body {
 .webagent-chat-container,
 .webagent-launcher-button,
 div[id*="webagent"],
-div[class*="webagent"],
-iframe[src*="webagent"],
-iframe[id*="webagent"] {
-  left: 5px !important;
+div[class*="webagent"] {
+  /* left: 5px !important;
   bottom: 90px !important;
-  right: auto !important;
-  /* height: 90dvh !important; */
+  right: auto !important; */
+      position: fixed !important;
+      bottom: 90 !important;
 }

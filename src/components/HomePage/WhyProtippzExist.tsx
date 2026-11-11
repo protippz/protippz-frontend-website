@@ -128,7 +128,7 @@ function WhyProtippzExist() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 items-start lg:items-center">
           {/* Image   full width on mobile/tablet, spans 2 rows on desktop */}
           <div
-            className="relative rounded-2xl overflow-hidden border bg-white col-span-1 lg:row-span-2"
+            className="relative rounded-md overflow-hidden border bg-white col-span-1 lg:row-span-2"
             style={{ borderColor: "#D0D7DE" }}
           >
             <Image
@@ -208,7 +208,7 @@ function WhyProtippzExist() {
 
           
           <div
-            className="relative rounded-2xl overflow-hidden border bg-white"
+            className="relative rounded-md overflow-hidden border bg-white"
             style={{ borderColor: '#D0D7DE' }}
           >
             

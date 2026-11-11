@@ -10,7 +10,7 @@ interface TeamAboutCardProps {
 
 const TeamAboutCard: React.FC<TeamAboutCardProps> = ({ team }) => {
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-5 sm:p-7 space-y-5">
+    <div className="bg-white border border-slate-200/90 rounded-md sm:rounded-3xl p-5 sm:p-7 space-y-5">
       <div className="flex items-center gap-2">
         <Building2 className="w-5 h-5 text-[#053697]" />
         <h3 className="text-lg sm:text-xl font-black uppercase text-slate-900 tracking-tight">
@@ -19,7 +19,7 @@ const TeamAboutCard: React.FC<TeamAboutCardProps> = ({ team }) => {
       </div>
 
       {/* Program Bio */}
-      <div className="bg-[#f8fafc] border border-slate-100 rounded-2xl p-4 sm:p-5 text-slate-700 text-xs sm:text-sm leading-relaxed font-medium">
+      <div className="bg-[#f8fafc] border border-slate-100 rounded-md p-4 sm:p-5 text-slate-700 text-xs sm:text-sm leading-relaxed font-medium">
         &ldquo;Official collegiate athletic program dedicated to competitive excellence, student-athlete development, high-performance training, and community engagement. Direct fan support empowers student-athletes with equipment, nutrition, wellness, and NIL growth.&rdquo;
       </div>
 

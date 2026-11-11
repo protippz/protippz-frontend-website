@@ -38,7 +38,7 @@ import {
 // Feed Skeleton Loader component
 function FeedCardSkeleton() {
   return (
-    <div className="p-4 rounded-2xl bg-white border border-border animate-pulse space-y-3">
+    <div className="p-4 rounded-md bg-white border border-border animate-pulse space-y-3">
       <div className="flex items-center gap-2">
         <div className="w-7 h-7 rounded-full bg-gray-200" />
         <div className="h-3 w-28 bg-gray-200 rounded" />
@@ -630,7 +630,7 @@ export default function CommunityPage({
           <div className="lg:col-span-2 space-y-4">
             {/* Error State Banner */}
             {isError && (
-              <div className="p-4 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-between text-red-800 text-xs sm:text-sm">
+              <div className="p-4 rounded-md bg-red-50 border border-red-200 flex items-center justify-between text-red-800 text-xs sm:text-sm">
                 <div className="flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
                   <span>Failed to load community posts. Please try again.</span>
@@ -663,7 +663,7 @@ export default function CommunityPage({
                   />
                 ))
               ) : !isLoading && !isFetching ? (
-                <div className="p-10 text-center rounded-2xl bg-white border border-[#0536971A] ">
+                <div className="p-10 text-center rounded-md bg-white border border-[#0536971A] ">
                   <p className="text-base font-bold text-[#053697]">
                     No content found
                   </p>

@@ -372,7 +372,7 @@ const InviteFriendsPage: React.FC = () => {
             {/* Step 1 */}
             <div className="bg-white border border-slate-200/90 rounded-3xl p-6 space-y-3.5 flex flex-col justify-between">
               <div className="space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#053697] flex items-center justify-center font-black text-base border border-blue-100">
+                <div className="w-12 h-12 rounded-md bg-blue-50 text-[#053697] flex items-center justify-center font-black text-base border border-blue-100">
                   01
                 </div>
                 <h4 className="text-base font-black text-slate-900 uppercase tracking-tight">
@@ -392,7 +392,7 @@ const InviteFriendsPage: React.FC = () => {
             {/* Step 2 */}
             <div className="bg-white border border-slate-200/90 rounded-3xl p-6 space-y-3.5 flex flex-col justify-between">
               <div className="space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#053697] flex items-center justify-center font-black text-base border border-blue-100">
+                <div className="w-12 h-12 rounded-md bg-blue-50 text-[#053697] flex items-center justify-center font-black text-base border border-blue-100">
                   02
                 </div>
                 <h4 className="text-base font-black text-slate-900 uppercase tracking-tight">
@@ -412,7 +412,7 @@ const InviteFriendsPage: React.FC = () => {
             {/* Step 3 */}
             <div className="bg-white border border-slate-200/90 rounded-3xl p-6 space-y-3.5 flex flex-col justify-between">
               <div className="space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#053697] flex items-center justify-center font-black text-base border border-blue-100">
+                <div className="w-12 h-12 rounded-md bg-blue-50 text-[#053697] flex items-center justify-center font-black text-base border border-blue-100">
                   03
                 </div>
                 <h4 className="text-base font-black text-slate-900 uppercase tracking-tight">
@@ -451,7 +451,7 @@ const InviteFriendsPage: React.FC = () => {
             </button>
 
             {/* Success Icon */}
-            <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
@@ -464,7 +464,7 @@ const InviteFriendsPage: React.FC = () => {
             </p>
 
             {/* Link Box */}
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between gap-2 mb-5">
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-md flex items-center justify-between gap-2 mb-5">
               <span className="text-xs font-mono text-slate-700 truncate select-all">
                 {inviteLink}
               </span>

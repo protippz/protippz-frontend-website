@@ -303,7 +303,7 @@ export default function SportsNewsPage() {
       {/* Main Content Area */}
       <main className="max-w-355 mx-auto w-full px-4 sm:px-6 py-8 space-y-6 min-h-[75vh]">
         {/* Search & Category Filter Navigation Bar */}
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/90 space-y-4">
+        <div className="bg-white p-4 sm:p-5 rounded-md border border-gray-200/90 space-y-4">
           <div className="flex flex-col sm:flex-row items-center gap-2">
             {/* Live Search Input */}
             <div className="relative flex-1 w-full">
@@ -358,7 +358,7 @@ export default function SportsNewsPage() {
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
               <div
                 key={i}
-                className="p-4 rounded-2xl bg-white border border-gray-200 space-y-3 animate-pulse max-w-[355px] w-full mx-auto"
+                className="p-4 rounded-md bg-white border border-gray-200 space-y-3 animate-pulse max-w-[355px] w-full mx-auto"
               >
                 <div className="w-full h-44 bg-gray-200 rounded-xl" />
                 <div className="h-4 bg-gray-200 rounded w-3/4" />
@@ -377,7 +377,7 @@ export default function SportsNewsPage() {
                 <article
                   key={item.id}
                   onClick={() => openStoryModal(item)}
-                  className="group bg-white rounded-2xl border border-gray-200 overflow-hidden cursor-pointer flex flex-col justify-between max-w-[355px] w-full mx-auto"
+                  className="group bg-white rounded-md border border-gray-200 overflow-hidden cursor-pointer flex flex-col justify-between max-w-[355px] w-full mx-auto"
                 >
                   <div className="space-y-3">
                     {/* Thumbnail Image Container */}
@@ -483,7 +483,7 @@ export default function SportsNewsPage() {
             })}
           </div>
         ) : (
-          <div className="p-12 text-center rounded-2xl bg-white border border-gray-200 space-y-3 max-w-md mx-auto">
+          <div className="p-12 text-center rounded-md bg-white border border-gray-200 space-y-3 max-w-md mx-auto">
             <BookOpen className="w-10 h-10 text-slate-300 mx-auto" />
             <h3 className="text-base font-bold text-[#053697]">
               No Sports Headlines Found
@@ -552,7 +552,7 @@ export default function SportsNewsPage() {
           onClick={closeStoryModal}
         >
           <div
-            className="relative bg-white w-full max-w-2xl max-h-[90vh] rounded-2xl flex flex-col overflow-hidden border border-gray-200 animate-in zoom-in-95 duration-150"
+            className="relative bg-white w-full max-w-2xl max-h-[90vh] rounded-md flex flex-col overflow-hidden border border-gray-200 animate-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}

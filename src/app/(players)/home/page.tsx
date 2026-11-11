@@ -163,7 +163,7 @@ const PlayerHomePage = () => {
     return (
       <div className="max-w-355 mx-auto px-3.5 lg:px-6 py-6 lg:py-8">
         <div className="animate-pulse space-y-5">
-          <div className="h-6 w-24 bg-slate-200 rounded-2xl" />
+          <div className="h-6 w-24 bg-slate-200 rounded-md" />
           <div className="h-20 bg-white border border-slate-200/90 rounded-[24px] w-full" />
           <div className="h-72 bg-white border border-slate-200/90 rounded-[28px] w-full" />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
@@ -214,7 +214,7 @@ const PlayerHomePage = () => {
       {!player?.isStripeConnected && (
         <div className="relative bg-amber-50/90 backdrop-blur-md border border-amber-200/80 rounded-[22px] lg:rounded-[24px] p-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <div className="p-2.5 bg-amber-100/90 text-amber-800 rounded-2xl shrink-0 border border-amber-200/60">
+            <div className="p-2.5 bg-amber-100/90 text-amber-800 rounded-md shrink-0 border border-amber-200/60">
               <AlertTriangle className="w-4 h-4" />
             </div>
             <div>
@@ -240,7 +240,7 @@ const PlayerHomePage = () => {
       {player?.isStripeConnected && !player?.isStripeReady && (
         <div className="relative bg-gradient-to-r from-amber-50/95 via-amber-50/85 to-orange-50/90 backdrop-blur-xl border border-amber-200/90 rounded-[22px] lg:rounded-[26px] p-4 lg:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 shadow-[0_4px_20px_-4px_rgba(245,158,11,0.08)]">
           <div className="flex items-start gap-2.5">
-            <div className="p-2.5 bg-amber-500/15 text-amber-700 rounded-2xl shrink-0 border border-amber-300/60 mt-0.5">
+            <div className="p-2.5 bg-amber-500/15 text-amber-700 rounded-md shrink-0 border border-amber-300/60 mt-0.5">
               <AlertTriangle className="w-5 h-5 text-amber-600" />
             </div>
             <div className="space-y-1">
@@ -395,7 +395,7 @@ const PlayerHomePage = () => {
               <button
                 type="button"
                 onClick={handleOpenWithdraw}
-                className="w-full lg:w-auto px-5 py-2.5 bg-[#053697] hover:bg-[#042870] text-white font-bold text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer"
+                className="w-full lg:w-auto px-5 py-2.5 bg-[#053697] hover:bg-[#042870] text-white font-bold text-xs uppercase tracking-wider rounded-md flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer"
               >
                 <Wallet className="w-4 h-4 text-[#2FC191]" />
                 <span>Withdraw Funds</span>
@@ -405,7 +405,7 @@ const PlayerHomePage = () => {
 
           {/* Bio Quote - Apple Notes Card Style */}
           {player?.bio && (
-            <div className="mt-4 p-4 rounded-2xl bg-slate-50/90 border border-slate-200/70 text-slate-700 text-xs lg:text-[13px] leading-relaxed">
+            <div className="mt-4 p-4 rounded-md bg-slate-50/90 border border-slate-200/70 text-slate-700 text-xs lg:text-[13px] leading-relaxed">
               <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
                 <span>NIL Statement</span>
               </div>

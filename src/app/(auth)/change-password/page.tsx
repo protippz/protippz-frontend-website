@@ -319,7 +319,7 @@ const ChangePasswordPage: React.FC = () => {
           </div>
 
           {/* Password Requirements Checklist */}
-          <div className="p-3.5 bg-slate-50 border border-slate-100 rounded-2xl space-y-2 text-xs">
+          <div className="p-3.5 bg-slate-50 border border-slate-100 rounded-md space-y-2 text-xs">
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
               Password Guidelines
             </span>

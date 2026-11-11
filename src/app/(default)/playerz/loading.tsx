@@ -2,7 +2,7 @@ import React from "react";
 
 function AthleticCardSkeleton() {
   return (
-    <div className="relative bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl  overflow-hidden mb-4 sm:mb-6 animate-pulse">
+    <div className="relative bg-white border border-slate-200/90 rounded-md sm:rounded-3xl  overflow-hidden mb-4 sm:mb-6 animate-pulse">
       <div className="flex flex-col md:flex-row items-stretch">
         {/* Left Column: Photo Hero Skeleton */}
         <div className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[320px] md:h-auto min-h-[280px] md:min-h-[340px] bg-slate-200 shrink-0 flex flex-col justify-end p-3.5 sm:p-4">
@@ -36,7 +36,7 @@ function AthleticCardSkeleton() {
             </div>
 
             {/* Stats Box (2 cols) */}
-            <div className="border border-slate-200/90 rounded-2xl p-4 sm:p-5 grid grid-cols-2 divide-x divide-slate-200 bg-white">
+            <div className="border border-slate-200/90 rounded-md p-4 sm:p-5 grid grid-cols-2 divide-x divide-slate-200 bg-white">
               <div className="pr-4 space-y-2">
                 <div className="w-24 h-3 bg-slate-200 rounded" />
                 <div className="w-20 h-7 bg-slate-200 rounded-lg" />
@@ -112,7 +112,7 @@ export default function PlayerzLoading() {
   return (
     <div className="max-w-355 mx-auto mt-2 sm:mt-3 px-2 sm:px-4 pb-14">
       {/* Unified Master Container Card Shell */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-slate-200 lg:sticky lg:top-[64px] h-[calc(100dvh-120px)] sm:h-[calc(100dvh-125px)] lg:h-[calc(100vh-125px)] min-h-[460px] sm:min-h-[520px] lg:min-h-[550px]">
+      <div className="bg-white rounded-md border border-slate-200/90 overflow-hidden flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-slate-200 lg:sticky lg:top-[64px] h-[calc(100dvh-120px)] sm:h-[calc(100dvh-125px)] lg:h-[calc(100vh-125px)] min-h-[460px] sm:min-h-[520px] lg:min-h-[550px]">
         {/* Left Column: Sidebar Skeleton */}
         <aside className="w-full shrink-0 lg:w-72 xl:w-80 lg:shrink-0 bg-white lg:h-full flex flex-col overflow-hidden">
           <SidebarSkeleton />

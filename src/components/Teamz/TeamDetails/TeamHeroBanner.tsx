@@ -92,7 +92,7 @@ const TeamHeroBanner: React.FC<TeamHeroBannerProps> = ({
           {/* Left: Team Logo & Identity */}
           <div className="flex flex-col sm:flex-row items-center sm:items-end gap-2 sm:gap-2 text-center sm:text-left z-10 w-full md:w-auto">
             {/* Logo Badge Container */}
-            <div className="relative w-28 h-28 sm:w-44 sm:h-44 rounded-2xl sm:rounded-3xl bg-white border-2 border-white/20 shrink-0 flex items-center justify-center overflow-hidden">
+            <div className="relative w-28 h-28 sm:w-44 sm:h-44 rounded-md sm:rounded-3xl bg-white border-2 border-white/20 shrink-0 flex items-center justify-center overflow-hidden">
               <Image
                 src={teamLogoUrl || ptLogo}
                 alt={team?.name || "Team Logo"}

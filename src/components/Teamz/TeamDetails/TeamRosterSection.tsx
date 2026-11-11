@@ -52,7 +52,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
   }, [roster, searchTerm]);
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-5">
+    <div className="bg-white border border-slate-200/90 rounded-md sm:rounded-3xl p-4 sm:p-7 space-y-5">
       {/* Header, Search & View Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200">
         <div>
@@ -130,7 +130,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
         roster.length === 0 ? (
           /* Empty Roster State */
           <div className="py-14 px-4 flex flex-col items-center justify-center text-center">
-            <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#053697] mb-3">
+            <div className="w-14 h-14 rounded-md bg-blue-50 border border-blue-100 flex items-center justify-center text-[#053697] mb-3">
               <Users className="w-7 h-7" />
             </div>
             <h3 className="text-base font-bold text-slate-900">
@@ -143,7 +143,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
         ) : (
           /* Search Empty State */
           <div className="py-12 px-4 flex flex-col items-center justify-center text-center">
-            <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 mb-2">
+            <div className="w-12 h-12 rounded-md bg-slate-100 flex items-center justify-center text-slate-400 mb-2">
               <UserX className="w-6 h-6" />
             </div>
             <h3 className="text-sm font-bold text-slate-900">
@@ -162,7 +162,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
         /* =========================================================
            OFFICIAL NCAA ROSTER TABLE LIST VIEW (MATCHING USER SCREENSHOT)
            ========================================================= */
-        <div className="border border-slate-200 rounded-xl sm:rounded-2xl overflow-hidden divide-y divide-slate-200">
+        <div className="border border-slate-200 rounded-xl sm:rounded-md overflow-hidden divide-y divide-slate-200">
           {filteredRoster.map((player, index) => {
             const playerImg = player.player_image
               ? imageUrl(player.player_image)
@@ -309,7 +309,7 @@ const TeamRosterSection: React.FC<TeamRosterSectionProps> = ({
             return (
               <div
                 key={player._id}
-                className="group relative bg-[#fafbfb] hover:bg-white border border-slate-200/90 hover:border-[#053697]/40 rounded-2xl overflow-hidden transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-[#fafbfb] hover:bg-white border border-slate-200/90 hover:border-[#053697]/40 rounded-md overflow-hidden transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <Link

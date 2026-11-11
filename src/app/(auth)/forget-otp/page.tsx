@@ -210,7 +210,7 @@ const ForgetOtpFormContent: React.FC = () => {
           />
 
           {/* Frosted Glass Mac-Style Floating Pill */}
-          <div className="absolute bottom-5 inset-x-5 backdrop-blur-xl bg-white/90 border border-white/40 rounded-2xl p-4 text-left">
+          <div className="absolute bottom-5 inset-x-5 backdrop-blur-xl bg-white/90 border border-white/40 rounded-md p-4 text-left">
             <div className="flex items-center gap-2">
               <div className="w-9 h-9 rounded-full bg-[#053697]/10 flex items-center justify-center text-[#053697] shrink-0">
                 <ShieldCheck className="w-5 h-5" />
@@ -231,7 +231,7 @@ const ForgetOtpFormContent: React.FC = () => {
         <div className="w-full max-w-sm mx-auto flex flex-col justify-center px-1 sm:px-2 py-2">
           {/* Header */}
           <div className="text-center">
-            <div className="mx-auto w-12 h-12 rounded-2xl bg-[#053697]/10 flex items-center justify-center mb-3 text-[#053697]">
+            <div className="mx-auto w-12 h-12 rounded-md bg-[#053697]/10 flex items-center justify-center mb-3 text-[#053697]">
               <KeyRound className="w-6 h-6" />
             </div>
 
@@ -269,7 +269,7 @@ const ForgetOtpFormContent: React.FC = () => {
                   onChange={(e) => handleDigitChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
                   onPaste={handlePaste}
-                  className="w-12 h-13 sm:w-13 sm:h-14 rounded-2xl border border-gray-200 bg-[#f9fafb] text-center text-xl font-black text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#053697] focus:bg-white transition-all  select-none"
+                  className="w-12 h-13 sm:w-13 sm:h-14 rounded-md border border-gray-200 bg-[#f9fafb] text-center text-xl font-black text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#053697] focus:bg-white transition-all  select-none"
                   aria-label={`Digit ${index + 1} of verification code`}
                 />
               ))}

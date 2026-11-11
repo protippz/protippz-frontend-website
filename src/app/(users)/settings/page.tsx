@@ -15,7 +15,7 @@ const SettingPage: React.FC = () => {
   return (
     <div className="w-full max-w-355 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       {/* Unified Main Container with Wall-to-Wall Divide X / Y */}
-      <div className="w-full bg-white border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-200">
+      <div className="w-full bg-white border border-slate-200 rounded-md overflow-hidden divide-y divide-slate-200">
 
         {/* Header Bar */}
         <div className="px-6 sm:px-8 py-6 bg-white">

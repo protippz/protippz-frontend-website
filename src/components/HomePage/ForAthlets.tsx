@@ -65,7 +65,7 @@ function ForAthletes() {
               <div className="absolute inset-0 bg-linear-to-t from-[#f0faf6]/90 via-transparent to-transparent lg:bg-linear-to-r lg:from-transparent lg:to-[#f0faf6]/80" />
 
               {/* Floating stat pill */}
-              {/* <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 flex items-center gap-2.5 bg-white/90 backdrop-blur-sm border border-white rounded-2xl px-4 py-3 ">
+              {/* <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 flex items-center gap-2.5 bg-white/90 backdrop-blur-sm border border-white rounded-md px-4 py-3 ">
                 <div className="w-8 h-8 rounded-full bg-[#2FC191]/10 flex items-center justify-center">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                     <path

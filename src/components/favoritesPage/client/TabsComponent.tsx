@@ -24,7 +24,7 @@ import toast from "react-hot-toast";
 // Shimmering Skeleton for Horizontal Cards
 function FavoriteCardSkeleton() {
   return (
-    <div className="relative bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl overflow-hidden mb-4 sm:mb-6 animate-pulse">
+    <div className="relative bg-white border border-slate-200/90 rounded-md sm:rounded-3xl overflow-hidden mb-4 sm:mb-6 animate-pulse">
       <div className="flex flex-col md:flex-row items-stretch">
         <div className="relative w-full md:w-[280px] lg:w-[320px] xl:w-[340px] h-[300px] md:h-auto min-h-[260px] md:min-h-[300px] bg-slate-200 shrink-0 flex flex-col justify-end p-3.5 sm:p-4">
           <div className="flex items-center gap-1.5 flex-wrap">
@@ -232,7 +232,7 @@ const TabsComponent: React.FC = () => {
       {/* Metric Cards Row */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-2 mb-6 sm:mb-8 items-stretch">
         {/* Big Primary Card (Left Side) */}
-        <div className="md:col-span-6 lg:col-span-7 bg-[#053697] text-white rounded-2xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border border-[#053697] min-h-[160px]">
+        <div className="md:col-span-6 lg:col-span-7 bg-[#053697] text-white rounded-md p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border border-[#053697] min-h-[160px]">
           <div className="absolute -right-8 -bottom-8 w-44 h-44 rounded-full bg-white/5 pointer-events-none" />
           <div className="absolute right-10 top-2 w-32 h-32 rounded-full bg-[#2FC191]/15 blur-2xl pointer-events-none" />
 
@@ -258,7 +258,7 @@ const TabsComponent: React.FC = () => {
         {/* Right Stacked Metric Cards */}
         <div className="md:col-span-6 lg:col-span-5 grid grid-cols-2 gap-2">
           {/* Athletes Metric */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-5 flex flex-col justify-between">
+          <div className="bg-white border border-slate-200/90 rounded-md p-5 flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                 Athletes
@@ -276,7 +276,7 @@ const TabsComponent: React.FC = () => {
           </div>
 
           {/* Teams Metric */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-5 flex flex-col justify-between">
+          <div className="bg-white border border-slate-200/90 rounded-md p-5 flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                 Teams
@@ -296,7 +296,7 @@ const TabsComponent: React.FC = () => {
       </div>
 
       {/* Control Bar: Segmented Tabs + Search Filter + Refresh Button */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl p-2.5 sm:p-3 mb-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+      <div className="bg-white border border-slate-200/90 rounded-md p-2.5 sm:p-3 mb-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
         {/* Segmented Tab Controls */}
         <div className="inline-flex p-1 bg-slate-100 rounded-xl gap-1 shrink-0">
           <button
@@ -393,8 +393,8 @@ const TabsComponent: React.FC = () => {
         ) : filteredPlayers.length === 0 ? (
           searchQuery ? (
             // Search Query No Results
-            <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-2xl my-4">
-              <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mb-3">
+            <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-md my-4">
+              <div className="w-14 h-14 rounded-md bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mb-3">
                 <Search className="w-6 h-6" />
               </div>
               <h3 className="text-base font-bold text-slate-900">
@@ -413,8 +413,8 @@ const TabsComponent: React.FC = () => {
             </div>
           ) : (
             // No Athletes Bookmarked
-            <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-2xl my-4">
-              <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#053697] mb-3">
+            <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-md my-4">
+              <div className="w-14 h-14 rounded-md bg-blue-50 border border-blue-100 flex items-center justify-center text-[#053697] mb-3">
                 <UserX className="w-7 h-7" />
               </div>
               <h3 className="text-base font-bold text-slate-900">
@@ -449,8 +449,8 @@ const TabsComponent: React.FC = () => {
         ) : filteredTeams.length === 0 ? (
           searchQuery ? (
             // Search Query No Results
-            <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-2xl my-4">
-              <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mb-3">
+            <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-md my-4">
+              <div className="w-14 h-14 rounded-md bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mb-3">
                 <Search className="w-6 h-6" />
               </div>
               <h3 className="text-base font-bold text-slate-900">
@@ -469,8 +469,8 @@ const TabsComponent: React.FC = () => {
             </div>
           ) : (
             // No Teams Bookmarked
-            <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-2xl my-4">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-3">
+            <div className="w-full py-16 px-4 flex flex-col items-center justify-center text-center bg-white border border-slate-200 rounded-md my-4">
+              <div className="w-14 h-14 rounded-md bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mb-3">
                 <ShieldAlert className="w-7 h-7" />
               </div>
               <h3 className="text-base font-bold text-slate-900">

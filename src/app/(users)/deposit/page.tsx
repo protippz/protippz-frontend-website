@@ -106,7 +106,7 @@ const DepositFundForm = () => {
   return (
     <div className="w-full flex items-center justify-center py-4 sm:py-8 px-3 sm:px-6">
       {/* Seamless Wall-to-Wall Divide X / Y Container */}
-      <div className="w-full max-w-355 bg-white border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-200">
+      <div className="w-full max-w-355 bg-white border border-slate-200 rounded-md overflow-hidden divide-y divide-slate-200">
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-200"

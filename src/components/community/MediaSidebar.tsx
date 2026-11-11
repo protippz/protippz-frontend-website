@@ -79,7 +79,7 @@ const MediaSidebar = memo(function MediaSidebar({
   return (
     <aside className="hidden sm:block w-full min-w-0 max-w-full lg:sticky lg:top-20 lg:max-h-[calc(100vh-100px)] lg:overflow-y-auto custom-sidebar-scrollbar space-y-4 sm:space-y-5">
       {/* 1. Media & Publishing Categories Card */}
-      <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-border w-full max-w-full min-w-0 overflow-hidden box-border">
+      <div className="p-3.5 sm:p-5 rounded-md bg-white border border-border w-full max-w-full min-w-0 overflow-hidden box-border">
         <div className="flex items-center gap-2 mb-3 sm:mb-3.5 pb-2.5 border-b border-border min-w-0">
           <FileText className="w-4 h-4 text-[#2FC191] shrink-0" />
           <h3 className="text-xs font-bold text-[#053697] uppercase tracking-wider truncate min-w-0 flex-1">
@@ -131,7 +131,7 @@ const MediaSidebar = memo(function MediaSidebar({
       </div>
 
       {/* 2. Trending Topics / Tags Card */}
-      <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-border w-full max-w-full min-w-0 overflow-hidden box-border">
+      <div className="p-3.5 sm:p-5 rounded-md bg-white border border-border w-full max-w-full min-w-0 overflow-hidden box-border">
         <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border min-w-0">
           <TrendingUp className="w-4 h-4 text-[#2FC191] shrink-0" />
           <h3 className="text-xs font-bold text-[#053697] uppercase tracking-wider truncate min-w-0 flex-1">

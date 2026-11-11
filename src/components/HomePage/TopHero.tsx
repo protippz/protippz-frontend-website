@@ -33,7 +33,7 @@ function PlayerCard({ player }: { player: Player }) {
 
   return (
     <div
-      className="relative shrink-0 w-64 md:w-72 aspect-9/14 border-zero rounded-2xl overflow-hidden cursor-pointer group"
+      className="relative shrink-0 w-64 md:w-72 aspect-9/14 border-zero rounded-md overflow-hidden cursor-pointer group"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -66,7 +66,7 @@ function PlayerCard({ player }: { player: Player }) {
 
       {/* Hover ring */}
       <div
-        className={`absolute inset-0 rounded-2xl ring-2 ring-white/60 transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 rounded-md ring-2 ring-white/60 transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"}`}
       />
 
       {/* Player info */}

@@ -194,7 +194,7 @@ const UserVerifyOtp: React.FC<UserVerifyOtpProps> = ({
 
       {/* Header */}
       <div className="text-center mb-6 space-y-2">
-        <div className="mx-auto w-12 h-12 rounded-2xl bg-[#053697]/10 flex items-center justify-center text-[#053697]">
+        <div className="mx-auto w-12 h-12 rounded-md bg-[#053697]/10 flex items-center justify-center text-[#053697]">
           <ShieldCheck className="w-6 h-6" />
         </div>
 
@@ -229,7 +229,7 @@ const UserVerifyOtp: React.FC<UserVerifyOtpProps> = ({
               onChange={(e) => handleDigitChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={handlePaste}
-              className="w-12 h-13 sm:w-13 sm:h-14 rounded-2xl border border-slate-200 bg-slate-50/70 text-center text-xl font-black text-slate-900 focus:outline-none focus:border-[#053697] focus:bg-white transition-all  select-none"
+              className="w-12 h-13 sm:w-13 sm:h-14 rounded-md border border-slate-200 bg-slate-50/70 text-center text-xl font-black text-slate-900 focus:outline-none focus:border-[#053697] focus:bg-white transition-all  select-none"
               aria-label={`Digit ${index + 1}`}
             />
           ))}

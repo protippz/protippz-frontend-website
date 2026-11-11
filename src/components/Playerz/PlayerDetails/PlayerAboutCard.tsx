@@ -40,7 +40,7 @@ const PlayerAboutCard: React.FC<PlayerAboutCardProps> = ({
 
       {/* Bio / NIL Statement */}
       {player.bio ? (
-        <div className="p-4 rounded-2xl bg-slate-50/90 border border-slate-200/70 text-slate-800">
+        <div className="p-4 rounded-md bg-slate-50/90 border border-slate-200/70 text-slate-800">
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#053697] block mb-1">
             Athlete Bio & NIL Statement
           </span>
