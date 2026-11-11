@@ -10,11 +10,9 @@ import {
   ArrowUpRight,
   Coins,
   Receipt,
-  Sparkles,
   Award,
-  Calendar,
-  Wallet,
 } from "lucide-react";
+import { useMyTipseQuery } from "@/Redux/Apis/tippzApis"
 
 interface TipHistoryInterface {
   _id: string;
@@ -51,6 +49,7 @@ const TippzHistoryPage = () => {
   const [pagination, setPagination] = useState<Pagination>();
   const [page, setPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { data } = useMyTipseQuery({ page, limit: 10 });
 
   useEffect(() => {
     const getMyTip = async () => {

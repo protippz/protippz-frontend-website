@@ -20,7 +20,7 @@ const PlayerTipCard: React.FC<PlayerTipCardProps> = ({
   playerItemForTipping,
 }) => {
   return (
-    <div className="bg-white border border-[#053697]/20 p-6">
+    <div className="bg-white border border-[#053697]/20 p-6 rounded-3xl">
       <div className="flex items-center gap-2 mb-2 pt-1">
         <span className="text-xs font-bold uppercase tracking-wider text-[#053697]">
           Support This Athlete

@@ -182,7 +182,7 @@ const TaxInformationPage = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6">
       {/* Top Header / Breadcrumb Card: Apple Toolbar Aesthetic */}
-      <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-[24px] sm:rounded-[28px] p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 ">
+      <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-md p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 ">
         <div className="flex items-center gap-2">
           <Link
             href="/home"
@@ -204,7 +204,7 @@ const TaxInformationPage = () => {
       </div>
 
       {/* Main Content Card with Continuous Squircle Curvature */}
-      <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-[28px] sm:rounded-[32px] p-6 sm:p-8 md:p-10  relative overflow-hidden">
+      <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-md  p-6 sm:p-8 md:p-10  relative overflow-hidden">
         {/* Decorative soft gradient glow */}
         <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-blue-50/70 via-indigo-50/40 to-transparent rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
 

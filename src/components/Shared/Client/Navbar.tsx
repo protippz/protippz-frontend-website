@@ -166,6 +166,14 @@ const Navbar: React.FC = () => {
           <Wallet className="w-4 h-4 text-[#2FC191]" />
           <span>Tipz History</span>
         </Link>}
+        {isPlayerOrTeam && <Link
+          href={"/player-transaction-log"}
+          onClick={() => setDropdownOpen(false)}
+          className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50/80 hover:text-[#2FC191] transition-colors group"
+        >
+          <DollarSign className="w-4 h-4 text-[#2FC191]" />
+          <span>Transaction Log</span>
+        </Link>}
         {!isPlayerOrTeam && (
           <>
             <Link

@@ -83,6 +83,25 @@ const AthleteTipHistoryPage = () => {
     0
   );
 
+  // Helper to calculate athlete net earnings after deduction
+  const getEarningsBreakdown = (rawAmount: number, tipBy?: string) => {
+    const gross = Number(rawAmount) || 0;
+    const isProfileBalance = tipBy?.toLowerCase() === "profile balance";
+    const platformFee = gross * 0.1; // 10% platform charge
+    const stripeFee = isProfileBalance ? 0 : 0.03; // $0.03 stripe charge when paid via stripe/card
+    const totalDeduction = platformFee + stripeFee;
+    const netReceived = Math.max(0, gross - totalDeduction);
+
+    return {
+      gross,
+      platformFee,
+      stripeFee,
+      totalDeduction,
+      netReceived,
+      isProfileBalance,
+    };
+  };
+
   return (
     <div className="w-full max-w-355 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6">
       {/* Top Header Card: Apple Toolbar Style with Continuous Squircles */}
@@ -241,7 +260,7 @@ const AthleteTipHistoryPage = () => {
                   <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                     <th className="py-3.5 px-6">Date</th>
                     <th className="py-3.5 px-6">Supporter (Fan)</th>
-                    <th className="py-3.5 px-6">Amount</th>
+                    <th className="py-3.5 px-6">Amount &amp; Net</th>
                     <th className="py-3.5 px-6">Payment Method</th>
                     <th className="py-3.5 px-6 text-right">Status</th>
                   </tr>
@@ -305,18 +324,43 @@ const AthleteTipHistoryPage = () => {
                           </div>
                         </td>
 
-                        {/* Amount */}
+                        {/* Amount & Net Received */}
                         <td className="py-4 px-6">
-                          <span className="font-black text-emerald-700 text-sm">
-                            +${Number(tip.amount).toFixed(2)}
-                          </span>
+                          {(() => {
+                            const {
+                              gross,
+                              totalDeduction,
+                              netReceived,
+                              isProfileBalance,
+                            } = getEarningsBreakdown(tip.amount, tip.tipBy);
+
+                            return (
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-bold text-slate-900 text-sm">
+                                    ${gross.toFixed(2)}
+                                  </span>
+                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                    +${netReceived.toFixed(2)} Net
+                                  </span>
+                                </div>
+                                <p className="text-[10px] text-slate-400 mt-1">
+                                  Fee: -${totalDeduction.toFixed(2)}{" "}
+                                  <span className="text-slate-400/80">
+                                    ({isProfileBalance ? "10% platform" : "10% platform + $0.03 Stripe"})
+                                  </span>
+                                </p>
+                              </div>
+                            );
+                          })()}
                         </td>
 
                         {/* Payment Method */}
-                        <td className="py-4 px-6">
+                        <td className="py-4 px-6 ">
                           <span className="text-slate-600 font-medium capitalize">
                             {tip.tipBy || "Direct Tip"}
                           </span>
+
                         </td>
 
                         {/* Status */}
@@ -372,11 +416,31 @@ const AthleteTipHistoryPage = () => {
                         </div>
                       </div>
 
-                      <div className="text-right">
-                        <p className="text-sm font-black text-emerald-700">
-                          +${Number(tip.amount).toFixed(2)}
-                        </p>
-                      </div>
+                      {(() => {
+                        const {
+                          gross,
+                          totalDeduction,
+                          netReceived,
+                          isProfileBalance,
+                        } = getEarningsBreakdown(tip.amount, tip.tipBy);
+
+                        return (
+                          <div className="text-right shrink-0">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <span className="text-xs text-slate-500 font-semibold">
+                                ${gross.toFixed(2)}
+                              </span>
+                              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-full">
+                                +${netReceived.toFixed(2)} Net
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-slate-400 mt-0.5">
+                              Fee: -${totalDeduction.toFixed(2)}{" "}
+                              <span>({isProfileBalance ? "10%" : "10% + $0.03"})</span>
+                            </p>
+                          </div>
+                        );
+                      })()}
                     </div>
 
                     <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-100">
@@ -395,13 +459,15 @@ const AthleteTipHistoryPage = () => {
           </>
         )}
 
-        {/* Pagination Controls */}
-        {pagination && pagination.totalPage > 1 && (
+        {/* Pagination Controls — always visible */}
+        {pagination && (
           <div className="p-4 sm:p-5 border-t border-slate-200/80 bg-white flex items-center justify-between">
             <p className="text-xs text-slate-500 font-medium">
               Showing{" "}
               <span className="font-bold text-slate-900">
-                {(page - 1) * (pagination.limit || 10) + 1}
+                {pagination.total === 0
+                  ? 0
+                  : (page - 1) * (pagination.limit || 10) + 1}
               </span>{" "}
               to{" "}
               <span className="font-bold text-slate-900">
@@ -428,15 +494,15 @@ const AthleteTipHistoryPage = () => {
               <div className="flex items-center gap-1 px-2.5 text-xs font-bold text-slate-700 font-mono">
                 <span>{page}</span>
                 <span className="text-slate-400">/</span>
-                <span className="text-slate-400">{pagination.totalPage}</span>
+                <span className="text-slate-400">{pagination.totalPage || 1}</span>
               </div>
 
               <button
                 type="button"
                 onClick={() =>
-                  setPage((p) => Math.min(pagination.totalPage, p + 1))
+                  setPage((p) => Math.min(pagination.totalPage || 1, p + 1))
                 }
-                disabled={page >= pagination.totalPage}
+                disabled={page >= (pagination.totalPage || 1)}
                 className="px-3.5 py-1.5 rounded-full border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition-all cursor-pointer"
               >
                 <span className="hidden sm:inline">Next</span>

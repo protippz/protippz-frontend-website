@@ -35,6 +35,7 @@ import {
   Twitter,
   ArrowUpRight,
   Loader2,
+  Activity,
 } from "lucide-react";
 import { FaArrowLeftLong, FaTiktok } from "react-icons/fa6";
 import { FinancialSnapshot } from "@/components/player-profile/FinancialSnapshot";
@@ -45,6 +46,8 @@ import {
   WithdrawFundsModal,
 } from "@/components/player-profile/WithdrawModals";
 import { useRouter } from "next/navigation";
+import PlayerHeroBanner from "@/components/Playerz/PlayerDetails/PlayerHeroBanner";
+import PlayerLastGamesTable from "@/components/Playerz/PlayerLastGamesTable";
 
 const PlayerHomePage = () => {
   const context = useContextData();
@@ -55,6 +58,7 @@ const PlayerHomePage = () => {
   const [showStripeModal, setShowStripeModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [updatingStripe, setUpdatingStripe] = useState(false);
+  const [activeTab, setActiveTab] = useState<"info" | "games">("info");
 
   const handleUpdateStripeAccount = async () => {
     const token =
@@ -235,7 +239,6 @@ const PlayerHomePage = () => {
           </button>
         </div>
       )}
-
       {/* Stripe Verification / Update Warning Card (Connected, but isStripeReady is false) */}
       {player?.isStripeConnected && !player?.isStripeReady && (
         <div className="relative bg-gradient-to-r from-amber-50/95 via-amber-50/85 to-orange-50/90 backdrop-blur-xl border border-amber-200/90 rounded-[22px] lg:rounded-[26px] p-4 lg:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 shadow-[0_4px_20px_-4px_rgba(245,158,11,0.08)]">
@@ -282,25 +285,49 @@ const PlayerHomePage = () => {
         </div>
       )}
 
-      {/* Athlete Hero Profile Card with Continuous Squircle Curvature */}
+      {/* View Switcher Tabs (Mac/Apple Segmented Control Style) */}
+      <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-[20px] p-1.5 sm:p-2 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+          <button
+            type="button"
+            onClick={() => setActiveTab("info")}
+            className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 rounded-[14px] text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              activeTab === "info"
+                ? "bg-[#053697] text-white shadow-xs"
+                : "bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
+            }`}
+          >
+            <UserIcon className="w-4 h-4" />
+            <span>User Information</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("games")}
+            className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 rounded-[14px] text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              activeTab === "games"
+                ? "bg-[#053697] text-white shadow-xs"
+                : "bg-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/80"
+            }`}
+          >
+            <Activity className="w-4 h-4" />
+            <span>Player Last Games</span>
+          </button>
+        </div>
+
+        <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200/70 text-slate-500 text-[11px] font-mono font-semibold">
+          Athlete Portal
+        </span>
+      </div>
+
+      {activeTab === "info" ? (
+        <>
+          {/* Athlete Hero Profile Card with Continuous Squircle Curvature */}
       <div className="relative bg-white/95 backdrop-blur-xl border border-slate-200/90 hover:border-slate-300 rounded-[26px] lg:rounded-[30px] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.05)] transition-colors duration-300 overflow-hidden">
         {/* Banner Graphic Background with Subtle Grid Texture */}
         <div
           className="relative h-40 lg:h-52 w-full bg-gradient-to-r from-[#053697] via-[#042874] to-[#021744] overflow-hidden"
-          style={
-            bgSrc
-              ? {
-                backgroundImage: `url(${bgSrc})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }
-              : undefined
-          }
         >
-          {/* Subtle Apple gradient vignette */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70 pointer-events-none" />
-          <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px] opacity-10 pointer-events-none" />
-
           {/* Top-Right Floating Badges */}
           <div className="absolute top-3.5 right-3.5 flex flex-wrap items-center gap-2 z-10">
             {player?.isProfileClaimed ? (
@@ -340,10 +367,10 @@ const PlayerHomePage = () => {
               </div>
 
               {/* Player Identity Metadata */}
-              <div className="space-y-1">
+              <div className="space-y-1 mt-18">
                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2">
-                  <h2 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight uppercase">
-                    {player?.name || "STEPHEN CURRY"}
+                  <h2 className="text-2xl z-999  lg:text-3xl font-black text-slate-900 tracking-tight uppercase">
+                    {player?.name}
                   </h2>
                   {player?.username && (
                     <span className="text-xs font-mono text-slate-600 bg-slate-100/90 border border-slate-200/80 px-2.5 py-0.5 rounded-full">
@@ -420,7 +447,16 @@ const PlayerHomePage = () => {
       <QuickActionRibbon onOpenWithdraw={handleOpenWithdraw} />
 
       {/* Main Balanced Dossier Grid: 2 Apple Inspector Columns */}
-      <MainBalancedDossier />
+          <MainBalancedDossier />
+        </>
+      ) : (
+        <PlayerLastGamesTable
+          playerId={player?._id}
+          teamName={teamName}
+          position={player?.position}
+          accentColor="#053697"
+        />
+      )}
 
       {/* Payout & Withdraw Modals */}
       <StripeConnectModal

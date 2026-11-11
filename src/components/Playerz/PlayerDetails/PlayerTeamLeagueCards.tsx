@@ -22,7 +22,7 @@ const PlayerTeamLeagueCards: React.FC<PlayerTeamLeagueCardsProps> = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
       {/* Team Card */}
-      <div className="bg-white border p-5 flex flex-col justify-between">
+      <div className="bg-white border p-5 flex flex-col justify-between rounded-3xl">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-3">
             Team Information
@@ -65,7 +65,7 @@ const PlayerTeamLeagueCards: React.FC<PlayerTeamLeagueCardsProps> = ({
       </div>
 
       {/* League Card */}
-      <div className="bg-white border p-5 flex flex-col justify-between">
+      <div className="bg-white border p-5 flex flex-col justify-between rounded-3xl">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-3">
             League & Conference

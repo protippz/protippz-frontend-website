@@ -82,6 +82,7 @@ const TransactionLogPage = () => {
           res?.data?.result ||
           res?.data?.data?.result ||
           (Array.isArray(res?.data) ? res.data : []);
+        console.log(JSON.stringify(resultData, null, 2))
         const metaData = res?.data?.meta || res?.data?.data?.meta;
 
         if (Array.isArray(resultData)) {
@@ -383,7 +384,7 @@ const TransactionLogPage = () => {
                             {Number(tx.amount || 0).toFixed(2)}
                           </span>
                           {typeof tx.fee === "number" && tx.fee > 0 && (
-                            <span className="text-[10px] text-slate-400 block mt-0.5">
+                            <span className="text-[10px] text-red-400 block mt-0.5">
                               Fee: ${Number(tx.fee).toFixed(2)}
                               {typeof tx.netAmount === "number"
                                 ? ` • Net: $${Number(tx.netAmount).toFixed(2)}`
@@ -519,13 +520,15 @@ const TransactionLogPage = () => {
           </>
         )}
 
-        {/* Pagination Controls */}
-        {pagination && pagination.totalPage > 1 && (
+        {/* Pagination Controls — always visible */}
+        {pagination && (
           <div className="p-4 sm:p-5 border-t border-slate-200 bg-white flex items-center justify-between">
             <p className="text-xs text-slate-500 font-medium">
               Showing{" "}
               <span className="font-semibold text-slate-900">
-                {(page - 1) * (pagination.limit || 10) + 1}
+                {pagination.total === 0
+                  ? 0
+                  : (page - 1) * (pagination.limit || 10) + 1}
               </span>{" "}
               to{" "}
               <span className="font-semibold text-slate-900">
@@ -552,15 +555,15 @@ const TransactionLogPage = () => {
               <div className="flex items-center gap-1 px-2 text-xs font-semibold text-slate-700">
                 <span>{page}</span>
                 <span className="text-slate-400">/</span>
-                <span className="text-slate-400">{pagination.totalPage}</span>
+                <span className="text-slate-400">{pagination.totalPage || 1}</span>
               </div>
 
               <button
                 type="button"
                 onClick={() =>
-                  setPage((p) => Math.min(pagination.totalPage, p + 1))
+                  setPage((p) => Math.min(pagination.totalPage || 1, p + 1))
                 }
-                disabled={page >= pagination.totalPage}
+                disabled={page >= (pagination.totalPage || 1)}
                 className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 transition-colors cursor-pointer"
               >
                 <span className="hidden sm:inline">Next</span>
