@@ -429,4 +429,6 @@ div[class*="webagent"] {
   right: auto !important; */
       position: fixed !important;
       bottom: 90 !important;
+      left: auto !important;
+      right:  5px !important;
 }

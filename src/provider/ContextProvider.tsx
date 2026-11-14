@@ -52,6 +52,14 @@ export interface User {
     email?: string | undefined | null;
     id?: string | null;
   };
+  team_logo?: string;
+  team_bg_image?: string;
+  sport?: string;
+  description?: string;
+  claimedAt?: string;
+  stripAccountId?: string;
+  csvUploadId?: string;
+  verfiedBy?: string;
   username?: string;
   _id?: string;
   createdAt?: string;

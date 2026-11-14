@@ -55,7 +55,7 @@ const SignInPage: React.FC = () => {
         return redirectUrl;
       }
     }
-    return role === "user" ? "/community" : "/home";
+    return role === "user" ? "/community" : role === "team" ? "/team-home":"/home";
   };
 
   const login = useGoogleLogin({
@@ -173,7 +173,6 @@ const SignInPage: React.FC = () => {
         platform,
       };
 
-      console.log("[SignIn] Submitting login data:", data);
       const res = await SignInHandler(data);
 
       if (res?.success) {
@@ -182,7 +181,6 @@ const SignInPage: React.FC = () => {
         Cookies.set("token", res?.data?.accessToken);
         toast.success(res?.message || "Logged in successfully!");
 
-        // Resolve authenticated MongoDB user _id (never use username/email as external ID)
         const dbUserId =
           res?.data?.user?._id ||
           res?.data?.userData?._id ||
@@ -203,7 +201,6 @@ const SignInPage: React.FC = () => {
             role: res?.data?.role || res?.data?.user?.role,
           };
 
-          // Await OneSignal sync with a safety timeout so it isn't cancelled by window.location.href
           try {
             await Promise.race([
               syncOneSignalUser(loggedUser),
