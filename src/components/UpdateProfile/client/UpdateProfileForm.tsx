@@ -193,14 +193,14 @@ const UpdateProfileForm: React.FC = () => {
     "https://i.ibb.co.com/f4tzYw2/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg";
 
   return (
-    <div className="w-full max-w-355  mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+    <div className="w-full! max-w-355  mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       {/* Unified Container matching ProfilePage with Cover and Divide X/Y Grid */}
       <div className="w-full bg-white border border-slate-200 rounded-md overflow-hidden divide-y divide-slate-200">
 
         {/* TOP SECTION: Cover Header & Identity Bar */}
         <div>
           {/* Cover Header */}
-          <div className="h-28 sm:h-32 bg-gradient-to-r from-[#0d2e73] via-[#123F9C] to-[#1D4ED8] relative overflow-hidden">
+          <div className="h-28 sm:h-32 bg-transparent relative overflow-hidden">
             <div className="absolute -right-8 -bottom-8 w-40 h-40 rounded-full bg-white/5 pointer-events-none" />
             <div className="absolute left-8 top-0 w-32 h-32 rounded-full bg-[#2FC191]/15 blur-2xl pointer-events-none" />
           </div>

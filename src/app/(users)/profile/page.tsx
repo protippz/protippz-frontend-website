@@ -31,11 +31,11 @@ const ProfilePage = () => {
         {/* TOP SECTION: Professional Header Banner & Identity */}
         <div>
           {/* Subtle Tone Header */}
-          <div className="h-28 sm:h-52 bg-gradient-to-r from-[#0d2e73] via-[#123F9C] to-[#1D4ED8]" />
+          {/* <div className="h-28 sm:h-52 bg-transparent" /> */}
 
           {/* Profile Identity Row */}
           <div className="px-6 sm:px-8 pb-6 pt-0">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 -mt-12 sm:-mt-14 mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-4">
               {/* Avatar (clean 96px, 50% boundary overlap) */}
               <div className="relative w-24 h-24 sm:w-26 sm:h-26 rounded-full border-4 border-white bg-slate-100 overflow-hidden shrink-0">
                 <Image

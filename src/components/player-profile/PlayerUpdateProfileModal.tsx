@@ -431,9 +431,6 @@ export const PlayerUpdateProfileModal: React.FC<PlayerUpdateProfileModalProps> =
         {/* Header Bar */}
         <div className="px-5 sm:px-7 py-4.5 bg-gradient-to-r from-slate-50 via-white to-slate-50 border-b border-slate-200/80 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-[#053697]/10 text-[#053697] flex items-center justify-center font-bold">
-              <Award className="w-5 h-5" />
-            </div>
             <div>
               <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
                 Edit Athlete Profile
