@@ -4,6 +4,8 @@ import InfiniteRewardList from "@/components/rewardz/Client/InfiniteRewardList";
 import Rewards from "@/components/rewardz/Rewards";
 import GoToTop from "@/components/ui/GoToTop";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { getTokenRole, isTokenValid } from "@/lib/authUtils";
 import Link from "next/link";
 import { Suspense } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
@@ -35,6 +37,28 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
   const { searchTerm, category, sort, page, limit } = await searchParams;
   const cookie = cookies();
   const token = (await cookie).get("token")?.value;
+
+  if (!token || !isTokenValid(token)) {
+    redirect("/prottiz-special");
+  }
+
+  let role = getTokenRole(token);
+  if (!role) {
+    try {
+      const userRes = await get("/user/my-profile", {
+        headers: { Authorization: token },
+      });
+      role = userRes?.data?.user?.role || userRes?.data?.role || null;
+    } catch {
+      // ignore
+    }
+  }
+
+  if (role === "player") {
+    redirect("/home");
+  } else if (role === "team") {
+    redirect("/team-home");
+  }
 
   const params = {
     category: category ? String(category) : undefined,

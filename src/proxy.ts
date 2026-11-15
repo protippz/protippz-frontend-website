@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { UNDER_DEVELOPMENT_HTML } from "./lib/underDevelopmentHtml";
-import { isTokenValid } from "./lib/authUtils";
+import { isTokenValid, getTokenRole } from "./lib/authUtils";
 
 export function proxy(request: NextRequest) {
   const isProduction = process.env.NODE_ENV === "production";
@@ -61,11 +61,17 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  // Existing route protection
-  const protectedRoutes = ["/rewardz"];
-  if (protectedRoutes.includes(pathname)) {
+  // Route protection for /rewardz: only accessible by standard user role
+  if (normalizedPath === "/rewardz" || pathname.startsWith("/rewardz")) {
     if (!isLoggedIn) {
       return NextResponse.redirect(new URL("/prottiz-special", request.url));
+    }
+    const tokenRole = getTokenRole(rawToken);
+    if (tokenRole === "player") {
+      return NextResponse.redirect(new URL("/home", request.url));
+    }
+    if (tokenRole === "team") {
+      return NextResponse.redirect(new URL("/team-home", request.url));
     }
   }
 

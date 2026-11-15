@@ -65,16 +65,22 @@ const Footer: React.FC = () => {
     { name: "PLAYERZ", href: "/playerz" },
     { name: "TEAMZ", href: "/teamz" },
     { name: "MEDIA & COMMUNITY", href: "/community" },
-    { name: "REWARDZ", href: "/rewardz" },
+    ...(!isPlayerOrTeam ? [{ name: "REWARDZ", href: "/rewardz" }] : []),
     { name: "STORE", href: "https://protippz.store", external: true },
   ];
 
   // Protected routes only displayed when user is logged in
   const userHubLinks = isPlayerOrTeam
     ? [
-      { name: "Athlete Dashboard", href: "/home" },
+      {
+        name: userRole === "team" ? "Franchise Dashboard" : "Athlete Dashboard",
+        href: userRole === "team" ? "/team-home" : "/home",
+      },
       { name: "My Tip History", href: "/my-tip-history" },
-      { name: "Withdraw Earnings", href: "/home" },
+      {
+        name: "Withdraw Earnings",
+        href: userRole === "team" ? "/team-home" : "/home",
+      },
       { name: "Address Info", href: "/address" },
       { name: "Tax Information", href: "/tax-information" },
       { name: "Help & FAQs", href: "/faqs" },

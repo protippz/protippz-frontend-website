@@ -62,7 +62,12 @@ const Navbar: React.FC = () => {
     data?.userData?.user?.role === "player" ||
     data?.userData?.user?.role === "team";
 
-  const profileHref = isPlayerOrTeam ? "/home" : "/profile";
+  const profileHref =
+    data?.userData?.user?.role === "team"
+      ? "/team-home"
+      : data?.userData?.user?.role === "player"
+      ? "/home"
+      : "/profile";
 
   const navItems = [
     ...(data?.userData ? [] : [{ href: "/tippz", text: "TIPPZ" }]),
@@ -73,7 +78,7 @@ const Navbar: React.FC = () => {
       ]
       : []),
     { href: "/community", text: "MEDIA & COMMUNITY" },
-    { href: "/rewardz", text: "REWARDZ" },
+    ...(!isPlayerOrTeam ? [{ href: "/rewardz", text: "REWARDZ" }] : []),
     { href: "https://protippz.store", text: "STORE", external: true },
   ];
 
@@ -417,7 +422,7 @@ const Navbar: React.FC = () => {
             ...(isPlayerOrTeam
               ? [
                 {
-                  href: "/home",
+                  href: data?.userData?.user?.role === "team" ? "/team-home" : "/home",
                   icon: Home,
                   label: "Dashboard",
                 },
@@ -425,11 +430,6 @@ const Navbar: React.FC = () => {
                   href: "/community",
                   icon: Users2,
                   label: "Community",
-                },
-                {
-                  href: "/rewardz",
-                  icon: Gift,
-                  label: "Rewardz",
                 },
               ]
               : [
@@ -520,9 +520,11 @@ const Navbar: React.FC = () => {
               )}
 
               {/* More nav links */}
-              <div className="grid grid-cols-3 gap-2 mb-4">
+              <div className={`grid ${isPlayerOrTeam ? "grid-cols-2" : "grid-cols-3"} gap-2 mb-4`}>
                 {[
-                  { href: "/rewardz", icon: Gift, label: "Rewardz" },
+                  ...(!isPlayerOrTeam
+                    ? [{ href: "/rewardz", icon: Gift, label: "Rewardz" }]
+                    : []),
                   { href: "/community", icon: Users2, label: "Community" },
                   { href: "https://protippz.store", icon: ShoppingBag, label: "Store", external: true },
                 ].map(({ href, icon: Icon, label, external }) => {

@@ -59,3 +59,51 @@ export function isTokenValid(token?: string | null): boolean {
   }
 }
 
+/**
+ * Decodes and returns the payload of a JWT token, or null if invalid.
+ */
+export function getTokenPayload(token?: string | null): Record<string, any> | null {
+  if (!token || typeof token !== "string") return null;
+
+  const clean = token.replace(/^Bearer\s+/i, "").trim();
+  if (!clean || clean.split(".").length !== 3) return null;
+
+  try {
+    const base64Url = clean.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64.padEnd(
+      base64.length + ((4 - (base64.length % 4)) % 4),
+      "=",
+    );
+
+    let jsonString = "";
+    if (typeof atob === "function") {
+      jsonString = atob(padded);
+    } else if (typeof Buffer !== "undefined") {
+      jsonString = Buffer.from(padded, "base64").toString("utf-8");
+    } else {
+      return null;
+    }
+
+    return JSON.parse(jsonString);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Extracts the user role from a JWT token, or null if not present.
+ */
+export function getTokenRole(token?: string | null): string | null {
+  const payload = getTokenPayload(token);
+  if (!payload) return null;
+  return (
+    payload.role ||
+    payload.user?.role ||
+    payload.userData?.user?.role ||
+    payload.data?.role ||
+    null
+  );
+}
+
+

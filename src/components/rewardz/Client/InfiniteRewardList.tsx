@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { useContextData } from "@/provider/ContextProvider";
 import RewardzCards from "@/components/rewardz/RewardzCards";
 import { RewardInterface } from "@/app/(default)/rewardz/page";
 import { get } from "@/ApisRequests/server";
@@ -30,6 +32,18 @@ const InfiniteRewardList: React.FC<InfiniteRewardListProps> = ({
   category,
   limit = 20,
 }) => {
+  const context = useContextData();
+  const router = useRouter();
+  const userRole = context?.userData?.user?.role;
+
+  useEffect(() => {
+    if (userRole === "player") {
+      router.replace("/home");
+    } else if (userRole === "team") {
+      router.replace("/team-home");
+    }
+  }, [userRole, router]);
+
   const [rewards, setRewards] = useState<RewardInterface[]>(initialData);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(
@@ -148,6 +162,10 @@ const InfiniteRewardList: React.FC<InfiniteRewardListProps> = ({
       observer.disconnect();
     };
   }, [hasMore, loadMore]);
+
+  if (userRole === "player" || userRole === "team") {
+    return null;
+  }
 
   if (!rewards || rewards.length === 0) {
     return (
