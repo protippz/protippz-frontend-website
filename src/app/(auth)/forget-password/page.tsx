@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, KeyRound, ArrowLeft, Loader2, ShieldCheck } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { useForgetPasswordMutation } from "@/redux/features/auth/authApi";
 import { getApiErrorMessage } from "@/lib/api/errors";
 import athleteBanner from "@/../public/new/female-player.webp";

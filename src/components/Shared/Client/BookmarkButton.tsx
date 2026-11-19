@@ -8,7 +8,7 @@ import {
 import { getApiErrorMessage } from "@/lib/api/errors";
 import { getAuthToken } from "@/lib/auth/token";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { Star, Loader2 } from "lucide-react";
 
 export interface BookmarkButtonProps {

@@ -18,7 +18,7 @@ import {
 import { IMAGE } from "@/constant/image.index";
 import playstore from "@/Assets/playstore.png";
 import qrCode from "@/Assets/qrcode.png";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { useContextData } from "@/provider/ContextProvider";
 
 const PLAY_STORE_URL =

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useContactUsMutation } from "@/redux/features/content/contentApi";
 import { getApiErrorMessage } from "@/lib/api/errors";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import GoToTop from "@/components/ui/GoToTop";
 import {
   Mail,

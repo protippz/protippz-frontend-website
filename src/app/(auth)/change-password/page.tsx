@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useChangePasswordMutation } from "@/redux/features/auth/authApi";
 import { getAuthToken } from "@/lib/auth/token";
 import { getApiErrorMessage } from "@/lib/api/errors";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import {
   Lock,
   KeyRound,

@@ -9,7 +9,7 @@ import { getApiErrorMessage } from "@/lib/api/errors";
 import { getAuthToken } from "@/lib/auth/token";
 import { useUpdateUserProfileMutation } from "@/redux/features/user/userApi";
 import { useLazySearchPlacesQuery } from "@/redux/features/internal/internalEndpoints";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import debounce from "lodash.debounce";
 import {
   Camera,

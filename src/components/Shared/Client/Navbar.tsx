@@ -29,9 +29,9 @@ import {
   Users2
 } from "lucide-react";
 import { useContextData } from "@/provider/ContextProvider";
-import Cookies from "js-cookie";
 import { IMAGE } from "@/constant/image.index";
-import { oneSignalLogout } from "@/components/OneSignal/OneSignalHandler";
+import { oneSignalLogout } from "@/lib/onesignal";
+import { clearAuthToken } from "@/lib/auth/token";
 const isRouteActive = (
   pathname: string | null,
   href: string,
@@ -85,16 +85,10 @@ const Navbar: React.FC = () => {
   const mobileNavItems = [{ href: data?.userData ? "/community" : "/", text: "HOME" }, ...navItems];
 
   const handleSignOut = async () => {
-    try {
-      await oneSignalLogout();
-    } catch (err) {
-      console.warn("[OneSignal] Logout error:", err);
-    } finally {
-      Cookies.remove("token");
-      Cookies.remove("token", { path: "/" });
-      localStorage.removeItem("token");
-      window.location.href = "/sign-in";
-    }
+    // Bounded (never hangs) and never throws.
+    await oneSignalLogout();
+    clearAuthToken();
+    window.location.href = "/sign-in";
   };
 
   const handlePasswordChange = () => {

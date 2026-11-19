@@ -7,7 +7,7 @@ import { Mail, Lock, Loader2, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useGoogleLogin } from "@react-oauth/google";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import {
   useGoogleLoginMutation,
   useLoginMutation,
@@ -15,11 +15,8 @@ import {
 import { clearStaleAuthToken, setAuthToken } from "@/lib/auth/token";
 import { getApiErrorMessage } from "@/lib/api/errors";
 import sfemalePlayer from "@/../public/new/female-player.webp";
-import {
-  getOneSignalPushSubscriptionId,
-  getPlatform,
-  syncOneSignalUser,
-} from "@/components/OneSignal/OneSignalHandler";
+import { getOneSignalPushSubscriptionId } from "@/lib/onesignal";
+import { getPlatform } from "@/lib/platform";
 
 // Only allow same-origin relative paths (prevents open redirects / javascript: URLs)
 const isSafeRedirect = (url: string) => {
@@ -45,9 +42,9 @@ const SignInPage: React.FC = () => {
     clearStaleAuthToken();
   }, []);
 
-  // Pre-warm OneSignal when the sign-in page opens
+  // Pre-warm OneSignal so the push subscription id is ready at submit time.
   useEffect(() => {
-    getOneSignalPushSubscriptionId().catch(() => { });
+    void getOneSignalPushSubscriptionId();
   }, []);
 
   const getRedirectTarget = (role?: string) => {
@@ -119,32 +116,8 @@ const SignInPage: React.FC = () => {
           setAuthToken(res?.data?.accessToken);
           toast.success(res?.message || "Logged in successfully!");
 
-          // Resolve authenticated MongoDB user _id (never use username/email)
-          const dbUserId =
-            res?.data?.user?._id ||
-            res?.data?.userData?._id ||
-            res?.data?.userId ||
-            res?.data?._id;
-
-          if (dbUserId) {
-            const loggedUser = {
-              _id: String(dbUserId),
-              email: data.email,
-              name: data.name,
-              role: res?.data?.role,
-            };
-
-            // Await OneSignal sync with a safety timeout so it isn't aborted by navigation
-            try {
-              await Promise.race([
-                syncOneSignalUser(loggedUser),
-                new Promise((resolve) => setTimeout(resolve, 2000)),
-              ]);
-            } catch (syncErr) {
-              console.warn("[OneSignal] Google login sync error (non-fatal):", syncErr);
-            }
-          }
-
+          // OneSignal identity is linked by <OneSignalHandler /> once the
+          // profile loads on the next page, so no sync is needed here.
           const target = getRedirectTarget(res?.data?.role);
           window.location.href = target;
         } else {
@@ -202,36 +175,7 @@ const SignInPage: React.FC = () => {
         setAuthToken(res?.data?.accessToken);
         toast.success(res?.message || "Logged in successfully!");
 
-        const dbUserId =
-          res?.data?.user?._id ||
-          res?.data?.userData?._id ||
-          res?.data?.userId ||
-          res?.data?._id;
-
-        if (dbUserId) {
-          const loggedUser = {
-            _id: String(dbUserId),
-            email:
-              res?.data?.user?.email ||
-              res?.data?.userData?.email ||
-              (userNameOrEmail.includes("@") ? userNameOrEmail.trim() : ""),
-            name:
-              res?.data?.user?.name ||
-              res?.data?.userData?.name ||
-              userNameOrEmail.trim(),
-            role: res?.data?.role || res?.data?.user?.role,
-          };
-
-          try {
-            await Promise.race([
-              syncOneSignalUser(loggedUser),
-              new Promise((resolve) => setTimeout(resolve, 2000)),
-            ]);
-          } catch (syncErr) {
-            console.warn("[OneSignal] Login sync error (non-fatal):", syncErr);
-          }
-        }
-
+        // OneSignal identity is linked by <OneSignalHandler /> after redirect.
         const target = getRedirectTarget(res?.data?.role);
         window.location.href = target;
       } else {

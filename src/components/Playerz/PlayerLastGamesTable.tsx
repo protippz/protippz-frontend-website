@@ -12,8 +12,98 @@ import { GameStatsHeader } from "./GameStats/GameStatsHeader";
 import { GameStatsSkeleton } from "./GameStats/GameStatsSkeleton";
 import { GameStatsEmptyState } from "./GameStats/GameStatsEmptyState";
 import { GameStatsTable } from "./GameStats/GameStatsTable";
+import { GameStatsCards } from "./GameStats/GameStatsCards";
+import { topScoringGameKey } from "./GameStats/format";
 
 export type { GameLogEntry, PlayerLastGamesTableProps };
+
+/** Shape of one game-stat document returned by the API. */
+interface RawGameStat {
+  _id?: string;
+  isHome?: boolean;
+  opponent?: string;
+  teamScore?: number;
+  opponentScore?: number;
+  gameResult?: string;
+  gameDate?: string;
+  minutesPlayed?: number | string;
+  points?: number | string;
+  fieldGoalsMade?: number | string;
+  fieldGoalsAttempted?: number | string;
+  threePointersMade?: number | string;
+  threePointersAttempted?: number | string;
+  freeThrowsMade?: number | string;
+  freeThrowsAttempted?: number | string;
+  offensiveRebounds?: number | string;
+  defensiveRebounds?: number | string;
+  totalRebounds?: number | string;
+  assists?: number | string;
+  steals?: number | string;
+  blocks?: number | string;
+  turnovers?: number | string;
+  personalFouls?: number | string;
+  plusMinus?: number | string;
+}
+
+const num = (value: unknown): number => Number(value) || 0;
+const pct = (made: number, attempts: number) => (attempts > 0 ? (made / attempts) * 100 : 0);
+
+const toGameLogEntry = (stat: RawGameStat): GameLogEntry => {
+  const isHome = Boolean(stat.isHome);
+  const opponent = stat.opponent || "Opponent";
+  const teamScore = num(stat.teamScore);
+  const oppScore = num(stat.opponentScore);
+  const wl: "W" | "L" =
+    stat.gameResult === "W" || stat.gameResult === "L"
+      ? stat.gameResult
+      : teamScore >= oppScore
+        ? "W"
+        : "L";
+
+  const fgm = num(stat.fieldGoalsMade);
+  const fga = num(stat.fieldGoalsAttempted);
+  const threePm = num(stat.threePointersMade);
+  const threePa = num(stat.threePointersAttempted);
+  const ftm = num(stat.freeThrowsMade);
+  const fta = num(stat.freeThrowsAttempted);
+  const oreb = num(stat.offensiveRebounds);
+  const dreb = num(stat.defensiveRebounds);
+
+  return {
+    id: stat._id,
+    gameDate: stat.gameDate
+      ? new Date(stat.gameDate).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+      : "Recent",
+    matchup: isHome ? `vs ${opponent}` : `@ ${opponent}`,
+    isHome,
+    wl,
+    score: `${teamScore}-${oppScore}`,
+    min: num(stat.minutesPlayed),
+    pts: num(stat.points),
+    fgm,
+    fga,
+    fgPct: pct(fgm, fga),
+    threePm,
+    threePa,
+    threePct: pct(threePm, threePa),
+    ftm,
+    fta,
+    ftPct: pct(ftm, fta),
+    oreb,
+    dreb,
+    reb: num(stat.totalRebounds ?? oreb + dreb),
+    ast: num(stat.assists),
+    stl: num(stat.steals),
+    blk: num(stat.blocks),
+    tov: num(stat.turnovers),
+    pf: num(stat.personalFouls),
+    plusMinus: num(stat.plusMinus),
+  };
+};
 
 const PlayerLastGamesTable: React.FC<PlayerLastGamesTableProps> = ({
   playerId,
@@ -21,140 +111,57 @@ const PlayerLastGamesTable: React.FC<PlayerLastGamesTableProps> = ({
 }) => {
   const [filterMode, setFilterMode] = useState<FilterMode>("ALL");
 
-  // Fetch real game stats from RTK Query
-  const {
-    data: apiResponse,
-    isLoading,
-  } = useGetPlayerGameStatsQuery(
-    {
-      playerId: playerId as string,
-      limit: 10,
-      sort: "-gameDate",
-    },
-    {
-      skip: !playerId,
-    }
+  const { data: apiResponse, isLoading } = useGetPlayerGameStatsQuery(
+    { playerId: playerId as string, limit: 10, sort: "-gameDate" },
+    { skip: !playerId || Boolean(propGames?.length) },
   );
 
-  // Map backend response to GameLogEntry format (No dummy or fallback data!)
-  const apiGames = useMemo<GameLogEntry[] | null>(() => {
-    const rawList = apiResponse?.data?.result;
-    if (!Array.isArray(rawList) || rawList.length === 0) return null;
+  // Real data only: games passed as a prop win, otherwise the API result.
+  const rawData = useMemo<GameLogEntry[]>(() => {
+    if (propGames?.length) return propGames;
+    const list = apiResponse?.data?.result;
+    return Array.isArray(list) ? (list as RawGameStat[]).map(toGameLogEntry) : [];
+  }, [propGames, apiResponse]);
 
-    return rawList.map((stat: any) => {
-      const isHome = Boolean(stat.isHome);
-      const opponent = stat.opponent || "Opponent";
-      const matchup = isHome ? `vs ${opponent}` : `@ ${opponent}`;
-      const teamScore = stat.teamScore ?? 0;
-      const oppScore = stat.opponentScore ?? 0;
-      const score = `${teamScore}-${oppScore}`;
-      const wl: "W" | "L" =
-        stat.gameResult === "W" || stat.gameResult === "L"
-          ? stat.gameResult
-          : teamScore >= oppScore
-            ? "W"
-            : "L";
-
-      const fgm = Number(stat.fieldGoalsMade) || 0;
-      const fga = Number(stat.fieldGoalsAttempted) || 0;
-      const fgPct = fga > 0 ? (fgm / fga) * 100 : 0;
-
-      const threePm = Number(stat.threePointersMade) || 0;
-      const threePa = Number(stat.threePointersAttempted) || 0;
-      const threePct = threePa > 0 ? (threePm / threePa) * 100 : 0;
-
-      const ftm = Number(stat.freeThrowsMade) || 0;
-      const fta = Number(stat.freeThrowsAttempted) || 0;
-      const ftPct = fta > 0 ? (ftm / fta) * 100 : 0;
-
-      const oreb = Number(stat.offensiveRebounds) || 0;
-      const dreb = Number(stat.defensiveRebounds) || 0;
-      const reb = Number(stat.totalRebounds ?? oreb + dreb) || 0;
-
-      const formattedDate = stat.gameDate
-        ? new Date(stat.gameDate).toLocaleDateString("en-US", {
-          month: "short",
-          day: "2-digit",
-          year: "numeric",
-        })
-        : "Recent";
-
-      return {
-        id: stat._id,
-        gameDate: formattedDate,
-        matchup,
-        isHome,
-        wl,
-        score,
-        min: Number(stat.minutesPlayed) || 0,
-        pts: Number(stat.points) || 0,
-        fgm,
-        fga,
-        fgPct,
-        threePm,
-        threePa,
-        threePct,
-        ftm,
-        fta,
-        ftPct,
-        oreb,
-        dreb,
-        reb,
-        ast: Number(stat.assists) || 0,
-        stl: Number(stat.steals) || 0,
-        blk: Number(stat.blocks) || 0,
-        tov: Number(stat.turnovers) || 0,
-        pf: Number(stat.personalFouls) || 0,
-        plusMinus: Number(stat.plusMinus) || 0,
-      };
-    });
-  }, [apiResponse]);
-
-  // Active dataset: strictly real data from prop or API (no fallback mock data!)
-  const rawData = useMemo(() => {
-    if (propGames && propGames.length > 0) return propGames;
-    if (apiGames && apiGames.length > 0) return apiGames;
-    return [];
-  }, [propGames, apiGames]);
-
-  // Filtered dataset
   const data = useMemo(() => {
     if (filterMode === "HOME") return rawData.filter((g) => g.isHome);
     if (filterMode === "AWAY") return rawData.filter((g) => !g.isHome);
     return rawData;
   }, [rawData, filterMode]);
 
-  // Summary statistics computed via split hook
   const summary = useGameStatsSummary(data);
+  const topGameKey = useMemo(() => topScoringGameKey(data), [data]);
 
   return (
-    <div className="w-full bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-[26px] sm:rounded-[30px] overflow-hidden  relative transition-all">
-      {/* Header with Title, Live Sync Badge & Filters */}
+    <section
+      aria-label="Recent game logs"
+      className="relative w-full overflow-hidden rounded-[24px] border border-slate-200/90 bg-white/95 backdrop-blur-xl sm:rounded-[30px]"
+    >
       <GameStatsHeader
         summary={summary}
-        hasApiGames={Boolean(apiGames && apiGames.length > 0)}
         filterMode={filterMode}
         onFilterChange={setFilterMode}
         totalGames={rawData.length}
+        visibleGames={data.length}
       />
 
-      {/* Horizontal Scroll Prompt for Mobile/Tablet */}
-      {data.length > 0 && (
-        <div className="xl:hidden bg-blue-50/60 border-b border-blue-100/60 px-4 py-1.5 text-[11px] text-[#053697] flex items-center justify-between font-medium">
-          <span>← Scroll horizontally for full 23-category box score →</span>
-          <span className="font-bold">Date pinned</span>
-        </div>
-      )}
-
-      {/* Content State: Loading, Empty, or Data Table */}
       {isLoading ? (
         <GameStatsSkeleton />
       ) : data.length === 0 ? (
-        <GameStatsEmptyState filterMode={filterMode} />
+        <GameStatsEmptyState filterMode={filterMode} onShowAll={() => setFilterMode("ALL")} />
       ) : (
-        <GameStatsTable data={data} summary={summary} />
+        <>
+          {/* Phones: one card per game */}
+          <div className="md:hidden">
+            <GameStatsCards data={data} topGameKey={topGameKey} />
+          </div>
+          {/* Tablet & desktop: full box-score table */}
+          <div className="hidden md:block">
+            <GameStatsTable data={data} summary={summary} topGameKey={topGameKey} />
+          </div>
+        </>
       )}
-    </div>
+    </section>
   );
 };
 

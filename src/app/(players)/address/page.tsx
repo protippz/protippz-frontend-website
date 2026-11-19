@@ -14,7 +14,7 @@ import {
   ArrowLeft,
   Sparkles,
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { useContextData } from "@/provider/ContextProvider";
 import { useUpdatePlayerAddressTaxMutation } from "@/redux/features/user/userApi";
 import { getAuthToken, clearAuthToken } from "@/lib/auth/token";

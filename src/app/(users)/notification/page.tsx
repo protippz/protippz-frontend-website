@@ -26,7 +26,7 @@ import {
   ArrowUpRight,
   Sparkles,
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 
 interface NotificationsType {
   _id: string;

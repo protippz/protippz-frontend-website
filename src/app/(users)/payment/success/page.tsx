@@ -15,7 +15,7 @@ import {
   HelpCircle,
   CreditCard,
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import Image from "next/image";
 import successImage from "@/Assets/success.jpg";
 const PaymentSuccessContent = () => {

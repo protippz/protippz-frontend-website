@@ -23,7 +23,7 @@ import {
   UserX,
   ShieldAlert,
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 
 // The old helper requested every bookmark in one page.
 const ALL_BOOKMARKS_PARAMS = { limit: 9999999 };

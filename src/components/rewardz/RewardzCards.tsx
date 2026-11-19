@@ -15,7 +15,7 @@ import {
   Sparkles,
   ArrowRight,
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 
 interface RewardCardsProps {
   item: RewardInterface;

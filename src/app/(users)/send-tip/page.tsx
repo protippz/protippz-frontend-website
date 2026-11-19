@@ -7,7 +7,7 @@ import { Form, Radio, Input, Button } from "antd";
 import Image from "next/image";
 import cards from "@/../public/card.png";
 import paypal from "@/Assets/paypal.png";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { useCreateTipMutation } from "@/redux/features/tip/tipApi";
 
 const stripePromise: Promise<Stripe | null> = loadStripe(

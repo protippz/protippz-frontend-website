@@ -6,7 +6,7 @@ import { FaGoogle } from "react-icons/fa6";
 import { Mail, Lock, User, Loader2, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 import {
@@ -17,10 +17,8 @@ import { setAuthToken } from "@/lib/auth/token";
 import { getApiErrorMessage } from "@/lib/api/errors";
 import fanBanner from "@/../public/new/fanbase.png";
 import athleteBanner from "@/../public/new/female-player.webp";
-import {
-  getOneSignalPushSubscriptionId,
-  getPlatform,
-} from "@/components/OneSignal/OneSignalHandler";
+import { getOneSignalPushSubscriptionId } from "@/lib/onesignal";
+import { getPlatform } from "@/lib/platform";
 
 type AccountType = "fan" | "athlete";
 
@@ -68,7 +66,7 @@ const SignUpFormContent: React.FC = () => {
 
   // Pre-warm OneSignal when the sign-up page opens
   useEffect(() => {
-    getOneSignalPushSubscriptionId().catch(() => { });
+    void getOneSignalPushSubscriptionId();
   }, []);
 
   // Google 1-Click Login / Signup

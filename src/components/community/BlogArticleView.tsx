@@ -46,7 +46,7 @@ import {
   useCreateCommentMutation,
   useDeleteCommentMutation,
 } from "@/redux/features/comment/commentApi";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { copyToClipboard, getEmbedVideoUrl } from "./helpers";
 
 interface BlogArticleViewProps {

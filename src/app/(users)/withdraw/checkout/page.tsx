@@ -6,7 +6,7 @@ import Image from "next/image";
 import ach from "@/Assets/ach.png";
 import check2 from "@/Assets/check2.png";
 import { useContextData } from "@/provider/ContextProvider";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { useCreateWithdrawMutation } from "@/redux/features/payment/paymentApi";
 import { getApiErrorMessage } from "@/lib/api/errors";
 

@@ -7,7 +7,8 @@ import React, {
   useEffect,
 } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from '@/components/ui/toast';
+import { ConfirmDialogHost } from '@/components/ui/confirm-dialog';
 import OneSignalHandler from '@/components/OneSignal/OneSignalHandler';
 import { useGetMyProfileQuery } from "@/redux/features/user/userApi";
 
@@ -96,7 +97,8 @@ const AuthProvider = ({ children }: Props) => {
       <AuthContext.Provider value={{ userData, loading: isLoading, hardLoad: () => refetch() }}>
         <OneSignalHandler />
         {children}
-        <Toaster position="top-center" reverseOrder={false} />
+        <Toaster />
+        <ConfirmDialogHost />
       </AuthContext.Provider>
     </GoogleOAuthProvider>
   );
