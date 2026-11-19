@@ -15,9 +15,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
-import { patch } from "@/ApisRequests/server";
 import { useContextData } from "@/provider/ContextProvider";
+import { useUpdatePlayerAddressTaxMutation } from "@/redux/features/user/userApi";
+import { getAuthToken, clearAuthToken } from "@/lib/auth/token";
+import { getApiErrorMessage } from "@/lib/api/errors";
 
 interface AddressFormData {
   streetAddress: string;
@@ -39,6 +40,7 @@ const AddressPage = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [updatePlayerAddressTax] = useUpdatePlayerAddressTaxMutation();
   const [initialLoading, setInitialLoading] = useState(true);
 
   // Pre-fill existing address data
@@ -89,13 +91,24 @@ const AddressPage = () => {
       return;
     }
 
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to update your address");
       router.push("/sign-in");
       return;
     }
+
+    const handleFailure = (message?: string) => {
+      if (message?.toLowerCase().includes("token")) {
+        toast.error("Session expired. Please sign in again.");
+        clearAuthToken();
+        setTimeout(() => {
+          router.push("/sign-in");
+        }, 1200);
+      } else {
+        toast.error(message || "Failed to update address. Please try again.");
+      }
+    };
 
     setLoading(true);
     try {
@@ -106,15 +119,7 @@ const AddressPage = () => {
         zipCode: trimmedZip,
       };
 
-      const res = await patch(
-        `/player/edit-address-tax`,
-        { address: payload },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
+      const res = await updatePlayerAddressTax({ address: payload }).unwrap();
 
       setLoading(false);
 
@@ -124,20 +129,13 @@ const AddressPage = () => {
           router.push("/home");
         }, 800);
       } else {
-        if (res?.success === false && res?.message?.toLowerCase().includes("token")) {
-          toast.error("Session expired. Please sign in again.");
-          Cookies.remove("token");
-          localStorage.removeItem("token");
-          setTimeout(() => {
-            router.push("/sign-in");
-          }, 1200);
-        } else {
-          toast.error(res?.message || "Failed to update address. Please try again.");
-        }
+        handleFailure(res?.message);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setLoading(false);
-      toast.error(err?.message || "An unexpected error occurred. Please try again.");
+      handleFailure(
+        getApiErrorMessage(err, "An unexpected error occurred. Please try again.")
+      );
     }
   };
 

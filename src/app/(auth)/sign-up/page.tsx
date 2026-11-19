@@ -6,12 +6,15 @@ import { FaGoogle } from "react-icons/fa6";
 import { Mail, Lock, User, Loader2, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { signUpHandler } from "@/ApisRequests/Auth";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
-import Cookies from "js-cookie";
-import { post } from "@/ApisRequests/server";
+import {
+  useGoogleLoginMutation,
+  useRegisterMutation,
+} from "@/redux/features/auth/authApi";
+import { setAuthToken } from "@/lib/auth/token";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import fanBanner from "@/../public/new/fanbase.png";
 import athleteBanner from "@/../public/new/female-player.webp";
 import {
@@ -33,6 +36,8 @@ const SignUpFormContent: React.FC = () => {
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [registerUser] = useRegisterMutation();
+  const [googleSignIn] = useGoogleLoginMutation();
 
   // Read and react to accountType and invite token from URL searchParams
   useEffect(() => {
@@ -69,7 +74,6 @@ const SignUpFormContent: React.FC = () => {
   // Google 1-Click Login / Signup
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse)
       try {
         const response = await fetch(
           "https://www.googleapis.com/oauth2/v3/userinfo",
@@ -110,11 +114,17 @@ const SignUpFormContent: React.FC = () => {
           platform,
         };
 
-        const res = await post("/auth/google-login", data);
+        let res;
+        try {
+          res = await googleSignIn(data).unwrap();
+        } catch (apiErr) {
+          toast.error(
+            getApiErrorMessage(apiErr, "Authentication failed. Please try again."),
+          );
+          return;
+        }
         if (res?.success) {
-          Cookies.remove("token");
-          localStorage.setItem("token", res?.data?.accessToken);
-          Cookies.set("token", res?.data?.accessToken);
+          setAuthToken(res?.data?.accessToken);
           localStorage.setItem("accountType", accountType);
           toast.success(res?.message || "Signed up successfully!");
           window.location.href = accountType === "athlete" ? "/home" : "/";
@@ -202,7 +212,15 @@ const SignUpFormContent: React.FC = () => {
         platform,
       };
 
-      const res = await signUpHandler(data);
+      let res: { success?: boolean; message?: string };
+      try {
+        res = await registerUser(data).unwrap();
+      } catch (apiErr) {
+        res = {
+          success: false,
+          message: getApiErrorMessage(apiErr, "Sign up failed. Please try again."),
+        };
+      }
       setFormLoading(false);
 
       if (res?.success) {
@@ -222,9 +240,9 @@ const SignUpFormContent: React.FC = () => {
           toast.error(res?.message || "Sign up failed. Please try again.");
         }
       }
-    } catch (err: any) {
+    } catch (err) {
       setFormLoading(false);
-      toast.error(err?.message || "Network error. Please try again.");
+      toast.error(getApiErrorMessage(err, "Network error. Please try again."));
     }
   };
 

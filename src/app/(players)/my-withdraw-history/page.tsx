@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMyWithdrawsQuery } from "@/Redux/Apis/withdrawApis";
+import { useGetMyWithdrawsQuery } from "@/redux/features/payment/paymentApi";
 import {
   ChevronLeft,
   ChevronRight,
@@ -40,7 +40,7 @@ const WithdrawHistoryPage = () => {
   const [page, setPage] = useState<number>(1);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const { data, isLoading } = useMyWithdrawsQuery({ page, limit: 10 });
+  const { data, isLoading } = useGetMyWithdrawsQuery({ page, limit: 10 });
 
   const withdrawals: WithdrawRecord[] = data?.data?.result || [];
   const pagination: WithdrawMeta | undefined = data?.data?.meta;

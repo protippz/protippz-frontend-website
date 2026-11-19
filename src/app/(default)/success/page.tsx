@@ -1,27 +1,21 @@
-import { patch } from "@/ApisRequests/server";
-import { cookies } from "next/headers";
+import type { Metadata } from "next";
+import { serverFetch } from "@/lib/api/server";
+import { privateMetadata } from "@/lib/seo";
 import Link from "next/link";
 import React from "react";
+
+export const metadata: Metadata = privateMetadata("Payment Status");
 
 const Page = async ({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
-  const { PayerID, paymentId, token } = await searchParams;
-  const cookie = cookies();
-  const res = await patch(
-    `/tip/execute-paypal-payment`,
-    {
-      paymentId: paymentId,
-      payerId: PayerID,
-    },
-    {
-      headers: {
-        Authorization: `${(await cookie).get("token")?.value}`,
-      },
-    }
-  );
+  const { PayerID, paymentId } = await searchParams;
+  const res = await serverFetch(`/tip/execute-paypal-payment`, {
+    method: "PATCH",
+    body: { paymentId, payerId: PayerID },
+  });
   if (res?.success) {
     return (
       <div className="flex justify-center items-center min-h-screen ">

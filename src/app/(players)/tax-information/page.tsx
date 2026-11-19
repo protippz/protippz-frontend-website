@@ -17,9 +17,10 @@ import {
   Building,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
-import { patch } from "@/ApisRequests/server";
 import { useContextData } from "@/provider/ContextProvider";
+import { useUpdatePlayerAddressTaxMutation } from "@/redux/features/user/userApi";
+import { getAuthToken, clearAuthToken } from "@/lib/auth/token";
+import { getApiErrorMessage } from "@/lib/api/errors";
 
 interface TaxInfoFormData {
   fullname: string;
@@ -41,6 +42,7 @@ const TaxInformationPage = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [updatePlayerAddressTax] = useUpdatePlayerAddressTaxMutation();
   const [showTaxId, setShowTaxId] = useState(false);
 
   // Pre-fill existing tax information
@@ -120,13 +122,26 @@ const TaxInformationPage = () => {
       return;
     }
 
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to update your tax information");
       router.push("/sign-in");
       return;
     }
+
+    const handleFailure = (message?: string) => {
+      if (message?.toLowerCase().includes("token")) {
+        toast.error("Session expired. Please sign in again.");
+        clearAuthToken();
+        setTimeout(() => {
+          router.push("/sign-in");
+        }, 1200);
+      } else {
+        toast.error(
+          message || "Failed to update tax information. Please try again."
+        );
+      }
+    };
 
     setLoading(true);
     try {
@@ -137,15 +152,7 @@ const TaxInformationPage = () => {
         residentialStatus: formData.residentialStatus,
       };
 
-      const res = await patch(
-        `/player/edit-address-tax`,
-        { taxInfo: payload },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
+      const res = await updatePlayerAddressTax({ taxInfo: payload }).unwrap();
 
       setLoading(false);
 
@@ -155,26 +162,12 @@ const TaxInformationPage = () => {
           router.push("/home");
         }, 800);
       } else {
-        if (
-          res?.success === false &&
-          res?.message?.toLowerCase().includes("token")
-        ) {
-          toast.error("Session expired. Please sign in again.");
-          Cookies.remove("token");
-          localStorage.removeItem("token");
-          setTimeout(() => {
-            router.push("/sign-in");
-          }, 1200);
-        } else {
-          toast.error(
-            res?.message || "Failed to update tax information. Please try again."
-          );
-        }
+        handleFailure(res?.message);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setLoading(false);
-      toast.error(
-        err?.message || "An unexpected error occurred. Please try again."
+      handleFailure(
+        getApiErrorMessage(err, "An unexpected error occurred. Please try again.")
       );
     }
   };

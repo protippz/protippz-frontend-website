@@ -7,15 +7,17 @@ import ach from "@/Assets/ach.png";
 import check2 from "@/Assets/check2.png";
 import { useContextData } from "@/provider/ContextProvider";
 import toast from "react-hot-toast";
-import { post } from "@/ApisRequests/server";
+import { useCreateWithdrawMutation } from "@/redux/features/payment/paymentApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
 
 const WithdrawFundForm = () => {
   const data = useContextData();
   const [paymentMethod, setPaymentMethod] = useState("ach");
   const [amount, setAmount] = useState(data?.userData?.totalAmount || 0);
+  const [createWithdraw] = useCreateWithdrawMutation();
 
   // Submit handler
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: Record<string, unknown>) => {
     try {
       if (!data?.userData?.totalAmount) {
         return toast.error("Insufficient balance");
@@ -39,15 +41,9 @@ const WithdrawFundForm = () => {
         withdrawOption: "Check",
         status: "Pending",
       };
-      const res = await post(
-        "/withdraw/create",
+      const res = await createWithdraw(
         paymentMethod == "ach" ? ach : check,
-        {
-          headers: {
-            Authorization: `${localStorage.getItem("token")}`,
-          },
-        },
-      );
+      ).unwrap();
       if (res?.success) {
         toast.success(res?.message);
         window.location.href = "/";
@@ -56,7 +52,7 @@ const WithdrawFundForm = () => {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to withdraw funds");
+      toast.error(getApiErrorMessage(error, "Failed to withdraw funds"));
     }
   };
 

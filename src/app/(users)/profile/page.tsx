@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
 import { useContextData } from "@/provider/ContextProvider";
 import { Edit3, BadgeCheck, ArrowRight } from "lucide-react";
 

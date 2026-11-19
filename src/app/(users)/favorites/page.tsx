@@ -4,7 +4,7 @@ import GoToTop from "@/components/ui/GoToTop";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "PROTIPPZ - FAVORITES",
+  title: "Favorites",
   description:
     "Manage your favorite collegiate athletes & official teams. Track their achievements and tip them directly.",
 };

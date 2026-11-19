@@ -21,10 +21,15 @@ import {
   KeyRound,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { post, imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
 import { RewardInterface } from "@/app/(default)/rewardz/page";
 import { useContextData } from "@/provider/ContextProvider";
-import { useRedeemRequesteMutation } from "@/Redux/Apis/redeemApis"
+import {
+  useCreateRedeemRequestMutation,
+  useVerifyRedeemEmailMutation,
+} from "@/redux/features/reward/rewardApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
+import { getAuthToken } from "@/lib/auth/token";
 
 interface SendTipsButtonProps {
   item: RewardInterface;
@@ -53,7 +58,8 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({
   const [redeemId, setRedeemId] = useState("");
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [redeemRequest, { }] = useRedeemRequesteMutation();
+  const [redeemRequest] = useCreateRedeemRequestMutation();
+  const [verifyRedeemEmail] = useVerifyRedeemEmailMutation();
 
   // Shipping address state
   const [shipping, setShipping] = useState({
@@ -103,8 +109,7 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({
 
   // Open modal handler
   const handleOpenModal = () => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to redeem rewards");
       router.push("/sign-in");
@@ -146,21 +151,11 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({
 
     setLoading(true);
     try {
-      const token =
-        typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const res = await post(
-        "/redeem-request/create",
-        {
-          reward: item?._id,
-          category: item?.category?._id,
-          email: trimmedEmail,
-        },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
+      const res = await redeemRequest({
+        reward: item?._id,
+        category: item?.category?._id,
+        email: trimmedEmail,
+      }).unwrap();
 
       setLoading(false);
       if (res?.success) {
@@ -170,9 +165,9 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({
       } else {
         toast.error(res?.message || "Failed to initiate redemption. Please try again.");
       }
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      toast.error(err?.message || "An unexpected error occurred. Please try again.");
+      toast.error(getApiErrorMessage(err, "Failed to initiate redemption. Please try again."));
     }
   };
 
@@ -237,17 +232,10 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({
 
     setLoading(true);
     try {
-      const token =
-        typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const res = await post(
-        `/redeem-request/verify-redeem-email/${redeemId}`,
-        { verifyCode: Number(code) },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
+      const res = await verifyRedeemEmail({
+        redeemId,
+        body: { verifyCode: Number(code) },
+      }).unwrap();
 
       setLoading(false);
       if (res?.success) {
@@ -256,9 +244,9 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({
       } else {
         toast.error(res?.message || "Invalid or expired verification code.");
       }
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      toast.error(err?.message || "Verification failed. Please try again.");
+      toast.error(getApiErrorMessage(err, "Invalid or expired verification code."));
     }
   };
 
@@ -312,9 +300,9 @@ const RedeemButton: React.FC<SendTipsButtonProps> = ({
       } else {
         toast.error(res?.message || "Failed to submit shipping details.");
       }
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      toast.error(err?.message || "Submission failed. Please try again.");
+      toast.error(getApiErrorMessage(err, "Failed to submit shipping details."));
     }
   };
 

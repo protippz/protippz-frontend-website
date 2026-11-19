@@ -1,15 +1,17 @@
-import { get } from "@/ApisRequests/server";
+import type { Metadata } from "next";
 import InfinitePlayerList from "@/components/Playerz/Client/InfinitePlayerList";
 import Teams from "@/components/Playerz/Teams";
-import GoToTop from "@/components/ui/GoToTop";
-import { cookies } from "next/headers";
+import { getPlayers } from "@/lib/api/queries";
+import { getServerToken } from "@/lib/api/server";
+import { buildMetadata } from "@/lib/seo";
 import { Suspense } from "react";
 
-export const metadata = {
-  title: "PROTIPPZ - PLAYERZ",
+export const metadata: Metadata = buildMetadata({
+  title: "Playerz – Tip Your Favorite Athletes",
   description:
-    "Learn how to tip your favorite player/team, earn rewards, and win prizes with TIPPZ.",
-};
+    "Browse athletes on PROTIPPZ and send them digital tips. Support college and professional players directly and earn rewards as a fan.",
+  path: "/playerz",
+});
 
 export interface PlayerTeam {
   _id?: string;
@@ -67,7 +69,7 @@ export interface Player {
 }
 
 interface ParamsProps {
-  searchParams: Promise<any>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }
 
 const PlayerZPage = async ({ searchParams }: ParamsProps) => {
@@ -80,21 +82,8 @@ const PlayerZPage = async ({ searchParams }: ParamsProps) => {
     limit: limit || "20",
     team: team || undefined,
   };
-  const cookie = cookies();
-  const token = (await cookie).get("token")?.value;
-
-  const paramsUrl = Object.entries(param)
-    .filter(([key, value]) => value !== undefined)
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
-
-  const res = await get(`/player/get-all?${paramsUrl}`, {
-    headers: {
-      Authorization: `${token}`,
-    },
-  });
-  const data = res.data?.result;
-  const meta = res.data?.meta;
+  const token = await getServerToken();
+  const { result: data, meta } = await getPlayers(param);
 
   return (
     <div className="max-w-355 mx-auto mt-2 sm:mt-3 px-2 sm:px-4 pb-14">
@@ -119,7 +108,7 @@ const PlayerZPage = async ({ searchParams }: ParamsProps) => {
             <InfinitePlayerList
               initialData={data || []}
               initialMeta={meta}
-              token={token}
+              token={token ?? undefined}
               searchTerm={searchTerm}
               sort={sort}
               team={team}

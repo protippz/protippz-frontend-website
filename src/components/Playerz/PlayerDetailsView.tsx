@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
 import { FastAverageColor } from "fast-average-color";
 import { ExtractedColorTheme } from "@/lib/extractLogoColor";
 import PlayerLastGamesTable from "./PlayerLastGamesTable";

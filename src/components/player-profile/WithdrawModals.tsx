@@ -18,7 +18,14 @@ import {
   Award,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { post } from "@/ApisRequests/server";
+import {
+  getStripeLink,
+  useConnectStripeMutation,
+  useCreateWithdrawMutation,
+  useUpdateConnectedAccountMutation,
+} from "@/redux/features/payment/paymentApi";
+import { getAuthToken } from "@/lib/auth/token";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import achImg from "@/Assets/ach.png";
 
 // ==========================================
@@ -38,6 +45,7 @@ export const StripeConnectModal: React.FC<StripeConnectModalProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [onboardingOpened, setOnboardingOpened] = useState(false);
+  const [connectStripe] = useConnectStripeMutation();
 
   useEffect(() => {
     if (isOpen) {
@@ -54,8 +62,7 @@ export const StripeConnectModal: React.FC<StripeConnectModalProps> = ({
   if (!isOpen) return null;
 
   const handleConnectStripe = async () => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to connect your payout account");
       return;
@@ -63,29 +70,24 @@ export const StripeConnectModal: React.FC<StripeConnectModalProps> = ({
 
     setLoading(true);
     try {
-      const res = await post(
-        "/stripe/connect-stripe",
-        { test: "" },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
+      const res = await connectStripe({ test: "" }).unwrap();
 
       setLoading(false);
-      if (res?.success && res?.data) {
+      const link = getStripeLink(res?.data);
+      if (res?.success && link) {
         toast.success("Opening secure Stripe portal...");
-        window.open(res.data, "_blank");
+        window.open(link, "_blank");
         setOnboardingOpened(true);
       } else {
         toast.error(
           res?.message || "Failed to start Stripe setup. Please try again."
         );
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setLoading(false);
-      toast.error(err?.message || "An unexpected error occurred. Please try again.");
+      toast.error(
+        getApiErrorMessage(err, "Failed to start Stripe setup. Please try again.")
+      );
     }
   };
 
@@ -268,6 +270,9 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
   const [bankUpdateRequired, setBankUpdateRequired] = useState(
     isStripeReady === false
   );
+  const [createWithdraw] = useCreateWithdrawMutation();
+  const [updateConnectedAccount] = useUpdateConnectedAccountMutation();
+  const [connectStripe] = useConnectStripeMutation();
 
   useEffect(() => {
     if (isOpen) {
@@ -306,8 +311,7 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
       return;
     }
 
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to withdraw funds");
       return;
@@ -316,41 +320,44 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
     setLoading(true);
     setBankUpdateRequired(false);
 
+    const handleWithdrawFailure = (message: string | undefined, fallback: string) => {
+      if (
+        message === "Transfer failed update your bank info" ||
+        message?.toLowerCase().includes("update your bank")
+      ) {
+        setBankUpdateRequired(true);
+        toast.error("Please update your bank details in Stripe to complete transfer.");
+      } else {
+        toast.error(message || fallback);
+      }
+    };
+
     try {
-      const res = await post(
-        "/withdraw/create",
-        { amount: numericAmount },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
+      const res = await createWithdraw({ amount: numericAmount }).unwrap();
 
       setLoading(false);
 
       if (res?.success) {
         toast.success(res?.message || "Withdrawal request submitted successfully!");
         setSuccessData({ amount: numericAmount });
-      } else if (
-        res?.message === "Transfer failed update your bank info" ||
-        res?.message?.toLowerCase().includes("update your bank")
-      ) {
-        setBankUpdateRequired(true);
-        toast.error("Please update your bank details in Stripe to complete transfer.");
       } else {
-        toast.error(res?.message || "Failed to process withdrawal. Please try again.");
+        handleWithdrawFailure(
+          res?.message,
+          "Failed to process withdrawal. Please try again."
+        );
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setLoading(false);
-      toast.error(err?.message || "Something went wrong. Please try again.");
+      handleWithdrawFailure(
+        getApiErrorMessage(err, ""),
+        "Failed to process withdrawal. Please try again."
+      );
     }
   };
 
   // Handle updating Stripe connected account
   const handleUpdateConnectedAccount = async () => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to update your Stripe account");
       return;
@@ -358,42 +365,40 @@ export const WithdrawFundsModal: React.FC<WithdrawFundsModalProps> = ({
 
     setLoading(true);
     try {
-      const res = await post(
-        "/stripe/update-connected-account",
-        {},
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
+      let updateMessage: string | undefined;
+      try {
+        const res = await updateConnectedAccount().unwrap();
+        const link = getStripeLink(res?.data);
+        if (res?.success && link) {
+          setLoading(false);
+          toast.success("Opening Stripe portal to update your account...");
+          window.open(link, "_blank");
+          return;
         }
-      );
-      setLoading(false);
-      const link = typeof res?.data === "string" ? res.data : res?.data?.link;
-      if (res?.success && link) {
-        toast.success("Opening Stripe portal to update your account...");
-        window.open(link, "_blank");
-        return;
+        updateMessage = res?.message;
+      } catch (err: unknown) {
+        updateMessage = getApiErrorMessage(err, "") || undefined;
       }
+      setLoading(false);
 
       // Fallback: If update-connected-account didn't return a link, try connect-stripe
-      const connectRes = await post(
-        "/stripe/connect-stripe",
-        { test: "" },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
+      let connectMessage: string | undefined;
+      try {
+        const connectRes = await connectStripe({ test: "" }).unwrap();
+        const connectLink = getStripeLink(connectRes?.data);
+        if (connectRes?.success && connectLink) {
+          toast.success("Opening Stripe onboarding portal...");
+          window.open(connectLink, "_blank");
+          return;
         }
-      );
-      if (connectRes?.success && connectRes?.data) {
-        toast.success("Opening Stripe onboarding portal...");
-        window.open(connectRes.data, "_blank");
-      } else {
-        toast.error(res?.message || connectRes?.message || "Unable to open update link.");
+        connectMessage = connectRes?.message;
+      } catch (err: unknown) {
+        connectMessage = getApiErrorMessage(err, "") || undefined;
       }
-    } catch (err: any) {
+      toast.error(updateMessage || connectMessage || "Unable to open update link.");
+    } catch (err: unknown) {
       setLoading(false);
-      toast.error(err?.message || "Error opening Stripe update portal.");
+      toast.error(getApiErrorMessage(err, "Error opening Stripe update portal."));
     }
   };
 

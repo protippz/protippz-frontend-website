@@ -4,7 +4,7 @@ import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Player } from "@/app/(default)/playerz/page";
-import { imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
 import defaultPlayer from "@/Assets/playerDefult.jpg";
 import {
   Search,

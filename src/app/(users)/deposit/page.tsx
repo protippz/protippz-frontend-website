@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import toast from "react-hot-toast";
-import { post } from "@/ApisRequests/server";
+import { useCreateDepositIntentMutation } from "@/redux/features/payment/paymentApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
+import { getAuthToken } from "@/lib/auth/token";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/provider/ContextProvider";
 
@@ -41,6 +43,7 @@ const DepositFundForm = () => {
   const [amount, setAmount] = useState<string>("100");
   const [cardholderName, setCardholderName] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [createDepositIntent] = useCreateDepositIntentMutation();
 
   // Pre-fill cardholder name from the logged-in user's name
   useEffect(() => {
@@ -68,7 +71,7 @@ const DepositFundForm = () => {
       return toast.error("Amount cannot exceed $999,999.");
     }
 
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       return toast.error("Please log in to proceed.");
     }
@@ -76,11 +79,10 @@ const DepositFundForm = () => {
     setIsProcessing(true);
 
     try {
-      const res = await post(
-        "/deposit/create-deposit-intent",
-        { amount: numericAmount, paymentBy: "Credit Card" },
-        { headers: { Authorization: `${token}` } }
-      );
+      const res = await createDepositIntent({
+        amount: numericAmount,
+        paymentBy: "Credit Card",
+      }).unwrap();
 
       if (!res?.success || !res?.data) {
         setIsProcessing(false);
@@ -88,7 +90,7 @@ const DepositFundForm = () => {
       }
 
       // Backend returns a Stripe Checkout Session — redirect straight to it
-      const checkoutUrl = res.data?.checkoutUrl;
+      const checkoutUrl = (res.data as { checkoutUrl?: string } | null)?.checkoutUrl;
       if (checkoutUrl) {
         window.location.href = checkoutUrl;
         return;
@@ -96,9 +98,9 @@ const DepositFundForm = () => {
 
       setIsProcessing(false);
       toast.error("No checkout URL received. Please try again.");
-    } catch (err: any) {
+    } catch (err) {
       console.error("Deposit error:", err);
-      toast.error(err?.response?.data?.message || err?.message || "An error occurred.");
+      toast.error(getApiErrorMessage(err, "Failed to initialize payment."));
       setIsProcessing(false);
     }
   };

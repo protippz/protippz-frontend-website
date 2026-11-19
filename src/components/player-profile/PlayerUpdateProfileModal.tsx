@@ -23,7 +23,11 @@ import {
 } from "lucide-react";
 import { FaInstagram, FaTwitter, FaTiktok } from "react-icons/fa6";
 import toast from "react-hot-toast";
-import { get, patch, imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
+import { useGetTeamsQuery } from "@/redux/features/team/teamApi";
+import { useUpdatePlayerProfileMutation } from "@/redux/features/user/userApi";
+import { getAuthToken } from "@/lib/auth/token";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import LinkedInImageCropModal from "@/components/UpdateProfile/client/LinkedInImageCropModal";
 import defaultPlayer from "@/Assets/playerDefult.jpg";
 import ptLogo from "@/Assets/PT Logo.png";
@@ -112,8 +116,11 @@ export const PlayerUpdateProfileModal: React.FC<PlayerUpdateProfileModalProps> =
   // Team & League selection
   const [selectedTeamId, setSelectedTeamId] = useState("");
   const [selectedLeagueId, setSelectedLeagueId] = useState("");
-  const [teams, setTeams] = useState<TeamItem[]>([]);
-  const [loadingTeams, setLoadingTeams] = useState(false);
+  const { data: teamsData, isLoading: loadingTeams } = useGetTeamsQuery(
+    { limit: 100, page: 1 },
+    { skip: !isOpen }
+  );
+  const teams = (teamsData?.data?.result ?? []) as TeamItem[];
   const [teamSearch, setTeamSearch] = useState("");
   const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
   const teamDropdownRef = useRef<HTMLDivElement>(null);
@@ -127,6 +134,7 @@ export const PlayerUpdateProfileModal: React.FC<PlayerUpdateProfileModalProps> =
 
   // Saving state
   const [isSaving, setIsSaving] = useState(false);
+  const [updatePlayerProfile] = useUpdatePlayerProfileMutation();
 
   // Initialize form when player prop changes or modal opens
   useEffect(() => {
@@ -168,32 +176,6 @@ export const PlayerUpdateProfileModal: React.FC<PlayerUpdateProfileModalProps> =
       setRawImageFile(null);
     }
   }, [player, isOpen]);
-
-  // Load teams list for team selector
-  useEffect(() => {
-    if (!isOpen) return;
-    let isMounted = true;
-
-    const fetchTeams = async () => {
-      setLoadingTeams(true);
-      try {
-        const res = await get("/team/get-all?limit=100&page=1");
-        if (isMounted && res?.data?.result) {
-          setTeams(res.data.result);
-        }
-      } catch (err) {
-        console.error("Failed to load teams:", err);
-      } finally {
-        if (isMounted) setLoadingTeams(false);
-      }
-    };
-
-    fetchTeams();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [isOpen]);
 
   // Close team dropdown on outside click
   useEffect(() => {
@@ -282,8 +264,7 @@ export const PlayerUpdateProfileModal: React.FC<PlayerUpdateProfileModalProps> =
       }
     }
 
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to update your profile");
       return;
@@ -368,7 +349,7 @@ export const PlayerUpdateProfileModal: React.FC<PlayerUpdateProfileModalProps> =
 
     setIsSaving(true);
     try {
-      let res: any;
+      let body: FormData | Record<string, string>;
 
       if (hasImageChange) {
         const formData = new FormData();
@@ -377,18 +358,12 @@ export const PlayerUpdateProfileModal: React.FC<PlayerUpdateProfileModalProps> =
         }
         formData.append("player_image", croppedImageFile as File);
 
-        res = await patch("/player/profile", formData, {
-          headers: {
-            Authorization: `${token}`,
-          },
-        });
+        body = formData;
       } else {
-        res = await patch("/player/profile", dirtyFields, {
-          headers: {
-            Authorization: `${token}`,
-          },
-        });
+        body = dirtyFields;
       }
+
+      const res = await updatePlayerProfile(body).unwrap();
 
       setIsSaving(false);
 
@@ -407,17 +382,21 @@ export const PlayerUpdateProfileModal: React.FC<PlayerUpdateProfileModalProps> =
       } else {
         toast.error(
           res?.message ||
-          res?.errorDetails?.message ||
+          (res as { errorDetails?: { message?: string } })?.errorDetails?.message ||
           "Failed to update player profile"
         );
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setIsSaving(false);
       console.error("Profile update error:", err);
+      const errorDetailsMessage = (
+        err as { data?: { errorDetails?: { message?: string } } }
+      )?.data?.errorDetails?.message;
       toast.error(
-        err?.response?.data?.message ||
-        err?.message ||
-        "An error occurred while updating profile"
+        getApiErrorMessage(
+          err,
+          errorDetailsMessage || "Failed to update player profile"
+        )
       );
     }
   };

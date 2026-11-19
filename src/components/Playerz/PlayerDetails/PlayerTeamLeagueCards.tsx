@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
 import { PlayerDetailsData } from "../PlayerDetailsView";
 
 interface PlayerTeamLeagueCardsProps {

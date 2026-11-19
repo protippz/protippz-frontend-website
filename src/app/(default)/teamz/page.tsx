@@ -1,16 +1,17 @@
-import { get } from "@/ApisRequests/server";
+import type { Metadata } from "next";
 import InfiniteTeamList from "@/components/Teamz/Client/InfiniteTeamList";
 import League from "@/components/Teamz/Teams";
-import GoToTop from "@/components/ui/GoToTop";
-import { SearchParams } from "next/dist/server/request/search-params";
-import { cookies } from "next/headers";
+import { getTeams } from "@/lib/api/queries";
+import { getServerToken } from "@/lib/api/server";
+import { buildMetadata } from "@/lib/seo";
 import { Suspense } from "react";
 
-export const metadata = {
-  title: "PROTIPPZ - TEAMZ",
+export const metadata: Metadata = buildMetadata({
+  title: "Teamz – Support Your Favorite Teams",
   description:
-    "Learn how to tip your favorite player/team, earn rewards, and win prizes with TIPPZ.",
-};
+    "Discover teams across leagues on PROTIPPZ and support them with digital tips. Filter by league and find your favorite programs.",
+  path: "/teamz",
+});
 
 export interface TeamInterface {
   _id: string;
@@ -40,10 +41,9 @@ const TeamPage = async ({ searchParams }: ParamsProps) => {
     limit: limit || "20",
     league: league || undefined,
   };
-  const [data, meta] = await getTeam(param);
+  const { result: data, meta } = await getTeams(param);
   const playersData = data as TeamInterface[];
-  const cookie = cookies();
-  const token = (await cookie).get("token")?.value;
+  const token = await getServerToken();
 
   return (
     <div className="max-w-355 mx-auto mt-2 sm:mt-3 px-2 sm:px-4 pb-14">
@@ -68,7 +68,7 @@ const TeamPage = async ({ searchParams }: ParamsProps) => {
             <InfiniteTeamList
               initialData={playersData || []}
               initialMeta={meta}
-              token={token}
+              token={token ?? undefined}
               searchTerm={searchTerm || undefined}
               sort={sort || undefined}
               league={league || undefined}
@@ -83,16 +83,3 @@ const TeamPage = async ({ searchParams }: ParamsProps) => {
 
 export default TeamPage;
 
-const getTeam = async (param: SearchParams | {}) => {
-  const cookie = cookies();
-  const paramsUrl = Object.entries(param)
-    .filter(([key, value]) => value !== undefined)
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
-  const res = await get(`/team/get-all?${paramsUrl}`, {
-    headers: {
-      Authorization: `${(await cookie).get("token")?.value}`,
-    },
-  });
-  return [res.data?.result, res.data?.meta];
-};

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { get } from "@/ApisRequests/server";
+import { useState } from "react";
+import { useGetFaqsQuery } from "@/redux/features/content/contentApi";
 
 interface FaqInterface {
   _id: string;
@@ -88,29 +88,19 @@ function FAQItem({
 }
 
 function FAQ() {
-  const [faqs, setFaqs] = useState<FaqInterface[]>([]);
-  const [openItem, setOpenItem] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchFaqs = async () => {
-      try {
-        const res = await get("/manage/get-faq");
-        if (res?.data && Array.isArray(res.data)) {
-          setFaqs(res.data);
-          if (res.data.length > 0) {
-            setOpenItem(res.data[0]?.question || null);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to load FAQs:", error);
-      }
-    };
-
-    fetchFaqs();
-  }, []);
+  const { data: faqRes } = useGetFaqsQuery();
+  const faqs: FaqInterface[] = Array.isArray(faqRes?.data)
+    ? (faqRes.data as FaqInterface[])
+    : [];
+  // `undefined` = user hasn't toggled yet -> first FAQ is open by default.
+  const [selectedItem, setSelectedItem] = useState<string | null | undefined>(
+    undefined,
+  );
+  const openItem =
+    selectedItem === undefined ? faqs[0]?.question || null : selectedItem;
 
   const toggle = (question: string) => {
-    setOpenItem((prev) => (prev === question ? null : question));
+    setSelectedItem(openItem === question ? null : question);
   };
 
   return (

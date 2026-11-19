@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { post } from "@/ApisRequests/server";
+import { useInviteFriendMutation } from "@/redux/features/content/contentApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
+import { getAuthToken } from "@/lib/auth/token";
 import toast from "react-hot-toast";
 import GoToTop from "@/components/ui/GoToTop";
 import { useContextData } from "@/provider/ContextProvider";
@@ -40,6 +42,7 @@ const InviteFriendsPage: React.FC = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
+  const [inviteFriend] = useInviteFriendMutation();
 
   // Close modal on Escape
   useEffect(() => {
@@ -51,10 +54,7 @@ const InviteFriendsPage: React.FC = () => {
   }, [openModal]);
 
   const inviteHandler = async () => {
-    const token =
-      typeof localStorage !== "undefined"
-        ? localStorage.getItem("token")
-        : null;
+    const token = getAuthToken();
 
     if (!token) {
       toast.error("Please log in to generate your referral link");
@@ -64,24 +64,17 @@ const InviteFriendsPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const res = await post(
-        "/invite/invite-friend",
-        {},
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        },
-      );
+      const res = await inviteFriend({}).unwrap();
+      const link = (res?.data as { link?: string } | null)?.link;
 
-      if (res?.success && res?.data?.link) {
-        setInviteLink(res.data.link);
+      if (res?.success && link) {
+        setInviteLink(link);
         setOpenModal(true);
       } else {
         toast.error(res?.message || "Failed to generate referral link");
       }
-    } catch (err: any) {
-      toast.error(err?.message || "Something went wrong. Please try again.");
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Something went wrong. Please try again."));
     } finally {
       setLoading(false);
     }

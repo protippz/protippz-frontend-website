@@ -3,7 +3,7 @@
 import React, { memo } from "react";
 import Image from "next/image";
 import RedeemButton from "./Client/RedeemButton";
-import { imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
 import { RewardInterface } from "@/app/(default)/rewardz/page";
 import defaultPrize from "@/Assets/category.png";
 import {

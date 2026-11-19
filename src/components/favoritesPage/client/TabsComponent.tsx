@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import PlayerzCards from "@/components/Playerz/PlayerzCards";
 import TeamzCards from "@/components/Teamz/TeamzCards";
 import { Player } from "@/app/(default)/playerz/page";
 import { TeamInterface } from "@/app/(default)/teamz/page";
-import { get } from "@/ApisRequests/server";
+import {
+  useGetMyPlayerBookmarksQuery,
+  useGetMyTeamBookmarksQuery,
+} from "@/redux/features/bookmark/bookmarkApi";
+import { getAuthToken } from "@/lib/auth/token";
 import {
   Star,
   User,
@@ -20,6 +24,28 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import toast from "react-hot-toast";
+
+// The old helper requested every bookmark in one page.
+const ALL_BOOKMARKS_PARAMS = { limit: 9999999 };
+
+/**
+ * `my-bookmark` has returned either a plain array or `{ meta, result }`;
+ * unwrap the bookmarked entity and flag it as bookmarked.
+ */
+function extractBookmarked<T extends { _id: string }>(
+  payload: unknown,
+  key: "player" | "team",
+): T[] {
+  const list: unknown[] = Array.isArray(payload)
+    ? payload
+    : ((payload as { result?: unknown[] } | undefined)?.result ?? []);
+  return list
+    .map((item): T => ({
+      ...((item as Record<string, unknown> | null)?.[key] as T),
+      isBookmark: true,
+    }))
+    .filter((item) => item && item._id);
+}
 
 // Shimmering Skeleton for Horizontal Cards
 function FavoriteCardSkeleton() {
@@ -57,87 +83,68 @@ function FavoriteCardSkeleton() {
 const TabsComponent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"playerz" | "teamz">("playerz");
   const [token, setToken] = useState<string | null>(null);
-  const [players, setPlayers] = useState<Player[]>([]);
-  const [teams, setTeams] = useState<TeamInterface[]>([]);
-  const [isLoadingPlayers, setIsLoadingPlayers] = useState<boolean>(true);
-  const [isLoadingTeams, setIsLoadingTeams] = useState<boolean>(true);
+  const [tokenChecked, setTokenChecked] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  // Ids removed via the "bookmark-updated" event – hidden instantly until the refetch lands.
+  const [removedIds, setRemovedIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("token");
+      const storedToken = getAuthToken();
       if (storedToken) {
         setToken(storedToken);
       }
+      setTokenChecked(true);
     }
   }, []);
 
-  const fetchPlayers = useCallback(async (authToken: string | null) => {
-    setIsLoadingPlayers(true);
-    try {
-      const res = await get("/player-bookmark/my-bookmark?limit=9999999", {
-        headers: {
-          Authorization: `${authToken || ""}`,
-        },
-      });
-      const data =
-        res?.data?.map((item: any) => ({
-          ...item?.player,
-          isBookmark: true,
-        })) || [];
-      setPlayers(data.filter((item: any) => item && item._id));
-    } catch (err) {
-      console.error("Failed to load favorite players:", err);
-    } finally {
-      setIsLoadingPlayers(false);
-    }
-  }, []);
+  const {
+    data: playerBookmarksRes,
+    isFetching: isFetchingPlayers,
+    refetch: refetchPlayers,
+  } = useGetMyPlayerBookmarksQuery(ALL_BOOKMARKS_PARAMS, { skip: !token });
+  const {
+    data: teamBookmarksRes,
+    isFetching: isFetchingTeams,
+    refetch: refetchTeams,
+  } = useGetMyTeamBookmarksQuery(ALL_BOOKMARKS_PARAMS, { skip: !token });
 
-  const fetchTeams = useCallback(async (authToken: string | null) => {
-    setIsLoadingTeams(true);
-    try {
-      const res = await get("/team-bookmark/my-bookmark?limit=9999999", {
-        headers: {
-          Authorization: `${authToken || ""}`,
-        },
-      });
-      const data =
-        res?.data?.map((item: any) => ({
-          ...item?.team,
-          isBookmark: true,
-        })) || [];
-      setTeams(data.filter((item: any) => item && item._id));
-    } catch (err) {
-      console.error("Failed to load favorite teams:", err);
-    } finally {
-      setIsLoadingTeams(false);
-    }
-  }, []);
+  const isLoadingPlayers = !tokenChecked || isFetchingPlayers;
+  const isLoadingTeams = !tokenChecked || isFetchingTeams;
 
-  useEffect(() => {
-    if (token) {
-      fetchPlayers(token);
-      fetchTeams(token);
-    } else {
-      setIsLoadingPlayers(false);
-      setIsLoadingTeams(false);
-    }
-  }, [token, fetchPlayers, fetchTeams]);
+  const players = useMemo(
+    () =>
+      token
+        ? extractBookmarked<Player>(playerBookmarksRes?.data, "player").filter(
+            (p) => !removedIds.includes(p._id),
+          )
+        : [],
+    [token, playerBookmarksRes, removedIds],
+  );
+
+  const teams = useMemo(
+    () =>
+      token
+        ? extractBookmarked<TeamInterface>(teamBookmarksRes?.data, "team").filter(
+            (t) => !removedIds.includes(t._id),
+          )
+        : [],
+    [token, teamBookmarksRes, removedIds],
+  );
 
   // Sync state in real-time when user un-bookmarks an item
   useEffect(() => {
-    const handleBookmarkUpdate = (e: any) => {
-      const { type, _id, action } = e.detail || {};
+    const handleBookmarkUpdate = (e: Event) => {
+      const { type, _id, action } =
+        (e as CustomEvent<{ type?: string; _id?: string; action?: string }>)
+          .detail || {};
       if (action === "removed" && _id) {
-        if (type === "team") {
-          setTeams((prev) => prev.filter((t) => t._id !== _id));
-        } else {
-          setPlayers((prev) => prev.filter((p) => p._id !== _id));
-        }
+        setRemovedIds((prev) => (prev.includes(_id) ? prev : [...prev, _id]));
       } else if (token) {
-        if (type === "team") fetchTeams(token);
-        else fetchPlayers(token);
+        if (_id) setRemovedIds((prev) => prev.filter((id) => id !== _id));
+        if (type === "team") refetchTeams();
+        else refetchPlayers();
       }
     };
 
@@ -145,13 +152,13 @@ const TabsComponent: React.FC = () => {
     return () => {
       window.removeEventListener("bookmark-updated", handleBookmarkUpdate);
     };
-  }, [token, fetchPlayers, fetchTeams]);
+  }, [token, refetchPlayers, refetchTeams]);
 
   const handleManualRefresh = async () => {
     if (!token) return;
     setIsRefreshing(true);
     try {
-      await Promise.all([fetchPlayers(token), fetchTeams(token)]);
+      await Promise.all([refetchPlayers(), refetchTeams()]);
       toast.success("Favorites refreshed");
     } finally {
       setIsRefreshing(false);

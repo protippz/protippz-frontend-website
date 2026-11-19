@@ -3,7 +3,9 @@
 import React, { useState } from "react";
 import { Mail, ShieldCheck, ArrowRight, Loader2, X, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
-import { post } from "@/ApisRequests/server";
+import { useAddEmailAddressMutation } from "@/redux/features/user/userApi";
+import { getAuthToken } from "@/lib/auth/token";
+import { getApiErrorMessage } from "@/lib/api/errors";
 
 interface EmailVerifyModalProps {
   setAddEmail: (email: string) => void;
@@ -20,6 +22,7 @@ const EmailVerifyModal: React.FC<EmailVerifyModalProps> = ({
 }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [addEmailAddress] = useAddEmailAddressMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,8 +39,7 @@ const EmailVerifyModal: React.FC<EmailVerifyModalProps> = ({
       return;
     }
 
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to verify your email");
       return;
@@ -45,15 +47,18 @@ const EmailVerifyModal: React.FC<EmailVerifyModalProps> = ({
 
     setLoading(true);
     try {
-      const result = await post(
-        "/user/add-email-address",
-        { email: trimmedEmail },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
+      let result: { success?: boolean; message?: string };
+      try {
+        result = await addEmailAddress({ email: trimmedEmail }).unwrap();
+      } catch (apiErr) {
+        result = {
+          success: false,
+          message: getApiErrorMessage(
+            apiErr,
+            "Failed to send verification code. Please try again."
+          ),
+        };
+      }
 
       setLoading(false);
 
@@ -67,9 +72,11 @@ const EmailVerifyModal: React.FC<EmailVerifyModalProps> = ({
           result?.message || "Failed to send verification code. Please try again."
         );
       }
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      toast.error(err?.message || "An unexpected error occurred. Please try again.");
+      toast.error(
+        getApiErrorMessage(err, "An unexpected error occurred. Please try again.")
+      );
     }
   };
 

@@ -3,7 +3,7 @@
 import React, { memo, useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { imageUrl, post } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
 import toast from "react-hot-toast";
 import { Player } from "@/app/(default)/playerz/page";
 import { useContextData } from "@/provider/ContextProvider";
@@ -23,7 +23,8 @@ import {
   Loader2,
   ShieldCheck,
 } from "lucide-react";
-import { useCreatTippsMutation } from "@/Redux/Apis/paymentApis";
+import { useCreateTipMutation } from "@/redux/features/tip/tipApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
 
 interface SendTipsButtonProps {
   item: Player;
@@ -60,7 +61,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
     "deposit"
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [createTippz, { isLoading: isCreatiing }] = useCreatTippsMutation()
+  const [createTippz, { isLoading: isCreatiing }] = useCreateTipMutation()
   const data = useContextData();
   const router = useRouter();
 
@@ -157,17 +158,18 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
       }
 
       const response = await createTippz(data).unwrap()
-      if (response?.success && response?.data?.checkoutUrl) {
+      const checkoutUrl = (response?.data as { checkoutUrl?: string } | undefined)?.checkoutUrl;
+      if (response?.success && checkoutUrl) {
         toast.success(response?.message || "Redirecting to checkout...", { position: "top-right" });
-        router.push(response?.data?.checkoutUrl || "")
+        router.push(checkoutUrl || "")
       } else if (response?.success) {
         setSuccessAmount(amount);
         setIsPaymentModalOpen(false);
         setIsModalOpen(false);
         setIsSuccessModalOpen(true);
       }
-    } catch (error: any) {
-      toast.error(error?.data?.message || error?.message || "Failed to complete tip");
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, "Failed to complete tip"));
     }
   };
   const teamName =

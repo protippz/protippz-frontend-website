@@ -1,99 +1,60 @@
 import { NextRequest, NextResponse } from "next/server";
+import { imageUrl, SITE_URL } from "@/lib/api/config";
+import { getCommunityPost } from "@/lib/api/queries";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo";
 
-const BASE_SITE_URL = "https://protippz.com";
 const DEFAULT_SEO_TITLE = "ProTippz - Community Post";
-const DEFAULT_OG_IMAGE = "https://protippz.com/assets/seo-banner.jpg";
+const DEFAULT_THUMBNAIL = `${SITE_URL}${DEFAULT_OG_IMAGE}`;
+
+const baseResponse = {
+  version: "1.0",
+  type: "link",
+  provider_name: "ProTippz",
+  provider_url: SITE_URL,
+  thumbnail_width: 1200,
+  thumbnail_height: 630,
+} as const;
+
+const fallback = () =>
+  NextResponse.json({ ...baseResponse, title: DEFAULT_SEO_TITLE, thumbnail_url: DEFAULT_THUMBNAIL });
+
+/** Extracts the post id/slug from `/community/post/:id`, `/community/blog/:id` or `?post=`. */
+function extractIdOrSlug(targetUrl: string): string {
+  if (!targetUrl) return "";
+  const match = targetUrl.match(/\/community\/(?:post|blog)\/([^/?#]+)/);
+  if (match?.[1]) {
+    try {
+      return decodeURIComponent(match[1]);
+    } catch {
+      return "";
+    }
+  }
+  try {
+    return new URL(targetUrl, SITE_URL).searchParams.get("post") || "";
+  } catch {
+    return "";
+  }
+}
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const targetUrl = searchParams.get("url") || "";
+    const idOrSlug = extractIdOrSlug(req.nextUrl.searchParams.get("url") || "");
+    if (!idOrSlug || idOrSlug.length > 200) return fallback();
 
-    // Extract post ID or slug from URL path e.g. /community/post/slug
-    let idOrSlug = "";
-    if (targetUrl) {
-      const match = targetUrl.match(/\/community\/post\/([^/?#]+)/);
-      if (match && match[1]) {
-        idOrSlug = decodeURIComponent(match[1]);
-      } else {
-        const urlObj = new URL(targetUrl, BASE_SITE_URL);
-        idOrSlug = urlObj.searchParams.get("post") || "";
-      }
-    }
+    const post = await getCommunityPost(idOrSlug);
+    if (!post) return fallback();
 
-    if (!idOrSlug) {
-      return NextResponse.json({
-        version: "1.0",
-        type: "link",
-        title: DEFAULT_SEO_TITLE,
-        provider_name: "ProTippz",
-        provider_url: BASE_SITE_URL,
-        thumbnail_url: DEFAULT_OG_IMAGE,
-        thumbnail_width: 1200,
-        thumbnail_height: 630,
-      });
-    }
-
-    const res = await fetch(
-      `https://api.protippz.com/community-post/get-single/${encodeURIComponent(idOrSlug)}`,
-      { next: { revalidate: 60 } },
-    );
-
-    if (!res.ok) {
-      return NextResponse.json({
-        version: "1.0",
-        type: "link",
-        title: DEFAULT_SEO_TITLE,
-        provider_name: "ProTippz",
-        provider_url: BASE_SITE_URL,
-        thumbnail_url: DEFAULT_OG_IMAGE,
-        thumbnail_width: 1200,
-        thumbnail_height: 630,
-      });
-    }
-
-    const data = await res.json();
-    const post = data?.data?.result || data?.data || data?.result;
-
-    const title = post?.seoTitle || post?.title || DEFAULT_SEO_TITLE;
-    const authorName = post?.user?.name || "ProTippz Team";
-
-    let ogImageUrl =
-      post?.ogImage ||
-      (post?.images && post.images.length > 0 ? post.images[0] : null) ||
-      DEFAULT_OG_IMAGE;
-
-    if (
-      ogImageUrl &&
-      !ogImageUrl.startsWith("http://") &&
-      !ogImageUrl.startsWith("https://")
-    ) {
-      ogImageUrl = `${BASE_SITE_URL}${ogImageUrl.startsWith("/") ? "" : "/"}${ogImageUrl}`;
-    }
+    const thumbnail = post.ogImage || post.images?.[0];
 
     return NextResponse.json({
-      version: "1.0",
-      type: "link",
-      title: title,
-      author_name: authorName,
-      author_url: BASE_SITE_URL,
-      provider_name: "ProTippz",
-      provider_url: BASE_SITE_URL,
-      thumbnail_url: ogImageUrl,
-      thumbnail_width: 1200,
-      thumbnail_height: 630,
+      ...baseResponse,
+      title: post.seoTitle || post.title || DEFAULT_SEO_TITLE,
+      author_name: post.user?.name || "ProTippz Team",
+      author_url: SITE_URL,
+      thumbnail_url: thumbnail ? imageUrl(thumbnail) : DEFAULT_THUMBNAIL,
     });
   } catch (error) {
     console.error("Error generating oEmbed JSON:", error);
-    return NextResponse.json({
-      version: "1.0",
-      type: "link",
-      title: DEFAULT_SEO_TITLE,
-      provider_name: "ProTippz",
-      provider_url: BASE_SITE_URL,
-      thumbnail_url: DEFAULT_OG_IMAGE,
-      thumbnail_width: 1200,
-      thumbnail_height: 630,
-    });
+    return fallback();
   }
 }

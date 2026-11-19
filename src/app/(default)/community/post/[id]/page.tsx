@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import JsonLd from "@/components/seo/JsonLd";
+import { imageUrl, SITE_URL } from "@/lib/api/config";
+import { getCommunityPost } from "@/lib/api/queries";
+import { DEFAULT_OG_IMAGE as SEO_DEFAULT_OG_IMAGE } from "@/lib/seo";
 import CommunityPage from "../../page";
-import { CommunityPostBackendItem } from "@/types/community";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -9,34 +12,10 @@ interface PageProps {
 const DEFAULT_SEO_TITLE = "ProTippz - Community Post";
 const DEFAULT_SEO_DESCRIPTION =
   "Join the discussion on ProTippz, earn rewards, and connect with sports tipping fans!";
-const DEFAULT_OG_IMAGE = "https://protippz.com/assets/seo-banner.jpg";
-const BASE_SITE_URL = "https://protippz.com";
+const BASE_SITE_URL = SITE_URL;
+const DEFAULT_OG_IMAGE = `${SITE_URL}${SEO_DEFAULT_OG_IMAGE}`;
 
-/**
- * Fetch post details on the server to populate Open Graph, Twitter Card, and oEmbed tags
- * for social media bots across all platforms (Facebook, X/Twitter, LinkedIn, WhatsApp, Telegram, Discord, Slack, iMessage, Pinterest).
- */
-async function getPostData(
-  idOrSlug: string,
-): Promise<CommunityPostBackendItem | null> {
-  try {
-    const res = await fetch(
-      `https://api.protippz.com/community-post/get-single/${encodeURIComponent(idOrSlug)}`,
-      {
-        next: { revalidate: 60 },
-      },
-    );
-
-    if (!res.ok) return null;
-
-    const data = await res.json();
-    const item = data?.data?.result || data?.data || data?.result;
-    return item || null;
-  } catch (error) {
-    console.error("Failed to fetch post data for metadata:", error);
-    return null;
-  }
-}
+const getPostData = getCommunityPost;
 
 export async function generateMetadata({
   params,
@@ -57,6 +36,7 @@ export async function generateMetadata({
     return {
       title: DEFAULT_SEO_TITLE,
       description: DEFAULT_SEO_DESCRIPTION,
+      robots: { index: false, follow: true },
     };
   }
 
@@ -84,7 +64,7 @@ export async function generateMetadata({
     !ogImageUrl.startsWith("http://") &&
     !ogImageUrl.startsWith("https://")
   ) {
-    ogImageUrl = `${BASE_SITE_URL}${ogImageUrl.startsWith("/") ? "" : "/"}${ogImageUrl}`;
+    ogImageUrl = imageUrl(ogImageUrl);
   }
 
   const postUrl = `${BASE_SITE_URL}/community/post/${encodeURIComponent(id)}`;
@@ -105,7 +85,6 @@ export async function generateMetadata({
     ],
     authors: [{ name: authorName }],
     publisher: "ProTippz",
-    themeColor: "#2FC191",
     alternates: {
       canonical: postUrl,
       types: {
@@ -176,7 +155,7 @@ export default async function PostPage({ params }: PageProps) {
     !ogImageUrl.startsWith("http://") &&
     !ogImageUrl.startsWith("https://")
   ) {
-    ogImageUrl = `${BASE_SITE_URL}${ogImageUrl.startsWith("/") ? "" : "/"}${ogImageUrl}`;
+    ogImageUrl = imageUrl(ogImageUrl);
   }
 
   const postUrl = `${BASE_SITE_URL}/community/post/${encodeURIComponent(resolvedParams.id)}`;
@@ -200,7 +179,7 @@ export default async function PostPage({ params }: PageProps) {
       url: BASE_SITE_URL,
       logo: {
         "@type": "ImageObject",
-        url: `${BASE_SITE_URL}/favicon.png`,
+        url: `${BASE_SITE_URL}/new/logo.png`,
       },
     },
     mainEntityOfPage: {
@@ -211,10 +190,7 @@ export default async function PostPage({ params }: PageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <CommunityPage initialPostId={resolvedParams.id} />
     </>
   );

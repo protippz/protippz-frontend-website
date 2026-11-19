@@ -4,7 +4,11 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useContextData } from "@/provider/ContextProvider";
-import { imageUrl, patch } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
+import { getApiErrorMessage } from "@/lib/api/errors";
+import { getAuthToken } from "@/lib/auth/token";
+import { useUpdateUserProfileMutation } from "@/redux/features/user/userApi";
+import { useLazySearchPlacesQuery } from "@/redux/features/internal/internalEndpoints";
 import toast from "react-hot-toast";
 import debounce from "lodash.debounce";
 import {
@@ -40,6 +44,8 @@ const UpdateProfileForm: React.FC = () => {
   const [loadingPlaces, setLoadingPlaces] = useState<boolean>(false);
   const [showOptions, setShowOptions] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [searchPlaces] = useLazySearchPlacesQuery();
+  const [updateUserProfile] = useUpdateUserProfileMutation();
 
   useEffect(() => {
     if (user) {
@@ -82,13 +88,10 @@ const UpdateProfileForm: React.FC = () => {
 
     setLoadingPlaces(true);
     try {
-      const response = await fetch(
-        `/api/places?query=${encodeURIComponent(query)}`
-      );
-      const resData = await response.json();
+      const resData = await searchPlaces(query).unwrap();
 
       if (resData.predictions && Array.isArray(resData.predictions)) {
-        setOptions(resData.predictions.map((item: any) => item.description));
+        setOptions(resData.predictions.map((item) => item.description));
         setShowOptions(true);
       }
     } catch (error) {
@@ -141,10 +144,7 @@ const UpdateProfileForm: React.FC = () => {
       return toast.error("Please enter your full name");
     }
 
-    const token =
-      typeof localStorage !== "undefined"
-        ? localStorage.getItem("token")
-        : null;
+    const token = getAuthToken();
     if (!token) {
       return toast.error("Please log in to continue");
     }
@@ -163,11 +163,7 @@ const UpdateProfileForm: React.FC = () => {
         formData.append("profile_image", selectedFile);
       }
 
-      const res = await patch("/normal-user/update-profile", formData, {
-        headers: {
-          Authorization: `${token}`,
-        },
-      });
+      const res = await updateUserProfile(formData).unwrap();
 
       if (res?.success) {
         toast.success("Profile updated successfully!");
@@ -175,12 +171,10 @@ const UpdateProfileForm: React.FC = () => {
       } else {
         toast.error(res?.message || "Failed to update profile");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Profile update error:", error);
       toast.error(
-        error?.response?.data?.message ||
-        error?.message ||
-        "An error occurred while updating profile"
+        getApiErrorMessage(error, "An error occurred while updating profile")
       );
     } finally {
       setIsSaving(false);

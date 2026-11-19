@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { post } from "@/ApisRequests/server";
+import { useContactUsMutation } from "@/redux/features/content/contentApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import toast from "react-hot-toast";
 import GoToTop from "@/components/ui/GoToTop";
 import {
@@ -40,6 +41,7 @@ const ContactUsPage: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [contactUs] = useContactUsMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,12 +77,12 @@ const ContactUsPage: React.FC = () => {
         message: `[Topic: ${topic}] ${message.trim()}`,
       };
 
-      const res = await post("/contact-us", payload);
+      const res = await contactUs(payload).unwrap();
 
       if (
         res?.message === "Contact email sent successfully" ||
         res?.success ||
-        res?.status === 200
+        res?.statusCode === 200
       ) {
         toast.success(res?.message || "Message sent successfully!");
         setIsSuccess(true);
@@ -93,9 +95,9 @@ const ContactUsPage: React.FC = () => {
           res?.message || "Failed to send message. Please try again.",
         );
       }
-    } catch (err: any) {
+    } catch (err) {
       toast.error(
-        err?.message || "Something went wrong. Please try again later.",
+        getApiErrorMessage(err, "Something went wrong. Please try again later."),
       );
     } finally {
       setLoading(false);

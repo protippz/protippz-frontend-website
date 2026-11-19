@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { post, remove } from "@/ApisRequests/server";
+import {
+  useCreateBookmarkMutation,
+  useDeleteBookmarkMutation,
+} from "@/redux/features/bookmark/bookmarkApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
+import { getAuthToken } from "@/lib/auth/token";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Star, Loader2 } from "lucide-react";
@@ -26,6 +31,9 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
   const router = useRouter();
   const [bookmarked, setBookmarked] = useState<boolean>(Boolean(isBookmark));
   const [loading, setLoading] = useState(false);
+  const [createBookmark] = useCreateBookmarkMutation();
+  const [deleteBookmark] = useDeleteBookmarkMutation();
+  const bookmarkType = type === "team" ? "team" : "player";
 
   // Sync internal state when prop changes
   useEffect(() => {
@@ -61,8 +69,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
     e.stopPropagation();
     e.preventDefault();
 
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to save favorites");
       return;
@@ -81,16 +88,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
     try {
       if (previousState) {
         // DELETE bookmark
-        const res = await remove(
-          type === "team"
-            ? `/team-bookmark/delete/${_id}`
-            : `/player-bookmark/delete/${_id}`,
-          {
-            headers: {
-              Authorization: `${token}`,
-            },
-          }
-        );
+        const res = await deleteBookmark({ type: bookmarkType, id: _id }).unwrap();
 
         setLoading(false);
         if (res?.success) {
@@ -112,15 +110,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
       } else {
         // CREATE bookmark
         const data = type === "team" ? { teamId: _id } : { playerId: _id };
-        const res = await post(
-          type === "team" ? "/team-bookmark/create" : "/player-bookmark/create",
-          data,
-          {
-            headers: {
-              Authorization: `${token}`,
-            },
-          }
-        );
+        const res = await createBookmark({ type: bookmarkType, body: data }).unwrap();
 
         setLoading(false);
         if (res?.success) {
@@ -140,11 +130,18 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
           toast.error(res?.message || "Failed to add to favorites");
         }
       }
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
       setBookmarked(previousState);
       onBookmarkChange?.(previousState);
-      toast.error(err?.message || "Something went wrong. Please try again.");
+      toast.error(
+        getApiErrorMessage(
+          err,
+          previousState
+            ? "Failed to remove from favorites"
+            : "Failed to add to favorites",
+        ),
+      );
     }
   };
 

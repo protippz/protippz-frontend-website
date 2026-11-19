@@ -31,6 +31,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Post,
   Comment,
+  BackendCommentItem,
+  CommunityPostBackendItem,
   mapBackendItemToPost,
   mapBackendCommentToComment,
 } from "@/types/community";
@@ -38,12 +40,12 @@ import { useAuth } from "@/provider/ContextProvider";
 import {
   useLikeCommunityPostMutation,
   useGetAllCommunityPostsQuery,
-} from "@/Redux/Apis/communityApis";
+} from "@/redux/features/community/communityApi";
 import {
   useGetCommentsByPostQuery,
   useCreateCommentMutation,
   useDeleteCommentMutation,
-} from "@/Redux/Apis/commentApis";
+} from "@/redux/features/comment/commentApi";
 import toast from "react-hot-toast";
 import { copyToClipboard, getEmbedVideoUrl } from "./helpers";
 
@@ -53,7 +55,7 @@ interface BlogArticleViewProps {
   onClose?: () => void;
   onSelectPost?: (post: Post) => void;
   scrollToComments?: boolean;
-  onDeleteComment?: (postId: string, commentId: string) => Promise<any> | void;
+  onDeleteComment?: (postId: string, commentId: string) => Promise<unknown> | void;
 }
 
 export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
@@ -94,14 +96,20 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
     );
 
   const recentStories: Post[] = useMemo(() => {
-    const rawList =
+    // Backend envelope has been seen in several shapes in production; read defensively.
+    const looseResponse = blogPostsData as
+      | { data?: unknown; result?: unknown }
+      | undefined;
+    const rawList: unknown =
       blogPostsData?.data?.result ||
-      blogPostsData?.data ||
-      blogPostsData?.result ||
+      looseResponse?.data ||
+      looseResponse?.result ||
       [];
     if (!Array.isArray(rawList)) return [];
 
-    const mapped = rawList.map(mapBackendItemToPost);
+    const mapped = (rawList as CommunityPostBackendItem[]).map(
+      mapBackendItemToPost,
+    );
     // Exclude current active article by matching ID or slug
     return mapped
       .filter((p) => p.id !== post.id && (!post.slug || p.slug !== post.slug))
@@ -110,10 +118,7 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
 
   // Fetch comments for this post
   const { data: commentsResponse, refetch: refetchComments } =
-    useGetCommentsByPostQuery(
-      { postId: post.id, page: 1, limit: 20 },
-      { skip: !post.id },
-    );
+    useGetCommentsByPostQuery(post.id, { skip: !post.id });
 
   const scrollToCommentsSection = (focusInput = true) => {
     const commentsElem = document.getElementById("comments-section");
@@ -138,13 +143,16 @@ export const BlogArticleView: React.FC<BlogArticleViewProps> = ({
   const [deletedCommentIds, setDeletedCommentIds] = useState<string[]>([]);
 
   const commentsList: Comment[] = useMemo(() => {
-    const raw =
+    const looseResponse = commentsResponse as
+      | { data?: unknown; result?: unknown }
+      | undefined;
+    const raw: unknown =
       commentsResponse?.data?.result ||
-      commentsResponse?.data ||
-      commentsResponse?.result ||
+      looseResponse?.data ||
+      looseResponse?.result ||
       [];
     if (!Array.isArray(raw)) return [];
-    return raw
+    return (raw as BackendCommentItem[])
       .map(mapBackendCommentToComment)
       .filter((c) => !deletedCommentIds.includes(c.id));
   }, [commentsResponse, deletedCommentIds]);

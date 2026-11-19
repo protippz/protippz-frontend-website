@@ -1,17 +1,19 @@
-import { get } from "@/ApisRequests/server";
+import type { Metadata } from "next";
 import rewardbg from "@/Assets/rewardbgs.png";
 import InfiniteRewardList from "@/components/rewardz/Client/InfiniteRewardList";
 import Rewards from "@/components/rewardz/Rewards";
-import GoToTop from "@/components/ui/GoToTop";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTokenRole, isTokenValid } from "@/lib/authUtils";
+import { getRewards } from "@/lib/api/queries";
+import { getServerToken, serverFetch } from "@/lib/api/server";
+import { privateMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Suspense } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
 
-export const metadata = {
-  title: "PROTIPPZ - REWARDZ",
+// Logged-in only page – keep it out of the index.
+export const metadata: Metadata = {
+  ...privateMetadata("Rewardz"),
   description:
     "Earn points by sending Tippz and redeem them for exclusive merchandise, tickets, and cash prizes.",
 };
@@ -35,8 +37,7 @@ interface PageProps {
 
 const RewardzPage = async ({ searchParams }: PageProps) => {
   const { searchTerm, category, sort, page, limit } = await searchParams;
-  const cookie = cookies();
-  const token = (await cookie).get("token")?.value;
+  const token = await getServerToken();
 
   if (!token || !isTokenValid(token)) {
     redirect("/prottiz-special");
@@ -45,9 +46,9 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
   let role = getTokenRole(token);
   if (!role) {
     try {
-      const userRes = await get("/user/my-profile", {
-        headers: { Authorization: token },
-      });
+      const userRes = await serverFetch<{ role?: string; user?: { role?: string } }>(
+        "/user/my-profile",
+      );
       role = userRes?.data?.user?.role || userRes?.data?.role || null;
     } catch {
       // ignore
@@ -68,7 +69,7 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
     limit: limit ? String(limit) : "20",
   };
 
-  const [data, meta] = await getReward(params, token);
+  const { result: data, meta } = await getRewards(params);
   const rewardData = (data || []) as RewardInterface[];
 
   return (
@@ -90,7 +91,6 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
               <InfiniteRewardList
                 initialData={rewardData}
                 initialMeta={meta}
-                token={token}
                 searchTerm={params.searchTerm}
                 sort={params.sort}
                 category={params.category}
@@ -149,17 +149,3 @@ const RewardzPage = async ({ searchParams }: PageProps) => {
 };
 
 export default RewardzPage;
-
-const getReward = async (
-  params: { [key: string]: string | undefined },
-  token?: string,
-) => {
-  const paramsUrl = Object.entries(params)
-    .filter(([key, value]) => value !== undefined && value !== "")
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
-  const res = await get(`/reward/get-all?${paramsUrl}`, {
-    headers: token ? { Authorization: `${token}` } : {},
-  });
-  return [res.data?.result, res.data?.meta];
-};

@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import JsonLd from "@/components/seo/JsonLd";
+import { imageUrl, SITE_URL } from "@/lib/api/config";
+import { getCommunityPost } from "@/lib/api/queries";
+import { DEFAULT_OG_IMAGE as SEO_DEFAULT_OG_IMAGE } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import {
-  CommunityPostBackendItem,
   mapBackendItemToPost,
 } from "@/types/community";
 import BlogArticleView from "@/components/community/BlogArticleView";
@@ -14,30 +17,10 @@ interface PageProps {
 const DEFAULT_SEO_TITLE = "ProTippz - Blog Article";
 const DEFAULT_SEO_DESCRIPTION =
   "Read the latest sports tipping articles, news, and insights on ProTippz!";
-const DEFAULT_OG_IMAGE = "https://protippz.com/assets/seo-banner.jpg";
-const BASE_SITE_URL = "https://protippz.com";
+const BASE_SITE_URL = SITE_URL;
+const DEFAULT_OG_IMAGE = `${SITE_URL}${SEO_DEFAULT_OG_IMAGE}`;
 
-async function getPostData(
-  idOrSlug: string,
-): Promise<CommunityPostBackendItem | null> {
-  try {
-    const res = await fetch(
-      `https://api.protippz.com/community-post/get-single/${encodeURIComponent(idOrSlug)}`,
-      {
-        next: { revalidate: 60 },
-      },
-    );
-
-    if (!res.ok) return null;
-
-    const data = await res.json();
-    const item = data?.data?.result || data?.data || data?.result;
-    return item || null;
-  } catch (error) {
-    console.error("Failed to fetch blog post data for metadata:", error);
-    return null;
-  }
-}
+const getPostData = getCommunityPost;
 
 export async function generateMetadata({
   params,
@@ -58,6 +41,7 @@ export async function generateMetadata({
     return {
       title: DEFAULT_SEO_TITLE,
       description: DEFAULT_SEO_DESCRIPTION,
+      robots: { index: false, follow: true },
     };
   }
 
@@ -82,7 +66,7 @@ export async function generateMetadata({
     !ogImageUrl.startsWith("http://") &&
     !ogImageUrl.startsWith("https://")
   ) {
-    ogImageUrl = `${BASE_SITE_URL}${ogImageUrl.startsWith("/") ? "" : "/"}${ogImageUrl}`;
+    ogImageUrl = imageUrl(ogImageUrl);
   }
 
   const blogUrl = `${BASE_SITE_URL}/community/blog/${encodeURIComponent(id)}`;
@@ -92,7 +76,7 @@ export async function generateMetadata({
   const oembedUrl = `${BASE_SITE_URL}/api/oembed?url=${encodeURIComponent(blogUrl)}`;
 
   return {
-    title: `${title} - ProTippz`,
+    title,
     description: metaDescription,
     keywords: [
       "ProTippz",
@@ -107,7 +91,6 @@ export async function generateMetadata({
     ],
     authors: [{ name: authorName }],
     publisher: "ProTippz",
-    themeColor: "#2FC191",
     alternates: {
       canonical: blogUrl,
       types: {
@@ -196,7 +179,7 @@ export default async function BlogPage({ params }: PageProps) {
     !ogImageUrl.startsWith("http://") &&
     !ogImageUrl.startsWith("https://")
   ) {
-    ogImageUrl = `${BASE_SITE_URL}${ogImageUrl.startsWith("/") ? "" : "/"}${ogImageUrl}`;
+    ogImageUrl = imageUrl(ogImageUrl);
   }
 
   const blogUrl = `${BASE_SITE_URL}/community/blog/${encodeURIComponent(resolvedParams.id)}`;
@@ -220,7 +203,7 @@ export default async function BlogPage({ params }: PageProps) {
       url: BASE_SITE_URL,
       logo: {
         "@type": "ImageObject",
-        url: `${BASE_SITE_URL}/favicon.png`,
+        url: `${BASE_SITE_URL}/new/logo.png`,
       },
     },
     mainEntityOfPage: {
@@ -231,10 +214,7 @@ export default async function BlogPage({ params }: PageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <BlogArticleView post={mappedPost} />
     </>
   );

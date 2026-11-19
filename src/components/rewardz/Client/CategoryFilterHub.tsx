@@ -9,9 +9,10 @@ import React, {
   useTransition,
 } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { get, imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
+import { useLazyGetRewardCategoriesQuery } from "@/redux/features/reward/rewardApi";
 import defaultCategory from "@/Assets/category.png";
 import {
   Search,
@@ -59,7 +60,7 @@ const CategoryLogoImage: React.FC<{
   height = 32,
   className = "object-contain max-h-full max-w-full",
 }) => {
-    const [imgSrc, setImgSrc] = useState<any>(
+    const [imgSrc, setImgSrc] = useState<string | StaticImageData>(
       src ? imageUrl(src) : defaultCategory
     );
 
@@ -88,6 +89,7 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
   const activeCategoryId = searchParams?.get("category") || "";
 
   const [isPending, startTransition] = useTransition();
+  const [fetchCategories] = useLazyGetRewardCategoriesQuery();
   const [pendingCategoryId, setPendingCategoryId] = useState<string | null>(
     null
   );
@@ -160,9 +162,10 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
       if (!q) {
         setIsSearching(true);
         try {
-          const res = await get("/reward-category/get-all?limit=30&page=1");
-          const items = res.data?.result || [];
-          const meta = res.data?.meta;
+          const res = await fetchCategories({ limit: 30, page: 1 }).unwrap();
+          const items =
+          (res?.data?.result as unknown as CategoryItem[] | undefined) || [];
+          const meta = res?.data?.meta;
           setCategories(items);
           setPage(1);
           setHasMore(
@@ -179,13 +182,10 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
 
       setIsSearching(true);
       try {
-        const res = await get(
-          `/reward-category/get-all?searchTerm=${encodeURIComponent(
-            q
-          )}&limit=30&page=1`
-        );
-        const items = res.data?.result || [];
-        const meta = res.data?.meta;
+        const res = await fetchCategories({ searchTerm: q, limit: 30, page: 1 }).unwrap();
+        const items =
+          (res?.data?.result as unknown as CategoryItem[] | undefined) || [];
+        const meta = res?.data?.meta;
         setCategories(items);
         setPage(1);
         setHasMore(
@@ -200,7 +200,7 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [searchQuery, fetchCategories]);
 
   // Infinite scroll loader
   const loadMoreCategories = useCallback(async () => {
@@ -209,14 +209,16 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
     setIsLoadingMore(true);
     const nextPage = page + 1;
     const q = searchQuery.trim();
-    const searchParam = q ? `&searchTerm=${encodeURIComponent(q)}` : "";
 
     try {
-      const res = await get(
-        `/reward-category/get-all?limit=30&page=${nextPage}${searchParam}`
-      );
-      const newItems: CategoryItem[] = res.data?.result || [];
-      const meta = res.data?.meta;
+      const res = await fetchCategories({
+        limit: 30,
+        page: nextPage,
+        searchTerm: q || undefined,
+      }).unwrap();
+      const newItems: CategoryItem[] =
+        (res?.data?.result as unknown as CategoryItem[] | undefined) || [];
+      const meta = res?.data?.meta;
 
       if (Array.isArray(newItems) && newItems.length > 0) {
         setCategories((prev) => {
@@ -241,7 +243,7 @@ const CategoryFilterHub: React.FC<CategoryFilterHubProps> = ({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, isSearching, page, searchQuery]);
+  }, [isLoadingMore, hasMore, isSearching, page, searchQuery, fetchCategories]);
 
   // Observer for desktop sidebar scroll
   useEffect(() => {

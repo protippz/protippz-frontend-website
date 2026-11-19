@@ -4,9 +4,16 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, LogIn } from "lucide-react";
 import { useAuth } from "@/provider/ContextProvider";
-import { Post, User, Comment, mapBackendCommentToComment } from "@/types/community";
+import { skipToken } from "@reduxjs/toolkit/query";
+import {
+  Post,
+  User,
+  Comment,
+  BackendCommentItem,
+  mapBackendCommentToComment,
+} from "@/types/community";
 import { mockUsers } from "./data/mockData";
-import { useGetCommentsByPostQuery } from "@/Redux/Apis/commentApis";
+import { useGetCommentsByPostQuery } from "@/redux/features/comment/commentApi";
 import { ModalHeader } from "./modal/ModalHeader";
 import { ModalPostContent } from "./modal/ModalPostContent";
 import { ModalStatsBar } from "./modal/ModalStatsBar";
@@ -25,8 +32,8 @@ interface PostModalProps {
     parentId?: string,
     imageFile?: File,
   ) => void;
-  onDeleteComment?: (postId: string, commentId: string) => Promise<any> | void;
-  onLikeComment?: (postId: string, commentId: string) => Promise<any> | void;
+  onDeleteComment?: (postId: string, commentId: string) => Promise<unknown> | void;
+  onLikeComment?: (postId: string, commentId: string) => Promise<unknown> | void;
   onCommentReaction?: (
     postId: string,
     commentId: string,
@@ -120,20 +127,22 @@ export const PostModal: React.FC<PostModalProps> = ({
 
   // Fetch comments for current post from API
   const { data: commentsApiResponse, isLoading: isCommentsLoading } =
-    useGetCommentsByPostQuery(post?.id, {
-      skip: !isOpen || !post?.id,
-    }) as { data?: any; isLoading: boolean };
+    useGetCommentsByPostQuery(isOpen && post?.id ? post.id : skipToken);
 
   // Transform raw API comment list and sync optimistic comments into frontend Comment hierarchy
   const processedComments = useMemo(() => {
-    const rawList =
+    // Backend envelope has been seen in several shapes in production; read defensively.
+    const looseResponse = commentsApiResponse as
+      | { data?: unknown; result?: unknown }
+      | undefined;
+    const rawList: unknown =
       commentsApiResponse?.data?.result ||
-      commentsApiResponse?.data ||
-      commentsApiResponse?.result ||
+      looseResponse?.data ||
+      looseResponse?.result ||
       (Array.isArray(commentsApiResponse) ? commentsApiResponse : []);
 
     const mapped: Comment[] = Array.isArray(rawList)
-      ? rawList.map(mapBackendCommentToComment)
+      ? (rawList as BackendCommentItem[]).map(mapBackendCommentToComment)
       : [];
 
     // Existing IDs in the API response (including nested replies)
@@ -368,7 +377,6 @@ export const PostModal: React.FC<PostModalProps> = ({
 
       {/* Modal Container */}
       <div
-        data-lenis-prevent
         className="relative bg-[#FAFBFB] w-full max-w-2xl max-h-[92dvh] sm:max-h-[88dvh] h-[92dvh] sm:h-auto rounded-t-3xl sm:rounded-md flex flex-col overflow-hidden border-t sm:border border-border z-10 animate-in slide-in-from-bottom-5 sm:slide-in-from-bottom-0 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
@@ -386,7 +394,6 @@ export const PostModal: React.FC<PostModalProps> = ({
         {/* Scrollable Modal Body */}
         <div
           ref={modalBodyRef}
-          data-lenis-prevent
           className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 custom-scrollbar"
         >
           {/* Post Content */}

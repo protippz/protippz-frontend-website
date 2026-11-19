@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useContextData } from "@/provider/ContextProvider";
 import RewardzCards from "@/components/rewardz/RewardzCards";
 import { RewardInterface } from "@/app/(default)/rewardz/page";
-import { get } from "@/ApisRequests/server";
+import { useLazyGetRewardsQuery } from "@/redux/features/reward/rewardApi";
 import { Gift, Loader2 } from "lucide-react";
 
 interface InfiniteRewardListProps {
@@ -26,7 +26,6 @@ interface InfiniteRewardListProps {
 const InfiniteRewardList: React.FC<InfiniteRewardListProps> = ({
   initialData = [],
   initialMeta,
-  token,
   searchTerm,
   sort,
   category,
@@ -44,6 +43,7 @@ const InfiniteRewardList: React.FC<InfiniteRewardListProps> = ({
     }
   }, [userRole, router]);
 
+  const [fetchRewards] = useLazyGetRewardsQuery();
   const [rewards, setRewards] = useState<RewardInterface[]>(initialData);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(
@@ -75,25 +75,17 @@ const InfiniteRewardList: React.FC<InfiniteRewardListProps> = ({
     const nextPage = pageRef.current + 1;
 
     try {
-      const param: Record<string, string | number | undefined> = {
-        searchTerm,
-        sort,
-        category,
+      const res = await fetchRewards({
+        searchTerm: searchTerm || undefined,
+        sort: sort || undefined,
+        category: category || undefined,
         page: nextPage,
         limit,
-      };
+      }).unwrap();
 
-      const paramsUrl = Object.entries(param)
-        .filter(([, value]) => value !== undefined && value !== "")
-        .map(([key, value]) => `${key}=${value}`)
-        .join("&");
-
-      const res = await get(`/reward/get-all?${paramsUrl}`, {
-        headers: token ? { Authorization: `${token}` } : {},
-      });
-
-      const newItems: RewardInterface[] = res.data?.result || [];
-      const meta = res.data?.meta;
+      const newItems: RewardInterface[] =
+        (res?.data?.result as unknown as RewardInterface[] | undefined) || [];
+      const meta = res?.data?.meta;
       const totalPage = Number(meta?.totalPage);
 
       if (!Array.isArray(newItems) || newItems.length === 0) {
@@ -134,7 +126,7 @@ const InfiniteRewardList: React.FC<InfiniteRewardListProps> = ({
       isFetchingRef.current = false;
       setLoading(false);
     }
-  }, [searchTerm, sort, category, limit, token]);
+  }, [searchTerm, sort, category, limit, fetchRewards]);
 
   // Robust IntersectionObserver
   useEffect(() => {

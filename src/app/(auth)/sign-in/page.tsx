@@ -7,11 +7,13 @@ import { Mail, Lock, Loader2, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useGoogleLogin } from "@react-oauth/google";
-import { SignInHandler } from "@/ApisRequests/Auth";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
-import { post } from "@/ApisRequests/server";
-import { isTokenValid } from "@/lib/authUtils";
+import {
+  useGoogleLoginMutation,
+  useLoginMutation,
+} from "@/redux/features/auth/authApi";
+import { clearStaleAuthToken, setAuthToken } from "@/lib/auth/token";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import sfemalePlayer from "@/../public/new/female-player.webp";
 import {
   getOneSignalPushSubscriptionId,
@@ -19,27 +21,28 @@ import {
   syncOneSignalUser,
 } from "@/components/OneSignal/OneSignalHandler";
 
+// Only allow same-origin relative paths (prevents open redirects / javascript: URLs)
+const isSafeRedirect = (url: string) => {
+  const value = url.trim();
+  if (!value.startsWith("/")) return false;
+  if (value.startsWith("//") || value.startsWith("/\\")) return false;
+  if (value.includes("://")) return false;
+  if (value.toLowerCase().startsWith("javascript:")) return false;
+  return true;
+};
+
 const SignInPage: React.FC = () => {
   const [userNameOrEmail, setUserNameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [signIn] = useLoginMutation();
+  const [googleSignIn] = useGoogleLoginMutation();
 
   // Clean up any expired / dead tokens on mount so the form works cleanly
   useEffect(() => {
-    const cookieToken = Cookies.get("token");
-    const localToken =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    const token = cookieToken || localToken;
-
-    if (token && !isTokenValid(token)) {
-      Cookies.remove("token");
-      Cookies.remove("token", { path: "/" });
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("token");
-      }
-    }
+    clearStaleAuthToken();
   }, []);
 
   // Pre-warm OneSignal when the sign-in page opens
@@ -51,7 +54,12 @@ const SignInPage: React.FC = () => {
     if (typeof window !== "undefined") {
       const searchParams = new URLSearchParams(window.location.search);
       const redirectUrl = searchParams.get("redirect");
-      if (redirectUrl && redirectUrl !== "/" && redirectUrl !== "/sign-in") {
+      if (
+        redirectUrl &&
+        isSafeRedirect(redirectUrl) &&
+        redirectUrl !== "/" &&
+        redirectUrl !== "/sign-in"
+      ) {
         return redirectUrl;
       }
     }
@@ -98,11 +106,17 @@ const SignInPage: React.FC = () => {
           platform,
         };
 
-        const res = await post("/auth/google-login", data);
+        let res;
+        try {
+          res = await googleSignIn(data).unwrap();
+        } catch (apiErr) {
+          toast.error(
+            getApiErrorMessage(apiErr, "Something went wrong. Please try again."),
+          );
+          return;
+        }
         if (res?.success) {
-          Cookies.remove("token");
-          localStorage.setItem("token", res?.data?.accessToken);
-          Cookies.set("token", res?.data?.accessToken);
+          setAuthToken(res?.data?.accessToken);
           toast.success(res?.message || "Logged in successfully!");
 
           // Resolve authenticated MongoDB user _id (never use username/email)
@@ -173,12 +187,19 @@ const SignInPage: React.FC = () => {
         platform,
       };
 
-      const res = await SignInHandler(data);
+      let res;
+      try {
+        res = await signIn(data).unwrap();
+      } catch (apiErr) {
+        setLoading(false);
+        toast.error(
+          getApiErrorMessage(apiErr, "Invalid credentials. Please try again."),
+        );
+        return;
+      }
 
       if (res?.success) {
-        Cookies.remove("token");
-        localStorage.setItem("token", res?.data?.accessToken);
-        Cookies.set("token", res?.data?.accessToken);
+        setAuthToken(res?.data?.accessToken);
         toast.success(res?.message || "Logged in successfully!");
 
         const dbUserId =
@@ -217,9 +238,9 @@ const SignInPage: React.FC = () => {
         setLoading(false);
         toast.error(res?.message || "Invalid credentials. Please try again.");
       }
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      toast.error(err?.message || "Something went wrong. Please try again.");
+      toast.error(getApiErrorMessage(err, "Something went wrong. Please try again."));
     }
   };
 

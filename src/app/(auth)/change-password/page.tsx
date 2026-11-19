@@ -3,7 +3,9 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { post } from "@/ApisRequests/server";
+import { useChangePasswordMutation } from "@/redux/features/auth/authApi";
+import { getAuthToken } from "@/lib/auth/token";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import toast from "react-hot-toast";
 import {
   Lock,
@@ -20,6 +22,7 @@ import {
 
 const ChangePasswordPage: React.FC = () => {
   const router = useRouter();
+  const [changePassword] = useChangePasswordMutation();
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -88,10 +91,7 @@ const ChangePasswordPage: React.FC = () => {
       return;
     }
 
-    const token =
-      typeof localStorage !== "undefined"
-        ? localStorage.getItem("token")
-        : null;
+    const token = getAuthToken();
 
     if (!token) {
       toast.error("Please log in to change your password");
@@ -101,19 +101,19 @@ const ChangePasswordPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const res = await post(
-        "/auth/change-password",
-        {
+      let res: { success?: boolean; message?: string };
+      try {
+        res = await changePassword({
           oldPassword,
           newPassword,
           confirmNewPassword,
-        },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        },
-      );
+        }).unwrap();
+      } catch (apiErr) {
+        res = {
+          success: false,
+          message: getApiErrorMessage(apiErr, "Something went wrong. Please try again."),
+        };
+      }
 
       if (res?.success) {
         toast.success(res?.message || "Password changed successfully!");
@@ -126,9 +126,9 @@ const ChangePasswordPage: React.FC = () => {
       } else {
         toast.error(res?.message || "Something went wrong. Please try again.");
       }
-    } catch (err: any) {
+    } catch (err) {
       toast.error(
-        err?.message || "Failed to update password. Please try again.",
+        getApiErrorMessage(err, "Failed to update password. Please try again."),
       );
     } finally {
       setLoading(false);

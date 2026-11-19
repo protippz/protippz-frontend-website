@@ -2,37 +2,27 @@
 
 import React, { useEffect, useState } from "react";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
-import {
-  CardElement,
-  Elements,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
+import { CardElement, Elements } from "@stripe/react-stripe-js";
 import { Form, Radio, Input, Button } from "antd";
 import Image from "next/image";
 import cards from "@/../public/card.png";
 import paypal from "@/Assets/paypal.png";
-import { patch, post } from "@/ApisRequests/server";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import { useCreatTippsMutation } from "@/Redux/Apis/paymentApis.js"
+import { useCreateTipMutation } from "@/redux/features/tip/tipApi";
 
 const stripePromise: Promise<Stripe | null> = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "",
 );
 
 const DepositFundForm = () => {
-  const router = useRouter();
   const currentParams = new URLSearchParams(
     typeof window == "undefined" ? "" : window.location.search,
   );
-  const stripe = useStripe();
-  const elements = useElements();
   const [paymentMethod, setPaymentMethod] = useState("paypal");
   const [amount, setAmount] = useState(currentParams.get("amount"));
   const [entityType, setEntityType] = useState(currentParams.get("entityType"));
   const [entityId, setEntityId] = useState(currentParams.get("entityId"));
-  const [createTippz, { isLoading: isCreatiing }] = useCreatTippsMutation()
+  const [createTip] = useCreateTipMutation();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -42,66 +32,13 @@ const DepositFundForm = () => {
 
     const data = {
       amount: Number(amount),
-      entityId: entityId,
-      entityType: entityType,
+      entityId: entityId as string,
+      entityType: entityType as string,
       tipBy: "Credit card",
-    }
+    };
 
-    const response = await createTippz(data).unwrap()
-    console.log(JSON.stringify(response, null, 2))
-    // try {
-    //   const clientSecret = await post(
-    //     "/tip/create",
-    //     {
-    //       amount: Number(amount),
-    //       entityId: entityId,
-    //       entityType: entityType,
-    //       tipBy: paymentMethod === "credit" ? "Credit card" : "Paypal",
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `${localStorage.getItem("token")}`,
-    //       },
-    //     },
-    //   );
-    //   if (paymentMethod === "credit" && stripe && elements) {
-    //     const cardElement = elements.getElement(CardElement);
-    //     const { error, paymentIntent } = await stripe.confirmCardPayment(
-    //       clientSecret?.data?.clientSecret,
-    //       {
-    //         payment_method: {
-    //           card: cardElement!,
-    //           billing_details: {
-    //             name: "Customer Name",
-    //           },
-    //         },
-    //       },
-    //     );
-    //     if (error) {
-    //       console.error(error);
-    //     } else {
-    //       const executePayment = await patch(
-    //         "/tip/execute-stipe-payment",
-    //         {
-    //           transactionId: paymentIntent?.id,
-    //         },
-    //         {
-    //           headers: {
-    //             Authorization: `${localStorage.getItem("token")}`,
-    //           },
-    //         },
-    //       );
-    //       if (executePayment?.success) {
-    //         toast.success(executePayment?.message);
-    //         router.push("/playerz");
-    //       } else {
-    //         toast.error(executePayment?.message);
-    //       }
-    //     }
-    //   } else if (paymentMethod === "paypal") {
-    //     router.push(clientSecret?.data?.approvalUrl);
-    //   }
-    // } catch (error) { }
+    const response = await createTip(data).unwrap();
+    console.log(JSON.stringify(response, null, 2));
   };
   useEffect(() => {
     setAmount(currentParams.get("amount"));

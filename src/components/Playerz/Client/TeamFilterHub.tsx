@@ -9,9 +9,10 @@ import React, {
   useTransition,
 } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { get, imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
+import { useLazyGetTeamsQuery } from "@/redux/features/team/teamApi";
 import ptLogo from "@/Assets/PT Logo.png";
 import {
   Search,
@@ -57,7 +58,7 @@ const TeamLogoImage: React.FC<{
   height = 32,
   className = "object-contain max-h-full max-w-full",
 }) => {
-    const [imgSrc, setImgSrc] = useState<any>(src ? imageUrl(src) : ptLogo);
+    const [imgSrc, setImgSrc] = useState<string | StaticImageData>(src ? imageUrl(src) : ptLogo);
 
     useEffect(() => {
       setImgSrc(src ? imageUrl(src) : ptLogo);
@@ -84,6 +85,7 @@ const TeamFilterHub: React.FC<TeamFilterHubProps> = ({
   const activeTeamId = searchParams?.get("team") || "";
 
   const [isPending, startTransition] = useTransition();
+  const [fetchTeams] = useLazyGetTeamsQuery();
   const [pendingTeamId, setPendingTeamId] = useState<string | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -153,9 +155,10 @@ const TeamFilterHub: React.FC<TeamFilterHubProps> = ({
       if (!q) {
         setIsSearching(true);
         try {
-          const res = await get("/team/get-all?limit=30&page=1");
-          const items = res.data?.result || [];
-          const meta = res.data?.meta;
+          const res = await fetchTeams({ limit: 30, page: 1 }).unwrap();
+          const items =
+          (res?.data?.result as unknown as TeamItem[] | undefined) || [];
+          const meta = res?.data?.meta;
           setTeams(items);
           setPage(1);
           setHasMore(meta?.totalPage ? 1 < meta.totalPage : items.length >= 30);
@@ -170,11 +173,10 @@ const TeamFilterHub: React.FC<TeamFilterHubProps> = ({
 
       setIsSearching(true);
       try {
-        const res = await get(
-          `/team/get-all?searchTerm=${encodeURIComponent(q)}&limit=30&page=1`
-        );
-        const items = res.data?.result || [];
-        const meta = res.data?.meta;
+        const res = await fetchTeams({ searchTerm: q, limit: 30, page: 1 }).unwrap();
+        const items =
+          (res?.data?.result as unknown as TeamItem[] | undefined) || [];
+        const meta = res?.data?.meta;
         setTeams(items);
         setPage(1);
         setHasMore(meta?.totalPage ? 1 < meta.totalPage : items.length >= 30);
@@ -187,7 +189,7 @@ const TeamFilterHub: React.FC<TeamFilterHubProps> = ({
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [searchQuery, fetchTeams]);
 
   // Infinite scroll loader
   const loadMoreTeams = useCallback(async () => {
@@ -196,14 +198,16 @@ const TeamFilterHub: React.FC<TeamFilterHubProps> = ({
     setIsLoadingMore(true);
     const nextPage = page + 1;
     const q = searchQuery.trim();
-    const searchParam = q ? `&searchTerm=${encodeURIComponent(q)}` : "";
 
     try {
-      const res = await get(
-        `/team/get-all?limit=30&page=${nextPage}${searchParam}`
-      );
-      const newItems: TeamItem[] = res.data?.result || [];
-      const meta = res.data?.meta;
+      const res = await fetchTeams({
+        limit: 30,
+        page: nextPage,
+        searchTerm: q || undefined,
+      }).unwrap();
+      const newItems: TeamItem[] =
+        (res?.data?.result as unknown as TeamItem[] | undefined) || [];
+      const meta = res?.data?.meta;
 
       if (Array.isArray(newItems) && newItems.length > 0) {
         setTeams((prev) => {
@@ -226,7 +230,7 @@ const TeamFilterHub: React.FC<TeamFilterHubProps> = ({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, isSearching, page, searchQuery]);
+  }, [isLoadingMore, hasMore, isSearching, page, searchQuery, fetchTeams]);
 
   // Observer for desktop sidebar scroll
   useEffect(() => {

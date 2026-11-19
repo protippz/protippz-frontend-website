@@ -3,7 +3,9 @@
 import React, { memo, useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { imageUrl, post } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
+import { useCreateTipMutation } from "@/redux/features/tip/tipApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import toast from "react-hot-toast";
 import { TeamInterface } from "@/app/(default)/teamz/page";
 import { useContextData } from "@/provider/ContextProvider";
@@ -40,7 +42,6 @@ interface SendTipsButtonProps {
 const PRESET_AMOUNTS = [5, 10, 25, 50, 100];
 
 const SendTipsButton: React.FC<SendTipsButtonProps> = ({
-  token,
   item,
   className,
   buttonText,
@@ -59,6 +60,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
     "deposit"
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [createTip] = useCreateTipMutation();
 
   const data = useContextData();
   const router = useRouter();
@@ -145,25 +147,12 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
     if (paymentMethod === "deposit") {
       setIsSubmitting(true);
       try {
-        const storedToken =
-          typeof localStorage !== "undefined"
-            ? localStorage.getItem("token")
-            : "";
-
-        const res = await post(
-          "/tip/create",
-          {
-            entityId: item?._id,
-            entityType: "Team",
-            amount: Number(amount),
-            tipBy: "Profile balance",
-          },
-          {
-            headers: {
-              Authorization: `${storedToken || token || ""}`,
-            },
-          }
-        );
+        const res = await createTip({
+          entityId: item?._id,
+          entityType: "Team",
+          amount: Number(amount),
+          tipBy: "Profile balance",
+        }).unwrap();
 
         if (res?.success) {
           setSuccessAmount(amount);
@@ -177,7 +166,19 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
           setIsOopsModalOpen(true);
         }
       } catch (error) {
-        toast.error("An error occurred while processing your tip");
+        const isHttpError =
+          typeof error === "object" &&
+          error !== null &&
+          "status" in error &&
+          typeof (error as { status: unknown }).status === "number";
+        if (isHttpError) {
+          // Backend rejected the tip (e.g. insufficient balance) – same as the old non-success branch
+          toast.error(getApiErrorMessage(error, "Failed to process tip"));
+          setIsPaymentModalOpen(false);
+          setIsOopsModalOpen(true);
+        } else {
+          toast.error("An error occurred while processing your tip");
+        }
       } finally {
         setIsSubmitting(false);
       }

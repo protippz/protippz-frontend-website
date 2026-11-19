@@ -4,7 +4,15 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContextData } from "@/provider/ContextProvider";
-import { get, imageUrl, post } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
+import { useGetPlayersQuery } from "@/redux/features/player/playerApi";
+import {
+  getStripeLink,
+  useConnectStripeMutation,
+  useUpdateConnectedAccountMutation,
+} from "@/redux/features/payment/paymentApi";
+import { getAuthToken } from "@/lib/auth/token";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import toast from "react-hot-toast";
 import {
   Wallet,
@@ -51,8 +59,13 @@ const TeamHomePage = () => {
   const [updatingStripe, setUpdatingStripe] = useState(false);
 
   // Roster state
-  const [roster, setRoster] = useState<Player[]>([]);
-  const [loadingRoster, setLoadingRoster] = useState<boolean>(false);
+  const { data: rosterData, isLoading: loadingRoster } = useGetPlayersQuery(
+    { team: team?._id, limit: 100 },
+    { skip: !team?._id }
+  );
+  const roster = (rosterData?.data?.result ?? []) as Player[];
+  const [updateConnectedAccount] = useUpdateConnectedAccountMutation();
+  const [connectStripe] = useConnectStripeMutation();
 
   // Logo fallback state
   const [logoSrc, setLogoSrc] = useState<string>("");
@@ -63,40 +76,9 @@ const TeamHomePage = () => {
     }
   }, [team?.team_logo]);
 
-  // Fetch Team Roster
-  useEffect(() => {
-    if (!team?._id) return;
-    let isMounted = true;
-
-    const fetchRoster = async () => {
-      setLoadingRoster(true);
-      try {
-        const token =
-          typeof window !== "undefined" ? localStorage.getItem("token") : null;
-        const res = await get(`/player/get-all?team=${team._id}&limit=100`, {
-          headers: token ? { Authorization: `${token}` } : {},
-        });
-        if (isMounted && res?.data?.result) {
-          setRoster(res.data.result);
-        }
-      } catch (err) {
-        console.error("Failed to fetch team roster:", err);
-      } finally {
-        if (isMounted) setLoadingRoster(false);
-      }
-    };
-
-    fetchRoster();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [team?._id]);
-
   // Handle Stripe Account Portal / Onboarding
   const handleUpdateStripeAccount = async () => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to update your Stripe account");
       return;
@@ -104,47 +86,45 @@ const TeamHomePage = () => {
 
     setUpdatingStripe(true);
     try {
-      const res = await post(
-        "/stripe/update-connected-account",
-        {},
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
+      let updateMessage: string | undefined;
+      try {
+        const res = await updateConnectedAccount().unwrap();
+        const link = getStripeLink(res?.data);
+        if (res?.success && link) {
+          setUpdatingStripe(false);
+          toast.success("Opening Stripe portal to update your profile...");
+          window.open(link, "_blank");
+          return;
         }
-      );
-      setUpdatingStripe(false);
-      const link = typeof res?.data === "string" ? res.data : res?.data?.link;
-      if (res?.success && link) {
-        toast.success("Opening Stripe portal to update your profile...");
-        window.open(link, "_blank");
-        return;
+        updateMessage = res?.message;
+      } catch (err: unknown) {
+        updateMessage = getApiErrorMessage(err, "") || undefined;
       }
+      setUpdatingStripe(false);
 
       // Fallback: connect-stripe
-      const connectRes = await post(
-        "/stripe/connect-stripe",
-        { test: "" },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
+      let connectMessage: string | undefined;
+      try {
+        const connectRes = await connectStripe({ test: "" }).unwrap();
+        const connectLink = getStripeLink(connectRes?.data);
+        if (connectRes?.success && connectLink) {
+          toast.success("Opening Stripe portal to complete onboarding...");
+          window.open(connectLink, "_blank");
+          return;
         }
-      );
-      if (connectRes?.success && connectRes?.data) {
-        toast.success("Opening Stripe portal to complete onboarding...");
-        window.open(connectRes.data, "_blank");
-      } else {
-        toast.error(
-          res?.message ||
-            connectRes?.message ||
-            "Unable to open Stripe update link. Please try again."
-        );
+        connectMessage = connectRes?.message;
+      } catch (err: unknown) {
+        connectMessage = getApiErrorMessage(err, "") || undefined;
       }
-    } catch (err: any) {
+      toast.error(
+        updateMessage ||
+          connectMessage ||
+          "Unable to open Stripe update link. Please try again."
+      );
+    } catch (err: unknown) {
       setUpdatingStripe(false);
       toast.error(
-        err?.message || "Failed to connect to Stripe. Please try again."
+        getApiErrorMessage(err, "Failed to connect to Stripe. Please try again.")
       );
     }
   };
@@ -181,8 +161,7 @@ const TeamHomePage = () => {
       ? team.league
       : "Official League";
 
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = getAuthToken();
 
   return (
     <div className="max-w-355 mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">

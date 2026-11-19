@@ -2,7 +2,7 @@
 
 import React, { memo, useState, useEffect } from "react";
 import Image from "next/image";
-import { imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
 import BookmarkButton from "../Shared/Client/BookmarkButton";
 import ptLogo from "@/Assets/PT Logo.png";
 import defaultTeamLogo from "@/Assets/team.webp";

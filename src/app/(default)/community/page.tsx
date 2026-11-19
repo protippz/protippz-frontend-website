@@ -22,18 +22,33 @@ import {
   Comment,
   ContentCategory,
   mapBackendItemToPost,
-  CommunityPostApiResponse,
+  CommunityPostBackendItem,
 } from "@/types/community";
+import type { QueryParams } from "@/types/api";
 import {
   useGetAllCommunityPostsQuery,
   useLikeCommunityPostMutation,
   useLazyGetSingleCommunityPostQuery,
-} from "@/Redux/Apis/communityApis";
+} from "@/redux/features/community/communityApi";
 import {
   useCreateCommentMutation,
   useDeleteCommentMutation,
   useLikeCommentMutation,
-} from "@/Redux/Apis/commentApis";
+} from "@/redux/features/comment/commentApi";
+
+/**
+ * Loose shapes the backend has been observed to return for create-comment and
+ * get-single-post (the typed endpoints assume `data` is the item itself).
+ */
+type LooseIdResponse = {
+  _id?: string;
+  data?: { _id?: string; result?: { _id?: string } };
+  result?: { _id?: string };
+};
+type LooseSinglePostResponse = {
+  data?: CommunityPostBackendItem & { result?: CommunityPostBackendItem };
+  result?: CommunityPostBackendItem;
+};
 
 // Feed Skeleton Loader component
 function FeedCardSkeleton() {
@@ -99,7 +114,7 @@ export default function CommunityPage({
 
   // Query Params for API
   const queryParams = useMemo(() => {
-    const params: Record<string, any> = {
+    const params: QueryParams = {
       page,
       limit,
       status: "Published",
@@ -121,14 +136,7 @@ export default function CommunityPage({
     isError,
     error,
     refetch,
-  } = useGetAllCommunityPostsQuery(queryParams) as {
-    data?: CommunityPostApiResponse;
-    isLoading: boolean;
-    isFetching: boolean;
-    isError: boolean;
-    error: any;
-    refetch: () => void;
-  };
+  } = useGetAllCommunityPostsQuery(queryParams);
   console.log(error);
   const meta = apiResponse?.data?.meta;
   const rawResults = apiResponse?.data?.result;
@@ -327,7 +335,9 @@ export default function CommunityPage({
           formData.append("image", imageFile);
         }
 
-        const res = await createCommentApi(formData).unwrap();
+        const res = (await createCommentApi(
+          formData,
+        ).unwrap()) as LooseIdResponse;
         const realId =
           res?.data?._id ||
           res?.data?.result?._id ||
@@ -547,7 +557,8 @@ export default function CommunityPage({
       } else {
         triggerGetSinglePost(postParam)
           .unwrap()
-          .then((res) => {
+          .then((response) => {
+            const res = response as LooseSinglePostResponse;
             const raw = res?.data?.result || res?.data || res?.result;
             if (raw) {
               const mapped = mapBackendItemToPost(raw);

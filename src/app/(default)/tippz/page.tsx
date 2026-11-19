@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Cards, { TippzStepItem } from "@/components/Tippz/Cards";
 import PhoneMockup from "@/components/Tippz/PhoneMockup";
@@ -8,8 +7,10 @@ import Money from "@/Assets/Money.png";
 import player from "@/Assets/player.webp";
 import playstore from "@/Assets/playstore.png";
 import qrCode from "@/Assets/qrcode.png";
-import SeoPage from "@/components/seo/SeoPage";
-import { getSEOMetadata } from "@/components/seo/seo";
+import type { Metadata } from "next";
+import { isTokenValid } from "@/lib/authUtils";
+import { getServerToken } from "@/lib/api/server";
+import { buildMetadata } from "@/lib/seo";
 import {
   Sparkles,
   ShieldCheck,
@@ -20,11 +21,13 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-export const metadata = {
-  title: "PROTIPPZ - TIPPZ | How Direct Athlete Tipping Works",
+export const metadata: Metadata = buildMetadata({
+  title: "Tippz – How Direct Athlete Tipping Works",
   description:
     "Learn how to tip your favorite collegiate and pro athletes, earn reward points, and win exclusive prizes on PROTIPPZ.",
-};
+  path: "/tippz",
+  keywords: ["sports tipping", "NIL tipping", "tip athletes", "support athletes", "sports fans", "sports community"],
+});
 
 const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.coryrains.protppz&hl=en";
@@ -63,18 +66,13 @@ const cardData: TippzStepItem[] = [
 ];
 
 const TipsPage = async () => {
-  const cookieStore = await cookies();
-  const rawToken = cookieStore.get("token")?.value;
-  if (rawToken && rawToken !== "undefined" && rawToken !== "null" && rawToken.trim() !== "") {
+  // Logged-in users go straight to the community feed (mirrors src/proxy.ts).
+  if (isTokenValid(await getServerToken())) {
     redirect("/community");
   }
 
-  const seoMetadata = getSEOMetadata("sportsTipping");
-
   return (
     <>
-      <SeoPage metadata={seoMetadata} />
-
       <div className="w-full bg-[#FAF9F6] min-h-screen py-8 md:py-12">
         <div className="max-w-355 mx-auto px-4 sm:px-6 lg:px-8 space-y-10 md:space-y-4">
           {/* ================= HEADER SECTION ================= */}

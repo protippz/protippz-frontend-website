@@ -10,7 +10,12 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { post } from "@/ApisRequests/server";
+import {
+  useAddEmailAddressMutation,
+  useVerifyAddEmailMutation,
+} from "@/redux/features/user/userApi";
+import { getAuthToken } from "@/lib/auth/token";
+import { getApiErrorMessage } from "@/lib/api/errors";
 
 interface UserVerifyOtpProps {
   setShowModalOtp: (value: boolean) => void;
@@ -27,6 +32,8 @@ const UserVerifyOtp: React.FC<UserVerifyOtpProps> = ({
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const [countdown, setCountdown] = useState(60);
+  const [verifyAddEmail] = useVerifyAddEmailMutation();
+  const [addEmailAddress] = useAddEmailAddressMutation();
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -103,8 +110,7 @@ const UserVerifyOtp: React.FC<UserVerifyOtpProps> = ({
       return;
     }
 
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to complete verification");
       return;
@@ -112,18 +118,21 @@ const UserVerifyOtp: React.FC<UserVerifyOtpProps> = ({
 
     setLoading(true);
     try {
-      const result = await post(
-        "/user/verify-add-email",
-        {
+      let result: { success?: boolean; message?: string };
+      try {
+        result = await verifyAddEmail({
           email: addEmail,
           verifyCode: Number(fullOtp),
-        },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
+        }).unwrap();
+      } catch (apiErr) {
+        result = {
+          success: false,
+          message: getApiErrorMessage(
+            apiErr,
+            "Invalid or expired verification code. Please try again."
+          ),
+        };
+      }
 
       setLoading(false);
 
@@ -138,30 +147,29 @@ const UserVerifyOtp: React.FC<UserVerifyOtpProps> = ({
           result?.message || "Invalid or expired verification code. Please try again."
         );
       }
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      toast.error(err?.message || "Verification failed. Please try again.");
+      toast.error(getApiErrorMessage(err, "Verification failed. Please try again."));
     }
   };
 
   const handleResend = async () => {
     if (countdown > 0 || resending) return;
 
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) return;
 
     setResending(true);
     try {
-      const result = await post(
-        "/user/add-email-address",
-        { email: addEmail },
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-      );
+      let result: { success?: boolean; message?: string };
+      try {
+        result = await addEmailAddress({ email: addEmail }).unwrap();
+      } catch (apiErr) {
+        result = {
+          success: false,
+          message: getApiErrorMessage(apiErr, "Failed to resend verification code."),
+        };
+      }
       setResending(false);
       if (result?.success) {
         toast.success(`Verification code re-sent to ${addEmail}`);

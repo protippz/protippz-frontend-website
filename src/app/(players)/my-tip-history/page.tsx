@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { get, imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
+import { useGetMyTipsQuery } from "@/redux/features/tip/tipApi";
 import {
   ChevronLeft,
   ChevronRight,
@@ -46,36 +47,10 @@ interface Pagination {
 }
 
 const AthleteTipHistoryPage = () => {
-  const [tipHistory, setTipHistory] = useState<TipHistoryInterface[]>([]);
-  const [pagination, setPagination] = useState<Pagination>();
   const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const getMyTip = async () => {
-      setIsLoading(true);
-      try {
-        const token =
-          typeof localStorage !== "undefined"
-            ? localStorage.getItem("token")
-            : "";
-        const res = await get(`/tip/my-tips?page=${page}`, {
-          headers: {
-            Authorization: `${token || ""}`,
-          },
-        });
-        if (res?.data?.result) {
-          setTipHistory(res?.data?.result);
-          setPagination(res?.data?.meta);
-        }
-      } catch (error) {
-        console.error("Failed to load athlete tip history:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    getMyTip();
-  }, [page]);
+  const { data: tipData, isFetching: isLoading } = useGetMyTipsQuery({ page });
+  const tipHistory = (tipData?.data?.result ?? []) as TipHistoryInterface[];
+  const pagination = tipData?.data?.meta as Pagination | undefined;
 
   // Aggregate stats from current tip data
   const totalTipsAmount = tipHistory.reduce(

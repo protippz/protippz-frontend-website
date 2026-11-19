@@ -16,7 +16,11 @@ import {
 } from "lucide-react";
 import { FaInstagram, FaTwitter, FaTiktok } from "react-icons/fa6";
 import toast from "react-hot-toast";
-import { get, patch, imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
+import { useGetLeaguesQuery } from "@/redux/features/team/teamApi";
+import { useUpdateTeamProfileMutation } from "@/redux/features/user/userApi";
+import { getAuthToken } from "@/lib/auth/token";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import LinkedInImageCropModal from "@/components/UpdateProfile/client/LinkedInImageCropModal";
 import ptLogo from "@/Assets/PT Logo.png";
 
@@ -52,8 +56,11 @@ export const TeamUpdateProfileModal: React.FC<TeamUpdateProfileModalProps> = ({
   const [tiktok, setTiktok] = useState("");
 
   // League selector state
-  const [leagues, setLeagues] = useState<LeagueItem[]>([]);
-  const [loadingLeagues, setLoadingLeagues] = useState(false);
+  const { data: leaguesData, isLoading: loadingLeagues } = useGetLeaguesQuery(
+    { limit: 100, page: 1 },
+    { skip: !isOpen }
+  );
+  const leagues = (leaguesData?.data?.result ?? []) as LeagueItem[];
   const [leagueSearch, setLeagueSearch] = useState("");
   const [isLeagueDropdownOpen, setIsLeagueDropdownOpen] = useState(false);
   const leagueDropdownRef = useRef<HTMLDivElement>(null);
@@ -67,6 +74,7 @@ export const TeamUpdateProfileModal: React.FC<TeamUpdateProfileModalProps> = ({
 
   // Saving state
   const [isSaving, setIsSaving] = useState(false);
+  const [updateTeamProfile] = useUpdateTeamProfileMutation();
 
   // Initialize form when team prop changes or modal opens
   useEffect(() => {
@@ -87,32 +95,6 @@ export const TeamUpdateProfileModal: React.FC<TeamUpdateProfileModalProps> = ({
       setRawImageFile(null);
     }
   }, [team, isOpen]);
-
-  // Load leagues list for league selector
-  useEffect(() => {
-    if (!isOpen) return;
-    let isMounted = true;
-
-    const fetchLeagues = async () => {
-      setLoadingLeagues(true);
-      try {
-        const res = await get("/league/get-all?limit=100&page=1");
-        if (isMounted && res?.data?.result) {
-          setLeagues(res.data.result);
-        }
-      } catch (err) {
-        console.error("Failed to load leagues:", err);
-      } finally {
-        if (isMounted) setLoadingLeagues(false);
-      }
-    };
-
-    fetchLeagues();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [isOpen]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -190,8 +172,7 @@ export const TeamUpdateProfileModal: React.FC<TeamUpdateProfileModalProps> = ({
       }
     }
 
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getAuthToken();
     if (!token) {
       toast.error("Please sign in to update team profile");
       return;
@@ -243,7 +224,7 @@ export const TeamUpdateProfileModal: React.FC<TeamUpdateProfileModalProps> = ({
 
     setIsSaving(true);
     try {
-      let res: any;
+      let body: FormData | Record<string, string>;
 
       if (hasLogoChange) {
         const formData = new FormData();
@@ -252,18 +233,12 @@ export const TeamUpdateProfileModal: React.FC<TeamUpdateProfileModalProps> = ({
         }
         formData.append("team_logo", croppedImageFile as File);
 
-        res = await patch("/team/profile", formData, {
-          headers: {
-            Authorization: `${token}`,
-          },
-        });
+        body = formData;
       } else {
-        res = await patch("/team/profile", dirtyFields, {
-          headers: {
-            Authorization: `${token}`,
-          },
-        });
+        body = dirtyFields;
       }
+
+      const res = await updateTeamProfile(body).unwrap();
 
       setIsSaving(false);
 
@@ -282,17 +257,21 @@ export const TeamUpdateProfileModal: React.FC<TeamUpdateProfileModalProps> = ({
       } else {
         toast.error(
           res?.message ||
-            res?.errorDetails?.message ||
+            (res as { errorDetails?: { message?: string } })?.errorDetails?.message ||
             "Failed to update team profile"
         );
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setIsSaving(false);
       console.error("Team profile update error:", err);
+      const errorDetailsMessage = (
+        err as { data?: { errorDetails?: { message?: string } } }
+      )?.data?.errorDetails?.message;
       toast.error(
-        err?.response?.data?.message ||
-          err?.message ||
-          "An error occurred while updating team profile"
+        getApiErrorMessage(
+          err,
+          errorDetailsMessage || "Failed to update team profile"
+        )
       );
     }
   };

@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { get } from "@/ApisRequests/server";
+import { useGetMyTransactionsQuery } from "@/redux/features/payment/paymentApi";
 import {
   ChevronLeft,
   ChevronRight,
@@ -59,46 +59,27 @@ interface Pagination {
   totalPage: number;
 }
 
+/** The endpoint has returned a few shapes over time – accept all of them. */
+type TransactionPayload =
+  | TransactionLog[]
+  | {
+      result?: TransactionLog[];
+      meta?: Pagination;
+      data?: { result?: TransactionLog[]; meta?: Pagination };
+    };
+
 const TransactionLogPage = () => {
   const [page, setPage] = useState<number>(1);
-  const [transactions, setTransactions] = useState<TransactionLog[]>([]);
-  const [pagination, setPagination] = useState<Pagination>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      setIsLoading(true);
-      try {
-        const token =
-          typeof localStorage !== "undefined"
-            ? localStorage.getItem("token")
-            : "";
-        const res = await get(`/transaction/my-transactions?page=${page}`, {
-          headers: {
-            Authorization: `${token || ""}`,
-          },
-        });
-        const resultData =
-          res?.data?.result ||
-          res?.data?.data?.result ||
-          (Array.isArray(res?.data) ? res.data : []);
-        console.log(JSON.stringify(resultData, null, 2))
-        const metaData = res?.data?.meta || res?.data?.data?.meta;
-
-        if (Array.isArray(resultData)) {
-          setTransactions(resultData);
-        }
-        if (metaData) {
-          setPagination(metaData);
-        }
-      } catch (error) {
-        console.error("Failed to load transactions:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchTransactions();
-  }, [page]);
+  // `isFetching` mirrors the old behaviour of showing the loader on every page change.
+  const { data: res, isFetching: isLoading } = useGetMyTransactionsQuery({ page });
+  const payload = res?.data as TransactionPayload | undefined;
+  const resultData = Array.isArray(payload)
+    ? payload
+    : payload?.result || payload?.data?.result || [];
+  const transactions: TransactionLog[] = Array.isArray(resultData) ? resultData : [];
+  const pagination: Pagination | undefined = Array.isArray(payload)
+    ? undefined
+    : payload?.meta || payload?.data?.meta;
 
   // Aggregate stats from current transaction data
   const totalVolume = transactions.reduce(

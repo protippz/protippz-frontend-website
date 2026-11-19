@@ -1,8 +1,8 @@
 'use client';
 
-import { get } from '@/ApisRequests/server';
+import { useGetPlayerQuery } from '@/redux/features/player/playerApi';
 import { Modal } from 'antd';
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 interface IPlayerDetailsProps {
@@ -49,31 +49,20 @@ interface PlayerData {
 }
 
 const PlayerDetailsModal: React.FC<IPlayerDetailsProps> = ({ id, token, detailsModal, showDetailsModal }) => {
-  const [playerData, setPlayerData] = useState<PlayerData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { data, isLoading: loading, error } = useGetPlayerQuery(id, {
+    skip: !detailsModal || !id || !token,
+  });
+  const playerData = (data?.data as unknown as PlayerData | undefined) ?? null;
 
   useEffect(() => {
-    const fetchPlayer = async () => {
-      if (!id || !token) return toast.error('Please login to view player details');
-      setLoading(true);
-      try {
-        const res = await get(`/player/get-single/${id}`, {
-          headers: {
-            Authorization: `${token}`,
-          },
-        });
-        setPlayerData(res.data);
-      } catch (error) {
-        console.error("Failed to fetch player data", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (detailsModal) {
-      fetchPlayer();
+    if (detailsModal && (!id || !token)) {
+      toast.error('Please login to view player details');
     }
   }, [id, token, detailsModal]);
+
+  useEffect(() => {
+    if (error) console.error("Failed to fetch player data", error);
+  }, [error]);
 
   return (
     <Modal

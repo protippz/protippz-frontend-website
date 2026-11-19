@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { get } from "@/ApisRequests/server";
+import { useGetMyTransactionsQuery } from "@/redux/features/payment/paymentApi";
 import {
     ChevronLeft,
     ChevronRight,
@@ -61,43 +61,10 @@ interface Pagination {
 
 const PlayerTransactionLogPage = () => {
     const [page, setPage] = useState<number>(1);
-    const [transactions, setTransactions] = useState<TransactionLog[]>([]);
-    const [pagination, setPagination] = useState<Pagination>();
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        const fetchTransactions = async () => {
-            setIsLoading(true);
-            try {
-                const token =
-                    typeof localStorage !== "undefined"
-                        ? localStorage.getItem("token")
-                        : "";
-                const res = await get(`/transaction/my-transactions?page=${page}`, {
-                    headers: {
-                        Authorization: `${token || ""}`,
-                    },
-                });
-                const resultData =
-                    res?.data?.result ||
-                    res?.data?.data?.result ||
-                    (Array.isArray(res?.data) ? res.data : []);
-                const metaData = res?.data?.meta || res?.data?.data?.meta;
-
-                if (Array.isArray(resultData)) {
-                    setTransactions(resultData);
-                }
-                if (metaData) {
-                    setPagination(metaData);
-                }
-            } catch (error) {
-                console.error("Failed to load transactions:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchTransactions();
-    }, [page]);
+    const { data: transactionData, isFetching: isLoading } =
+        useGetMyTransactionsQuery({ page });
+    const transactions = (transactionData?.data?.result ?? []) as TransactionLog[];
+    const pagination = transactionData?.data?.meta as Pagination | undefined;
 
     // Aggregate stats from current transaction data
     const totalVolume = transactions.reduce(

@@ -1,83 +1,52 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import Link from "next/link";
-import { get } from "@/ApisRequests/server";
 import PlayerDetailsView, {
   PlayerDetailsData,
 } from "@/components/Playerz/PlayerDetailsView";
-import GoToTop from "@/components/ui/GoToTop";
+import JsonLd from "@/components/seo/JsonLd";
 import { ArrowLeft, UserX } from "lucide-react";
 import { extractLogoColor } from "@/lib/extractLogoColor";
+import { getPlayerById } from "@/lib/api/queries";
+import { getServerToken } from "@/lib/api/server";
+import { buildMetadata, jsonLdAthlete, jsonLdBreadcrumbs, toPlainText } from "@/lib/seo";
 
 interface PageProps {
   params: Promise<{ id: string }>;
-}
-
-async function fetchPlayer(
-  id: string,
-  token?: string | null,
-): Promise<PlayerDetailsData | null> {
-  try {
-    const res = await get(`/player/get-single/${id}`, {
-      headers: token ? { Authorization: token } : {},
-    });
-    if (res?.success && res?.data) {
-      return res.data;
-    }
-    return null;
-  } catch (error) {
-    console.error("Failed to fetch player details:", error);
-    return null;
-  }
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  if (!id) {
-    return {
-      title: "Player Profile | PROTIPPZ",
-      description: "Support athletes and send digital tips with ProTippz.",
-    };
-  }
+  const player = id ? await getPlayerById(id) : null;
 
-  const player = await fetchPlayer(id);
   if (!player) {
-    return {
-      title: "Player Not Found | PROTIPPZ",
+    return buildMetadata({
+      title: "Player Not Found",
       description: "The requested athlete profile could not be found.",
-    };
+      noIndex: true,
+    });
   }
 
   const teamName = player.team?.name || "Independent";
   const position = player.position ? ` (${player.position})` : "";
-  const title = `${player.name}${position} - ${teamName} | PROTIPPZ`;
-  const description = `Support ${player.name} with direct digital tips on ProTippz. View athletic stats, team affiliation, and join the tipping community!`;
+  const bio = toPlainText(player.bio, 110);
+  const description = `Support ${player.name}${position} of ${teamName} with direct digital tips on PROTIPPZ.${bio ? ` ${bio}` : " View stats, team affiliation and join the tipping community."}`;
 
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: player.player_image ? [{ url: player.player_image }] : [],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: player.player_image ? [player.player_image] : [],
-    },
-  };
+  return buildMetadata({
+    title: `${player.name}${position} – ${teamName}`,
+    description: toPlainText(description, 160),
+    path: `/playerz/${player._id || id}`,
+    image: player.player_image,
+    imageAlt: player.name,
+    type: "profile",
+    keywords: [player.name, teamName, "tip athletes", "NIL tipping", "PROTIPPZ"],
+  });
 }
 
 export default async function PlayerDetailsPage({ params }: PageProps) {
   const { id } = await params;
-  const cookie = await cookies();
-  const token = cookie.get("token")?.value;
-
-  const player = await fetchPlayer(id, token);
+  const [player, token] = await Promise.all([getPlayerById(id), getServerToken()]);
 
   if (!player) {
     return (
@@ -112,10 +81,19 @@ export default async function PlayerDetailsPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-[#fafbfb] pb-16">
-      {/* // <GoToTop /> */}
+      <JsonLd
+        data={[
+          jsonLdAthlete(player),
+          jsonLdBreadcrumbs([
+            { name: "Home", path: "/" },
+            { name: "Playerz", path: "/playerz" },
+            { name: player.name, path: `/playerz/${player._id}` },
+          ]),
+        ]}
+      />
       <PlayerDetailsView
-        player={player}
-        token={token}
+        player={player as PlayerDetailsData}
+        token={token ?? undefined}
         colorTheme={colorTheme}
       />
     </div>

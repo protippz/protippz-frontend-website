@@ -1,3 +1,12 @@
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Delete Your Account",
+  description: "How to request deletion of your PROTIPPZ account and associated personal data.",
+  path: "/delete-account",
+});
+
 function page() {
   return (
     <div className="max-w-355 mx-auto px-4 py-8">

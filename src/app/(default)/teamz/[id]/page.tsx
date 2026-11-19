@@ -1,108 +1,56 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import Link from "next/link";
-import { get, imageUrl } from "@/ApisRequests/server";
 import TeamDetailsView, {
   TeamDetailsData,
 } from "@/components/Teamz/TeamDetails/TeamDetailsView";
-import { Player } from "@/app/(default)/playerz/page";
-import GoToTop from "@/components/ui/GoToTop";
+import type { Player } from "@/app/(default)/playerz/page";
+import JsonLd from "@/components/seo/JsonLd";
 import { ArrowLeft, ShieldX } from "lucide-react";
 import { extractLogoColor } from "@/lib/extractLogoColor";
+import { getPlayers, getTeamById } from "@/lib/api/queries";
+import { getServerToken } from "@/lib/api/server";
+import { buildMetadata, jsonLdBreadcrumbs, jsonLdSportsTeam, toPlainText } from "@/lib/seo";
 
 interface PageProps {
   params: Promise<{ id: string }>;
-}
-
-async function fetchTeam(
-  id: string,
-  token?: string | null,
-): Promise<TeamDetailsData | null> {
-  try {
-    const res = await get(`/team/get-single/${id}`, {
-      headers: token ? { Authorization: token } : {},
-    });
-    if (res?.success && res?.data) {
-      return res.data;
-    }
-    return null;
-  } catch (error) {
-    console.error("Failed to fetch team details:", error);
-    return null;
-  }
-}
-
-async function fetchTeamRoster(
-  teamId: string,
-  token?: string | null,
-): Promise<Player[]> {
-  try {
-    const res = await get(`/player/get-all?team=${teamId}&limit=50`, {
-      headers: token ? { Authorization: token } : {},
-    });
-    if (res?.success && res?.data?.result) {
-      return res.data.result;
-    }
-    return [];
-  } catch (error) {
-    console.error("Failed to fetch team roster:", error);
-    return [];
-  }
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  if (!id) {
-    return {
-      title: "Team Profile | PROTIPPZ",
-      description:
-        "Support collegiate teams and send digital tips with ProTippz.",
-    };
-  }
+  const team = id ? await getTeamById(id) : null;
 
-  const team = await fetchTeam(id);
   if (!team) {
-    return {
-      title: "Team Not Found | PROTIPPZ",
+    return buildMetadata({
+      title: "Team Not Found",
       description: "The requested athletic team profile could not be found.",
-    };
+      noIndex: true,
+    });
   }
 
   const leagueName = team.league?.name || "NCAA";
-  const title = `${team.name} - ${leagueName} Team Profile | PROTIPPZ`;
-  const description = `Support ${team.name} with direct digital tips on ProTippz. View team roster, NIL community raised, and follow the program!`;
-  const logoUrl = team.team_logo
-    ? imageUrl(team.team_logo)
-    : undefined;
+  const about = toPlainText(team.description, 90);
+  const description = `Support ${team.name} (${leagueName}) with direct digital tips on PROTIPPZ.${about ? ` ${about}` : " View the team roster and follow the program."}`;
 
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: logoUrl ? [{ url: logoUrl }] : [],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: logoUrl ? [logoUrl] : [],
-    },
-  };
+  return buildMetadata({
+    title: `${team.name} – ${leagueName} Team Profile`,
+    description: toPlainText(description, 160),
+    path: `/teamz/${team._id || id}`,
+    image: team.team_logo,
+    imageAlt: `${team.name} logo`,
+    keywords: [team.name, leagueName, "support teams", "sports tipping", "PROTIPPZ"],
+  });
 }
 
 export default async function TeamDetailsPage({ params }: PageProps) {
   const { id } = await params;
-  const cookie = await cookies();
-  const token = cookie.get("token")?.value;
-
-  const [team, roster] = await Promise.all([
-    fetchTeam(id, token),
-    fetchTeamRoster(id, token),
+  const [team, rosterRes, token] = await Promise.all([
+    getTeamById(id),
+    getPlayers({ team: id, limit: 50 }),
+    getServerToken(),
   ]);
+  const roster = rosterRes.result as Player[];
 
   if (!team) {
     return (
@@ -134,11 +82,20 @@ export default async function TeamDetailsPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-[#fafbfb] pb-16">
-      {/* // <GoToTop /> */}
+      <JsonLd
+        data={[
+          jsonLdSportsTeam(team),
+          jsonLdBreadcrumbs([
+            { name: "Home", path: "/" },
+            { name: "Teamz", path: "/teamz" },
+            { name: team.name, path: `/teamz/${team._id}` },
+          ]),
+        ]}
+      />
       <TeamDetailsView
-        team={team}
+        team={team as TeamDetailsData}
         roster={roster}
-        token={token}
+        token={token ?? undefined}
         colorTheme={colorTheme}
       />
     </div>

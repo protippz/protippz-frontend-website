@@ -9,9 +9,10 @@ import React, {
   useTransition,
 } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { get, imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
+import { useLazyGetLeaguesQuery } from "@/redux/features/team/teamApi";
 import ptLogo from "@/Assets/PT Logo.png";
 import {
   Search,
@@ -57,7 +58,7 @@ const LeagueLogoImage: React.FC<{
   height = 32,
   className = "object-contain max-h-full max-w-full",
 }) => {
-    const [imgSrc, setImgSrc] = useState<any>(src ? imageUrl(src) : ptLogo);
+    const [imgSrc, setImgSrc] = useState<string | StaticImageData>(src ? imageUrl(src) : ptLogo);
 
     useEffect(() => {
       setImgSrc(src ? imageUrl(src) : ptLogo);
@@ -84,6 +85,7 @@ const LeagueFilterHub: React.FC<LeagueFilterHubProps> = ({
   const activeLeagueId = searchParams?.get("league") || "";
 
   const [isPending, startTransition] = useTransition();
+  const [fetchLeagues] = useLazyGetLeaguesQuery();
   const [pendingLeagueId, setPendingLeagueId] = useState<string | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -153,9 +155,10 @@ const LeagueFilterHub: React.FC<LeagueFilterHubProps> = ({
       if (!q) {
         setIsSearching(true);
         try {
-          const res = await get("/league/get-all?limit=30&page=1");
-          const items = res.data?.result || [];
-          const meta = res.data?.meta;
+          const res = await fetchLeagues({ limit: 30, page: 1 }).unwrap();
+          const items =
+          (res?.data?.result as unknown as LeagueItem[] | undefined) || [];
+          const meta = res?.data?.meta;
           setLeagues(items);
           setPage(1);
           setHasMore(meta?.totalPage ? 1 < meta.totalPage : items.length >= 30);
@@ -170,11 +173,10 @@ const LeagueFilterHub: React.FC<LeagueFilterHubProps> = ({
 
       setIsSearching(true);
       try {
-        const res = await get(
-          `/league/get-all?searchTerm=${encodeURIComponent(q)}&limit=30&page=1`
-        );
-        const items = res.data?.result || [];
-        const meta = res.data?.meta;
+        const res = await fetchLeagues({ searchTerm: q, limit: 30, page: 1 }).unwrap();
+        const items =
+          (res?.data?.result as unknown as LeagueItem[] | undefined) || [];
+        const meta = res?.data?.meta;
         setLeagues(items);
         setPage(1);
         setHasMore(meta?.totalPage ? 1 < meta.totalPage : items.length >= 30);
@@ -187,7 +189,7 @@ const LeagueFilterHub: React.FC<LeagueFilterHubProps> = ({
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [searchQuery, fetchLeagues]);
 
   // Infinite scroll loader
   const loadMoreLeagues = useCallback(async () => {
@@ -196,14 +198,16 @@ const LeagueFilterHub: React.FC<LeagueFilterHubProps> = ({
     setIsLoadingMore(true);
     const nextPage = page + 1;
     const q = searchQuery.trim();
-    const searchParam = q ? `&searchTerm=${encodeURIComponent(q)}` : "";
 
     try {
-      const res = await get(
-        `/league/get-all?limit=30&page=${nextPage}${searchParam}`
-      );
-      const newItems: LeagueItem[] = res.data?.result || [];
-      const meta = res.data?.meta;
+      const res = await fetchLeagues({
+        limit: 30,
+        page: nextPage,
+        searchTerm: q || undefined,
+      }).unwrap();
+      const newItems: LeagueItem[] =
+        (res?.data?.result as unknown as LeagueItem[] | undefined) || [];
+      const meta = res?.data?.meta;
 
       if (Array.isArray(newItems) && newItems.length > 0) {
         setLeagues((prev) => {
@@ -228,7 +232,7 @@ const LeagueFilterHub: React.FC<LeagueFilterHubProps> = ({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, isSearching, page, searchQuery]);
+  }, [isLoadingMore, hasMore, isSearching, page, searchQuery, fetchLeagues]);
 
   // Observer for desktop sidebar scroll
   useEffect(() => {

@@ -3,12 +3,12 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import TeamzCards from "@/components/Teamz/TeamzCards";
 import { TeamInterface } from "@/app/(default)/teamz/page";
-import { fetchMoreTeams } from "@/app/actions/teams";
+import { useLazyGetTeamsQuery } from "@/redux/features/team/teamApi";
 import { ShieldAlert, Loader2 } from "lucide-react";
 
 interface InfiniteTeamListProps {
   initialData: TeamInterface[];
-  initialMeta: {
+  initialMeta?: {
     total: number;
     page: number;
     limit: number;
@@ -30,6 +30,7 @@ const InfiniteTeamList: React.FC<InfiniteTeamListProps> = ({
   league,
   limit = 20,
 }) => {
+  const [fetchTeams] = useLazyGetTeamsQuery();
   const [teams, setTeams] = useState<TeamInterface[]>(initialData);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(() => {
@@ -80,24 +81,17 @@ const InfiniteTeamList: React.FC<InfiniteTeamListProps> = ({
     const nextPage = pageRef.current + 1;
 
     try {
-      // Use Next.js Server Action to avoid browser cross-origin CORS limitations
-      const res = await fetchMoreTeams({
-        searchTerm,
-        sort,
-        league,
+      const res = await fetchTeams({
+        searchTerm: searchTerm || undefined,
+        sort: sort || undefined,
+        league: league || undefined,
         page: nextPage,
-        limit,
-      });
+        limit: limit || 20,
+      }).unwrap();
 
-      if (!res.success) {
-        console.error("fetchMoreTeams server action error:", res.error);
-        setHasMore(false);
-        hasMoreRef.current = false;
-        return;
-      }
-
-      const newItems: TeamInterface[] = res.result || [];
-      const meta = res.meta;
+      const newItems: TeamInterface[] =
+        (res?.data?.result as unknown as TeamInterface[] | undefined) || [];
+      const meta = res?.data?.meta;
       const totalPage = Number(meta?.totalPage);
 
       if (!Array.isArray(newItems) || newItems.length === 0) {
@@ -143,7 +137,7 @@ const InfiniteTeamList: React.FC<InfiniteTeamListProps> = ({
       isFetchingRef.current = false;
       setLoading(false);
     }
-  }, [searchTerm, sort, league, limit]);
+  }, [searchTerm, sort, league, limit, fetchTeams]);
 
   // Robust IntersectionObserver: uses viewport (root: null) so both mobile page scroll
   // and desktop container scroll trigger seamlessly

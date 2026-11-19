@@ -87,7 +87,9 @@ export const middleware = proxy;
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)$).*)",
+    // Skip static assets and crawler/meta files (robots.txt, sitemap.xml, manifest)
+    // so search engines always receive them, regardless of geo rules.
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico|css|js|mp4|webm|woff2?|ttf)$).*)",
   ],
 };
 

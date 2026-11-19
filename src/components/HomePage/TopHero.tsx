@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
-import { VIDEO } from "../../../public/video/video.index";
+import { VIDEO } from "@/constant/video.index";
 import Image from "next/image";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 

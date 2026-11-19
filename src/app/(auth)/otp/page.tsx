@@ -6,7 +6,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Loader2, Mail, ShieldCheck, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
-import { OtpVerify } from "@/ApisRequests/Auth";
+import { useVerifyCodeMutation } from "@/redux/features/auth/authApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import athleteBanner from "@/../public/new/female-player.webp";
 
 const OTP_LENGTH = 5;
@@ -18,6 +19,7 @@ const OtpFormContent: React.FC = () => {
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [verifyCode] = useVerifyCodeMutation();
   const [resendCooldown, setResendCooldown] = useState(60);
   const [isResending, setIsResending] = useState(false);
 
@@ -128,10 +130,21 @@ const OtpFormContent: React.FC = () => {
 
     setLoading(true);
     try {
-      const res = await OtpVerify({
-        email: resolvedEmail,
-        verifyCode: Number(fullOtp),
-      });
+      let res: { success?: boolean; message?: string };
+      try {
+        res = await verifyCode({
+          email: resolvedEmail,
+          verifyCode: Number(fullOtp),
+        }).unwrap();
+      } catch (apiErr) {
+        res = {
+          success: false,
+          message: getApiErrorMessage(
+            apiErr,
+            "Invalid or expired verification code. Please try again.",
+          ),
+        };
+      }
 
       setLoading(false);
 
@@ -141,9 +154,9 @@ const OtpFormContent: React.FC = () => {
       } else {
         toast.error(res?.message || "Invalid or expired verification code. Please try again.");
       }
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      toast.error(err?.message || "Verification failed. Please try again.");
+      toast.error(getApiErrorMessage(err, "Verification failed. Please try again."));
     }
   };
 

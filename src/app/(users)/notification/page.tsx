@@ -2,7 +2,11 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { get, patch } from "@/ApisRequests/server";
+import {
+  useLazyGetNotificationsQuery,
+  useMarkAllNotificationsSeenMutation,
+  useMarkNotificationSeenMutation,
+} from "@/redux/features/notification/notificationApi";
 import GoToTop from "@/components/ui/GoToTop";
 import {
   Bell,
@@ -23,7 +27,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
 
 interface NotificationsType {
   _id: string;
@@ -162,15 +165,9 @@ const NotificationPage = () => {
   const [activeTab, setActiveTab] = useState<"all" | "unread" | "read">("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const getAuthToken = useCallback(() => {
-    if (typeof window === "undefined") return "";
-    return (
-      localStorage.getItem("token") ||
-      localStorage.getItem("accessToken") ||
-      Cookies.get("token") ||
-      ""
-    );
-  }, []);
+  const [getNotifications] = useLazyGetNotificationsQuery();
+  const [markNotificationSeen] = useMarkNotificationSeenMutation();
+  const [markAllNotificationsSeen] = useMarkAllNotificationsSeenMutation();
 
   const fetchNotifications = useCallback(
     async (targetPage = 1, isManual = false) => {
@@ -178,19 +175,13 @@ const NotificationPage = () => {
       else setIsLoading(true);
 
       try {
-        const token = getAuthToken();
-
-        const res = await get(
-          `/notification/get-notifications?page=${targetPage}&limit=15`,
-          {
-            headers: {
-              Authorization: `${token || ""}`,
-            },
-          },
-        );
+        const res = await getNotifications({
+          page: targetPage,
+          limit: 15,
+        }).unwrap();
 
         if (res?.data?.result) {
-          setNotifications(res.data.result);
+          setNotifications(res.data.result as NotificationsType[]);
           if (res.data.meta) {
             setPagination(res.data.meta);
           }
@@ -202,7 +193,7 @@ const NotificationPage = () => {
         setIsRefreshing(false);
       }
     },
-    [getAuthToken],
+    [getNotifications],
   );
 
   useEffect(() => {
@@ -224,15 +215,8 @@ const NotificationPage = () => {
           : n,
       ),
     );
-    const token = getAuthToken();
     try {
-      const res = await patch(
-        `/notification/see-notification/${id}`,
-        {},
-        {
-          headers: { Authorization: token || "" },
-        },
-      );
+      const res = await markNotificationSeen(id).unwrap();
       if (!res?.success) {
         console.error("Server failed to mark notification as read:", res);
       }
@@ -253,15 +237,8 @@ const NotificationPage = () => {
     );
     toast.success("All notifications marked as read");
 
-    const token = getAuthToken();
     try {
-      const res = await patch(
-        "/notification/see-notifications",
-        {},
-        {
-          headers: { Authorization: token || "" },
-        },
-      );
+      const res = await markAllNotificationsSeen().unwrap();
       if (!res?.success) {
         console.error("Server failed to mark all notifications as read:", res);
       }

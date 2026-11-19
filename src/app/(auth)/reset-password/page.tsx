@@ -7,7 +7,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Lock, KeyRound, ArrowLeft, Loader2, ShieldCheck, CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { post } from "@/ApisRequests/server";
+import { useResetPasswordMutation } from "@/redux/features/auth/authApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import athleteBanner from "@/../public/new/female-player.webp";
 
 const ResetPasswordFormContent: React.FC = () => {
@@ -20,6 +21,7 @@ const ResetPasswordFormContent: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [resetPassword] = useResetPasswordMutation();
 
   // Retrieve email from URL search params or localStorage
   useEffect(() => {
@@ -70,7 +72,18 @@ const ResetPasswordFormContent: React.FC = () => {
         email: resolvedEmail,
       };
 
-      const res = await post("/auth/reset-password", payload);
+      let res: { success?: boolean; message?: string };
+      try {
+        res = await resetPassword(payload).unwrap();
+      } catch (apiErr) {
+        res = {
+          success: false,
+          message: getApiErrorMessage(
+            apiErr,
+            "Failed to reset password. Please try again.",
+          ),
+        };
+      }
       setLoading(false);
 
       if (res?.success) {
@@ -83,9 +96,11 @@ const ResetPasswordFormContent: React.FC = () => {
       } else {
         toast.error(res?.message || "Failed to reset password. Please try again.");
       }
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      toast.error(err?.message || "An unexpected error occurred. Please try again.");
+      toast.error(
+        getApiErrorMessage(err, "An unexpected error occurred. Please try again."),
+      );
     }
   };
 

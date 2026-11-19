@@ -3,12 +3,12 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import PlayerzCards from "@/components/Playerz/PlayerzCards";
 import { Player } from "@/app/(default)/playerz/page";
-import { fetchMorePlayers } from "@/app/actions/players";
+import { useLazyGetPlayersQuery } from "@/redux/features/player/playerApi";
 import { UserX, Loader2 } from "lucide-react";
 
 interface InfinitePlayerListProps {
   initialData: Player[];
-  initialMeta: {
+  initialMeta?: {
     total: number;
     page: number;
     limit: number;
@@ -30,6 +30,7 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
   team,
   limit = 20,
 }) => {
+  const [fetchPlayers] = useLazyGetPlayersQuery();
   const [players, setPlayers] = useState<Player[]>(initialData);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(() => {
@@ -80,24 +81,17 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
     const nextPage = pageRef.current + 1;
 
     try {
-      // Use Next.js Server Action to avoid browser cross-origin CORS limitations
-      const res = await fetchMorePlayers({
-        searchTerm,
-        sort,
-        team,
+      const res = await fetchPlayers({
+        searchTerm: searchTerm || undefined,
+        sort: sort || undefined,
+        team: team || undefined,
         page: nextPage,
-        limit,
-      });
+        limit: limit || 20,
+      }).unwrap();
 
-      if (!res.success) {
-        console.error("fetchMorePlayers server action error:", res.error);
-        setHasMore(false);
-        hasMoreRef.current = false;
-        return;
-      }
-
-      const newItems: Player[] = res.result || [];
-      const meta = res.meta;
+      const newItems: Player[] =
+        (res?.data?.result as unknown as Player[] | undefined) || [];
+      const meta = res?.data?.meta;
       const totalPage = Number(meta?.totalPage);
 
       if (!Array.isArray(newItems) || newItems.length === 0) {
@@ -143,7 +137,7 @@ const InfinitePlayerList: React.FC<InfinitePlayerListProps> = ({
       isFetchingRef.current = false;
       setLoading(false);
     }
-  }, [searchTerm, sort, team, limit]);
+  }, [searchTerm, sort, team, limit, fetchPlayers]);
 
   // Robust IntersectionObserver: uses viewport (root: null) so both mobile page scroll
   // and desktop container scroll trigger seamlessly

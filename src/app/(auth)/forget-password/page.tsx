@@ -6,13 +6,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, KeyRound, ArrowLeft, Loader2, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
-import { post } from "@/ApisRequests/server";
+import { useForgetPasswordMutation } from "@/redux/features/auth/authApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import athleteBanner from "@/../public/new/female-player.webp";
 
 const ForgetPasswordFormContent: React.FC = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [forgetPassword] = useForgetPasswordMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,7 +33,18 @@ const ForgetPasswordFormContent: React.FC = () => {
 
     setLoading(true);
     try {
-      const res = await post("/auth/forget-password", { email: trimmedEmail }, {});
+      let res: { success?: boolean; message?: string };
+      try {
+        res = await forgetPassword({ email: trimmedEmail }).unwrap();
+      } catch (apiErr) {
+        res = {
+          success: false,
+          message: getApiErrorMessage(
+            apiErr,
+            "Unable to send reset code. Please check your email.",
+          ),
+        };
+      }
       setLoading(false);
 
       if (res?.success) {
@@ -43,9 +56,9 @@ const ForgetPasswordFormContent: React.FC = () => {
       } else {
         toast.error(res?.message || "Unable to send reset code. Please check your email.");
       }
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      toast.error(err?.message || "Something went wrong. Please try again.");
+      toast.error(getApiErrorMessage(err, "Something went wrong. Please try again."));
     }
   };
 

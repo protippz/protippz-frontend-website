@@ -1,13 +1,16 @@
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import rewardsArt from "@/../public/new/rewards-special.jpg";
 
-export const metadata = {
-  title: "PROTIPPZ - Send Tippz, Earn Rewardz, Win Prizes",
+export const metadata: Metadata = buildMetadata({
+  title: "Send Tippz, Earn Rewardz, Win Prizes",
   description:
     "When you send Tippz you will earn reward points that can be redeemed for exclusive prizes and you will be entered into weekly drawings.",
-};
+  path: "/prottiz-special",
+});
 
 const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.coryrains.protppz&hl=en";

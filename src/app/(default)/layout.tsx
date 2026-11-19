@@ -1,81 +1,19 @@
-import type { Metadata } from "next";
 import Navbar from "@/components/Shared/Client/Navbar";
 import Footer from "@/components/Shared/Client/Footer";
-import { AuthProvider } from "@/provider/ContextProvider";
-import NextTopLoader from "nextjs-toploader";
-import ShocaseMarquee from "@/components/HomePage/ShocaseMarquee";
-import Head from "next/head";
-import Header from "@/components/Shared/Client/Header";
 import SportsTicker from "@/components/Shared/SportsTicker";
 
-export const metadata: Metadata = {
-  title: "PROTIPPZ",
-  keywords: "protippz",
-  description: "protippz",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+/**
+ * Public marketing / directory pages.
+ * Metadata is defined per page (see `buildMetadata` in `src/lib/seo.ts`).
+ * Auth, Redux and the top loader are provided once by the root layout.
+ */
+export default function DefaultLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      <Head>
-        <meta name="description" content="protippz" />
-        <meta name="keywords" content="protippz" />
-        <meta name="robots" content="index, follow" />
-
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="PROTIPPZ" />
-        <meta property="og:description" content="protippz" />
-        <meta
-          property="og:image"
-          content="https://protippz.com/assets/seo-banner.jpg"
-        />
-        <meta property="og:url" content="https://protippz.com" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PROTIPPZ" />
-        <meta
-          name="twitter:description"
-          content="Join a passionate sports tipping community, earn rewards, and win prizes. Start tipping today!"
-        />
-        <meta
-          name="twitter:image"
-          content="https://protippz.com/assets/seo-banner.jpg"
-        />
-
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Website",
-            name: "PROTIPPZ - Best Sports Tipping Platform",
-            url: "https://protippz.com",
-            description: "protippz",
-            image: "https://protippz.com/assets/seo-banner.jpg",
-            publisher: {
-              "@type": "Organization",
-              name: "PROTIPPZ",
-              logo: "https://protippz.com/assets/logo.png",
-            },
-            potentialAction: {
-              "@type": "SearchAction",
-              target: "https://protippz.com/search?q={search_term_string}",
-              "query-input": "required name=search_term_string",
-            },
-          })}
-        </script>
-      </Head>
-      {/* <ShocaseMarquee /> */}
-      <AuthProvider>
-        <Navbar />
-        <div className="min-h-[72vh] pb-32 sm:pb-36 lg:pb-16">
-          {children}
-        </div>
-        <Footer />
-         <SportsTicker />
-      </AuthProvider>
+      <Navbar />
+      <div className="min-h-[72vh] pb-32 sm:pb-36 lg:pb-16">{children}</div>
+      <Footer />
+      <SportsTicker />
     </>
   );
 }

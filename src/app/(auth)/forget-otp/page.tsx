@@ -6,7 +6,11 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Loader2, Mail, KeyRound, RefreshCw, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
-import { post } from "@/ApisRequests/server";
+import {
+  useForgetPasswordMutation,
+  useVerifyResetOtpMutation,
+} from "@/redux/features/auth/authApi";
+import { getApiErrorMessage } from "@/lib/api/errors";
 import athleteBanner from "@/../public/new/female-player.webp";
 
 const OTP_LENGTH = 5;
@@ -18,6 +22,8 @@ const ForgetOtpFormContent: React.FC = () => {
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [verifyResetOtp] = useVerifyResetOtpMutation();
+  const [forgetPassword] = useForgetPasswordMutation();
   const [resendCooldown, setResendCooldown] = useState(60);
   const [isResending, setIsResending] = useState(false);
 
@@ -132,7 +138,18 @@ const ForgetOtpFormContent: React.FC = () => {
         resetCode: Number(fullOtp),
       };
 
-      const res = await post("/auth/verify-reset-otp", payload, {});
+      let res: { success?: boolean; message?: string };
+      try {
+        res = await verifyResetOtp(payload).unwrap();
+      } catch (apiErr) {
+        res = {
+          success: false,
+          message: getApiErrorMessage(
+            apiErr,
+            "Invalid or expired reset code. Please try again.",
+          ),
+        };
+      }
       setLoading(false);
 
       if (res?.success) {
@@ -141,9 +158,9 @@ const ForgetOtpFormContent: React.FC = () => {
       } else {
         toast.error(res?.message || "Invalid or expired reset code. Please try again.");
       }
-    } catch (err: any) {
+    } catch (err) {
       setLoading(false);
-      toast.error(err?.message || "Verification failed. Please try again.");
+      toast.error(getApiErrorMessage(err, "Verification failed. Please try again."));
     }
   };
 
@@ -161,7 +178,15 @@ const ForgetOtpFormContent: React.FC = () => {
 
     setIsResending(true);
     try {
-      const res = await post("/auth/forget-password", { email: resolvedEmail }, {});
+      let res: { success?: boolean; message?: string };
+      try {
+        res = await forgetPassword({ email: resolvedEmail }).unwrap();
+      } catch (apiErr) {
+        res = {
+          success: false,
+          message: getApiErrorMessage(apiErr, "Failed to resend code. Please try again."),
+        };
+      }
       if (res?.success) {
         toast.success(res?.message || `A new reset code has been sent to ${resolvedEmail}`);
         setResendCooldown(60);

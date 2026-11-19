@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { useGetPlayerGameStatsQuery } from "@/Redux/Apis/gameStatsApis";
+import { useGetPlayerGameStatsQuery } from "@/redux/features/gameStats/gameStatsApi";
 import {
   GameLogEntry,
   FilterMode,

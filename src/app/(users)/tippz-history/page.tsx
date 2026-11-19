@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { get, imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
 import {
   ChevronLeft,
   ChevronRight,
@@ -12,7 +12,7 @@ import {
   Receipt,
   Award,
 } from "lucide-react";
-import { useMyTipseQuery } from "@/Redux/Apis/tippzApis"
+import { useGetMyTipsQuery } from "@/redux/features/tip/tipApi";
 
 interface TipHistoryInterface {
   _id: string;
@@ -45,37 +45,11 @@ interface Pagination {
 }
 
 const TippzHistoryPage = () => {
-  const [tipHistory, setTipHistory] = useState<TipHistoryInterface[]>([]);
-  const [pagination, setPagination] = useState<Pagination>();
   const [page, setPage] = useState<number>(1);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { data } = useMyTipseQuery({ page, limit: 10 });
-
-  useEffect(() => {
-    const getMyTip = async () => {
-      setIsLoading(true);
-      try {
-        const token =
-          typeof localStorage !== "undefined"
-            ? localStorage.getItem("token")
-            : "";
-        const res = await get(`/tip/my-tips?page=${page}`, {
-          headers: {
-            Authorization: `${token || ""}`,
-          },
-        });
-        if (res?.data?.result) {
-          setTipHistory(res.data.result);
-          setPagination(res.data.meta);
-        }
-      } catch (error) {
-        console.error("Failed to load tip history:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    getMyTip();
-  }, [page]);
+  // `isFetching` mirrors the old behaviour of showing the loader on every page change.
+  const { data, isFetching: isLoading } = useGetMyTipsQuery({ page });
+  const tipHistory = (data?.data?.result ?? []) as TipHistoryInterface[];
+  const pagination: Pagination | undefined = data?.data?.meta;
 
   // Aggregate stats from current tip data
   const totalTipsAmount = tipHistory.reduce(

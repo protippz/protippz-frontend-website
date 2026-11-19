@@ -1,5 +1,9 @@
 import Link from "next/link";
 import React from "react";
+import type { Metadata } from "next";
+import { privateMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = privateMetadata("Account Added");
 
 const Page = async () => {
   return (

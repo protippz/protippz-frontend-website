@@ -9,7 +9,7 @@ import React, {
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Toaster } from 'react-hot-toast';
 import OneSignalHandler from '@/components/OneSignal/OneSignalHandler';
-import { useMyProfileQuery } from "@/Redux/Apis/profileApis"
+import { useGetMyProfileQuery } from "@/redux/features/user/userApi";
 
 export interface User {
   address?: any;
@@ -83,7 +83,7 @@ const AuthProvider = ({ children }: Props) => {
   const GOOGLE_CLIENT_ID = `${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`;
 
   const [userData, setUserData] = useState<User | null>(null);
-  const { data, isLoading, refetch } = useMyProfileQuery({})
+  const { data, isLoading, refetch } = useGetMyProfileQuery()
 
   useEffect(() => {
     if (data?.success) {

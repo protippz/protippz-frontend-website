@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { imageUrl } from "@/ApisRequests/server";
+import { imageUrl } from "@/lib/api/config";
 import BookmarkButton from "@/components/Shared/Client/BookmarkButton";
 import SendTipsButton from "../Client/SendTipsButton";
 import ptLogo from "@/Assets/PT Logo.png";

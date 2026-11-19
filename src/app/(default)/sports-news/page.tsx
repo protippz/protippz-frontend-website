@@ -28,6 +28,7 @@ import {
 import OptimizedPostImage from "@/components/community/OptimizedPostImage";
 import { TickerHeadline } from "@/app/api/sports-news-ticker/route";
 import { copyToClipboard } from "@/components/community/helpers";
+import { useLazyGetSportsNewsQuery } from "@/redux/features/internal/internalEndpoints";
 
 const BADGE_CONFIGS: Record<
   string,
@@ -96,6 +97,7 @@ export default function SportsNewsPage() {
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const fetchingRef = useRef(false);
+  const [fetchSportsNews] = useLazyGetSportsNewsQuery();
 
   const openStoryModal = useCallback((item: TickerHeadline) => {
     setActiveModalItem(item);
@@ -126,15 +128,12 @@ export default function SportsNewsPage() {
         if (isRefresh) setRefreshing(true);
         else if (currentLimit > 20) setLoadingMore(true);
 
-        const params = new URLSearchParams();
-        params.set("limit", String(currentLimit));
-        if (category !== "All") params.set("category", category);
-        if (query.trim()) params.set("search", query.trim());
-
-        const url = `/api/sports-news-ticker?${params.toString()}`;
-
-        const res = await fetch(url, { cache: "no-store" });
-        const data = await res.json();
+        // Lazy trigger always hits the network (equivalent to cache: "no-store").
+        const data = await fetchSportsNews({
+          limit: currentLimit,
+          category: category !== "All" ? category : undefined,
+          search: query.trim() || undefined,
+        }).unwrap();
 
         if (data.success && Array.isArray(data.headlines)) {
           setHeadlines(data.headlines);
@@ -155,7 +154,7 @@ export default function SportsNewsPage() {
         fetchingRef.current = false;
       }
     },
-    [],
+    [fetchSportsNews],
   );
 
   // Initial load, category change, or search query change
@@ -183,8 +182,8 @@ export default function SportsNewsPage() {
       if (existing) {
         setActiveModalItem(existing);
       } else if (!loading && headlines.length > 0) {
-        fetch(`/api/sports-news-ticker?limit=50`)
-          .then((res) => res.json())
+        fetchSportsNews({ limit: 50 })
+          .unwrap()
           .then((data) => {
             if (data.success && Array.isArray(data.headlines)) {
               const matched = data.headlines.find(
@@ -196,7 +195,7 @@ export default function SportsNewsPage() {
           .catch(() => { });
       }
     }
-  }, [headlines, loading]);
+  }, [headlines, loading, fetchSportsNews]);
 
   // IntersectionObserver for Infinite Scrolling near bottom of screen
   useEffect(() => {
