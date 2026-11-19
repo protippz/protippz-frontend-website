@@ -3,7 +3,7 @@
 import { useGetPlayerQuery } from '@/redux/features/player/playerApi';
 import { Modal } from 'antd';
 import React, { memo, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import { toast } from "@/components/ui/toast";
 
 interface IPlayerDetailsProps {
   id: string;

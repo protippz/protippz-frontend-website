@@ -154,11 +154,10 @@ export const sharePostLink = async (options: ShareOptions): Promise<void> => {
 
   // Fallback to Clipboard copy
   const copied = await copyToClipboard(shareUrl);
+  const { toast } = await import("@/components/ui/toast");
   if (copied) {
-    const { toast } = await import("react-hot-toast");
     toast.success("Link copied to clipboard!");
   } else {
-    const { toast } = await import("react-hot-toast");
     toast.error("Failed to copy link. Please copy manually.");
   }
 };

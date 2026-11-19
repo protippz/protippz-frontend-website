@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Lock, KeyRound, ArrowLeft, Loader2, ShieldCheck, CheckCircle2 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { useResetPasswordMutation } from "@/redux/features/auth/authApi";
 import { getApiErrorMessage } from "@/lib/api/errors";
 import athleteBanner from "@/../public/new/female-player.webp";

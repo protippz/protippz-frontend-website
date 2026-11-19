@@ -85,11 +85,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <JsonLd data={[jsonLdOrganization(), jsonLdWebsite()]} />
         <ReduxProvider>
-          <Script
-            id="onesignal-sdk-script"
-            src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
-            strategy="afterInteractive"
-          />
           <NextTopLoader />
           <AuthProvider>
             <Script id="chatbot-script" src={CHATBOT_SCRIPT_URL} strategy="lazyOnload" />

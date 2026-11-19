@@ -17,7 +17,7 @@ import {
   Zap,
   Award,
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import {
   getStripeLink,
   useConnectStripeMutation,

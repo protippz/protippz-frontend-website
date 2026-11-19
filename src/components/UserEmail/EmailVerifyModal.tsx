@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Mail, ShieldCheck, ArrowRight, Loader2, X, Sparkles } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { useAddEmailAddressMutation } from "@/redux/features/user/userApi";
 import { getAuthToken } from "@/lib/auth/token";
 import { getApiErrorMessage } from "@/lib/api/errors";

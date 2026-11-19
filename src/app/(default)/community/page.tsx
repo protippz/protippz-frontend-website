@@ -10,7 +10,7 @@ import React, {
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/provider/ContextProvider";
 import { Plus, RefreshCw, Loader2, AlertCircle } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import CommunityHeader from "@/components/community/CommunityHeader";
 import CommunitySearchBar from "@/components/community/CommunitySearchBar";
 import FeedCard from "@/components/community/FeedCard";

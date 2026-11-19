@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useInviteFriendMutation } from "@/redux/features/content/contentApi";
 import { getApiErrorMessage } from "@/lib/api/errors";
 import { getAuthToken } from "@/lib/auth/token";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import GoToTop from "@/components/ui/GoToTop";
 import { useContextData } from "@/provider/ContextProvider";
 import {

@@ -4,10 +4,10 @@ import React, { memo, useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { imageUrl } from "@/lib/api/config";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { Player } from "@/app/(default)/playerz/page";
 import { useContextData } from "@/provider/ContextProvider";
-import Swal from "sweetalert2";
+import { confirmDialog } from "@/components/ui/confirm-dialog";
 import defaultPlayer from "@/Assets/playerDefult.jpg";
 import {
   X,
@@ -86,19 +86,16 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
 
   const openTip = () => {
     if (!data?.userData?.user) {
-      return Swal.fire({
-        title: "You need to log in!",
-        text: "Please log in to send digital tips to athletes.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Go to Login",
-        cancelButtonText: "Cancel",
-        confirmButtonColor: "#053697",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigateToLogin();
-        }
+      void confirmDialog({
+        tone: "login",
+        title: "Log in to send Tippz",
+        description: "Please log in to send digital tips to athletes.",
+        confirmText: "Go to Login",
+        cancelText: "Not now",
+      }).then((confirmed) => {
+        if (confirmed) navigateToLogin();
       });
+      return;
     }
     setSelectedPreset(25);
     setCustomAmount("");
@@ -160,7 +157,7 @@ const SendTipsButton: React.FC<SendTipsButtonProps> = ({
       const response = await createTippz(data).unwrap()
       const checkoutUrl = (response?.data as { checkoutUrl?: string } | undefined)?.checkoutUrl;
       if (response?.success && checkoutUrl) {
-        toast.success(response?.message || "Redirecting to checkout...", { position: "top-right" });
+        toast.success(response?.message || "Redirecting to checkout...");
         router.push(checkoutUrl || "")
       } else if (response?.success) {
         setSuccessAmount(amount);

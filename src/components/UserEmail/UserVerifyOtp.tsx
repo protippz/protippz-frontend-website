@@ -9,7 +9,7 @@ import {
   RefreshCw,
   CheckCircle2,
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import {
   useAddEmailAddressMutation,
   useVerifyAddEmailMutation,

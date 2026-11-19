@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { useCreateDepositIntentMutation } from "@/redux/features/payment/paymentApi";
 import { getApiErrorMessage } from "@/lib/api/errors";
 import { getAuthToken } from "@/lib/auth/token";

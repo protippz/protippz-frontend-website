@@ -3,7 +3,7 @@
 import React from "react";
 import { FaInstagram, FaXTwitter, FaTiktok } from "react-icons/fa6";
 import { ExternalLink, Link2Off } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 
 interface PlayerSocialButtonsProps {
   playerName?: string;
@@ -132,18 +132,7 @@ const PlayerSocialButtons: React.FC<PlayerSocialButtonsProps> = ({
   const handleClick = (item: SocialItem, e: React.MouseEvent) => {
     if (!item.url) {
       e.preventDefault();
-      toast(
-        `${playerName} has not linked their ${item.name} profile yet.`,
-        {
-          icon: "🔗",
-          style: {
-            borderRadius: "16px",
-            background: "#1e293b",
-            color: "#fff",
-            fontSize: "13px",
-          },
-        },
-      );
+      toast.info(`${playerName} has not linked their ${item.name} profile yet.`);
     }
   };
 

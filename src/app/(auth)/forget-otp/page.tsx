@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, Loader2, Mail, KeyRound, RefreshCw, ShieldCheck } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import {
   useForgetPasswordMutation,
   useVerifyResetOtpMutation,

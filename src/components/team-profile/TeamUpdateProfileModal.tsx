@@ -15,7 +15,7 @@ import {
   Save,
 } from "lucide-react";
 import { FaInstagram, FaTwitter, FaTiktok } from "react-icons/fa6";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { imageUrl } from "@/lib/api/config";
 import { useGetLeaguesQuery } from "@/redux/features/team/teamApi";
 import { useUpdateTeamProfileMutation } from "@/redux/features/user/userApi";

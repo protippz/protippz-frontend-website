@@ -12,7 +12,7 @@ import {
 } from "@/redux/features/payment/paymentApi";
 import { getAuthToken } from "@/lib/auth/token";
 import { getApiErrorMessage } from "@/lib/api/errors";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import BackButton from "@/components/ui/BackButton";
 import EmailVerifyModal from "@/components/UserEmail/EmailVerifyModal";
 import UserVerifyOtp from "@/components/UserEmail/UserVerifyOtp";

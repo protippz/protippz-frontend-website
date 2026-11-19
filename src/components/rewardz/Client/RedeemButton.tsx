@@ -20,7 +20,7 @@ import {
   Building,
   KeyRound,
 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "@/components/ui/toast";
 import { imageUrl } from "@/lib/api/config";
 import { RewardInterface } from "@/app/(default)/rewardz/page";
 import { useContextData } from "@/provider/ContextProvider";
